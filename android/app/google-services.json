@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "545243335695",
+    "project_id": "defi-wallet",
+    "storage_bucket": "defi-wallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545243335695:android:4d163e39a61fcd9dd9677a",
+        "android_client_info": {
+          "package_name": "com.defiwalletmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545243335695-a1qe3297bjo66390h6m4un2tu0nrh08a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFPXdORJ_zDXkkJo6_ye_0VcviHs_O4kU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545243335695-a1qe3297bjo66390h6m4un2tu0nrh08a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

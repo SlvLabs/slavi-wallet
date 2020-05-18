@@ -1,0 +1,96 @@
+import React from 'react';
+import {
+  Modal,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+import theme from '../../theme';
+import CustomIcon from '../custom-icon/custom-icon';
+
+export interface FullScreenModalProps {
+  visible: boolean;
+  onCancel: () => void;
+  title?: string;
+  children: React.ReactNode;
+  animationType?: 'none' | 'slide' | 'fade';
+  rightIconName?: string;
+  rightIconOnPress?: () => void;
+  rightIconColor?: string;
+}
+
+const defaultAnimation = 'slide';
+const defaultIconColor = theme.colorsOld.lightGray;
+
+const FullScreenModal = (props: FullScreenModalProps) => {
+  return (
+    <Modal
+      animationType={props.animationType || defaultAnimation}
+      visible={props.visible}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.closeIcon} onPress={props.onCancel}>
+            <CustomIcon name={'close'} size={24} color={defaultIconColor} />
+          </TouchableOpacity>
+          <View style={styles.titleContainer}>
+            {props.title && <Text style={styles.title}>{props.title}</Text>}
+          </View>
+          <TouchableOpacity
+            style={styles.rightIcon}
+            onPress={props.rightIconOnPress}>
+            {props.rightIconName && (
+              <CustomIcon
+                name={props.rightIconName}
+                size={24}
+                color={props.rightIconColor || defaultIconColor}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.content}>{props.children}</View>
+      </SafeAreaView>
+    </Modal>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: 60,
+    backgroundColor: theme.colorsOld.white,
+  },
+  header: {
+    flexDirection: 'row',
+  },
+  closeIcon: {
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  titleContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 11,
+  },
+  rightIcon: {
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  title: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    letterSpacing: 0.4,
+    fontSize: 12,
+    lineHeight: 12,
+    color: theme.colorsOld.gray,
+  },
+  content: {},
+});
+
+export default FullScreenModal;

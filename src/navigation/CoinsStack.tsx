@@ -52,7 +52,7 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.LIST}
         component={CoinsListScreen}
-        options={{title: t('Slavi wallet')}}
+        options={{title: t('')}}
       />
       <StackNavigator.Screen
         name={ROUTES.COINS.INFO}

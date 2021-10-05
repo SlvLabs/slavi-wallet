@@ -27,7 +27,7 @@ const BaseModal = (props: BaseModalProps) => {
       </View>
     </View>
   );
-  // TODO: подумать можно ли как-то посимпотичнее обработать чтобы клик на пустое место внутри контейнера не закрывал модалку
+  // TODO: make so beautiful
   return (
     <Modal animationType="fade" transparent={true} visible={props.visible}>
       {props.onCancel ? (
@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 32,
-    backgroundColor: theme.colorsOld.white,
-    borderRadius: 32,
-    padding: 32,
+    backgroundColor: theme.colors.grayDark,
+    borderRadius: 10,
+    padding: 24,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {

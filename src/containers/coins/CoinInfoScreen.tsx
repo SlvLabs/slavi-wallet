@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {CoinInfoRouteProps} from '../../navigation/CoinsStack';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
-import StakingCard from '../../components/coin-info/staking-card';
 import ROUTES from '../../navigation/config/routes';
 import SimpleToast from 'react-native-simple-toast';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
@@ -14,6 +13,7 @@ import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CoinControlButtons from '../../components/coin-info/coin-control-buttons';
 import theme from '../../theme';
+import LinearGradient from 'react-native-linear-gradient';
 
 const CoinInfoScreen = () => {
   const route = useRoute<CoinInfoRouteProps>();
@@ -57,43 +57,34 @@ const CoinInfoScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <CoinBalanceHeader
-          name={data.name}
-          balance={data.balance}
-          cryptoBalance={data.cryptoBalance}
-          cryptoTicker={data.crypto}
-          fiatBalance={data.fiatBalance}
-          fiatTicker={data.fiat}
-          logo={data.logo}
-          extraContent={
-            <CoinControlButtons
-              onPressExchange={onPressExchange}
-              onPressReceive={onPressReceive}
-              onPressSend={onPressSend}
-            />
-          }
-        />
-        <StakingCard
-          balance={data.investedBalance}
-          ticker={data.ticker}
-          fiatBalance={data.investedFiatBalance || '0'}
-          fiatTicker={data.fiat}
-          cryptoBalance={data.investedCryptoBalance || '0'}
-          cryptoTicker={data.crypto}
-          investNotAvailable={false}
-          withdrawNotAvailable={false}
-          roi={data.roi}
-        />
-        <CoinTabs
-          infoParams={list || []}
-          fiat={fiat}
-          crypto={crypto}
-          infoIsLoading={isLoading}
-          coin={coin}
-          coinParams={dict}
-        />
-      </ScrollView>
+      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
+        <ScrollView>
+          <CoinBalanceHeader
+            name={data.name}
+            balance={data.balance}
+            cryptoBalance={data.cryptoBalance}
+            cryptoTicker={data.crypto}
+            fiatBalance={data.fiatBalance}
+            fiatTicker={data.fiat}
+            logo={data.logo}
+            extraContent={
+              <CoinControlButtons
+                onPressExchange={onPressExchange}
+                onPressReceive={onPressReceive}
+                onPressSend={onPressSend}
+              />
+            }
+          />
+          <CoinTabs
+            infoParams={list || []}
+            fiat={fiat}
+            crypto={crypto}
+            infoIsLoading={isLoading}
+            coin={coin}
+            coinParams={dict}
+          />
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -101,7 +92,9 @@ const CoinInfoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colorsOld.white,
+  },
+  gradient: {
+    flex: 1,
   },
 });
 

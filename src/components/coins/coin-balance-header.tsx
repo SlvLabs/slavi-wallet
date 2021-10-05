@@ -16,6 +16,7 @@ export interface CoinBalanceHeaderProps {
   logo?: string;
   logoStyle?: ImageStyle;
   extraContent?: React.ReactNode;
+  type?: string;
 }
 
 const CoinBalanceHeader = (props: CoinBalanceHeaderProps) => {
@@ -28,6 +29,7 @@ const CoinBalanceHeader = (props: CoinBalanceHeaderProps) => {
         <View style={styles.dataColumn}>
           <View style={styles.nameRow}>
             <Text style={styles.name}>{props.name}</Text>
+            {!!props.type && <Text style={styles.type}>{props.type}</Text>}
           </View>
           <ConvertedBalanceElement
             balance={props.balance}
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     flex: 1,
+    marginRight: 10,
   },
   logoImage: {
     width: 48,
@@ -64,16 +67,15 @@ const styles = StyleSheet.create({
   },
   nameRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   name: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 17,
-    letterSpacing: 0.5,
-    color: theme.colorsOld.darkGray,
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.quiteTransparent,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -83,6 +85,15 @@ const styles = StyleSheet.create({
   button: {
     width: 88,
   },
+  type: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 10,
+    lineHeight: 16,
+    color: theme.colors.borderGreen,
+    textTransform: 'uppercase',
+  }
 });
 
 export default CoinBalanceHeader;

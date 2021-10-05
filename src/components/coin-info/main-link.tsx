@@ -3,7 +3,6 @@ import {View, Text, Linking, TouchableOpacity, StyleSheet} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import SimpleToast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
-import Card from '../view/card';
 import theme from '../../theme';
 
 export interface MainLinkProps {
@@ -23,15 +22,13 @@ const MainLink = (props: MainLinkProps) => {
   }, [props.link, t]);
   return (
     <View style={styles.container}>
-      <Card style={styles.card}>
-        <TouchableOpacity onPress={onPress}>
-          <CustomIcon
-            name={props.icon}
-            size={24}
-            color={theme.colorsOld.mistyRose}
-          />
-        </TouchableOpacity>
-      </Card>
+      <TouchableOpacity onPress={onPress}>
+        <CustomIcon
+          name={props.icon}
+          size={36}
+          color={theme.colors.gold2}
+        />
+      </TouchableOpacity>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>{props.text}</Text>
       </View>
@@ -42,6 +39,12 @@ const MainLink = (props: MainLinkProps) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    backgroundColor: theme.colors.mediumBackground,
+    borderRadius: 8,
+    width: 76,
+    height: 98,
   },
   label: {
     fontFamily: theme.fonts.default,
@@ -49,11 +52,13 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 12,
     lineHeight: 14,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.darkGray,
+    letterSpacing: 0.01,
+    color: theme.colors.textLightGray,
+
   },
   labelContainer: {
     justifyContent: 'center',
+    marginTop: 16,
   },
   card: {
     marginBottom: 8,

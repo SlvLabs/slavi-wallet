@@ -2,9 +2,7 @@ import React, {useState} from 'react';
 import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
 import InfoView, {CoinParams} from './info-view';
 import {StyleSheet, View} from 'react-native';
-import theme from '../../../theme';
 import HistoryView from './history-view';
-import RateView from './rate-view';
 import CoinTabsHeader from './coin-tabs-header';
 
 export interface CoinTabsProps {
@@ -32,24 +30,19 @@ const renderHistory = (props: CoinTabsProps) => (
   <HistoryView coin={props.coin} />
 );
 
-const renderRates = (props: CoinTabsProps) => <RateView coin={props.coin} />;
-
 enum ScreenKeys {
   info,
   history,
-  rates,
 }
 
 const names = {
   [ScreenKeys.info]: 'Info',
   [ScreenKeys.history]: 'History',
-  [ScreenKeys.rates]: 'Rates',
 };
 
 const renders = {
   [ScreenKeys.info]: renderInfo,
   [ScreenKeys.history]: renderHistory,
-  [ScreenKeys.rates]: renderRates,
 };
 
 const CoinTabs = (props: CoinTabsProps) => {
@@ -71,14 +64,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     overflow: 'visible',
-    padding: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   tabBar: {
     backgroundColor: 'transparent',
     elevation: 0,
-  },
-  indicator: {
-    backgroundColor: theme.colorsOld.pink,
   },
 });
 

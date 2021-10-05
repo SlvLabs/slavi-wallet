@@ -14,7 +14,6 @@ const SendEthScreen = (props: SendEthScreenProps) => {
     addressService.getGetterDelegate(props.coin),
   );
 
-  // TODO: ругается на несоответсвие типов в types и src, надо разобраться почему реакт падает при мипорте из типов и откуда правильно импортировать
   // @ts-ignore
   return <SendEthBasedScreen coin={props.coin} pattern={pattern} />;
 };

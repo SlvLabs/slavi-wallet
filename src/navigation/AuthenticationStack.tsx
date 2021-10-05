@@ -6,7 +6,7 @@ import ROUTES from './config/routes';
 
 const AuthenticationStack = () => {
   const StackNavigator = createStackNavigator();
-  // TODO: Придумать какой долженбыть хэдер
+  // TODO: change header
   return (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.AUTHENTICATION.LOGIN}

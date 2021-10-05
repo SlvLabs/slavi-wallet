@@ -15,18 +15,13 @@ const Card = (props: CardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    borderRadius: 16,
-    backgroundColor: theme.colorsOld.white,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 18,
+    paddingBottom: 18,
+    borderRadius: 8,
+    backgroundColor: theme.colors.darkBackground,
     margin: 16,
-    shadowColor: theme.colorsOld.gray,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowRadius: 16,
-    shadowOpacity: 0.32,
-    elevation: 16,
     zIndex: 999,
   },
 });

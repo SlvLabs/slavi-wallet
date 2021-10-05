@@ -27,6 +27,10 @@ const Button = (props: ButtonProps) => {
           ...styles.defaultTitle,
           ...(props.titleStyle as ViewStyle),
         }}
+        disabledStyle={{
+          ...styles.defaultDisabledStyle,
+          ...(props.disabledStyle as ViewStyle)
+        }}
       />
     </View>
   );
@@ -37,26 +41,24 @@ const styles = StyleSheet.create({
   disabledTitleStyle: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.lightGray,
+    fontWeight: '600',
+    fontSize: 13,
+    color: theme.colors.textDarkGray,
   },
   defaultStyle: {
-    backgroundColor: theme.colorsOld.cultured,
-    borderRadius: 8,
-    padding: 11,
+    borderRadius: 38,
+    padding: 12,
   },
   defaultTitle: {
-    fontFamily: theme.fonts.default,
+    color: theme.colors.white,
+    fontSize: 13,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    fontWeight: '600',
+    lineHeight: 16,
   },
+  defaultDisabledStyle: {
+    backgroundColor: theme.colors.grayDark,
+  }
 });
 
 export default Button;

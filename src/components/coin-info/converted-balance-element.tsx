@@ -33,10 +33,10 @@ const ConvertedBalanceElement = (props: ConvertedBalanceElementProps) => {
         )}
         {props.cryptoBalance && (
           <View style={styles.cryptoBalance}>
-            <Text style={styles.convertedValue}>
+            <Text style={styles.convertedCryptoValue}>
               {makeRoundedBalance(4, props.cryptoBalance)}
             </Text>
-            <Text style={styles.convertedTicker}>{props.cryptoTicker}</Text>
+            <Text style={styles.convertedCryptoTicker}>{props.cryptoTicker}</Text>
           </View>
         )}
       </View>
@@ -69,29 +69,45 @@ const styles = StyleSheet.create({
   balance: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 24,
-    lineHeight: 29,
-    letterSpacing: 0.1,
-    color: theme.colorsOld.gray,
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
   },
   convertedValue: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
+    fontWeight: 'normal',
     fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    lineHeight: 16,
+    color: theme.colors.white,
   },
   convertedTicker: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 10,
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.lightGray,
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.white,
+    textTransform: 'uppercase',
+    marginLeft: 5,
+  },
+
+  convertedCryptoValue: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.hardTransparent,
+  },
+  convertedCryptoTicker: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.hardTransparent,
     textTransform: 'uppercase',
     marginLeft: 5,
   },

@@ -16,7 +16,7 @@ export interface BootstrapResult extends BootstrapResultCore {}
 
 const wsConfig = {
   //TODO: env!
-  url: 'http://65.21.188.174/ws',
+  url: 'wss://slaviwallet.io/ws',
   minReconnectTime: +Config.WS_MIN_RECONNECT_TIME || 1000,
   maxReconnectTime: +Config.WS_MAX_RECONNECT_TIME || 30000,
   ping: {
@@ -40,7 +40,7 @@ const bootstrap = async (
 ): Promise<BootstrapResult> => {
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
-    currentTranslationVersion: 1, // TODO: поулчить из кэша
+    currentTranslationVersion: 1, // TODO: load from cache
     languageDetector: i18nextReactNative,
     store: store,
     authCoinDerivedPath: Config.AUTH_DERIVED_PATH,

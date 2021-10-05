@@ -20,7 +20,7 @@ const FullFilterCoinSection = (props: FullFilterCoinSectionProps) => {
 
   const {t} = useTranslation();
 
-  // TODO: change hook to useRecentCoins - хз как он должен работать
+  // TODO: change hook to useRecentCoins
   const coins = useCoinsSelector().slice(COIN_COUNT);
 
   const [coinModalShown, setCoinModalShown] = useState<boolean>(false);

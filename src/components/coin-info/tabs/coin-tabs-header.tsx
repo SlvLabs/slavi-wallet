@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import theme from '../../../theme';
+import LinearGradient from 'react-native-linear-gradient';
 
 export interface CoinTabsHeaderProps {
   tabs: Record<number, string>;
@@ -15,7 +16,6 @@ const CoinTabsHeader = (props: CoinTabsHeaderProps) => {
         let style = styles.header;
         let textStyle = styles.text;
         if (+key === props.activeTab) {
-          style = {...style, ...styles.activeHeader};
           textStyle = {...textStyle, ...styles.activeText};
         }
         return (
@@ -23,7 +23,15 @@ const CoinTabsHeader = (props: CoinTabsHeaderProps) => {
             key={`tab_header_${index}`}
             style={style}
             onPress={() => props.onTabChange(+key)}>
-            <Text style={textStyle}>{value}</Text>
+            {+key === props.activeTab ? (
+              <LinearGradient useAngle={false} colors={['rgba(116, 122, 142, 0.2)', 'rgba(35, 38, 48, 0.2)', '#2D303E']}  locations={[0, 1, 1]} style={styles.headerContainer}>
+                <Text style={textStyle}>{value}</Text>
+              </LinearGradient>
+            ) : (
+              <View style={styles.headerContainer}>
+                <Text style={textStyle}>{value}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         );
       })}
@@ -34,28 +42,34 @@ const CoinTabsHeader = (props: CoinTabsHeaderProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-  },
-  activeHeader: {
-    borderBottomColor: theme.colorsOld.pink,
-    borderBottomWidth: 2,
+    justifyContent: 'space-around',
+    backgroundColor: theme.colors.mediumBackground,
+    padding: 8,
+    borderRadius: 8,
   },
   header: {
-    marginRight: 16,
-    paddingBottom: 4,
+    flex: 1,
   },
   text: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 17,
-    letterSpacing: 0.1,
-    textTransform: 'uppercase',
-    color: theme.colorsOld.lightGray,
+    fontWeight: '600',
+    fontSize: 13,
+    lineHeight: 16,
+    letterSpacing: 0.01,
+    color: theme.colors.lightGray,
+    textAlign: 'center',
   },
   activeText: {
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
   },
+  headerContainer: {
+    borderRadius: 8,
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingRight: 16,
+    paddingLeft: 16,
+  }
 });
 
 export default CoinTabsHeader;

@@ -3,6 +3,7 @@ import Button from '../buttons/button';
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import OutlineButton from '../buttons/outline-button';
 
 export interface CoinControlButtonsProps {
   onPressSend: () => void;
@@ -19,7 +20,7 @@ const CoinControlButtons = (props: CoinControlButtonsProps) => {
         onPress={props.onPressSend}
         buttonStyle={styles.button}
       />
-      <Button
+      <OutlineButton
         title={t('Receive')}
         onPress={props.onPressReceive}
         buttonStyle={styles.button}

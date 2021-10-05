@@ -4,7 +4,6 @@ import {Icon, SearchBar} from 'react-native-elements';
 import {useTranslation} from 'react-i18next';
 import SearchParamsButton, {ParamsItem} from './search-params-button';
 import theme from '../../theme';
-import FilterTagList from './filter-tag-list';
 import CustomIcon from '../custom-icon/custom-icon';
 
 export interface FilterTag {
@@ -16,8 +15,6 @@ export interface SearchCoinRowProps {
   onSearch(search: string): void;
   onAddPress(): void;
   sortingMethods: ParamsItem[];
-  filtrationTags: FilterTag[];
-  onFilterRemove: (tag: any) => void;
   search: string;
   onClear: () => void;
 }
@@ -79,12 +76,6 @@ const SearchCoinRow = (props: SearchCoinRowProps) => {
           <CustomIcon name="add" size={24} color={theme.colors.hardTransparent} />
         </TouchableOpacity>
       </View>
-      <FilterTagList
-        tags={props.filtrationTags.map(element => ({
-          text: element.name,
-          onRemove: () => props.onFilterRemove(element.key),
-        }))}
-      />
     </View>
   );
 };
@@ -93,10 +84,11 @@ const styles = StyleSheet.create({
   container: {
     paddingLeft: 16,
     paddingRight: 16,
+    paddingTop: 16,
   },
   searchRow: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.lightTransparent,
+    backgroundColor: theme.colors.grayDark,
     borderRadius: 8,
     justifyContent: 'space-between',
   },

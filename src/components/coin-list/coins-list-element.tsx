@@ -85,7 +85,7 @@ const CoinsListElement = (props: CoinListElementProps) => {
           <Text style={styles.ticker}>{ticker}</Text>
           <PriceWithChange
             price={fiatPrice || 0}
-            currency={'$'}          // TODO: Заменить на символ из монеты (нужны модификации бека)
+            currency={'$'}          // TODO: receive from backend
             change={priceChange}
           />
         </View>

@@ -56,6 +56,12 @@ const ROUTES = {
   NOTIFICATION: {
     LIST: 'Notification/List',
   },
+  DEFI: {
+    MAIN: 'Defi/Main',
+  },
+  SWAP: {
+    MAIN: 'Swap/Main',
+  },
 };
 
 export default ROUTES;

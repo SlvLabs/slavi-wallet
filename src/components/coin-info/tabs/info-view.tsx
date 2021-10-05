@@ -72,20 +72,21 @@ const styles = StyleSheet.create({
   },
   mainListLinks: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   infoParamsList: {},
   descriptionContainer: {
-    paddingTop: 16,
+    margin: 24,
   },
   description: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 12,
+    fontWeight: 'normal',
+    fontSize: 13,
     lineHeight: 18,
-    letterSpacing: 0.1,
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
+    opacity: 0.7,
+    textAlign: 'left',
   },
 });
 

@@ -30,6 +30,7 @@ import SimpleErrorBoundary from './components/error-boundary/simple-error-bounda
 import perf from '@react-native-firebase/perf';
 import DebugPerformanceMonitor from './utils/debug-performance-monitor';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
+import theme from './theme';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -98,6 +99,10 @@ const App: () => ReactNode = () => {
 
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
+      <StatusBar
+        backgroundColor={theme.colors.black}
+        barStyle={'light-content'}
+      />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
           <SafeAreaProvider>

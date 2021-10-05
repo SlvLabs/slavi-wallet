@@ -7,14 +7,26 @@ export default {
     mediumTransparent: 'rgba(255,255,255,0.3)',
     hardTransparent: 'rgba(255,255,255,0.6)',
     quiteTransparent: 'rgba(255,255,255,0.5)',
+    maxTransparent: 'rgba(255, 255, 255, 0.1)',
     gold: '#C1A96D',
     shadow: 'rgba(0, 0, 0, 0.3)',
     black: '#000',
     green: '#26C672',
     red: '#E8513B',
     lightGreen: '#26C672',
-    blackoutTransparent: 'rgba(13, 13, 13, 0.6)'
+    darkGreen: '#17DC90',
+    borderGreen: '#12D489',
+    blackoutTransparent: 'rgba(13, 13, 13, 0.6)',
+    grayDark: '#181A1F',
+    lightGray: '#B8BEC6',
+    borderGray: '#2D2F35',
+    textLightGray: '#83858C',
+    textDarkGray: '#3A3C44',
+    darkBackground: 'rgba(10,10,12, 0.9)',
+    mediumBackground: 'rgba(10,10,12, 0.4)',
+    gold2: '#EACD6F',
   },
+  /** @deprecated */
   colorsOld: {
     cultured: '#F5F4F6',
     gray: '#333333',
@@ -75,6 +87,43 @@ export default {
       start: {x: 0.5, y: -0.2 },
       end: {x: 0.5, y: 1 }
     },
+    cardGradient: {
+      colors: ['#575B80', 'rgba(143, 155, 255, 0)'],
+      start: {x: 0.5, y: 0.5 },
+      end: {x: 0.5, y: 1 }
+    },
+    activeIcon: {
+      colors: ['#17DC90', '#067e50'],
+      locations: [0,0.7]
+    },
+    inactiveIcon: {
+      colors: ['#FFE39C', '#ab9160'],
+      locations: [0,0.7]
+    },
+    backgroundGradient: {
+      colors: ['#303542', '#121418',],
+      locations: [0.1, 1],
+      useAngle: true,
+      angle: 120,
+      angleCenter: { x: 0.5, y: 0.5 },
+    },
+    radialLoadingGradient: {
+      colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],
+      center: [100,250],
+      radius: 400
+    },
+    button: {
+      colors: ['#00CB7C', '#00785B',],
+      locations: [0.5, 1],
+      useAngle: true,
+      angle: 62,
+      angleCenter: { x: 0.5, y: 0.5 },
+    },
+    activeTab: {
+      colors: ['rgba(116, 122, 142, 0.2)', 'rgba(35, 38, 48, 0.2)', '#2D303E'],
+      locations: [0.2, 0.7, 1],
+      useAngle: false,
+    }
   },
   gradientsOld: {
     default: {

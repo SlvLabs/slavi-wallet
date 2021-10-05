@@ -12,7 +12,7 @@ export interface ReceiveControlButtonsProps {
   address: string;
   editAddress: (value?: string) => void;
   editAmount: (value?: string) => void;
-  dataToShare?: string | null; // TODO: реали нужен такой тип?
+  dataToShare?: string | null;
   containerStyle?: ViewStyle;
   iconsSize?: number;
   iconsColor?: string;

@@ -21,10 +21,11 @@ const OutlineButton = (props: OutlineButtonProps) => {
 
 const styles = StyleSheet.create({
   defaultButtonStyle: {
-    borderRadius: 8,
-    padding: 11,
-    borderColor: theme.colorsOld.lightGray,
-    backgroundColor: theme.colorsOld.white,
+    padding: 12,
+    backgroundColor: 'transparent',
+    borderColor: theme.colors.textLightGray,
+    borderRadius: 38,
+    borderWidth: 1,
   },
 });
 

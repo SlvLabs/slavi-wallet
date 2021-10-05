@@ -91,7 +91,7 @@ const ReceiveScreen = () => {
           onSnapToItem={onSnapToItem}
           onEdit={editRecvAddr}
         />
-        {/* TODO: проверить тип адреса */}
+        {/* TODO: check address type */}
         <ReceiveControlButtons
           address={address || ''}
           dataToShare={qr}

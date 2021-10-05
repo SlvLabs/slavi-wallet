@@ -3,7 +3,6 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import SummaryBalanceElement from './summary-balance-element';
 import theme from '../../theme';
-import LinearGradient from 'react-native-linear-gradient';
 import {chart} from '../../assets/images';
 import ElementWithChevron, {ChevronType} from './element-with-chevron';
 
@@ -18,13 +17,13 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
   const fiatRound = props.fiatRound || 2;
   const {t} = useTranslation();
   return (
-    <LinearGradient style={styles.container} {...theme.gradients.header}>
+    <View style={styles.container}>
       <View style={styles.balances}>
         <Text style={styles.label}>{t('Total Value')}</Text>
         <SummaryBalanceElement
           balance={fiatBalance}
           round={fiatRound}
-          ticker={'$'} //TODO: заменить на сервереное значение
+          ticker={'$'} // TODO: receive from backend
         />
         <View style={styles.profitBlock}>
           <Text style={styles.subLabel}>{t('Profit 24h')}</Text>
@@ -49,14 +48,13 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
       <View style={styles.chart}>
         <Image source={chart} style={styles.chartImage} />
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    marginBottom: 16,
     flexDirection: 'row',
   },
   balances: {
@@ -90,7 +88,6 @@ const styles = StyleSheet.create({
   chart: {
     flex: 1,
     justifyContent: 'flex-end',
-    marginBottom: -16,
   },
   chartImage: {
     width: 163,

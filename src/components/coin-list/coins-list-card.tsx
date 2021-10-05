@@ -1,6 +1,6 @@
-import SearchCoinRow, {FilterTag} from './search-coin-row';
+import SearchCoinRow from './search-coin-row';
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {Dimensions, StyleSheet, View, ViewStyle} from 'react-native';
 import {ParamsItem} from './search-params-button';
 import {CoinDisplayData} from './coins-list-element';
 import CoinsList, {showCoinsEnum} from './coins-list';
@@ -8,18 +8,17 @@ import searcher from '@slavi/wallet-core/src/utils/search-in-arrays-of-object-by
 import TokenAddButton from '../../containers/token/token-add-button';
 import OutlineButton from '../buttons/outline-button';
 import {useTranslation} from 'react-i18next';
+import LinearGradient from 'react-native-linear-gradient';
+import theme from '../../theme';
 
 export interface CoinsListCardProps {
   containerStyle: ViewStyle;
   sortingMethods: ParamsItem[];
-  filtrationMethods: ParamsItem[];
   coins: CoinDisplayData[];
   addClicked: boolean;
   onAddPress(): void;
   onElementPress(ticker: string): void;
   onShownChange(ticker: string): void;
-  filtrationTags: FilterTag[];
-  onFilterRemove: (tag: any) => void;
   fiat: string;
   crypto: string;
 }
@@ -33,7 +32,6 @@ const CoinListCard = (props: CoinsListCardProps) => {
     onElementPress,
     onAddPress,
     addClicked,
-    filtrationMethods,
   } = props;
   const [coinsToList, setCoinsToList] = useState<CoinDisplayData[]>(coins);
   const [search, setSearch] = useState<string>('');
@@ -63,15 +61,12 @@ const CoinListCard = (props: CoinsListCardProps) => {
   }, [addClicked, clearSearch, onAddPress]);
 
   return (
-    <View style={{...styles.container, ...containerStyle}}>
+    <LinearGradient {...theme.gradients.backgroundGradient} style={{...styles.container, ...containerStyle}}>
       <SearchCoinRow
         search={search}
         onSearch={setSearch}
         sortingMethods={sortingMethods}
-        filtrationMethods={filtrationMethods}
         onAddPress={onAddPress}
-        filtrationTags={props.filtrationTags}
-        onFilterRemove={props.onFilterRemove}
         onClear={clearSearch}
       />
       <CoinsList
@@ -98,12 +93,16 @@ const CoinListCard = (props: CoinsListCardProps) => {
           />
         </View>
       )}
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    paddingTop: 16,
+    flex: 1,
+    minHeight: Dimensions.get('window').height - 294,
+  },
   buttonContainer: {
     padding: 16,
   },

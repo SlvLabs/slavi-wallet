@@ -53,7 +53,7 @@ const AmountInput = (props: AmountInputProps) => {
             value={amount}
             errorMessage={errorMessage}
             inputType={DecimalType.Real}
-            buttonText={t('Max')} //TODO: опциональность
+            buttonText={t('Max')} //TODO: Optional
             onButtonPress={onMaxPress}
             placeholder={props.label}
           />

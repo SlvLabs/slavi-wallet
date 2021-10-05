@@ -14,22 +14,16 @@ const SolidButton = (props: SolidButtonProps) => {
   return (
     <Button
       ViewComponent={LinearGradient}
-      linearGradientProps={theme.gradientsOld.default}
-      titleStyle={styles.defaultTitle}
+      linearGradientProps={theme.gradients.button}
+      containerStyle={styles.buttonContainer}
       {...props}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  defaultTitle: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.white,
+  buttonContainer: {
+    borderRadius: 38,
   },
 });
 

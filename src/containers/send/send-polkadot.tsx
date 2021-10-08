@@ -169,6 +169,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
           fiatBalance={coinDetails.spendableFiatBalance}
           fiatTicker={coinDetails.fiat}
           logo={coinDetails.logo}
+          type={coinDetails.type}
         />
         <SendManyView
           readQr={(index: number): void => setActiveQR(index)}

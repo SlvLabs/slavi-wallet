@@ -32,10 +32,11 @@ const OperationHeader = (props: OperationHeaderProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    backgroundColor: theme.colorsOld.transparent,
+    backgroundColor: 'transparent',
+    paddingTop: 17,
+    paddingBottom: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.maxTransparent,
   },
   header: {
     fontFamily: theme.fonts.default,

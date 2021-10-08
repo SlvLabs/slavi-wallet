@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import {useRoute} from '@react-navigation/core';
 import {CoinSuccessfullySendingRouteProps} from '../../navigation/CoinsStack';
+import LinearGradient from 'react-native-linear-gradient';
 
 const SuccessfullySendingScreen = () => {
   const {t} = useTranslation();
@@ -29,30 +30,32 @@ const SuccessfullySendingScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>{t('Success')}</Text>
-      </View>
-      <View style={styles.content}>
-        <CustomIcon name={'check'} size={256} color={theme.colorsOld.green} />
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>{t('Successfully sent')}</Text>
-          <Text style={styles.description}>
-            {Object.keys(route.params.recipients).length > 1
-              ? t('To addresses')
-              : t('To address')}
-          </Text>
-          {route.params.recipients.map(({address, amount}, index) => (
-            <Text
-              style={{...styles.description, ...styles.boldText}}
-              key={`recipient_${index}`}>
-              {`${address}: ${amount} ${route.params.ticker}`}
-            </Text>
-          ))}
+      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>{t('Success')}</Text>
         </View>
-      </View>
-      <View style={styles.controls}>
-        <SolidButton title={t('Home')} onPress={homeOnPress} />
-      </View>
+        <View style={styles.content}>
+          <CustomIcon name={'check'} size={256} color={theme.colors.gold2} />
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.description}>{t('Successfully sent')}</Text>
+            <Text style={styles.description}>
+              {Object.keys(route.params.recipients).length > 1
+                ? t('To addresses')
+                : t('To address')}
+            </Text>
+            {route.params.recipients.map(({address, amount}, index) => (
+              <Text
+                style={{...styles.description, ...styles.boldText}}
+                key={`recipient_${index}`}>
+                {`${address}: ${amount} ${route.params.ticker}`}
+              </Text>
+            ))}
+          </View>
+        </View>
+        <View style={styles.controls}>
+          <SolidButton title={t('Home')} onPress={homeOnPress} />
+        </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -60,8 +63,6 @@ const SuccessfullySendingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 64,
-    paddingBottom: 64,
   },
   headerContainer: {
     alignItems: 'center',
@@ -72,9 +73,8 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: 48,
-    lineHeight: 56,
-    letterSpacing: 0.1,
-    color: theme.colorsOld.darkGray,
+    lineHeight: 48,
+    color: theme.colors.gold2,
   },
   content: {
     alignItems: 'center',
@@ -87,8 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 14,
     lineHeight: 16,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.lightGray,
+    color: theme.colors.lightGray,
     textTransform: 'uppercase',
   },
   controls: {
@@ -102,6 +101,11 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
   },
+  gradient: {
+    flex: 1,
+    paddingTop: 64,
+    paddingBottom: 64,
+  }
 });
 
 export default SuccessfullySendingScreen;

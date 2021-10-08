@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import CustomIcon from '../../custom-icon/custom-icon';
-import Card from '../../view/card';
 import theme from '../../../theme';
 
 export interface IconTextWithLabelProps {
@@ -12,18 +11,18 @@ export interface IconTextWithLabelProps {
 
 const IconTextWithLabel = (props: IconTextWithLabelProps) => {
   return (
-    <Card style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.label}>{props.label}</Text>
       <View style={styles.valueContainer}>
         <CustomIcon
           name={props.icon}
           size={16}
-          color={theme.colorsOld.pink}
+          color={theme.colors.textLightGray}
           style={styles.icon}
         />
         <Text style={styles.value}>{props.text}</Text>
       </View>
-    </Card>
+    </View>
   );
 };
 
@@ -32,9 +31,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    marginRight: 0,
-    marginLeft: 0,
   },
   valueContainer: {
     flexDirection: 'row',
@@ -44,11 +40,10 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 14.4,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.lightGray,
+    fontWeight: 'normal',
+    fontSize: 15,
+    lineHeight: 22,
+    color: theme.colors.textLightGray,
   },
   icon: {
     marginRight: 5,
@@ -56,11 +51,10 @@ const styles = StyleSheet.create({
   value: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 14.4,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
   },
 });
 

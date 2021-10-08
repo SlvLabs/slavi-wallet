@@ -89,11 +89,11 @@ const styles = StyleSheet.create({
   showAllText: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    letterSpacing: 0.4,
-    fontSize: 10,
-    lineHeight: 10,
-    color: theme.colorsOld.pink,
+    fontWeight: '500',
+    letterSpacing: 0.01,
+    fontSize: 12,
+    lineHeight: 28,
+    color: theme.colors.gold,
     textTransform: 'uppercase',
   },
 });

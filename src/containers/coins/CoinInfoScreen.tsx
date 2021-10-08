@@ -67,6 +67,7 @@ const CoinInfoScreen = () => {
             fiatBalance={data.fiatBalance}
             fiatTicker={data.fiat}
             logo={data.logo}
+            type={data.type}
             extraContent={
               <CoinControlButtons
                 onPressExchange={onPressExchange}

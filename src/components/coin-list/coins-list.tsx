@@ -3,6 +3,7 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import CoinsListElement, {CoinDisplayData} from './coins-list-element';
 import theme from '../../theme';
+import CoinListElementSoon from './coin-list-element-soon';
 
 export enum showCoinsEnum {
   onlyShown = 0,
@@ -47,6 +48,7 @@ const CoinsList = (props: CoinListProps) => {
 
   return (
     <View style={styles.container}>
+      <CoinListElementSoon logo={'/images/matic.png'} name={'Polygon'} ticker={'MATIC'}/>
       {props.coins && props.coins.length > 0 ? (
         props.coins.map(renderItem)
       ) : (

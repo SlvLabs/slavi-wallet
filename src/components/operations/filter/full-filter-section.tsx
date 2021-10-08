@@ -38,11 +38,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    letterSpacing: 0.4,
-    fontSize: 16,
-    lineHeight: 19,
-    color: theme.colorsOld.gray,
+    fontWeight: '500',
+    letterSpacing: 0.01,
+    fontSize: 18,
+    lineHeight: 28,
+    color: theme.colors.white,
   },
   rightElementContainer: {},
   content: {

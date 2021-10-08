@@ -34,7 +34,6 @@ const AmountInput = (props: AmountInputProps) => {
   };
 
   const onAmountChange = (inputValue: string) => {
-    console.log('AmountInput: ' + inputValue);
     setAmount(inputValue);
     onChange(inputValue, false);
   };
@@ -55,7 +54,7 @@ const AmountInput = (props: AmountInputProps) => {
             inputType={DecimalType.Real}
             buttonText={t('Max')} //TODO: Optional
             onButtonPress={onMaxPress}
-            placeholder={props.label}
+            label={props.label}
           />
         </View>
       </View>

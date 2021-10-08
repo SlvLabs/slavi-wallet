@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   container: {},
   button: {},
   buttonTitle: {
-    color: theme.colorsOld.pink,
+    color: theme.colors.darkGreen1,
   },
   centeredView: {
     flex: 1,

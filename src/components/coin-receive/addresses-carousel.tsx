@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Carousel from 'react-native-snap-carousel';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import QrView from './qr-view';
@@ -28,7 +28,9 @@ export interface AddressesCarouselProps {
 
 const AddressesCarousel = (props: AddressesCarouselProps) => {
   const refs = useRef<any>();
-  let carousel = useRef<Carousel<any> | null>();
+  let carousel = useRef<Carousel<any> | null>(null);
+
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const _renderItem = useCallback(
     ({item, index}) => {
@@ -91,6 +93,8 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
     }
   }, [onSnapItem, props.addresses]);
 
+  useEffect(() => setCurrentIndex(carousel.current?.currentIndex || 0), [carousel.current?.currentIndex]);
+
   const snapToNext = useCallback(() => {
     if (carousel.current) {
       carousel.current.snapToNext();
@@ -105,26 +109,28 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
 
   return (
     <View style={styles.carouselContainer}>
-      <CarouselSlideButton icon={leftChevron} onPress={snapToPrev} />
-      <Carousel
-        renderItem={_renderItem}
-        data={props.addresses}
-        sliderWidth={264}
-        sliderHeight={700}
-        itemWidth={200}
-        loop={false}
-        enableSnap={true}
-        shouldOptimizeUpdates={true}
-        firstItem={0}
-        onSnapToItem={onSnapItem}
-        layout={'default'}
-        inactiveSlideOpacity={-1}
-        ref={c => {
-          carousel.current = c;
-        }}
-        enableMomentum={true}
-      />
-      <CarouselSlideButton icon={rightChevron} onPress={snapToNext} />
+      {currentIndex > 0 && <CarouselSlideButton icon={leftChevron} onPress={snapToPrev} />}
+      <View style={styles.carouselMargin}>
+        <Carousel
+          renderItem={_renderItem}
+          data={props.addresses}
+          sliderWidth={264}
+          sliderHeight={700}
+          itemWidth={200}
+          loop={false}
+          enableSnap={true}
+          shouldOptimizeUpdates={true}
+          firstItem={0}
+          onSnapToItem={onSnapItem}
+          layout={'default'}
+          inactiveSlideOpacity={-1}
+          ref={c => {
+            carousel.current = c;
+          }}
+          enableMomentum={true}
+        />
+      </View>
+      {currentIndex < (props.addresses.length - 1) && <CarouselSlideButton icon={rightChevron} onPress={snapToNext} />}
     </View>
   );
 };
@@ -137,7 +143,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingRight: 16,
     paddingLeft: 16,
+    marginTop: 24,
     flex: 1,
   },
+  carouselMargin: {
+    marginRight: 16,
+    marginLeft: 16,
+  }
 });
 export default AddressesCarousel;

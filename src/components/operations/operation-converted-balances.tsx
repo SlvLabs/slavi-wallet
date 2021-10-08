@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, ViewStyle, Text, TextStyle} from 'react-native';
 import theme from '../../theme';
-import {Icon} from 'react-native-elements';
 
 export interface OperationConvertedBalancesProps {
   cryptoBalance: string;
@@ -19,12 +18,9 @@ const OperationConvertedBalances = (props: OperationConvertedBalancesProps) => {
         {`${props.cryptoBalance} ${props.cryptoTicker}`}
       </Text>
       <View style={styles.delimiter}>
-        <Icon
-          name={'circle'}
-          type={'material'}
-          size={4}
-          color={theme.colorsOld.lightGray}
-        />
+        <Text style={{...styles.fiatBalance, ...props.textStyle}}>
+          |
+        </Text>
       </View>
       <Text style={{...styles.fiatBalance, ...props.textStyle}}>
         {`${props.fiatBalance} ${props.fiatTicker}`}
@@ -38,29 +34,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   cryptoBalance: {
-    fontFamily: theme.fonts.default,
+    ontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    letterSpacing: 0.4,
-    fontSize: 10,
-    lineHeight: 10,
-    color: theme.colorsOld.lightGray,
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.lightGray,
     textTransform: 'uppercase',
   },
   fiatBalance: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    letterSpacing: 0.4,
-    fontSize: 10,
-    lineHeight: 10,
-    color: theme.colorsOld.lightGray,
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 16,
+    color: theme.colors.lightGray,
     textTransform: 'uppercase',
   },
   delimiter: {
     justifyContent: 'center',
-    paddingLeft: 2,
-    paddingRight: 2,
+    paddingLeft: 6,
+    paddingRight: 6,
   },
 });
 

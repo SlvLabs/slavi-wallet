@@ -85,7 +85,7 @@ const AddressesFilterModal = (props: AddressesFilterModalProps) => {
       title={t('Select addresses')}
       rightIconName={'check'}
       rightIconOnPress={submit}
-      rightIconColor={theme.colorsOld.gray}>
+      rightIconColor={theme.colors.green}>
       <ScrollView keyboardShouldPersistTaps={'handled'}>
         <SearchInput
           containerStyle={styles.search}

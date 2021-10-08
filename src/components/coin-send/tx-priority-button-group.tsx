@@ -38,6 +38,7 @@ const TxPriorityButtonGroup = (props: TxPriorityButtonGroupProps) => {
           <SolidButton
             title={title}
             buttonStyle={styles.button}
+            containerStyle={styles.buttonContainer}
             onPress={() => props.onSelected(index)}
             key={key}
           />
@@ -48,6 +49,7 @@ const TxPriorityButtonGroup = (props: TxPriorityButtonGroupProps) => {
         <Button
           title={title}
           buttonStyle={styles.button}
+          titleStyle={styles.buttonTitle}
           onPress={() => props.onSelected(index)}
           key={key}
         />
@@ -70,14 +72,14 @@ const TxPriorityButtonGroup = (props: TxPriorityButtonGroupProps) => {
               name={'settings'}
               type={'feather'}
               size={12}
-              color={theme.colorsOld.pink}
+              color={theme.colors.darkGreen1}
               style={styles.advancedIcon}
             />
             <Text style={styles.advancedLabel}>{t('Advanced')}</Text>
           </TouchableOpacity>
         )}
       </View>
-      <View style={{...styles.buttonContainer, ...props.buttonsContainerStyle}}>
+      <View style={{...styles.buttonsContainer, ...props.buttonsContainerStyle}}>
         {buttons.map(renderButton)}
       </View>
     </View>
@@ -97,20 +99,33 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.2,
-    color: theme.colorsOld.lightGray,
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 28,
+    letterSpacing: 0.01,
+    color: theme.colors.white,
   },
-  buttonContainer: {
+  buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
   button: {
-    width: 88,
-    height: 36,
+    width: 73,
+    height: 48,
     marginRight: 8,
+    borderRadius: 8,
+    backgroundColor: theme.colors.cardBackground3,
+  },
+  buttonTitle: {
+    color: theme.colors.textLightGray,
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 16,
+    textTransform: 'uppercase',
+  },
+  buttonContainer: {
+    borderRadius: 8,
   },
   advancedContainer: {
     flexDirection: 'row',
@@ -124,7 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     letterSpacing: 0.1,
-    color: theme.colorsOld.pink,
+    color: theme.colors.darkGreen1,
   },
   advancedIcon: {
     marginRight: 4,

@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   mainListLinks: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 16,
   },
   infoParamsList: {},
   descriptionContainer: {

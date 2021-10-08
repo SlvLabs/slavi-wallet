@@ -10,6 +10,7 @@ import EditAddressButton from '../../components/coin-receive/edit-address-button
 import AddressesCarousel from '../../components/coin-receive/addresses-carousel';
 import {useInnerAddressBookService} from '@slavi/wallet-core';
 import theme from '../../theme';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ReceiveScreen = () => {
   const route = useRoute<CoinReceiveRouteProps>();
@@ -68,42 +69,46 @@ const ReceiveScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps="handled">
-        <CoinBalanceHeader
-          logo={data.logo}
-          balance={data.balance}
-          name={data.name}
-          cryptoBalance={data.cryptoBalance}
-          cryptoTicker={data.crypto}
-          fiatBalance={data.fiatBalance}
-          fiatTicker={data.fiat}
-        />
-        <AddressesCarousel
-          addresses={addresses.map(element => ({
-            address: element.address,
-            name: element.name,
-            id: element.id,
-          }))}
-          qrSize={200}
-          onDataChange={onQrChange}
-          amount={amount}
-          coin={coin}
-          onSnapToItem={onSnapToItem}
-          onEdit={editRecvAddr}
-        />
-        {/* TODO: check address type */}
-        <ReceiveControlButtons
-          address={address || ''}
-          dataToShare={qr}
-          editAddress={editRecvAddr}
-          editAmount={onAmountChange}
-        />
-        <EditAddressButton
-          title={'Get new address'}
-          nameInputLabel={'Address name'}
-          onSubmit={getNewRecvAddr}
-        />
-      </ScrollView>
+      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <CoinBalanceHeader
+            logo={data.logo}
+            balance={data.balance}
+            name={data.name}
+            cryptoBalance={data.cryptoBalance}
+            cryptoTicker={data.crypto}
+            fiatBalance={data.fiatBalance}
+            fiatTicker={data.fiat}
+            type={data.type}
+          />
+          <AddressesCarousel
+            addresses={addresses.map(element => ({
+              address: element.address,
+              name: element.name,
+              id: element.id,
+            }))}
+            qrSize={200}
+            onDataChange={onQrChange}
+            amount={amount}
+            coin={coin}
+            onSnapToItem={onSnapToItem}
+            onEdit={editRecvAddr}
+          />
+          {/* TODO: check address type */}
+          <ReceiveControlButtons
+            address={address || ''}
+            dataToShare={qr}
+            editAddress={editRecvAddr}
+            editAmount={onAmountChange}
+            containerStyle={styles.receiveControlButtons}
+          />
+          <EditAddressButton
+            title={'Get new address'}
+            nameInputLabel={'Address name'}
+            onSubmit={getNewRecvAddr}
+          />
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -113,6 +118,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colorsOld.white,
   },
+  gradient: {
+    flex: 1,
+  },
+  receiveControlButtons: {
+    marginTop: 24,
+  }
 });
 
 export default ReceiveScreen;

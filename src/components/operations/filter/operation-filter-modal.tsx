@@ -104,7 +104,7 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
       title={t('Filters')}
       rightIconName={'check'}
       rightIconOnPress={submit}
-      rightIconColor={theme.colorsOld.gray}>
+      rightIconColor={theme.colors.green}>
       <ScrollView>
         <FullFilterCoinSection
           selectedCoins={selectedCoins}

@@ -15,6 +15,7 @@ export default {
     red: '#E8513B',
     lightGreen: '#26C672',
     darkGreen: '#17DC90',
+    darkGreen1: '#4DA683',
     borderGreen: '#12D489',
     blackoutTransparent: 'rgba(13, 13, 13, 0.6)',
     grayDark: '#181A1F',
@@ -24,7 +25,15 @@ export default {
     textDarkGray: '#3A3C44',
     darkBackground: 'rgba(10,10,12, 0.9)',
     mediumBackground: 'rgba(10,10,12, 0.4)',
+    darkBackground2: 'rgba(21,21,21, 0.8)',
+    lightBackground: 'rgba(128, 144,173, 0.1)',
+    maxDarkBackground: '#0C1317',
     gold2: '#EACD6F',
+    cardBackground2: '#0E1018',
+    cardBackground3: '#13151A',
+    textLightGray1: '#676A78',
+    textLightGray2: '#E1E1E1',
+    textLightGray3: '#828799',
   },
   /** @deprecated */
   colorsOld: {

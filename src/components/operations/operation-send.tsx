@@ -9,9 +9,9 @@ const OperationSend = (props: OperationElementProps) => {
     <AbstractOperationMovement
       {...props}
       addresses={
-        props.operation.to
+        props.operation.to && props.operation.to.length > 0
           ? props.operation.to.map((element: ProcessedMovement) => element.name)
-          : []
+          : ['Fee']
       }
       balanceType={Type.negative}
     />

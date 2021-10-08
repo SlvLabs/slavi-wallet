@@ -43,7 +43,7 @@ const FullFilterDateSection = (props: FullFilterDateSectionProps) => {
       />
       <TouchableOpacity style={styles.container} onPress={showDatePicker}>
         <Text style={styles.text}>{datesStr}</Text>
-        <CustomIcon name={'calendar'} size={24} color={theme.colorsOld.blue} />
+        <CustomIcon name={'calendar'} size={24} color={theme.colors.textLightGray3} />
       </TouchableOpacity>
     </FullFilterSection>
   );
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: theme.colorsOld.cultured,
+    backgroundColor: theme.colors.maxDarkBackground,
     padding: 16,
     borderRadius: 16,
   },
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     fontSize: 12,
     lineHeight: 14,
-    color: theme.colorsOld.lightGray,
+    color: theme.colors.textLightGray3,
   },
 });
 

@@ -19,7 +19,7 @@ export interface ReceiveControlButtonsProps {
 }
 
 const defaultIconSize = 32;
-const defaultIconColor = theme.colorsOld.gray;
+const defaultIconColor = theme.colors.gold2;
 
 const ReceiveControlButtons = (props: ReceiveControlButtonsProps) => {
   const {t} = useTranslation();

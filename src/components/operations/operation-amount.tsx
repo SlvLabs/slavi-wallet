@@ -16,14 +16,9 @@ export interface OperationAmountProps {
 }
 
 const OperationAmount = (props: OperationAmountProps) => {
-  const extraTextStyle =
-    props.type === Type.negative ? styles.negativeText : styles.positiveText;
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Text style={{...styles.sing, ...extraTextStyle, ...props.textStyle}}>
-        {props.type === Type.positive && '+'}
-      </Text>
-      <Text style={{...styles.amount, ...extraTextStyle, ...props.textStyle}}>
+      <Text style={{...styles.amount, ...props.textStyle}}>
         {props.amount} {props.ticker}
       </Text>
     </View>
@@ -37,30 +32,14 @@ const styles = StyleSheet.create({
     paddingRight: 4,
     paddingLeft: 4,
   },
-  sing: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    letterSpacing: 0.4,
-    fontSize: 12,
-    lineHeight: 12,
-    color: theme.colorsOld.green,
-    textTransform: 'uppercase',
-  },
   amount: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    letterSpacing: 0.4,
-    fontSize: 12,
-    lineHeight: 12,
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
     textTransform: 'uppercase',
-  },
-  positiveText: {
-    color: theme.colorsOld.green,
-  },
-  negativeText: {
-    color: theme.colorsOld.gray,
   },
 });
 

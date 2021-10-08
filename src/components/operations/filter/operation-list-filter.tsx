@@ -133,7 +133,7 @@ const OperationListFilter = (props: OperationListFilterProps) => {
       horizontal={true}
       showsHorizontalScrollIndicator={false}>
       <TouchableOpacity style={styles.chip} onPress={showFilter}>
-        <CustomIcon name={'full-filter'} size={18} />
+        <CustomIcon name={'full-filter'} size={18} color={theme.colors.green}/>
       </TouchableOpacity>
       <ScrollFilterChip
         text={t('Coins')}
@@ -214,14 +214,15 @@ const OperationListFilter = (props: OperationListFilterProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingLeft: 16,
   },
   chip: {
-    backgroundColor: theme.colorsOld.cultured,
-    borderRadius: 16,
+    backgroundColor: theme.colors.cardBackground3,
+    borderRadius: 8,
     paddingTop: 8,
     paddingBottom: 8,
-    paddingRight: 16,
-    paddingLeft: 16,
+    paddingRight: 17,
+    paddingLeft: 17,
     justifyContent: 'center',
     flex: 1,
   },

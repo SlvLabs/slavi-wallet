@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-elements';
+import theme from '../../theme';
 
 export interface AddressViewProps {
   address: string;
@@ -42,11 +43,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
     fontWeight: 'bold',
+    color: theme.colors.white,
   },
   address: {
     fontSize: 16,
     textAlign: 'center',
     marginTop: 10,
+    color: theme.colors.white,
   },
 });
 

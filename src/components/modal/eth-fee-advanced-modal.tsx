@@ -5,6 +5,7 @@ import DecimalInput, {DecimalType} from '../controls/decimal-input';
 import SolidButton from '../buttons/solid-button';
 import Button from '../buttons/button';
 import BaseModal, {ModalProps} from './base-modal';
+import theme from '../../theme';
 
 export interface EthFeeAdvancedModalProps extends ModalProps {
   onAccept: (gasPrice?: string, gasLimit?: string) => void;
@@ -43,12 +44,16 @@ const EthFeeAdvancedModal = (props: EthFeeAdvancedModalProps) => {
         value={gasPrice || props.defaultGasPrice}
         inputType={DecimalType.Integer}
         containerStyle={styles.gasPrice}
+        inputStyle={styles.inputStyle}
+        inputContainerStyle={styles.inputContainerStyle}
       />
       <DecimalInput
         onChange={setGasLimit}
         placeholder={t('Gas limit')}
         value={gasLimit || props.defaultGasLimit}
         inputType={DecimalType.Integer}
+        inputStyle={styles.inputStyle}
+        inputContainerStyle={styles.inputContainerStyle}
       />
       <View
         style={{
@@ -65,6 +70,7 @@ const EthFeeAdvancedModal = (props: EthFeeAdvancedModalProps) => {
           title={t('Ok')}
           onPress={() => props.onAccept(gasPrice, gasLimit)}
           buttonStyle={{...styles.acceptButton, ...props.acceptButtonStyle}}
+          containerStyle={styles.acceptButtonContainer}
         />
       </View>
     </BaseModal>
@@ -97,7 +103,15 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 8,
   },
-  header: {},
+  header: {
+    color: theme.colors.textLightGray,
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 16,
+    marginBottom: 24,
+    textAlign: 'center'
+  },
   controlsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -106,15 +120,28 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   acceptButton: {
-    width: 88,
+    width: 120,
+    borderRadius: 8,
+  },
+  acceptButtonContainer: {
+    borderRadius: 8,
   },
   cancelButton: {
-    width: 88,
+    width: 120,
+    borderRadius: 8,
+    backgroundColor: theme.colors.cardBackground3
   },
   gasPrice: {
     paddingBottom: 16,
+    backgroundColor: theme.colors.grayDark,
   },
   gasLimit: {},
+  inputStyle: {
+    flex: 0,
+  },
+  inputContainerStyle: {
+    backgroundColor: theme.colors.dark,
+  },
   content: {
     alignSelf: 'stretch',
     justifyContent: 'space-between',

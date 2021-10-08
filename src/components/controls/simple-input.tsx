@@ -27,6 +27,8 @@ export interface SimpleInputProps {
   inputStyle?: ViewStyle;
   errorContainerStyle?: ViewStyle;
   errorStyle?: TextStyle;
+  label?: string;
+  labelStyle?: TextStyle;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -37,7 +39,7 @@ const SimpleInput = (props: SimpleInputProps) => {
 
   if (props.disabled) {
     disabledStyle = {
-      backgroundColor: theme.colorsOld.cultured,
+      backgroundColor: theme.colors.borderGray,
       borderWidth: 1,
       borderColor: theme.colorsOld.darkGray,
     };
@@ -45,9 +47,9 @@ const SimpleInput = (props: SimpleInputProps) => {
 
   if (props.errorMessage) {
     errorStyle = {
-      backgroundColor: theme.colorsOld.white,
+      backgroundColor: theme.colors.grayDark,
       borderWidth: 1,
-      borderColor: theme.colorsOld.red,
+      borderColor: theme.colors.red,
     };
   }
 
@@ -69,17 +71,23 @@ const SimpleInput = (props: SimpleInputProps) => {
           ...errorStyle,
           ...props.inputContainerStyle,
         }}>
-        <TextInput
-          onChangeText={props.onChange}
-          value={props.value}
-          placeholder={props.placeholder}
-          style={{...styles.input, ...props.inputStyle}}
-          placeholderTextColor={theme.colorsOld.lightGray}
-          selectTextOnFocus={true}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          keyboardType={props.keyboardType}
-        />
+        <View style={styles.leftCol}>
+          {props.label && (
+            <View>
+              <Text style={styles.label}>{props.label}</Text>
+            </View>
+          )}
+          <TextInput
+            onChangeText={props.onChange}
+            value={props.value}
+            placeholder={props.placeholder}
+            style={{...styles.input, ...props.inputStyle}}
+            selectTextOnFocus={true}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            keyboardType={props.keyboardType}
+          />
+        </View>
         {props.buttonText && (
           <TouchableOpacity
             onPress={props.onButtonPress}
@@ -110,37 +118,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     textAlignVertical: 'center',
-    backgroundColor: theme.colorsOld.cultured,
-    borderRadius: 16,
+    backgroundColor: theme.colors.grayDark,
+    borderRadius: 8,
     padding: 16,
   },
   input: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.2,
+    fontWeight: 'normal',
+    fontSize: 18,
+    lineHeight: 21,
+    letterSpacing: 0.02,
+    color: theme.colors.textLightGray2,
     padding: 0,
     flex: 10,
-  },
-  titleStyle: {
-    color: theme.colorsOld.lightGray,
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 14,
-    letterSpacing: 0.2,
   },
   button: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: 12,
-    lineHeight: 12,
-    letterSpacing: 0.1,
-    color: theme.colorsOld.blue,
+    lineHeight: 28,
+    letterSpacing: 0.01,
+    color: theme.colors.darkGreen1,
     textTransform: 'uppercase',
     textAlign: 'right',
   },
@@ -161,15 +161,28 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 12,
     letterSpacing: 0.1,
-    color: theme.colorsOld.red,
+    color: theme.colors.red,
   },
   focused: {
-    backgroundColor: theme.colorsOld.white,
-    borderRadius: 16,
+    backgroundColor: theme.colors.grayDark,
+    borderRadius: 8,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: theme.colorsOld.cultured,
+    borderColor: theme.colors.borderGray,
   },
+  label: {
+    ontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 14,
+    letterSpacing: 0.02,
+    color: theme.colors.textLightGray1,
+  },
+  leftCol: {
+    flexDirection: 'column',
+    flex: 8,
+  }
 });
 
 export default SimpleInput;

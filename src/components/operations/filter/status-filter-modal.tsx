@@ -60,7 +60,7 @@ const StatusFilterModal = (props: StatusFilterModalProps) => {
       title={t('Select statuses')}
       rightIconName={'check'}
       rightIconOnPress={submit}
-      rightIconColor={theme.colorsOld.gray}>
+      rightIconColor={theme.colors.green}>
       <ScrollView>
         <FullFilterChipList
           chips={statuses}

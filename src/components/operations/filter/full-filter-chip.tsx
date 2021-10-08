@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import theme from '../../../theme';
+import LinearGradient from 'react-native-linear-gradient';
 
 export interface FullFilterChipProps {
   title: string;
@@ -9,49 +10,55 @@ export interface FullFilterChipProps {
 }
 
 const FullFilterChip = (props: FullFilterChipProps) => {
-  const extraContainerStyle = props.selected
-    ? styles.activeContainer
-    : styles.inactiveContainer;
-  const extraTitleStyle = props.selected
-    ? styles.activeTitle
-    : styles.inactiveTitle;
   return (
     <TouchableOpacity
-      style={{...styles.container, ...extraContainerStyle}}
+      style={styles.container}
       onPress={props.onPress}>
-      <Text style={{...styles.title, ...extraTitleStyle}}>{props.title}</Text>
+      {props.selected ? (
+        <LinearGradient {...theme.gradients.button} style={styles.contentContainer} >
+          <Text style={{...styles.title, ...styles.activeTitle}}>
+            {props.title}
+          </Text>
+        </LinearGradient>
+      ) : (
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>
+            {props.title}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
-    padding: 16,
     justifyContent: 'center',
-    margin: 4,
-  },
-  inactiveContainer: {
-    backgroundColor: theme.colorsOld.cultured,
-  },
-  activeContainer: {
-    backgroundColor: theme.colorsOld.pink,
+    margin: 8,
   },
   title: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    letterSpacing: 0.4,
-    fontSize: 10,
-    lineHeight: 10,
+    fontWeight: '500',
+    letterSpacing: 0.01,
+    fontSize: 12,
+    lineHeight: 16,
     textTransform: 'uppercase',
-  },
-  inactiveTitle: {
-    color: theme.colorsOld.gray,
+    color: theme.colors.textLightGray3
   },
   activeTitle: {
-    color: theme.colorsOld.white,
+    color: theme.colors.white,
   },
+  contentContainer: {
+    flex: 1,
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingRight: 20,
+    paddingLeft: 20,
+    borderRadius: 8,
+    justifyContent: 'center',
+    backgroundColor: theme.colors.cardBackground3,
+  }
 });
 
 export default FullFilterChip;

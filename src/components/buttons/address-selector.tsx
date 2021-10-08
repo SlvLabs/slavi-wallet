@@ -15,17 +15,20 @@ import AddressSelectorModal, {
 import {useTranslation} from 'react-i18next';
 
 export interface AddressSelectorProps {
-  placeholder: string;
   addresses: AddressEntry[];
   onSelect: (index: number) => void;
+  placeholder?: string;
+  label?: string;
   selectedAddress?: number;
   containerStyle?: ViewStyle;
   placeholderStyle?: TextStyle;
   iconSize?: number;
+  iconColor?: string;
   textStyle?: TextStyle;
 }
 
 const defaultIconSize = 16;
+const defaultIconColor = theme.colors.lightGray;
 
 const AddressSelector = (props: AddressSelectorProps) => {
   const {t} = useTranslation();
@@ -53,11 +56,19 @@ const AddressSelector = (props: AddressSelectorProps) => {
       <TouchableOpacity
         style={{...styles.container, ...props.containerStyle}}
         onPress={showModal}>
-        <Text style={textStyle}>{text}</Text>
+        <View>
+          {props.label && (
+            <View>
+              <Text style={styles.label}>{props.label}</Text>
+            </View>
+          )}
+          <Text style={textStyle}>{text}</Text>
+        </View>
         <Icon
           name={'down'}
           type={'antdesign'}
           size={props.iconSize || defaultIconSize}
+          color={props.iconColor || defaultIconColor}
         />
       </TouchableOpacity>
       <AddressSelectorModal
@@ -74,8 +85,8 @@ const AddressSelector = (props: AddressSelectorProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colorsOld.cultured,
-    borderRadius: 16,
+    backgroundColor: theme.colors.grayDark,
+    borderRadius: 8,
     paddingLeft: 16,
     paddingRight: 16,
     paddingTop: 22,
@@ -91,7 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     letterSpacing: 0.2,
-    color: theme.colorsOld.lightGray,
+    color: theme.colors.textLightGray1,
   },
   modal: {
     flex: 1,
@@ -102,11 +113,21 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 12,
+    lineHeight: 14,
+    letterSpacing: 0.02,
+    color: theme.colors.textLightGray2,
+  },
+  label: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,
     lineHeight: 14,
-    letterSpacing: 0.2,
-    color: theme.colorsOld.gray,
+    letterSpacing: 0.02,
+    color: theme.colors.textLightGray1,
+    marginBottom: 8,
   },
 });
 

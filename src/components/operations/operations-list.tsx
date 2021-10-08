@@ -19,6 +19,7 @@ export interface OperationsListProps {
   onEndReached: () => void;
   filter: (params: OperationListParams) => void;
   containerStyle?: ViewStyle;
+  placeholderStyle?: ViewStyle;
 }
 
 interface Section {
@@ -67,13 +68,15 @@ const OperationsList = (props: OperationsListProps) => {
             style={styles.list}
           />
         ) : (
-          <View style={styles.placeholder}>
-            <Icon
-              type={'feather'}
-              name={'grid'}
-              size={200}
-              color={theme.colorsOld.secondary}
-            />
+          <View style={{...styles.placeholder, ...props.placeholderStyle}}>
+            <View style={styles.iconContainer}>
+              <Icon
+                type={'feather'}
+                name={'grid'}
+                size={64}
+                color={theme.colors.textLightGray1}
+              />
+            </View>
             <Text style={styles.placeholderText}>
               {t('Operations not found')}
             </Text>
@@ -96,6 +99,8 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   list: {},
   placeholder: {
@@ -103,10 +108,18 @@ const styles = StyleSheet.create({
     height: '96%',
   },
   placeholderText: {
-    color: theme.colorsOld.secondary,
-    fontSize: 28,
+    color: theme.colors.textLightGray1,
+    fontSize: 20,
+    lineHeight: 20,
+    marginTop: 24,
     textAlign: 'center',
   },
+  iconContainer: {
+    backgroundColor: theme.colors.mediumBackground,
+    padding: 30,
+    alignSelf: 'center',
+    borderRadius: 16,
+  }
 });
 
 export default OperationsList;

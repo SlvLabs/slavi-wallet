@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import SolidButton from '../buttons/solid-button';
 import SimpleInput from '../controls/simple-input';
 import BaseModal, {ModalProps} from './base-modal';
+import theme from '../../theme';
 
 export interface SimpleInputModalProps extends ModalProps {
   onSubmit: (name?: string) => void;
@@ -30,7 +31,13 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
       onCancel={props.onCancel}
       modalStyle={props.modalStyle}
       contentStyle={props.contentStyle}>
-      <SimpleInput onChange={setName} placeholder={props.label} value={value} />
+      <SimpleInput
+        onChange={setName}
+        label={props.label}
+        value={value}
+        inputStyle={styles.input}
+        inputContainerStyle={styles.inputContainerStyle}
+      />
       <SolidButton
         onPress={_onSubmit}
         title={t('Save')}
@@ -42,6 +49,13 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
 
 const styles = StyleSheet.create({
   button: {},
+  input: {
+    flex: 0
+  },
+  inputContainerStyle: {
+    marginBottom: 24,
+    backgroundColor: theme.colors.dark
+  }
 });
 
 export default SimpleInputModal;

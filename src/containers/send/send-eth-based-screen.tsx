@@ -31,6 +31,7 @@ import SolidButton from '../../components/buttons/solid-button';
 import AddressSelector from '../../components/buttons/address-selector';
 import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -254,75 +255,78 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <CoinBalanceHeader
-          balance={accountBalance}
-          name={coinDetails.name}
-          cryptoTicker={coinDetails.crypto}
-          fiatTicker={coinDetails.fiat}
-          logo={coinDetails.logo}
-        />
-        <AddressSelector
-          placeholder={t('From account')}
-          containerStyle={styles.addressSelector}
-          addresses={balancesState.balances}
-          onSelect={setSenderIndex}
-          selectedAddress={senderIndex}
-        />
-        <View style={styles.sendContainer}>
-          <SendView
-            readQr={() => setActiveQR(true)}
-            coin={coinDetails.ticker}
-            balance={balance}
-            recipient={recipient}
-            onRecipientChange={onRecipientChange}
-            maxIsAllowed={true}
-            setRecipientPayFee={() => setRecipientPayFee(true)}
-            errors={voutError}
+      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
+        <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+          <CoinBalanceHeader
+            balance={accountBalance}
+            name={coinDetails.name}
+            cryptoTicker={coinDetails.crypto}
+            fiatTicker={coinDetails.fiat}
+            logo={coinDetails.logo}
+            type={coinDetails.type}
           />
-        </View>
-        <TxPriorityButtonGroup
-          label={t('Transaction fee')}
-          selectedIndex={txPriority}
-          onSelected={setTxPriority}
-          advancedIsAllowed={true}
-          onAdvancedPress={() => setAdvancedModalIsShown(true)}
-        />
-        {!isValid && errors.length > 0 && (
-          <View style={styles.errors}>
-            {errors.map((error, index) => (
-              <AlertRow text={error} key={'general_error_' + index} />
-            ))}
+          <AddressSelector
+            label={t('From account')}
+            containerStyle={styles.addressSelector}
+            addresses={balancesState.balances}
+            onSelect={setSenderIndex}
+            selectedAddress={senderIndex}
+          />
+          <View style={styles.sendContainer}>
+            <SendView
+              readQr={() => setActiveQR(true)}
+              coin={coinDetails.ticker}
+              balance={balance}
+              recipient={recipient}
+              onRecipientChange={onRecipientChange}
+              maxIsAllowed={true}
+              setRecipientPayFee={() => setRecipientPayFee(true)}
+              errors={voutError}
+            />
           </View>
-        )}
-        <View style={styles.submitButton}>
-          <SolidButton
-            title={t('Send')}
-            onPress={onSubmit}
-            disabled={!isValid || locked}
-            loading={locked}
+          <TxPriorityButtonGroup
+            label={t('Transaction fee')}
+            selectedIndex={txPriority}
+            onSelected={setTxPriority}
+            advancedIsAllowed={true}
+            onAdvancedPress={() => setAdvancedModalIsShown(true)}
           />
-        </View>
-        <QrReaderModal
-          visible={activeQR}
-          onQRRead={onQRRead}
-          onClose={() => setActiveQR(false)}
-        />
-        <ConfirmationModal
-          visible={confIsShown}
-          vouts={txResult?.vouts || []}
-          fee={txResult?.fee}
-          onAccept={send}
-          onCancel={cancelConfirmSending}
-        />
-        <EthFeeAdvancedModal
-          visible={advancedModalIsShown}
-          onCancel={() => setAdvancedModalIsShown(false)}
-          onAccept={setAdvancedOptions}
-          defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
-          defaultGasLimit={currentGasLimit}
-        />
-      </ScrollView>
+          {!isValid && errors.length > 0 && (
+            <View style={styles.errors}>
+              {errors.map((error, index) => (
+                <AlertRow text={error} key={'general_error_' + index} />
+              ))}
+            </View>
+          )}
+          <View style={styles.submitButton}>
+            <SolidButton
+              title={t('Send')}
+              onPress={onSubmit}
+              disabled={!isValid || locked}
+              loading={locked}
+            />
+          </View>
+          <QrReaderModal
+            visible={activeQR}
+            onQRRead={onQRRead}
+            onClose={() => setActiveQR(false)}
+          />
+          <ConfirmationModal
+            visible={confIsShown}
+            vouts={txResult?.vouts || []}
+            fee={txResult?.fee}
+            onAccept={send}
+            onCancel={cancelConfirmSending}
+          />
+          <EthFeeAdvancedModal
+            visible={advancedModalIsShown}
+            onCancel={() => setAdvancedModalIsShown(false)}
+            onAccept={setAdvancedOptions}
+            defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
+            defaultGasLimit={currentGasLimit}
+          />
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -335,7 +339,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   container: {
-    backgroundColor: theme.colorsOld.white,
+    flex: 1,
   },
   sendContainer: {
     paddingLeft: 16,
@@ -346,6 +350,14 @@ const styles = StyleSheet.create({
     marginRight: 16,
     marginBottom: 16,
   },
+  gradient: {
+    flex: 1,
+  },
+  scroll: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  }
 });
 
 export default SendEthBasedScreen;

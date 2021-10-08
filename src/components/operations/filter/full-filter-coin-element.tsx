@@ -21,8 +21,9 @@ export interface FullFilterCoinElementProps {
 }
 
 const FullFilterCoinElement = (props: FullFilterCoinElementProps) => {
+  const containerStyle = props.selected ? {...styles.container, ...styles.containerActive} : styles.container;
   return (
-    <TouchableOpacity style={styles.container} onPress={props.onPress}>
+    <TouchableOpacity style={containerStyle} onPress={props.onPress}>
       <View style={styles.leftColumn}>
         <View style={styles.logoContainer}>
           <Image
@@ -45,7 +46,7 @@ const FullFilterCoinElement = (props: FullFilterCoinElementProps) => {
       <View style={styles.rightColumn}>
         <View style={styles.selectedIndicator}>
           {props.selected && (
-            <CustomIcon name={'check'} size={24} color={theme.colorsOld.pink} />
+            <CustomIcon name={'check'} size={24} color={theme.colors.green} />
           )}
         </View>
       </View>
@@ -56,35 +57,34 @@ const FullFilterCoinElement = (props: FullFilterCoinElementProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: theme.colorsOld.cultured,
+    backgroundColor: theme.colors.lightBackground,
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 8,
     marginTop: 4,
     marginBottom: 4,
     alignItems: 'center',
   },
   logoContainer: {
-    paddingRight: 4,
-    paddingLeft: 4,
+    paddingRight: 8,
+    paddingLeft: 8,
   },
   logo: {
-    width: 24,
-    height: 24,
+    width: 32,
+    height: 32,
   },
   logoPlaceholder: {},
   nameContainer: {
-    paddingRight: 4,
-    paddingLeft: 4,
+    paddingRight: 8,
+    paddingLeft: 8,
     justifyContent: 'center',
   },
   name: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    letterSpacing: 0.4,
-    fontSize: 12,
-    lineHeight: 12,
-    color: theme.colorsOld.gray,
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.textLightGray,
   },
   typeContainer: {
     borderRadius: 4,
@@ -93,18 +93,19 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingBottom: 2,
     justifyContent: 'center',
-    backgroundColor: theme.colorsOld.lightGray,
     textAlignVertical: 'center',
   },
   type: {
+    marginLeft: 8,
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    letterSpacing: 0.4,
+    fontWeight: 'normal',
     fontSize: 10,
-    lineHeight: 10,
-    color: theme.colorsOld.white,
+    lineHeight: 16,
+    color: theme.colors.textLightGray1,
     textTransform: 'uppercase',
+    textAlign: 'left',
+    textAlignVertical: 'center',
   },
   selectedIndicator: {
     justifyContent: 'center',
@@ -119,6 +120,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
+  containerActive: {
+    backgroundColor: theme.colors.maxDarkBackground,
+  }
 });
 
 export default FullFilterCoinElement;

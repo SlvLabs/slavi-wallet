@@ -61,7 +61,7 @@ const SendView = (props: SendViewProps) => {
             <CustomIcon
               name={'close'}
               size={16}
-              color={theme.colorsOld.mistyRose}
+              color={theme.colors.darkGreen1}
             />
           </TouchableOpacity>
         )}
@@ -97,11 +97,11 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: 16,
-    lineHeight: 19,
-    letterSpacing: 0.2,
-    color: theme.colorsOld.pink,
+    lineHeight: 28,
+    letterSpacing: 0.01,
+    color: theme.colors.white,
   },
 });
 

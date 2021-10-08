@@ -6,7 +6,6 @@ import {
   useFiatSelector,
 } from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import OperationsList from '../../operations/operations-list';
-import useCoinsForSelect from '@slavi/wallet-core/src/store/modules/coins/use-coins-for-select';
 
 export interface HistoryViewProps {
   coin: string;
@@ -14,14 +13,10 @@ export interface HistoryViewProps {
 
 const HistoryView = (props: HistoryViewProps) => {
   const {isLoading, operations, updateParams, getMore} = useOperationsList({
-    coin: props.coin,
+    coins: [props.coin],
   });
   const fiat = useFiatSelector() || 'USD';
   const crypto = useCryptoSelector() || 'BTC';
-
-  const coins = useCoinsForSelect(elements =>
-    elements.filter(element => element.id === props.coin),
-  );
 
   return (
     <View style={styles.container}>
@@ -31,7 +26,7 @@ const HistoryView = (props: HistoryViewProps) => {
         cryptoTicker={crypto}
         onEndReached={getMore}
         filter={updateParams}
-        coins={coins}
+        placeholderStyle={styles.placeholder}
       />
       {isLoading && <ActivityIndicator />}
     </View>
@@ -41,8 +36,11 @@ const HistoryView = (props: HistoryViewProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
   },
+  placeholder: {
+    paddingTop: 50,
+  }
 });
 
 export default HistoryView;

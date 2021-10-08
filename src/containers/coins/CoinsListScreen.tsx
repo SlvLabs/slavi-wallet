@@ -21,7 +21,8 @@ const CoinsListScreen = () => {
   // TODO: research
   const [filteredCoins, setFilteredCoins] = useState<DisplayCoinData[]>(coins);
   const [coinsToCard, setCoinsToCart] = useState<DisplayCoinData[]>(coins);
-  const [nameSortDirection, setNameSortDirection] = useState(1);
+  const [defaultSortDirection, setDefaultSortDirection] = useState(1);
+  const [nameSortDirection, setNameSortDirection] = useState(0);
   const [valueSortDirection, setValueSortDirection] = useState(0);
   const fiat = store.useFiatSelector() || 'BTC';
   const crypto = store.useCryptoSelector() || 'USD';
@@ -37,11 +38,13 @@ const CoinsListScreen = () => {
   useEffect(() => {
     if (nameSortDirection === 1) {
       sortByField(filteredCoins, 'name', 0);
-    } else if (valueSortDirection) {
+    } else if (valueSortDirection === 1) {
       sortByField(filteredCoins, 'total', 1);
+    } else if(defaultSortDirection === 1) {
+      sortByField(filteredCoins, 'priority', 1);
     }
     setCoinsToCart([...filteredCoins]);
-  }, [filteredCoins, nameSortDirection, valueSortDirection]);
+  }, [filteredCoins, nameSortDirection, valueSortDirection, coins]);
 
   const onShownChange = (id: string) => {
     let idx = coins.findIndex(coin => coin.id === id);
@@ -59,10 +62,19 @@ const CoinsListScreen = () => {
 
   const sortingMethods: ParamsItem[] = [
     {
+      title: t('Default'),
+      onPress() {
+        setDefaultSortDirection(defaultSortDirection === 0 ? 1 : 0);
+        setValueSortDirection(0);
+        setNameSortDirection(0);
+      }
+    },
+    {
       title: t('By name'),
       onPress: () => {
         setNameSortDirection(nameSortDirection === 0 ? 1 : 0);
         setValueSortDirection(0);
+        setDefaultSortDirection(0);
       },
       isActive: !!nameSortDirection,
     },
@@ -70,6 +82,7 @@ const CoinsListScreen = () => {
       title: t('By btc value'),
       onPress: () => {
         setValueSortDirection(valueSortDirection === 0 ? 1 : 0);
+        setNameSortDirection(0);
         setNameSortDirection(0);
       },
       isActive: !!valueSortDirection,

@@ -75,7 +75,7 @@ const CoinsFilterModal = (props: CoinsFilterModalProps) => {
       title={t('Select coins')}
       rightIconName={'check'}
       rightIconOnPress={submit}
-      rightIconColor={theme.colorsOld.gray}>
+      rightIconColor={theme.colors.green}>
       <ScrollView
         style={styles.container}
         keyboardShouldPersistTaps={'handled'}>
@@ -84,6 +84,7 @@ const CoinsFilterModal = (props: CoinsFilterModalProps) => {
           placeholder={t('Search...')}
           onChange={setFilter}
           value={filter}
+          inputContainerStyle={styles.searchInputStyle}
         />
         <FullFilterCoinList
           coins={filteredCoins}
@@ -100,6 +101,9 @@ const styles = StyleSheet.create({
   container: {},
   search: {
     margin: 16,
+  },
+  searchInputStyle: {
+    backgroundColor: theme.colors.grayDark,
   },
   coinList: {
     margin: 16,

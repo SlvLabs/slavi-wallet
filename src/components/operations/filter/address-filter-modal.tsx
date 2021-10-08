@@ -33,7 +33,7 @@ const AddressFilterModal = (props: AddressesFilterModalProps) => {
       title={t('Select addresses')}
       rightIconName={'check'}
       rightIconOnPress={submit}
-      rightIconColor={theme.colorsOld.gray}>
+      rightIconColor={theme.colors.green}>
       <View style={styles.container}>
         <FullFilterAddressInput address={address} onChange={setAddress} />
       </View>

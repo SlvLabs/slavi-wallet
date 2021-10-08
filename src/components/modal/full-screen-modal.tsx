@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 
@@ -22,7 +23,7 @@ export interface FullScreenModalProps {
 }
 
 const defaultAnimation = 'slide';
-const defaultIconColor = theme.colorsOld.lightGray;
+const defaultIconColor = theme.colors.lightGray;
 
 const FullScreenModal = (props: FullScreenModalProps) => {
   return (
@@ -49,7 +50,7 @@ const FullScreenModal = (props: FullScreenModalProps) => {
             )}
           </TouchableOpacity>
         </View>
-        <View style={styles.content}>{props.children}</View>
+        <LinearGradient {...theme.gradients.backgroundGradient} style={styles.content}>{props.children}</LinearGradient>
       </SafeAreaView>
     </Modal>
   );
@@ -58,11 +59,12 @@ const FullScreenModal = (props: FullScreenModalProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 60,
-    backgroundColor: theme.colorsOld.white,
+    paddingBottom: 55,
+    backgroundColor: theme.colors.dark,
   },
   header: {
     flexDirection: 'row',
+    backgroundColor: theme.colors.dark,
   },
   closeIcon: {
     padding: 16,
@@ -84,13 +86,15 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    letterSpacing: 0.4,
-    fontSize: 12,
-    lineHeight: 12,
-    color: theme.colorsOld.gray,
+    fontWeight: '500',
+    letterSpacing: 0.01,
+    fontSize: 18,
+    lineHeight: 28,
+    color: theme.colors.white,
   },
-  content: {},
+  content: {
+    flex: 1
+  },
 });
 
 export default FullScreenModal;

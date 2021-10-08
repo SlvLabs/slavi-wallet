@@ -16,7 +16,7 @@ const DefiScreen = () => {
     <SafeAreaView style={styles.container}>
       <ImageBackground source={loadingBackground} style={styles.background}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
-          <Image source={screenStub} width={288} height={223} style={{width: 288, height: 223}}/>
+          <Image source={screenStub} width={310} height={245} style={{width: 310, height: 245}}/>
           <Text style={styles.header}>{t('Slavi DeFi is coming...')}</Text>
           <View style={styles.descriptionContainer}>
             <Text style={styles.description}>{t('Comprehensive with versatile functionality,')}</Text>

@@ -49,21 +49,19 @@ const styles = StyleSheet.create({
   participant: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    letterSpacing: 0.4,
-    fontSize: 12,
-    lineHeight: 12,
-    color: theme.colorsOld.gray,
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
     width: 150,
   },
   additionalParticipants: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'normal',
-    letterSpacing: 0.4,
-    fontSize: 12,
-    lineHeight: 12,
-    color: theme.colorsOld.darkGray,
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
   },
 });
 

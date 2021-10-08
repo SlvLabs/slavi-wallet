@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
+import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
 import TextWithLabel from './info-elements/text-with-label';
 import IconTextWithLabel from './info-elements/icon-text-with-label';
+import theme from '../../theme';
 
 export interface CoinInfoElementProps {
   info: CoinListElement;
@@ -39,20 +40,22 @@ const CoinInfoElement = (props: CoinInfoElementProps) => {
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      {props.info?.data?.title && (
-        <View style={styles.titleContainer}>
-          <Text style={{...styles.title, ...props.titleStyle}}>
-            {props.info?.data?.title}
-          </Text>
-        </View>
-      )}
-      <View style={styles.contentContainer}>{renderContent(props.info)}</View>
+      {renderContent(props.info)}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: theme.colors.cardBackground2,
+    borderRadius: 8,
+    marginTop: 8,
+    marginBottom: 8,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 13,
+    paddingBottom: 13,
+  },
   title: {},
   titleContainer: {},
   contentContainer: {},

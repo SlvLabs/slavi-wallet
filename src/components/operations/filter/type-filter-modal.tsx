@@ -58,7 +58,7 @@ const TypeFilterModal = (props: TypeFilterModalProps) => {
       title={t('Select types')}
       rightIconName={'check'}
       rightIconOnPress={submit}
-      rightIconColor={theme.colorsOld.gray}>
+      rightIconColor={theme.colors.green}>
       <ScrollView>
         <FullFilterChipList
           chips={types}

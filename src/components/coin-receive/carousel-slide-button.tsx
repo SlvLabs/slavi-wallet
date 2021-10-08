@@ -15,7 +15,7 @@ const CarouselSlideButton = (props: CarouselSlideButtonProps) => {
     <TouchableOpacity
       style={{...styles.container, ...props.containerStyle}}
       onPress={props.onPress}>
-      <Icon {...props.icon} />
+      <Icon color={theme.colors.white} {...props.icon} />
     </TouchableOpacity>
   );
 };
@@ -32,16 +32,7 @@ export const rightChevron = {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colorsOld.white,
-    shadowColor: theme.colorsOld.gray,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowRadius: 16,
-    shadowOpacity: 0.32,
-    elevation: 16,
-    zIndex: 999,
+    backgroundColor: 'transparent',
     padding: 8,
     borderRadius: 50,
     alignItems: 'center',

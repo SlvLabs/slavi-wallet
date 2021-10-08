@@ -31,6 +31,7 @@ import SolidButton from '../../components/buttons/solid-button';
 import theme from '../../theme';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
+import LinearGradient from 'react-native-linear-gradient';
 
 export interface SendBtcScreenProps {
   coin: string;
@@ -248,61 +249,66 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <CoinBalanceHeader
-          balance={balance}
-          name={coinDetails.name}
-          cryptoBalance={coinDetails.spendableCryptoBalance}
-          cryptoTicker={coinDetails.crypto}
-          fiatBalance={coinDetails.spendableFiatBalance}
-          fiatTicker={coinDetails.fiat}
-          logo={coinDetails.logo}
-        />
-        <SendManyView
-          readQr={readQr}
-          coin={props.coin}
-          balance={balance}
-          recipients={recipients}
-          onRecipientChange={onRecipientChange}
-          onRecipientAdd={onRecipientAdd}
-          onRecipientRemove={onRecipientRemove}
-          setRecipientPayFee={trySetRecipientPayFee}
-          errors={voutErrors}
-        />
-        <TxPriorityButtonGroup
-          label={t('Transaction fee')}
-          selectedIndex={txPriority}
-          onSelected={setTxPriority}
-          advancedIsAllowed={false}
-        />
-        {!isValid && errors.length > 0 && (
-          <View style={styles.errors}>
-            {errors.map((error, index) => (
-              <AlertRow text={error} key={'general_error_' + index} />
-            ))}
+      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
+        <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+          <View>
+            <CoinBalanceHeader
+              balance={balance}
+              name={coinDetails.name}
+              cryptoBalance={coinDetails.spendableCryptoBalance}
+              cryptoTicker={coinDetails.crypto}
+              fiatBalance={coinDetails.spendableFiatBalance}
+              fiatTicker={coinDetails.fiat}
+              logo={coinDetails.logo}
+              type={coinDetails.type}
+            />
+            <SendManyView
+              readQr={readQr}
+              coin={props.coin}
+              balance={balance}
+              recipients={recipients}
+              onRecipientChange={onRecipientChange}
+              onRecipientAdd={onRecipientAdd}
+              onRecipientRemove={onRecipientRemove}
+              setRecipientPayFee={trySetRecipientPayFee}
+              errors={voutErrors}
+            />
+            <TxPriorityButtonGroup
+              label={t('Transaction fee')}
+              selectedIndex={txPriority}
+              onSelected={setTxPriority}
+              advancedIsAllowed={false}
+            />
+            {!isValid && errors.length > 0 && (
+              <View style={styles.errors}>
+                {errors.map((error, index) => (
+                  <AlertRow text={error} key={'general_error_' + index} />
+                ))}
+              </View>
+            )}
           </View>
-        )}
-        <View style={styles.submitButton}>
-          <SolidButton
-            title={t('Send')}
-            onPress={onSubmit}
-            disabled={!isValid || locked}
-            loading={locked}
+          <View style={styles.submitButton}>
+            <SolidButton
+              title={t('Send')}
+              onPress={onSubmit}
+              disabled={!isValid || locked}
+              loading={locked}
+            />
+          </View>
+          <QrReaderModal
+            visible={activeQR >= 0}
+            onQRRead={onQRRead}
+            onClose={() => setActiveQR(-1)}
           />
-        </View>
-        <QrReaderModal
-          visible={activeQR >= 0}
-          onQRRead={onQRRead}
-          onClose={() => setActiveQR(-1)}
-        />
-        <ConfirmationModal
-          visible={confIsShown}
-          vouts={txResult?.vouts || []}
-          fee={txResult?.fee}
-          onAccept={send}
-          onCancel={cancelConfirmSending}
-        />
-      </ScrollView>
+          <ConfirmationModal
+            visible={confIsShown}
+            vouts={txResult?.vouts || []}
+            fee={txResult?.fee}
+            onAccept={send}
+            onCancel={cancelConfirmSending}
+          />
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -315,8 +321,16 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   container: {
-    backgroundColor: theme.colorsOld.white,
+    flex: 1,
   },
+  gradient: {
+    flex: 1,
+  },
+  scroll: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  }
 });
 
 export default SendBtcScreen;

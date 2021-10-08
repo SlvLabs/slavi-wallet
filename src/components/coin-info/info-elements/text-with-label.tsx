@@ -1,6 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
-import Card from '../../view/card';
+import {StyleSheet, Text, View} from 'react-native';
 import theme from '../../../theme';
 
 export interface TextWithLabelProps {
@@ -10,10 +9,10 @@ export interface TextWithLabelProps {
 
 const TextWithLabel = (props: TextWithLabelProps) => {
   return (
-    <Card style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.label}>{props.label}</Text>
       <Text style={styles.value}>{props.text}</Text>
-    </Card>
+    </View>
   );
 };
 
@@ -22,27 +21,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    marginRight: 0,
-    marginLeft: 0,
   },
   label: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 14.4,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.lightGray,
+    fontWeight: 'normal',
+    fontSize: 15,
+    lineHeight: 22,
+    color: theme.colors.textLightGray,
   },
   value: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 14.4,
-    letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
   },
 });
 

@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {Image, Text} from 'react-native-elements';
 import {useTranslation} from 'react-i18next';
 import theme from '../../theme';
@@ -60,14 +60,15 @@ const CoinsListElement = (props: CoinListElementProps) => {
     logo,
     id,
     fiatPriceChange,
-    fiatPrice
+    fiatPrice,
+    type
   } = props.data;
 
   const onChangeSwitcher = useCallback(() => {
     props.onShownChange(id);
   },[]);
 
-  const priceChange = useMemo(() => +(fiatPriceChange || 0), []);
+  const priceChange = +(fiatPriceChange || 0);
 
   return props.showElement ? (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
@@ -80,7 +81,10 @@ const CoinsListElement = (props: CoinListElementProps) => {
         />
       </View>
       <View style={styles.col1}>
-        <Text style={styles.name}>{name}</Text>
+        <View style={styles.nameTypeContainer}>
+          <Text style={styles.name}>{name}</Text>
+          {!!type && <Text style={styles.type}>{type}</Text>}
+        </View>
         <View style={styles.underNameRow}>
           <Text style={styles.ticker}>{ticker}</Text>
           <PriceWithChange
@@ -209,7 +213,22 @@ const styles = StyleSheet.create({
   },
   coinBalance: {
     marginRight: 3,
-  }
+  },
+  nameTypeContainer: {
+    flexDirection: 'row',
+  },
+  type: {
+    marginLeft: 8,
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 10,
+    lineHeight: 16,
+    color: theme.colors.textLightGray1,
+    textTransform: 'uppercase',
+    textAlign: 'left',
+    textAlignVertical: 'center',
+  },
 });
 
 export default CoinsListElement;

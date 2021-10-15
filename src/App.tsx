@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {initStore} from './store';
@@ -31,6 +31,7 @@ import perf from '@react-native-firebase/perf';
 import DebugPerformanceMonitor from './utils/debug-performance-monitor';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import theme from './theme';
+import Config from "react-native-config";
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -82,6 +83,7 @@ const App: () => ReactNode = () => {
           services.current.balancesService = result.balancesService;
           services.current.abiProvider = result.abiProvider;
           services.current.performanceMonitor = performanceMonitor;
+          services.current.languageService = result.languageService;
 
           trace.stop();
           store.dispatch(unsetGlobalLoading());
@@ -95,6 +97,11 @@ const App: () => ReactNode = () => {
           );
         });
     });
+    return () => {
+      if(services.current.ws) {
+        services.current.ws.close();
+      }
+    }
   }, [store]);
 
   return (
@@ -108,6 +115,7 @@ const App: () => ReactNode = () => {
           <SafeAreaProvider>
             <NavigationContainer>
               <StatusBar barStyle="dark-content" />
+              {Config.DEV_MODE && <Text>This is development version!</Text>}
               <MainNavigator
                 isInitialized={true}
                 isAuthorized={true}

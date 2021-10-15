@@ -236,6 +236,6 @@ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 project.ext.envConfigFiles = [
         debug: ".env.development",
         release: ".env.production",
-        anothercustombuild: ".env",
+        anothercustombuild: ".env.production",
 ]
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"

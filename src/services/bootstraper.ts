@@ -11,12 +11,10 @@ import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from "@slavi/wallet-core/src/utils/performance-monitor-interface";
 
-// TODO: Extends
 export interface BootstrapResult extends BootstrapResultCore {}
 
 const wsConfig = {
-  //TODO: env!
-  url: 'wss://slaviwallet.io/ws',
+  url: Config.WS_URL,
   minReconnectTime: +Config.WS_MIN_RECONNECT_TIME || 1000,
   maxReconnectTime: +Config.WS_MAX_RECONNECT_TIME || 30000,
   ping: {
@@ -38,9 +36,9 @@ const bootstrap = async (
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
 ): Promise<BootstrapResult> => {
+  console.log('bootstrap')
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
-    currentTranslationVersion: 1, // TODO: load from cache
     languageDetector: i18nextReactNative,
     store: store,
     authCoinDerivedPath: Config.AUTH_DERIVED_PATH,

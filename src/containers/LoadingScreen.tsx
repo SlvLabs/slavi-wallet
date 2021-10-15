@@ -8,11 +8,9 @@ import theme from '../theme';
 import RadialGradient from 'react-native-radial-gradient';
 import { Animated } from 'react-native';
 
-interface LoadingScreenProps { }
-
 const POINT_COUNT = 4;
 
-const LoadingScreen = (props: LoadingScreenProps) => {
+const LoadingScreen = () => {
   const connectionError = useSelector((state: State) => state.connection.error);
 
   const animations = useRef(Array.from(Array(POINT_COUNT), () => new Animated.Value(0))).current;
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontStyle: 'normal',
     fontWeight: 'bold',
-    lineHeight: 37,
+    lineHeight: 42,
     color: theme.colors.white
   },
   welcomeText: {

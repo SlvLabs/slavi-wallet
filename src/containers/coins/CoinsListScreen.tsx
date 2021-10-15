@@ -1,5 +1,5 @@
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {Reducer, useCallback, useEffect, useReducer, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import BalanceHeader from '../../components/coin-list/balance-header';
 import CoinListCard from '../../components/coin-list/coins-list-card';
@@ -15,15 +15,93 @@ import ROUTES from '../../navigation/config/routes';
 import sortByField from '@slavi/wallet-core/src/utils/sort-objects-in-array-by-field';
 import store from '@slavi/wallet-core/src/store/index';
 
+enum CoinsSortType {
+  name,
+  value,
+  priority,
+}
+
+interface CoinsSortParams {
+  field: string,
+  direction: number,
+}
+
+const coinsSorts: Record<CoinsSortType, CoinsSortParams> = {
+  [CoinsSortType.name]: {
+    field: 'name',
+    direction: 0,
+  },
+  [CoinsSortType.value]: {
+    field: 'value',
+    direction: 1,
+  },
+  [CoinsSortType.priority]: {
+    field: 'priority',
+    direction: 1,
+  }
+}
+
+interface CoinsState {
+  coins: DisplayCoinData[];
+  sort: CoinsSortType,
+}
+
+enum CoinsActionType {
+  updateCoins,
+  sortCoins
+}
+
+type CoinsAction =
+  { type: CoinsActionType.updateCoins, coins: DisplayCoinData[]} |
+  { type: CoinsActionType.sortCoins, sort: CoinsSortType};
+
+const CoinsUpdateAction = (coins: DisplayCoinData[]): CoinsAction => ({
+  type: CoinsActionType.updateCoins,
+  coins: coins,
+});
+
+const CoinsSortAction = (sort: CoinsSortType): CoinsAction => ({
+  type: CoinsActionType.sortCoins,
+  sort: sort,
+});
+
+type CoinsReducer = Reducer<CoinsState, CoinsAction>;
+
+const initialCoinsState: CoinsState = {
+  coins: [],
+  sort: CoinsSortType.priority,
+}
+
+const coinsReducer: CoinsReducer = (state, action) =>{
+  switch (action.type) {
+    case CoinsActionType.updateCoins: {
+      const sort = coinsSorts[state.sort];
+      const coins = [...action.coins];
+      sortByField(coins, sort.field as keyof DisplayCoinData, sort.direction);
+      return {
+        ...state,
+        coins: coins,
+      };
+    }
+    case CoinsActionType.sortCoins: {
+      const sort = coinsSorts[action.sort];
+      const coins = [...state.coins];
+      sortByField(coins, sort.field as keyof DisplayCoinData, sort.direction);
+      return {
+        sort: action.sort,
+        coins: coins,
+      };
+    }
+    default: {
+      throw new Error('Unknown coins reducer action');
+    }
+  }
+}
+
 const CoinsListScreen = () => {
   const {t} = useTranslation();
   const coins = useCoinsSelector();
-  // TODO: research
-  const [filteredCoins, setFilteredCoins] = useState<DisplayCoinData[]>(coins);
-  const [coinsToCard, setCoinsToCart] = useState<DisplayCoinData[]>(coins);
-  const [defaultSortDirection, setDefaultSortDirection] = useState(1);
-  const [nameSortDirection, setNameSortDirection] = useState(0);
-  const [valueSortDirection, setValueSortDirection] = useState(0);
+  const [coinsToCardState, dispatchCoinsToCard] = useReducer<CoinsReducer>(coinsReducer, initialCoinsState);
   const fiat = store.useFiatSelector() || 'BTC';
   const crypto = store.useCryptoSelector() || 'USD';
   const balance = useTotalBalance({fiat: fiat, crypto: crypto});
@@ -34,58 +112,37 @@ const CoinsListScreen = () => {
     setAddClicked(!addClicked);
   };
 
-  // TODO: remove magic numbers, maybe refactor logic of sort
   useEffect(() => {
-    if (nameSortDirection === 1) {
-      sortByField(filteredCoins, 'name', 0);
-    } else if (valueSortDirection === 1) {
-      sortByField(filteredCoins, 'total', 1);
-    } else if(defaultSortDirection === 1) {
-      sortByField(filteredCoins, 'priority', 1);
-    }
-    setCoinsToCart([...filteredCoins]);
-  }, [filteredCoins, nameSortDirection, valueSortDirection, coins]);
+    dispatchCoinsToCard(CoinsUpdateAction(coins));
+  }, [coins, dispatchCoinsToCard]);
 
+  //TODO: test it
   const onShownChange = (id: string) => {
     let idx = coins.findIndex(coin => coin.id === id);
-    coinService.update(id, undefined, !coins[idx].shown).then(res => {
-      if (res) {
-        coins[idx].shown = res.shown;
-        const indexInToCard = coinsToCard.findIndex(
-          el => el.name === coins[idx].name,
-        );
-        coinsToCard[indexInToCard].shown = res.shown;
-        setCoinsToCart([...coinsToCard]);
-      }
-    });
+    coinService.update(id, undefined, !coins[idx].shown);
   };
 
   const sortingMethods: ParamsItem[] = [
     {
       title: t('Default'),
       onPress() {
-        setDefaultSortDirection(defaultSortDirection === 0 ? 1 : 0);
-        setValueSortDirection(0);
-        setNameSortDirection(0);
-      }
+        dispatchCoinsToCard(CoinsSortAction(CoinsSortType.priority));
+      },
+      isActive: coinsToCardState.sort === CoinsSortType.priority,
     },
     {
       title: t('By name'),
-      onPress: () => {
-        setNameSortDirection(nameSortDirection === 0 ? 1 : 0);
-        setValueSortDirection(0);
-        setDefaultSortDirection(0);
+      onPress() {
+        dispatchCoinsToCard(CoinsSortAction(CoinsSortType.name));
       },
-      isActive: !!nameSortDirection,
+      isActive: coinsToCardState.sort === CoinsSortType.name,
     },
     {
       title: t('By btc value'),
-      onPress: () => {
-        setValueSortDirection(valueSortDirection === 0 ? 1 : 0);
-        setNameSortDirection(0);
-        setNameSortDirection(0);
+      onPress() {
+        dispatchCoinsToCard(CoinsSortAction(CoinsSortType.value));
       },
-      isActive: !!valueSortDirection,
+      isActive: coinsToCardState.sort === CoinsSortType.value,
     },
   ];
 
@@ -106,7 +163,7 @@ const CoinsListScreen = () => {
         <CoinListCard
           containerStyle={styles.coinsCard}
           sortingMethods={sortingMethods}
-          coins={coinsToCard}
+          coins={coinsToCardState.coins}
           onElementPress={onCoinPress}
           onAddPress={onAddPress}
           addClicked={addClicked}

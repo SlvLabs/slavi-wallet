@@ -48,7 +48,7 @@ const CoinsList = (props: CoinListProps) => {
 
   return (
     <View style={styles.container}>
-      <CoinListElementSoon logo={'/images/matic.png'} name={'Polygon'} ticker={'MATIC'}/>
+      <CoinListElementSoon logo={'/images/metis.png'} name={'MetisDAO'} ticker={'METIS'}/>
       {props.coins && props.coins.length > 0 ? (
         props.coins.map(renderItem)
       ) : (

@@ -49,7 +49,7 @@ const SearchCoinRow = (props: SearchCoinRowProps) => {
           <SearchBar
             containerStyle={styles.searchBarContainer}
             style={styles.searchBar}
-            placeholder={t('Search...')}
+            placeholder={t('Search')}
             lightTheme={true}
             onChangeText={onSearch}
             value={search}

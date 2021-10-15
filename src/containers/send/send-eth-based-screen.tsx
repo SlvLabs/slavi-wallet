@@ -257,47 +257,49 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     <SafeAreaView style={styles.container}>
       <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
         <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-          <CoinBalanceHeader
-            balance={accountBalance}
-            name={coinDetails.name}
-            cryptoTicker={coinDetails.crypto}
-            fiatTicker={coinDetails.fiat}
-            logo={coinDetails.logo}
-            type={coinDetails.type}
-          />
-          <AddressSelector
-            label={t('From account')}
-            containerStyle={styles.addressSelector}
-            addresses={balancesState.balances}
-            onSelect={setSenderIndex}
-            selectedAddress={senderIndex}
-          />
-          <View style={styles.sendContainer}>
-            <SendView
-              readQr={() => setActiveQR(true)}
-              coin={coinDetails.ticker}
-              balance={balance}
-              recipient={recipient}
-              onRecipientChange={onRecipientChange}
-              maxIsAllowed={true}
-              setRecipientPayFee={() => setRecipientPayFee(true)}
-              errors={voutError}
+          <View>
+            <CoinBalanceHeader
+              balance={accountBalance}
+              name={coinDetails.name}
+              cryptoTicker={coinDetails.crypto}
+              fiatTicker={coinDetails.fiat}
+              logo={coinDetails.logo}
+              type={coinDetails.type}
             />
-          </View>
-          <TxPriorityButtonGroup
-            label={t('Transaction fee')}
-            selectedIndex={txPriority}
-            onSelected={setTxPriority}
-            advancedIsAllowed={true}
-            onAdvancedPress={() => setAdvancedModalIsShown(true)}
-          />
-          {!isValid && errors.length > 0 && (
-            <View style={styles.errors}>
-              {errors.map((error, index) => (
-                <AlertRow text={error} key={'general_error_' + index} />
-              ))}
+            <AddressSelector
+              label={t('From account')}
+              containerStyle={styles.addressSelector}
+              addresses={balancesState.balances}
+              onSelect={setSenderIndex}
+              selectedAddress={senderIndex}
+            />
+            <View style={styles.sendContainer}>
+              <SendView
+                readQr={() => setActiveQR(true)}
+                coin={coinDetails.ticker}
+                balance={balance}
+                recipient={recipient}
+                onRecipientChange={onRecipientChange}
+                maxIsAllowed={true}
+                setRecipientPayFee={() => setRecipientPayFee(true)}
+                errors={voutError}
+              />
             </View>
-          )}
+            <TxPriorityButtonGroup
+              label={t('Transaction fee')}
+              selectedIndex={txPriority}
+              onSelected={setTxPriority}
+              advancedIsAllowed={true}
+              onAdvancedPress={() => setAdvancedModalIsShown(true)}
+            />
+            {!isValid && errors.length > 0 && (
+              <View style={styles.errors}>
+                {errors.map((error, index) => (
+                  <AlertRow text={error} key={'general_error_' + index} />
+                ))}
+              </View>
+            )}
+          </View>
           <View style={styles.submitButton}>
             <SolidButton
               title={t('Send')}

@@ -6,7 +6,6 @@ import {
   useCoinSpecsService,
   useDidUpdateEffect,
 } from '@slavi/wallet-core';
-import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
 import React, {useCallback, useState} from 'react';
 import SendView, {
   Recipient,
@@ -17,9 +16,7 @@ import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
-import useTxVoutsValidator, {
-  VoutError,
-} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
+import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import TxCreatingResult from '@slavi/wallet-core/types/services/transaction/tx-creating-result';
 import SimpleToast from 'react-native-simple-toast';
 import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
@@ -31,6 +28,11 @@ import PolkadotPattern from '@slavi/wallet-core/src/services/coin-pattern/polkad
 import theme from '../../theme';
 import LinearGradient from 'react-native-linear-gradient';
 import SolidButton from '../../components/buttons/solid-button';
+import ExistentialDepositError from '@slavi/wallet-core/src/services/errors/existential-deposit-error';
+import KeepAliveConfirmationModal from '../../components/coin-send/keep-alive-confirmation-modal';
+import {useNavigation} from '@react-navigation/native';
+import ROUTES from '../../navigation/config/routes';
+import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
 
 export interface SendPolkadotScreenProps {
   coin: string;
@@ -38,6 +40,9 @@ export interface SendPolkadotScreenProps {
 
 const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
   const {t} = useTranslation();
+
+  const navigation = useNavigation();
+
   const coinDetails = useCoinDetails(props.coin);
   if (!coinDetails) {
     throw new Error('Unknown coin for details display');
@@ -52,8 +57,6 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     throw new Error('Unable get coin spec for coin ' + props.coin);
   }
 
-  const balance: string = useSpendableBalance(props.coin);
-
   const [activeQR, setActiveQR] = useState<boolean>(false);
   const [recipient, setRecipient] = useState<Recipient>({
     address: '',
@@ -65,9 +68,9 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
   const [txResult, setTxResult] = useState<TxCreatingResult | null>(null);
   const [isValid, setIsValid] = useState<boolean>(false);
-  const validator = useTxVoutsValidator(props.coin);
   const balancesState = useAddressesBalance(props.coin);
   const [senderIndex, setSenderIndex] = useState<number>();
+  const [keepAliveConfirm, setKeepAliveConfirm] = useState<boolean>(false);
 
   const fromAddress =
     typeof senderIndex !== 'undefined'
@@ -78,6 +81,8 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
       ? balancesState.balances[senderIndex].balance
       : '0';
+
+  const validator = useVoutValidator(props.coin, accountBalance);
 
   const pattern: PolkadotPattern = coinPatternService.createPolkadotPattern(
     props.coin,
@@ -96,7 +101,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     setErrors([...errors, error]);
   };
 
-  const onSubmit = async () => {
+  const createTransaction = async (isKeepAlive: boolean = true): Promise<boolean> => {
     setLocked(true);
     if (validate()) {
       if (!pattern) {
@@ -104,9 +109,8 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
       }
 
       if (!fromAddress) {
-        console.log('Source address not specified');
         addError(t('Source address not specified'));
-        return;
+        return false;
       }
 
       let result;
@@ -114,7 +118,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
         result = await pattern.transfer(fromAddress, {
           recipient: recipient.address,
           amount: recipient.amount,
-          isKeepAlive: false,
+          isKeepAlive: isKeepAlive,
           tip: '0', // TODO: from user
         });
       } catch (e) {
@@ -124,20 +128,34 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
           addError(
             t('Can not create transaction. Try latter or contact support.'),
           );
+          return false;
+        }
+
+        const keepAliveErr = except<ExistentialDepositError>(ExistentialDepositError, e);
+        if(keepAliveErr) {
+          setKeepAliveConfirm(true);
+          return false;
         }
         throw e;
       }
 
       if (!result) {
         SimpleToast.show(t('Error of transaction creating'));
-        return;
+        return false;
       }
 
-      console.log(result);
-      setConfIsShown(true);
       setTxResult(result);
+      return true;
     }
+
+    return false;
   };
+
+  const onSubmit = async () => {
+    if(await createTransaction(true)) {
+      setConfIsShown(true);
+    }
+  }
 
   const onQrReadFailed = useCallback(
     () => SimpleToast.show(t('Can not read qr')),
@@ -179,30 +197,43 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
       throw new Error('Try send transaction before creating');
     }
     try {
-      await pattern.sendTransactions(txResult.transactions);
+      await pattern.sendTransactions(txResult.transactions, txResult.validToBlock);
     } catch (e) {
       addError(t('Error of broadcast tx. Try again latter or contact support'));
     } finally {
       cancelConfirmSending();
     }
+
+    navigation.navigate(ROUTES.COINS.SUCCESSFULLY_SENDING, {
+      recipients: [recipient],
+      ticker: coinDetails.ticker,
+    });
   };
 
   const validate = useCallback((): boolean => {
-    const result = validator({
-      vouts: [recipient],
-      recipientPayFee: false,
-    });
-
-    setIsValid(result.isSuccess());
-    setErrors(result.getErrors());
-    const voutErrors = result.getVoutErrors();
-    // Пока что решили без transferMany принудительно достаем из 0-его индекса
-    if (voutErrors[0]) {
-      setVoutError(voutErrors[0]);
+    const result = validator(recipient.address, recipient.amount);
+    setIsValid(result.isValid);
+    const tmp: VoutError = {address: [], amount: []};
+    if (result.address) {
+      tmp.address.push(result.address);
     }
+    if (result.amount) {
+      tmp.amount.push(result.amount);
+    }
+    setVoutError(tmp);
 
-    return result.isSuccess();
+    return result.isValid;
   }, [recipient, validator]);
+
+  const onKeepAliveConfirm = async () => {
+    if(await createTransaction(false)) {
+      setConfIsShown(true);
+      setKeepAliveConfirm(false);
+    }
+  };
+  const onKeepAliveDecline = useCallback(() => {
+    setKeepAliveConfirm(false);
+  }, []);
 
   useDidUpdateEffect(() => validate(), [recipient, validate]);
 
@@ -212,7 +243,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
         <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
           <View>
             <CoinBalanceHeader
-              balance={balance}
+              balance={accountBalance}
               name={coinDetails.name}
               cryptoBalance={coinDetails.spendableCryptoBalance}
               cryptoTicker={coinDetails.crypto}
@@ -231,7 +262,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
               <SendView
                 readQr={() => setActiveQR(true)}
                 coin={coinDetails.ticker}
-                balance={balance}
+                balance={accountBalance}
                 recipient={recipient}
                 onRecipientChange={onRecipientChange}
                 maxIsAllowed={true}
@@ -266,6 +297,11 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
             fee={txResult?.fee}
             onAccept={send}
             onCancel={cancelConfirmSending}
+          />
+          <KeepAliveConfirmationModal
+            visible={keepAliveConfirm}
+            onConfirm={onKeepAliveConfirm}
+            onCancel={onKeepAliveDecline}
           />
         </ScrollView>
       </LinearGradient>

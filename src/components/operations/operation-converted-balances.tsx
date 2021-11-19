@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   cryptoBalance: {
-    ontFamily: theme.fonts.default,
+    fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 12,

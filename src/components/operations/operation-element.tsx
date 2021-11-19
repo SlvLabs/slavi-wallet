@@ -6,6 +6,7 @@ import OperationSend from './operation-send';
 import OperationInternal from './opearation-internal';
 import {ProcessedOperation} from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
+import OperationFee from './operation-fee';
 
 export interface OperationElementProps {
   operation: ProcessedOperation;
@@ -24,6 +25,8 @@ const OperationElement = (props: OperationElementProps) => {
       return <OperationSend {...props} logo={coinData?.logo} />;
     case OperationType.internal:
       return <OperationInternal {...props} logo={coinData?.logo} />;
+    case OperationType.commission:
+      return <OperationFee {...props} logo={coinData?.logo} />
     default:
       return null;
   }

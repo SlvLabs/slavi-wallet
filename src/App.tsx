@@ -42,6 +42,8 @@ const App: () => ReactNode = () => {
     dataStoreProvider: asyncStorageProvider,
   });
 
+  const devMode = useMemo(() => Config.DEV_MODE === '1', [Config.DEV_MODE]);
+
   const store = useMemo(() => initStore(services.current), []);
 
   const authSubscriber = useCallback(
@@ -66,7 +68,7 @@ const App: () => ReactNode = () => {
 
     store.dispatch(setGlobalLoading());
     performanceMonitor.startTrace('BOOTSTRAP').then(trace => {
-      bootstrap(store, asyncStorageProvider, performanceMonitor)
+      bootstrap(store, asyncStorageProvider, performanceMonitor, devMode)
         .then((result: BootstrapResult) => {
           console.log('bootstraped');
           services.current.ws = result.ws;
@@ -102,7 +104,7 @@ const App: () => ReactNode = () => {
         services.current.ws.close();
       }
     }
-  }, [store]);
+  }, [store, devMode]);
 
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
@@ -115,7 +117,7 @@ const App: () => ReactNode = () => {
           <SafeAreaProvider>
             <NavigationContainer>
               <StatusBar barStyle="dark-content" />
-              {Config.DEV_MODE && <Text>This is development version!</Text>}
+              {devMode && <Text>This is development version!</Text>}
               <MainNavigator
                 isInitialized={true}
                 isAuthorized={true}

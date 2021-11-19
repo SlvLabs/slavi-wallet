@@ -16,7 +16,7 @@ export interface ModalProps {
 }
 
 export interface BaseModalProps extends ModalProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const BaseModal = (props: BaseModalProps) => {

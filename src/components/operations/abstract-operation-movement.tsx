@@ -25,6 +25,8 @@ export interface AbstractOperationMovementProps extends OperationElementProps {
 
 const cryptoPercision = 8;
 const fiatPercision = 2;
+const cryptoLimit = 0.00000001
+const fiatLimit = 0.001
 
 const AbstractOperationMovement = (props: AbstractOperationMovementProps) => {
   const coin = useCoinDetails(props.operation.coin);
@@ -42,7 +44,7 @@ const AbstractOperationMovement = (props: AbstractOperationMovementProps) => {
           <OperationParticipants participants={props.addresses} />
           <View style={styles.topRight}>
             <OperationAmount
-              amount={makeRoundedBalance(cryptoPercision, props.operation.amount)}
+              amount={makeRoundedBalance(cryptoPercision, props.operation.amount, cryptoLimit)}
               type={props.balanceType}
               ticker={coin?.ticker}
             />
@@ -55,10 +57,12 @@ const AbstractOperationMovement = (props: AbstractOperationMovementProps) => {
             cryptoBalance={makeRoundedBalance(
               cryptoPercision,
               props.operation.cryptoAmount,
+              cryptoLimit,
             )}
             fiatBalance={makeRoundedBalance(
               fiatPercision,
               props.operation.fiatAmount,
+              fiatLimit,
             )}
             cryptoTicker={props.cryptoTicker}
             fiatTicker={props.fiatTicker}

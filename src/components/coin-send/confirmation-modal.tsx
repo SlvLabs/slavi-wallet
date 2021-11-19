@@ -1,7 +1,7 @@
 import {Recipient} from './send-view';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import SolidButton from '../buttons/solid-button';
 import BaseModal from '../modal/base-modal';
 import theme from '../../theme';
@@ -24,17 +24,48 @@ export interface ConfirmationModalProps {
   cancelButtonStyle?: ViewStyle;
 }
 
+const DEFAULT_BEGIN_LETTERS_COUNT = 10;
+const DEFAULT_END_LETTERS_COUNT = 10;
+const DEFAULT_MAX_LENGTH = 35;
+
+const shrinkAddress = (
+  address: string,
+  beginLettersCount?: number,
+  endLettersCount?: number,
+  maxLettersLength?: number,
+) => {
+  const beginCount = beginLettersCount || DEFAULT_BEGIN_LETTERS_COUNT;
+  const endCount = endLettersCount || DEFAULT_END_LETTERS_COUNT;
+  const maxLength = maxLettersLength || DEFAULT_MAX_LENGTH;
+
+  if(address.length <= maxLength) {
+    return address;
+  }
+
+  return `${address.slice(0, beginCount)}...${address.slice(-endCount)}`;
+}
+
 const renderVout = (vout: Recipient, index: number) => (
   <View style={styles.vout} key={'conf_vouts_' + index}>
-    <Text style={styles.voutAddress}>{vout.address}: </Text>
+    <Text style={styles.voutAddress}>{shrinkAddress(vout.address)}: </Text>
     <Text style={styles.voutAmount}>{vout.amount}</Text>
   </View>
 );
 
 const ConfirmationModal = (props: ConfirmationModalProps) => {
+  const {visible, onAccept, onCancel} = props;
   const {t} = useTranslation();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => setLoading(false), [visible]);
+
+  const _onAccept = useCallback(() => {
+    setLoading(true);
+    onAccept();
+  }, [onAccept])
+
   return (
-    <BaseModal visible={props.visible}>
+    <BaseModal visible={visible}>
       <View
         style={{
           ...styles.headerContainer,
@@ -66,12 +97,13 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
         }}>
         <SolidButton
           title={t('Ok')}
-          onPress={props.onAccept}
+          onPress={_onAccept}
           buttonStyle={{...styles.acceptButton, ...props.acceptButtonStyle}}
+          loading={loading}
         />
         <SolidButton
           title={t('Cancel')}
-          onPress={props.onCancel}
+          onPress={onCancel}
           buttonStyle={{...styles.cancelButton, ...props.cancelButtonStyle}}
         />
       </View>
@@ -90,7 +122,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
   },
   voutsContainer: {
     paddingRight: 16,
@@ -102,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     letterSpacing: 0.1,
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
   },
   voutAmount: {
     fontFamily: theme.fonts.default,
@@ -111,7 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     letterSpacing: 0.1,
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
   },
   feeContainer: {
     flexDirection: 'row',
@@ -124,7 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
   },
   controlsContainer: {
     padding: 16,
@@ -144,7 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.4,
-    color: theme.colorsOld.gray,
+    color: theme.colors.white,
     marginLeft: 8,
   },
   vout: {

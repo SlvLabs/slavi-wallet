@@ -35,6 +35,7 @@ const bootstrap = async (
   store: Store,
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
+  devMode?: boolean,
 ): Promise<BootstrapResult> => {
   console.log('bootstrap')
   const coreBootstrap = new CoreBootstrap({
@@ -53,6 +54,7 @@ const bootstrap = async (
         SimpleToast.LONG,
         SimpleToast.TOP,
       ),
+    devMode: devMode,
   });
   return coreBootstrap.load();
 };

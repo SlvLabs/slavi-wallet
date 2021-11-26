@@ -32,11 +32,14 @@ import DebugPerformanceMonitor from './utils/debug-performance-monitor';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import theme from './theme';
 import Config from "react-native-config";
+import { load as initializationLoad } from '@slavi/wallet-core/src/store/modules/initialization/initialization-thunk-actions';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
     useState<boolean>(false);
   const [isBootstrapped, setBootstrapped] = useState<boolean>(true);
+  const [isInitialized, setInitialized] = useState<boolean>(false);
+  const [isInitFinishShow, setInitFinishShow] = useState<boolean>(false);
 
   const services = useRef<ServiceLocatorCoreInterface>({
     dataStoreProvider: asyncStorageProvider,
@@ -54,6 +57,14 @@ const App: () => ReactNode = () => {
 
   store.subscribe(() => {
     setBootstrapped(store.getState().globalLoading.loading !== 0);
+  });
+
+  store.subscribe(() => {
+    setInitialized(store.getState().initialization.initializationCompleted);
+  });
+
+  store.subscribe(() => {
+    setInitFinishShow(store.getState().initialization.finishShow);
   });
 
   useEffect(() => {
@@ -86,9 +97,13 @@ const App: () => ReactNode = () => {
           services.current.abiProvider = result.abiProvider;
           services.current.performanceMonitor = performanceMonitor;
           services.current.languageService = result.languageService;
+          services.current.clearableDataStorageProvider = result.clearableDataStorageProvider;
 
           trace.stop();
-          store.dispatch(unsetGlobalLoading());
+
+          store.dispatch<any>(initializationLoad()).then(() => {
+            store.dispatch(unsetGlobalLoading());
+          });
         })
         .catch(e => {
           crashlytics().recordError(e);
@@ -119,10 +134,11 @@ const App: () => ReactNode = () => {
               <StatusBar barStyle="dark-content" />
               {devMode && <Text>This is development version!</Text>}
               <MainNavigator
-                isInitialized={true}
+                isInitialized={isInitialized}
                 isAuthorized={true}
                 isAccountInitialized={isAccountInitialized}
                 isLoading={isBootstrapped}
+                isInitializationFinished={isInitFinishShow}
               />
             </NavigationContainer>
           </SafeAreaProvider>

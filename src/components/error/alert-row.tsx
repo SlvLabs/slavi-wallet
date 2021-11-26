@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignSelf: 'center',
-    color: theme.colorsOld.red,
+    color: theme.colors.red,
+    marginTop: 16,
   },
   icon: {
     marginRight: 10,

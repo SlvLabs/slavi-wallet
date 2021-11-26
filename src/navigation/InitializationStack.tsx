@@ -12,7 +12,7 @@ const InitializationStack = () => {
     <StackNavigator.Navigator
       initialRouteName={ROUTES.INITIALIZATION.LOCALIZATION}
       headerMode={'screen'}
-      screenOptions={defaultScreenOption}>
+      screenOptions={{...defaultScreenOption, headerShown: false}}>
       <StackNavigator.Screen
         name={ROUTES.INITIALIZATION.LOCALIZATION}
         component={InitializeLocalizationScreen}

@@ -1,24 +1,25 @@
 import {
   Text,
   View,
-  Button,
   StyleSheet,
   InteractionManager,
-  Alert,
-  SafeAreaView,
 } from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useSelector} from 'react-redux';
 import MnemonicArea from '../../../components/mnemonic/mnemonic-area';
 import ControlButtons from '../../../components/mnemonic/control-buttons';
 import {useNavigation} from '@react-navigation/native';
-import PageHeader from '../../../components/page-header';
 import theme from '../../../theme';
 import {State} from '../../../store';
 import ROUTES from '../../../navigation/config/routes';
 import {useTranslation} from 'react-i18next';
+import InitializationBackground from '../../../components/background/initialization-background';
+import SolidButton from '../../../components/buttons/solid-button';
+import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
+import ConfirmationModal from '../../../components/modal/confirmation-modal';
 
 const CreateMnemonicScreen = () => {
+  const [confIsShown, setConfIsShown] = useState<boolean>(false);
   const mnemonic = useSelector((state: State) => state.account.mnemonic);
   const navigation = useNavigation();
 
@@ -26,50 +27,51 @@ const CreateMnemonicScreen = () => {
 
   const {t} = useTranslation();
 
-  const onPressNext = useCallback(() => {
-    Alert.alert(
-      t('Attention!'),
-      t('If you lose your secret phrase, you will lose access to your funds.'),
-      [
-        {
-          text: t('Back'),
-          style: 'cancel',
-        },
-        {
-          text: t('OК'),
-          onPress: () => {
-            InteractionManager.runAfterInteractions(() => {
-              navigation.navigate(
-                ROUTES.ACCOUNT_INITIALIZATION.CONFIRM_MNEMONIC,
-              );
-            });
-          },
-        },
-      ],
-    );
-  }, [navigation, t]);
+  const goToNext = useCallback(() => {
+    InteractionManager.runAfterInteractions(() => {
+      navigation.navigate(
+        ROUTES.ACCOUNT_INITIALIZATION.CONFIRM_MNEMONIC,
+      );
+    });
+  }, [navigation]);
+
+  const showConf = useCallback(() => setConfIsShown(true),[]);
+  const hideConf = useCallback(() => setConfIsShown(false), []);
 
   return (
-    <SafeAreaView>
-      <PageHeader text={t('Your secret phrase')} />
-      <View style={styles.descriptionContainer}>
+    <InitializationBackground>
+      <View style={styles.textBlock}>
+        <Text style={styles.header}>{t('Your Secret Phrase')}</Text>
         <Text style={styles.description}>
           {t(
             "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
           )}
         </Text>
       </View>
-      <MnemonicArea words={words} style={styles.mnemonicContainer} />
+      <MnemonicArea words={words} />
       <ControlButtons
         mnemonic={mnemonic}
         containerStyle={styles.controlButtonContainer}
       />
-      <View style={styles.nextButtonContainer}>
-        <Button title={t('Next')} onPress={onPressNext} />
+      <View style={styles.buttonsBlock}>
+        <SolidButton title={t('Continue')} onPress={showConf} />
+        <View style={styles.loaderView}>
+          <PointerProgressBar stepsCount={5} activeStep={3}/>
+        </View>
       </View>
-    </SafeAreaView>
+      <ConfirmationModal
+        onPositive={goToNext}
+        title={t('Attention!')}
+        visible={confIsShown}
+        onCancel={hideConf}
+        description={t(
+          'I saved the phrase outside the wallet and I understand that in case of loss I will not be able to restore access'
+        )}
+      />
+    </InitializationBackground>
   );
 };
+
 const styles = StyleSheet.create({
   headerContainer: {
     marginBottom: 15,
@@ -78,19 +80,37 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     margin: 20,
   },
-  mnemonicContainer: {
-    margin: 30,
-  },
   controlButtonContainer: {
     margin: 30,
   },
-  nextButtonContainer: {
-    marginLeft: 20,
-    marginRight: 20,
+  textBlock: {
+    marginBottom: 30,
+    flex: 1,
+  },
+  header: {
+    alignSelf: 'center',
+    fontSize: 28,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    lineHeight: 32,
+    color: theme.colors.white,
+    marginBottom: 20,
   },
   description: {
-    color: theme.colorsOld.secondary,
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 18,
+    color: theme.colors.lightGray,
     textAlign: 'center',
+  },
+  buttonsBlock: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  loaderView: {
+    paddingTop: 17,
   },
 });
 export default CreateMnemonicScreen;

@@ -1,15 +1,17 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import PageHeader from '../../../components/page-header';
 import MnemonicArea from '../../../components/mnemonic/mnemonic-area';
 import theme from '../../../theme';
-import {useNavigation} from '@react-navigation/native';
 import AlertRow from '../../../components/error/alert-row';
-import {store} from '@slavi/wallet-core';
 import {State} from '../../../store';
-import ROUTES from '../../../navigation/config/routes';
 import {useTranslation} from 'react-i18next';
+import InitializationBackground from '../../../components/background/initialization-background';
+import SolidButton from '../../../components/buttons/solid-button';
+import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
+import { ConfirmMnemonic } from '@slavi/wallet-core/src/store/modules/account/account-thunk-actions';
+import {showFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import Layout from '../../../utils/layout';
 
 const ConfirmMnemonicScreen = () => {
   const mnemonic = useSelector((state: State) => state.account.mnemonic);
@@ -22,8 +24,8 @@ const ConfirmMnemonicScreen = () => {
   const [selectWords, setSelectedWords] = useState<string[]>([]);
   const [isWrong, setIsWrong] = useState<boolean>(false);
 
+  const {t} = useTranslation();
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const verifyMnemonic = useCallback(() => {
     setIsWrong(!mnemonic.startsWith(selectWords.join(' ')));
@@ -49,64 +51,93 @@ const ConfirmMnemonicScreen = () => {
 
   useEffect(() => verifyMnemonic(), [selectWords, verifyMnemonic]);
 
-  useEffect(() => {
-    if (selectWords.length === words.length && !isWrong) {
-      dispatch(store.SaveMnemonic(mnemonic));
-      navigation.navigate(ROUTES.ACCOUNT_INITIALIZATION.READY);
-    }
-  }, [
-    dispatch,
-    isWrong,
-    mnemonic,
-    navigation,
-    selectWords.length,
-    words.length,
-  ]);
-  const {t} = useTranslation();
+  const goNext = useCallback(() => {
+    dispatch(showFinish());
+    dispatch<any>(ConfirmMnemonic(mnemonic));
+  }, [dispatch]);
 
   return (
-    <SafeAreaView>
-      <PageHeader text={t('Input secret phrase')} />
-      <View style={styles.descriptionContainer}>
+    <InitializationBackground>
+      <View style={styles.textBlock}>
+        <Text style={styles.header}>{t('Type your secret phrase')}</Text>
         <Text style={styles.description}>
           {t(
-            'You need to confirm the passphrase. Choose in turn the words in such a way as to compose a passphrase from your wallet.',
+            "Write it down in the correct order, or copy it and keep it in a safe place. Don’t give it to anyone.",
           )}
         </Text>
       </View>
-      <MnemonicArea
-        words={selectWords}
-        style={styles.selectedContainer}
-        onPressWorld={unselectWord}
-      />
-      {isWrong && (
-        <AlertRow text={t('The secret phrase was entered incorrectly')} />
-      )}
       <MnemonicArea
         words={availableWords}
         style={styles.availableContainer}
         onPressWorld={selectWord}
       />
-    </SafeAreaView>
+      <MnemonicArea
+        words={selectWords}
+        style={styles.selectedContainer}
+        onPressWorld={unselectWord}
+        wordStyle={styles.word}
+      />
+      {isWrong && (
+        <AlertRow text={t('The secret phrase was entered incorrectly')} />
+      )}
+      <View style={styles.buttonsBlock}>
+        <SolidButton title={t('Continue')} onPress={goNext} disabled={selectWords.length != words.length || isWrong}/>
+        <View style={styles.loaderView}>
+          <PointerProgressBar stepsCount={5} activeStep={3}/>
+        </View>
+      </View>
+    </InitializationBackground>
   );
 };
 
 const styles = StyleSheet.create({
   availableContainer: {
-    borderWidth: 0,
-    marginTop: 20,
+    borderBottomWidth: 0,
+    flex: Layout.isSmallDevice ? 1 : 2,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   selectedContainer: {
-    margin: 20,
-    height: 180,
+    borderBottomWidth: 0,
+    borderRadius: 8,
+    backgroundColor: theme.colors.grayDark,
+    flex: Layout.isSmallDevice ? 1 : 2,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
-  descriptionContainer: {
-    margin: 20,
+  textBlock: {
+    marginBottom: 30,
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  header: {
+    alignSelf: 'center',
+    fontSize: Layout.isSmallDevice ? 18 : 28,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    lineHeight: 32,
+    color: theme.colors.white,
+    marginBottom: 20,
   },
   description: {
-    color: theme.colorsOld.secondary,
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 18,
+    color: theme.colors.lightGray,
     textAlign: 'center',
   },
+  buttonsBlock: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  loaderView: {
+    paddingTop: 17,
+  },
+  word: {
+    backgroundColor: theme.colors.darkWord,
+  }
 });
 
 export default ConfirmMnemonicScreen;

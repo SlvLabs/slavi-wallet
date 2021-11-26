@@ -38,9 +38,10 @@ const bootstrap = async (
   devMode?: boolean,
 ): Promise<BootstrapResult> => {
   console.log('bootstrap')
+  console.log('DETECT ' + i18nextReactNative.detect());
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
-    languageDetector: i18nextReactNative,
+    systemLanguage: i18nextReactNative.detect(),
     store: store,
     authCoinDerivedPath: Config.AUTH_DERIVED_PATH,
     authCoinNetwork: networks.AUTH_SLV,

@@ -4,17 +4,19 @@ import InitializationStack from './InitializationStack';
 import AuthenticationStack from './AuthenticationStack';
 import AccountInitializationStack from './AccountInitializationStack';
 import ApplicationDrawer from './ApplicationDrawer';
+import AccountReadyScreen from '../containers/account-initialization/AccountReadyScreen';
 
 interface MainNavigatorProps {
   isInitialized: boolean;
   isAuthorized: boolean;
   isAccountInitialized: boolean;
   isLoading: boolean;
+  isInitializationFinished: boolean;
 }
 
 const MainNavigator = (props: MainNavigatorProps) => {
   if (props.isLoading) {
-    return <LoadingScreen loadingText={'Loading'} />;
+    return <LoadingScreen />;
   }
 
   if (!props.isInitialized) {
@@ -27,6 +29,10 @@ const MainNavigator = (props: MainNavigatorProps) => {
 
   if (!props.isAccountInitialized) {
     return <AccountInitializationStack />;
+  }
+
+  if(props.isInitializationFinished) {
+    return <AccountReadyScreen />
   }
 
   return <ApplicationDrawer />;

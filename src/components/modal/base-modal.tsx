@@ -1,18 +1,22 @@
 import {
+  Dimensions,
   Modal,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native';
 import React from 'react';
 import theme from '../../theme';
+import CustomIcon from '../custom-icon/custom-icon';
 
 export interface ModalProps {
-  visible: boolean;
+  visible?: boolean;
   onCancel?: () => void;
   modalStyle?: ViewStyle;
   contentStyle?: ViewStyle;
+  showCloseIcon?: boolean;
 }
 
 export interface BaseModalProps extends ModalProps {
@@ -21,10 +25,17 @@ export interface BaseModalProps extends ModalProps {
 
 const BaseModal = (props: BaseModalProps) => {
   const content = (
-    <View style={{...styles.modalView, ...props.modalStyle}}>
-      <View style={{...styles.modalContent, ...props.contentStyle}}>
-        {props.children}
-      </View>
+    <View style={{...styles.modalView, ...props.modalStyle}} >
+      <TouchableWithoutFeedback>
+        <View style={{...styles.modalContent, ...props.contentStyle}}>
+          {!!props.showCloseIcon && (
+            <View style={styles.closeButtonRow}>
+              <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3}/>
+            </View>
+          )}
+          {props.children}
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
   // TODO: make so beautiful
@@ -49,12 +60,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
   modalView: {
-    margin: 32,
+    width: Dimensions.get('window').width - 64,
     backgroundColor: theme.colors.grayDark,
     borderRadius: 10,
     padding: 24,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: theme.colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -71,6 +82,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
   },
+  closeButtonRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+  }
 });
 
 export default BaseModal;

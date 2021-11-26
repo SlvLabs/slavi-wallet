@@ -1,15 +1,17 @@
 import {View, StyleSheet, ViewStyle} from 'react-native';
 import React, {useCallback} from 'react';
 import MnemonicWord from './mnemonic-word';
+import theme from '../../theme';
 
 export interface MnemonicAreaProps {
   words: string[];
   style?: ViewStyle;
+  wordStyle?: ViewStyle;
   onPressWorld?: (word: string) => void;
 }
 
 const MnemonicArea = (props: MnemonicAreaProps) => {
-  const {words, style, onPressWorld} = props;
+  const {words, style, onPressWorld, wordStyle} = props;
 
   const renderWorld = useCallback(
     (word: string, key: number) => {
@@ -18,6 +20,7 @@ const MnemonicArea = (props: MnemonicAreaProps) => {
           word={word}
           key={key}
           onPressWord={onPressWorld}
+          style={wordStyle}
         />
       );
     },
@@ -32,10 +35,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    padding: 20,
-    borderColor: '#999',
-    borderWidth: 1,
-    borderRadius: 6,
+    paddingTop: 40,
+    paddingBottom: 40,
+    borderBottomColor: theme.colors.textDarkGray,
+    borderBottomWidth: 1,
+    width: '100%',
+    alignItems: 'center',
   },
 });
 

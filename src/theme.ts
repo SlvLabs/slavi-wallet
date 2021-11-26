@@ -34,6 +34,10 @@ export default {
     textLightGray1: '#676A78',
     textLightGray2: '#E1E1E1',
     textLightGray3: '#828799',
+    dark1: '#838D9B',
+    lighter: '#F5F5F5',
+    lightGrayBackground: '#C4C4C4',
+    darkWord: '#030303',
   },
   /** @deprecated */
   colorsOld: {
@@ -120,6 +124,11 @@ export default {
       colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],
       center: [100,250],
       radius: 400
+    },
+    radialBackgroundGradient: {
+      colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],
+      center: [100,100],
+      radius: 250
     },
     button: {
       colors: ['#00CB7C', '#00785B',],

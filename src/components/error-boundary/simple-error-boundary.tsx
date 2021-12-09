@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: 24,
-    lineHeight: 27,
+    lineHeight: 28,
     letterSpacing: 0.2,
     flex: 1,
   },

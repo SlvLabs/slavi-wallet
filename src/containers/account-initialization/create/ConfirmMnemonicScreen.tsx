@@ -32,17 +32,17 @@ const ConfirmMnemonicScreen = () => {
   }, [mnemonic, selectWords]);
 
   const selectWord = useCallback(
-    (word: string) => {
+    (word: string, index?: number) => {
       setSelectedWords([...selectWords, word]);
-      setAvailableWords(availableWords.filter((val: string) => val !== word));
+      setAvailableWords(availableWords.filter((val: string, i) => (val !== word) || (i !== index)));
     },
     [availableWords, selectWords],
   );
 
   const unselectWord = useCallback(
-    (word: string) => {
+    (word: string, index?: number) => {
       setAvailableWords([...availableWords, word]);
-      setSelectedWords(selectWords.filter((val: string) => val !== word));
+      setSelectedWords(selectWords.filter((val: string, i) => (val !== word) || (i !== index)));
     },
     [availableWords, selectWords],
   );
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   header: {
+    fontFamily: theme.fonts.default,
     alignSelf: 'center',
     fontSize: Layout.isSmallDevice ? 18 : 28,
     fontStyle: 'normal',
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   description: {
+    fontFamily: theme.fonts.default,
     alignSelf: 'center',
     fontSize: 14,
     fontStyle: 'normal',

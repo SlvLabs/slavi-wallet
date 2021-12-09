@@ -11,6 +11,8 @@ import moment, {Moment} from 'moment';
 import DateRangePicker from '@slavi/react-native-daterange-picker';
 import theme from '../../../theme';
 import {useTranslation} from 'react-i18next';
+import {Icon} from 'react-native-elements';
+import Layout from '../../../utils/layout';
 
 export interface FullFilterDateProps {
   onStartDateChange: (date: Moment | null) => void;
@@ -87,7 +89,7 @@ const FullFilterDate = (props: FullFilterDateProps) => {
   );
 
   return (
-    <Modal visible={!!props.visible}>
+    <Modal visible={!!props.visible} transparent={true}>
       <DateRangePicker
         open={props.visible}
         endDate={finishDate}
@@ -97,14 +99,24 @@ const FullFilterDate = (props: FullFilterDateProps) => {
         range={true}
         buttons={true}
         controlButtons={controlButtons}
-      />
+        containerStyle={styles.modal}
+        headerTextStyle={styles.header}
+        monthPrevButton={<Icon name={'chevron-left'} type={'feather'} size={28} color={theme.colors.white} />}
+        monthNextButton={<Icon name={'chevron-right'} type={'feather'} size={28} color={theme.colors.white} />}
+        dayTextStyle={styles.dayText}
+        selectedStyle={styles.selectedStyle}
+        dayHeaderTextStyle={styles.dayHeaderTextStyle}
+
+      >
+        <View style={styles.background}/>
+      </DateRangePicker>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   buttonsContainer: {
-    backgroundColor: theme.colorsOld.transparent,
+    backgroundColor: 'transparent',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingLeft: 28,
@@ -124,11 +136,47 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    letterSpacing: 0.4,
-    fontSize: 14,
-    lineHeight: 14,
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 20,
+    color: theme.colors.white,
   },
+  background: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  modal: {
+    backgroundColor: theme.colors.grayDark,
+    borderRadius: 10,
+    height: Layout.isSmallDevice ? '90%' : '75%',
+  },
+  header: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 18,
+    lineHeight: 22,
+    color: theme.colors.white,
+  },
+  dayText: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 20,
+    color: theme.colors.white,
+  },
+  selectedStyle: {
+    backgroundColor: theme.colors.green,
+  },
+  dayHeaderTextStyle: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 20,
+    color: theme.colors.white,
+  }
 });
 
 export default FullFilterDate;

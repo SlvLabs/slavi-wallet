@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, TextInput, TextStyle, View, ViewStyle} from 'react-native';
+import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import {useTranslation} from 'react-i18next';
+import theme from '../../theme';
 
 export interface CopiedTextAreaProps {
   onChange?: (value: string) => void;
@@ -35,14 +36,21 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
           title={t('Insert')}
           type="clear"
           style={{...styles.button, ...props.buttonStyle}}
+          titleStyle={styles.buttonTittle}
           onPress={onPress}
         />
+        {!value && (
+          <Text style={styles.placeholder}>{t('Enter here...')}</Text>
+        )}
       </View>
       <TextInput
         style={{...styles.input, ...props.inputStyle}}
         numberOfLines={props.lineNumber || DEFAULT_LINE_NUMBER}
         value={value}
         onChangeText={setValue}
+        textAlignVertical={'top'}
+        selectionColor={theme.colors.darkWord}
+        multiline={true}
       />
     </View>
   );
@@ -54,24 +62,50 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 6,
-    marginRight: 30,
-    marginLeft: 30,
+    borderColor: theme.colors.borderGray,
+    borderRadius: 4,
+    marginRight: 10,
+    marginLeft: 10,
     marginTop: 10,
     marginBottom: 10,
+    backgroundColor: theme.colors.grayDark,
   },
   buttonRow: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    paddingRight: 8,
   },
   button: {
     paddingTop: 0,
   },
   input: {
     minWidth: 50,
+    fontFamily: theme.fonts.default,
+    fontSize: 15,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 28,
+    color: theme.colors.white,
   },
+  buttonTittle: {
+    fontFamily: theme.fonts.default,
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 28,
+    color: theme.colors.green,
+    textTransform: 'uppercase',
+  },
+  placeholder: {
+    fontFamily: theme.fonts.default,
+    fontSize: 15,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 28,
+    color: theme.colors.textLightGray,
+    textAlignVertical: 'center',
+  }
 });
 
 export default InsertableTextArea;

@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     letterSpacing: 0.2,
     padding: 0,
     flex: 10,

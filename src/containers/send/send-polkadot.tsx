@@ -26,7 +26,6 @@ import AddressSelector from '../../components/buttons/address-selector';
 import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
 import PolkadotPattern from '@slavi/wallet-core/src/services/coin-pattern/polkadot-pattern';
 import theme from '../../theme';
-import LinearGradient from 'react-native-linear-gradient';
 import SolidButton from '../../components/buttons/solid-button';
 import ExistentialDepositError from '@slavi/wallet-core/src/services/errors/existential-deposit-error';
 import KeepAliveConfirmationModal from '../../components/coin-send/keep-alive-confirmation-modal';
@@ -239,72 +238,71 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
-        <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-          <View>
-            <CoinBalanceHeader
+      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+        <View>
+          <CoinBalanceHeader
+            balance={accountBalance}
+            name={coinDetails.name}
+            cryptoBalance={coinDetails.spendableCryptoBalance}
+            cryptoTicker={coinDetails.crypto}
+            fiatBalance={coinDetails.spendableFiatBalance}
+            fiatTicker={coinDetails.fiat}
+            logo={coinDetails.logo}
+          />
+          <View style={styles.paddingContainer}>
+            <AddressSelector
+              placeholder={t('From account')}
+              containerStyle={styles.addressSelector}
+              addresses={balancesState.balances}
+              onSelect={setSenderIndex}
+              selectedAddress={senderIndex}
+              ticker={coinDetails.ticker}
+            />
+            <SendView
+              readQr={() => setActiveQR(true)}
+              coin={coinDetails.ticker}
               balance={accountBalance}
-              name={coinDetails.name}
-              cryptoBalance={coinDetails.spendableCryptoBalance}
-              cryptoTicker={coinDetails.crypto}
-              fiatBalance={coinDetails.spendableFiatBalance}
-              fiatTicker={coinDetails.fiat}
-              logo={coinDetails.logo}
+              recipient={recipient}
+              onRecipientChange={onRecipientChange}
+              maxIsAllowed={true}
+              setRecipientPayFee={() => {}}
+              errors={voutError}
             />
-            <View style={styles.paddingContainer}>
-              <AddressSelector
-                placeholder={t('From account')}
-                containerStyle={styles.addressSelector}
-                addresses={balancesState.balances}
-                onSelect={setSenderIndex}
-                selectedAddress={senderIndex}
-              />
-              <SendView
-                readQr={() => setActiveQR(true)}
-                coin={coinDetails.ticker}
-                balance={accountBalance}
-                recipient={recipient}
-                onRecipientChange={onRecipientChange}
-                maxIsAllowed={true}
-                setRecipientPayFee={() => {}}
-                errors={voutError}
-              />
-              {!isValid && errors.length > 0 && (
-                <View style={styles.errors}>
-                  {errors.map((error, index) => (
-                    <AlertRow text={error} key={'general_error_' + index} />
-                  ))}
-                </View>
-              )}
-            </View>
+            {!isValid && errors.length > 0 && (
+              <View style={styles.errors}>
+                {errors.map((error, index) => (
+                  <AlertRow text={error} key={'general_error_' + index} />
+                ))}
+              </View>
+            )}
           </View>
-          <View style={styles.submitButton}>
-            <SolidButton
-              title={t('Send')}
-              onPress={onSubmit}
-              disabled={!isValid || locked}
-              loading={locked}
-            />
-          </View>
-          <QrReaderModal
-            visible={activeQR}
-            onQRRead={onQRRead}
-            onClose={() => setActiveQR(false)}
+        </View>
+        <View style={styles.submitButton}>
+          <SolidButton
+            title={t('Send')}
+            onPress={onSubmit}
+            disabled={!isValid || locked}
+            loading={locked}
           />
-          <ConfirmationModal
-            visible={confIsShown}
-            vouts={txResult?.vouts || []}
-            fee={txResult?.fee}
-            onAccept={send}
-            onCancel={cancelConfirmSending}
-          />
-          <KeepAliveConfirmationModal
-            visible={keepAliveConfirm}
-            onConfirm={onKeepAliveConfirm}
-            onCancel={onKeepAliveDecline}
-          />
-        </ScrollView>
-      </LinearGradient>
+        </View>
+        <QrReaderModal
+          visible={activeQR}
+          onQRRead={onQRRead}
+          onClose={() => setActiveQR(false)}
+        />
+        <ConfirmationModal
+          visible={confIsShown}
+          vouts={txResult?.vouts || []}
+          fee={txResult?.fee}
+          onAccept={send}
+          onCancel={cancelConfirmSending}
+        />
+        <KeepAliveConfirmationModal
+          visible={keepAliveConfirm}
+          onConfirm={onKeepAliveConfirm}
+          onCancel={onKeepAliveDecline}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -327,6 +325,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   paddingContainer: {
     paddingLeft: 16,

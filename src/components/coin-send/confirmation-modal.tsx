@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     fontSize: 14,
-    lineHeight: 16,
+    lineHeight: 18,
     letterSpacing: 0.4,
     color: theme.colors.white,
   },

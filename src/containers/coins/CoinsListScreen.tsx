@@ -10,10 +10,11 @@ import useCoinsSelector, {
 } from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import useCoinsService from '@slavi/wallet-core/src/contexts/hooks/use-coins-service';
 import useTotalBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-total-balance-hook';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import sortByField from '@slavi/wallet-core/src/utils/sort-objects-in-array-by-field';
 import store from '@slavi/wallet-core/src/store/index';
+import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 
 enum CoinsSortType {
   name,
@@ -32,7 +33,7 @@ const coinsSorts: Record<CoinsSortType, CoinsSortParams> = {
     direction: 0,
   },
   [CoinsSortType.value]: {
-    field: 'value',
+    field: 'fiatTotal',
     direction: 1,
   },
   [CoinsSortType.priority]: {
@@ -102,12 +103,15 @@ const CoinsListScreen = () => {
   const {t} = useTranslation();
   const coins = useCoinsSelector();
   const [coinsToCardState, dispatchCoinsToCard] = useReducer<CoinsReducer>(coinsReducer, initialCoinsState);
-  const fiat = store.useFiatSelector() || 'BTC';
-  const crypto = store.useCryptoSelector() || 'USD';
+  const fiat = store.useFiatSelector() || 'USD';
+  const crypto = store.useCryptoSelector() || 'BTC';
+  const fiatSymbol = useFiatSymbolSelector() || '$';
   const balance = useTotalBalance({fiat: fiat, crypto: crypto});
   const [addClicked, setAddClicked] = useState<boolean>(false);
   const navigation = useNavigation();
+  const route = useRoute();
   const coinService = useCoinsService();
+
   const onAddPress = () => {
     setAddClicked(!addClicked);
   };
@@ -116,11 +120,7 @@ const CoinsListScreen = () => {
     dispatchCoinsToCard(CoinsUpdateAction(coins));
   }, [coins, dispatchCoinsToCard]);
 
-  //TODO: test it
-  const onShownChange = (id: string) => {
-    let idx = coins.findIndex(coin => coin.id === id);
-    coinService.update(id, undefined, !coins[idx].shown);
-  };
+  const onShownChange = useCallback((id: string) => coinService.changeShown(id), [coinService]);
 
   const sortingMethods: ParamsItem[] = [
     {
@@ -138,7 +138,7 @@ const CoinsListScreen = () => {
       isActive: coinsToCardState.sort === CoinsSortType.name,
     },
     {
-      title: t('By btc value'),
+      title: t('By value'),
       onPress() {
         dispatchCoinsToCard(CoinsSortAction(CoinsSortType.value));
       },
@@ -153,12 +153,28 @@ const CoinsListScreen = () => {
     [navigation],
   );
 
+  useEffect(() => {
+    if((route.params as any)?.hideAdd) {
+      setAddClicked(false)
+    }
+  }, [(route.params as any)?.hideAdd])
+
+  const navigateToReceive = useCallback(() =>
+    navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.RECEIVE}),
+    [navigation]);
+
+  const navigateToSend = useCallback(() =>
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND}),
+    [navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{flex: 1}}>
         <BalanceHeader
           fiatBalance={balance.fiat}
-          fiatTicker={fiat}
+          fiatTicker={fiatSymbol}
+          onReceiveClick={navigateToReceive}
+          onSendClick={navigateToSend}
         />
         <CoinListCard
           containerStyle={styles.coinsCard}
@@ -170,6 +186,7 @@ const CoinsListScreen = () => {
           onShownChange={onShownChange}
           fiat={fiat}
           crypto={crypto}
+          fiatSymbol={fiatSymbol}
         />
       </ScrollView>
     </SafeAreaView>

@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     letterSpacing: 0.01,
     color: theme.colors.textLightGray,
 

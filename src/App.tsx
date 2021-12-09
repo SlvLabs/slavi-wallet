@@ -16,7 +16,7 @@ import {Provider} from 'react-redux';
 import {initStore} from './store';
 import {NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './navigation/MainNavigator';
-import bootstrap, {BootstrapResult} from './services/bootstraper';
+import bootstrap from './services/bootstraper';
 import {ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
 import asyncStorageProvider from './services/asynс-storage-provider';
 import servicesContext from '@slavi/wallet-core/src/contexts/services-context';
@@ -33,6 +33,7 @@ import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performanc
 import theme from './theme';
 import Config from "react-native-config";
 import { load as initializationLoad } from '@slavi/wallet-core/src/store/modules/initialization/initialization-thunk-actions';
+import SimpleToast from 'react-native-simple-toast';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -40,6 +41,8 @@ const App: () => ReactNode = () => {
   const [isBootstrapped, setBootstrapped] = useState<boolean>(true);
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [isInitFinishShow, setInitFinishShow] = useState<boolean>(false);
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
+  const [isUpdateRequired, setIsUpdateRequired] = useState<boolean>(false);
 
   const services = useRef<ServiceLocatorCoreInterface>({
     dataStoreProvider: asyncStorageProvider,
@@ -67,6 +70,14 @@ const App: () => ReactNode = () => {
     setInitFinishShow(store.getState().initialization.finishShow);
   });
 
+  store.subscribe(() => {
+    setIsUpdateAvailable(store.getState().initialization.updateAvailable);
+  });
+
+  store.subscribe(() => {
+    setIsUpdateRequired(store.getState().initialization.updateRequired);
+  });
+
   useEffect(() => {
     let performanceMonitor: PerformanceMonitorInterface;
     if (!__DEV__) {
@@ -79,26 +90,9 @@ const App: () => ReactNode = () => {
 
     store.dispatch(setGlobalLoading());
     performanceMonitor.startTrace('BOOTSTRAP').then(trace => {
-      bootstrap(store, asyncStorageProvider, performanceMonitor, devMode)
-        .then((result: BootstrapResult) => {
+      bootstrap(store, asyncStorageProvider, performanceMonitor, services.current, devMode, Config.APP_VERSION)
+        .then(() => {
           console.log('bootstraped');
-          services.current.ws = result.ws;
-          services.current.coinService = result.coinsService;
-          services.current.roiService = result.roiService;
-          services.current.currencyService = result.currencyService;
-          services.current.addressesService = result.addressService;
-          services.current.coinSpecsService = result.coinSpecsService;
-          services.current.innerAddressBookService =
-            result.innerAddressBookService;
-          services.current.outerAddressBookService =
-            result.outerAddressBookService;
-          services.current.coinPatternService = result.coinPatternService;
-          services.current.balancesService = result.balancesService;
-          services.current.abiProvider = result.abiProvider;
-          services.current.performanceMonitor = performanceMonitor;
-          services.current.languageService = result.languageService;
-          services.current.clearableDataStorageProvider = result.clearableDataStorageProvider;
-
           trace.stop();
 
           store.dispatch<any>(initializationLoad()).then(() => {
@@ -109,9 +103,6 @@ const App: () => ReactNode = () => {
           crashlytics().recordError(e);
           console.error(e);
           console.error(e.stack);
-          console.error(
-            'Что-то пошло не так, не удалось инициализировать приложение, см. App.js',
-          );
         });
     });
     return () => {
@@ -120,6 +111,15 @@ const App: () => ReactNode = () => {
       }
     }
   }, [store, devMode]);
+
+  useEffect(() => {
+    if(isUpdateAvailable) {
+      SimpleToast.showWithGravity('A new version of the application is available. We recommend updating.',
+        SimpleToast.LONG,
+        SimpleToast.CENTER,
+      );
+    }
+  }, [isUpdateAvailable]);
 
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
@@ -139,6 +139,7 @@ const App: () => ReactNode = () => {
                 isAccountInitialized={isAccountInitialized}
                 isLoading={isBootstrapped}
                 isInitializationFinished={isInitFinishShow}
+                isUpdateRequired={isUpdateRequired}
               />
             </NavigationContainer>
           </SafeAreaProvider>

@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import SettingsScreen from '../containers/settings/SettingsScreen';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
@@ -8,10 +8,14 @@ import MnemonicImportScreen from '../containers/settings/mnemonic-import-screen'
 import LanguageScreen from '../containers/settings/language-screen';
 import CurrencyScreen from '../containers/settings/currency-screen';
 import InvalidateCachesScreen from '../containers/settings/invalidate-caches-screen';
+import {useTranslation} from 'react-i18next';
 
-const SettingsStack = () => {
-  const StackNavigator = createStackNavigator();
-  return (
+const StackNavigator = createStackNavigator();
+
+const SettingsStack = () =>  {
+  const {t} = useTranslation();
+
+  return useMemo(() => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.SETTINGS.MAIN}
       headerMode={'screen'}
@@ -19,35 +23,35 @@ const SettingsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.MAIN}
         component={SettingsScreen}
-        options={{title: 'Settings'}}
+        options={{title: t('Settings')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.EXPORT_MNEMONIC}
         component={MnemonicExportScreen}
-        options={{title: 'Export'}}
+        options={{title: t('Your Secret Phrase')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.IMPORT_MNEMONIC}
         component={MnemonicImportScreen}
-        options={{title: 'Import new mnemonic'}}
+        options={{title: t('Import new mnemonic')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.CURRENCY_CHANGE}
         component={CurrencyScreen}
-        options={{title: 'Change currency'}}
+        options={{title: t('Change currency')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.LANGUAGE}
         component={LanguageScreen}
-        options={{title: 'Set default language'}}
+        options={{title: t('Set default language')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.INVALIDATE_CACHES}
         component={InvalidateCachesScreen}
-        options={{title: 'Invalidate some caches'}}
+        options={{title: t('Invalidate some caches')}}
       />
     </StackNavigator.Navigator>
-  );
+  ),[]);
 };
 
 export default SettingsStack;

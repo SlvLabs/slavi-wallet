@@ -31,36 +31,38 @@ const SearchParamsButton = (props: SortButtonProps) => {
   const showOverlay = () => setVisible(true);
 
   const renderParamsElement = useCallback(
-    ({item}) => (
-      <TouchableOpacity
-        onPress={() => {
-          hideOverlay();
-          item.onPress();
-        }}
-        style={styles.itemContainer}>
-        <CheckBox
-          uncheckedColor={theme.colors.lightTransparent}
-          checkedColor={theme.colors.green}
-          checked={item.isActive}
-          uncheckedIcon={
-            <Icon
-              type='material-community'
-              name='checkbox-blank-circle-outline'
-              color={theme.colors.lightTransparent}
-            />}
-          checkedIcon={
-            <Icon
-              type='material-community'
-              name='circle-slice-8'
-              color={theme.colors.green}
-            />
-          }
-        />
-        <Text style={styles.itemText}>{item.title}</Text>
-      </TouchableOpacity>
-    ),
-    [],
-  );
+    ({item}) => {
+      const onPress = () => {
+        hideOverlay();
+        item.onPress();
+      }
+
+      return (
+        <TouchableOpacity
+          onPress={onPress}
+          style={styles.itemContainer}>
+          <CheckBox
+            uncheckedColor={theme.colors.lightTransparent}
+            checkedColor={theme.colors.green}
+            checked={item.isActive}
+            uncheckedIcon={
+              <Icon
+                type='material-community'
+                name='checkbox-blank-circle-outline'
+                color={theme.colors.lightTransparent}
+              />}
+            checkedIcon={
+              <Icon
+                type='material-community'
+                name='circle-slice-8'
+                color={theme.colors.green}
+              />
+            }
+            onPress={onPress}
+          />
+          <Text style={styles.itemText}>{item.title}</Text>
+        </TouchableOpacity>
+      )}, []);
 
   const keyExtractor = (item: any, index: number) => index.toString();
 
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     fontSize: 18,
-    lineHeight: 21,
+    lineHeight: 24,
     color: theme.colors.lightGray,
     paddingBottom: 20,
     alignSelf: 'flex-start',

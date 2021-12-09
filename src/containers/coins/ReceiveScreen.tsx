@@ -8,9 +8,8 @@ import ReceiveControlButtons from '../../components/coin-receive/receive-control
 import {useAllInnerAddressesSelector} from '@slavi/wallet-core/src/store/modules/address-book/selectors';
 import EditAddressButton from '../../components/coin-receive/edit-address-button';
 import AddressesCarousel from '../../components/coin-receive/addresses-carousel';
-import {useInnerAddressBookService} from '@slavi/wallet-core';
+import {useCoinSpecsService, useInnerAddressBookService} from '@slavi/wallet-core';
 import theme from '../../theme';
-import LinearGradient from 'react-native-linear-gradient';
 
 const ReceiveScreen = () => {
   const route = useRoute<CoinReceiveRouteProps>();
@@ -23,14 +22,17 @@ const ReceiveScreen = () => {
     throw new Error('Unknown coin for details display');
   }
 
-  const [address, setAddress] = useState<string | undefined>();
   const [id, setId] = useState<number | undefined>();
   const [amount, setAmount] = useState<string>('');
   const [qr, setQr] = useState<string | null>(null);
 
+  const specService = useCoinSpecsService();
+
   const addresses = useAllInnerAddressesSelector(coin).sort(
     (a, b) => b.shift - a.shift,
   );
+
+  const [address, setAddress] = useState<string | undefined>(addresses?.[0].address);
 
   const innerBookService = useInnerAddressBookService();
 
@@ -69,46 +71,44 @@ const ReceiveScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
-        <ScrollView keyboardShouldPersistTaps="handled">
-          <CoinBalanceHeader
-            logo={data.logo}
-            balance={data.balance}
-            name={data.name}
-            cryptoBalance={data.cryptoBalance}
-            cryptoTicker={data.crypto}
-            fiatBalance={data.fiatBalance}
-            fiatTicker={data.fiat}
-            type={data.type}
-          />
-          <AddressesCarousel
-            addresses={addresses.map(element => ({
-              address: element.address,
-              name: element.name,
-              id: element.id,
-            }))}
-            qrSize={200}
-            onDataChange={onQrChange}
-            amount={amount}
-            coin={coin}
-            onSnapToItem={onSnapToItem}
-            onEdit={editRecvAddr}
-          />
-          {/* TODO: check address type */}
-          <ReceiveControlButtons
-            address={address || ''}
-            dataToShare={qr}
-            editAddress={editRecvAddr}
-            editAmount={onAmountChange}
-            containerStyle={styles.receiveControlButtons}
-          />
-          <EditAddressButton
-            title={'Get new address'}
-            nameInputLabel={'Address name'}
-            onSubmit={getNewRecvAddr}
-          />
-        </ScrollView>
-      </LinearGradient>
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <CoinBalanceHeader
+          logo={data.logo}
+          balance={data.balance}
+          name={data.name}
+          cryptoBalance={data.cryptoBalance}
+          cryptoTicker={data.crypto}
+          fiatBalance={data.fiatBalance}
+          fiatTicker={data.fiat}
+          type={data.type}
+        />
+        <AddressesCarousel
+          addresses={addresses.map(element => ({
+            address: element.address,
+            name: element.name,
+            id: element.id,
+          }))}
+          qrSize={200}
+          onDataChange={onQrChange}
+          amount={amount}
+          coin={specService.getSpec(coin)?.bip21Name || ''}
+          onSnapToItem={onSnapToItem}
+          onEdit={editRecvAddr}
+        />
+        {/* TODO: check address type */}
+        <ReceiveControlButtons
+          address={address || ''}
+          dataToShare={qr}
+          editAddress={editRecvAddr}
+          editAmount={onAmountChange}
+          containerStyle={styles.receiveControlButtons}
+        />
+        <EditAddressButton
+          title={'Get new address'}
+          nameInputLabel={'Address name'}
+          onSubmit={getNewRecvAddr}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -116,10 +116,7 @@ const ReceiveScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colorsOld.white,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   receiveControlButtons: {
     marginTop: 24,

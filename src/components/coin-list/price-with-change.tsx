@@ -31,9 +31,10 @@ const PriceWithChange = (props: PriceWithChangeProps) => {
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <View>
+      <View style={styles.priceBlock}>
+        <Text style={{...styles.price, ...props.priceStyle}}>{props.currency}</Text>
         <Text style={{...styles.price, ...props.priceStyle}}>
-          {props.currency}{props.price.toFixed(precision)}
+          {props.price.toFixed(precision)}
         </Text>
       </View>
       {!!props.change && (
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textTransform: 'uppercase',
+    marginRight: 2,
   },
   change: {
     fontFamily: theme.fonts.default,
@@ -83,4 +85,7 @@ const styles = StyleSheet.create({
   changeContainer: {
     marginLeft: 9,
   },
+  priceBlock: {
+    flexDirection: 'row',
+  }
 });

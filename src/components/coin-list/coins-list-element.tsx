@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import React, {useCallback} from 'react';
 import {Image, Text} from 'react-native-elements';
-import {useTranslation} from 'react-i18next';
 import theme from '../../theme';
 import getImageSource from '../../utils/get-image-source';
 import CoinType from '@slavi/wallet-core/src/utils/coin-types';
@@ -40,17 +39,17 @@ export interface CoinListElementProps {
   data: CoinDisplayData;
   fiat: string;
   crypto: string;
+  fiatSymbol: string;
   showElement: boolean;
   showControl: boolean;
   onPress(): void;
-  onShownChange(ticker: string): void;
+  onShownChange(id: string): void;
 }
 
 const cryptoPercision = 4;
 const fiatPercision = 2;
 
 const CoinsListElement = (props: CoinListElementProps) => {
-  const {t} = useTranslation();
   const {
     name,
     total,
@@ -66,7 +65,7 @@ const CoinsListElement = (props: CoinListElementProps) => {
 
   const onChangeSwitcher = useCallback(() => {
     props.onShownChange(id);
-  },[]);
+  },[id, props.onShownChange]);
 
   const priceChange = +(fiatPriceChange || 0);
 
@@ -89,7 +88,7 @@ const CoinsListElement = (props: CoinListElementProps) => {
           <Text style={styles.ticker}>{ticker}</Text>
           <PriceWithChange
             price={fiatPrice || 0}
-            currency={'$'}          // TODO: receive from backend
+            currency={props.fiatSymbol}
             change={priceChange}
           />
         </View>
@@ -110,7 +109,6 @@ const CoinsListElement = (props: CoinListElementProps) => {
       </View>
       {props.showControl && (
         <View style={styles.displayedSwitchContainer}>
-          <Text style={styles.displayedLabel}>{t('Displayed')}:</Text>
           <Switch value={shown} onValueChange={onChangeSwitcher} />
         </View>
       )}

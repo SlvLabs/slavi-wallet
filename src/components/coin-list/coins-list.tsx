@@ -18,6 +18,7 @@ export interface CoinListProps {
   onShownChange(ticker: string): void;
   fiat: string;
   crypto: string;
+  fiatSymbol: string;
 }
 
 const CoinsList = (props: CoinListProps) => {
@@ -42,6 +43,7 @@ const CoinsList = (props: CoinListProps) => {
         }}
         fiat={props.fiat}
         crypto={props.crypto}
+        fiatSymbol={props.fiatSymbol}
       />
     );
   };

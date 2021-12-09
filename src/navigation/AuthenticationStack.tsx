@@ -1,13 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import LoginScreen from '../containers/authentification/LoginScreen';
 import RestoreScreen from '../containers/authentification/RestoreScreen';
 import ROUTES from './config/routes';
 
-const AuthenticationStack = () => {
-  const StackNavigator = createStackNavigator();
-  // TODO: change header
-  return (
+const StackNavigator = createStackNavigator();
+
+const AuthenticationStack = () => useMemo(() => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.AUTHENTICATION.LOGIN}
       headerMode={'screen'}>
@@ -20,7 +19,6 @@ const AuthenticationStack = () => {
         component={RestoreScreen}
       />
     </StackNavigator.Navigator>
-  );
-};
+  ), []);
 
 export default AuthenticationStack;

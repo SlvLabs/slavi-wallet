@@ -1,14 +1,14 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import InitializeLocalizationScreen from '../containers/initialization/InitializeLocalizationScreen';
 import InitializationPasscodeScreen from '../containers/initialization/InitializationPasscodeScreen';
 import LicenseAgreementScreen from '../containers/initialization/LicenseAgreementScreen';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
 
-const InitializationStack = () => {
-  const StackNavigator = createStackNavigator();
-  return (
+const StackNavigator = createStackNavigator();
+
+const InitializationStack = () => useMemo( () => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.INITIALIZATION.LOCALIZATION}
       headerMode={'screen'}
@@ -29,7 +29,6 @@ const InitializationStack = () => {
         options={{title: 'Licence'}}
       />
     </StackNavigator.Navigator>
-  );
-};
+  ), []);
 
 export default InitializationStack;

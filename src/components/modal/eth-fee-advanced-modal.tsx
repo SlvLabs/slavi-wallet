@@ -3,9 +3,9 @@ import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
 import SolidButton from '../buttons/solid-button';
-import Button from '../buttons/button';
 import BaseModal, {ModalProps} from './base-modal';
 import theme from '../../theme';
+import OutlineButton from '../buttons/outline-button';
 
 export interface EthFeeAdvancedModalProps extends ModalProps {
   onAccept: (gasPrice?: string, gasLimit?: string) => void;
@@ -60,17 +60,16 @@ const EthFeeAdvancedModal = (props: EthFeeAdvancedModalProps) => {
           ...styles.controlsContainer,
           ...props.controlsContainerStyle,
         }}>
-        <Button
-          title={t('Cancel')}
-          onPress={props.onCancel}
-          buttonStyle={{...styles.cancelButton, ...props.cancelButtonStyle}}
-        />
-
         <SolidButton
           title={t('Ok')}
           onPress={() => props.onAccept(gasPrice, gasLimit)}
-          buttonStyle={{...styles.acceptButton, ...props.acceptButtonStyle}}
-          containerStyle={styles.acceptButtonContainer}
+          buttonStyle={props.acceptButtonStyle}
+          containerStyle={styles.acceptContainer}
+        />
+        <OutlineButton
+          title={t('Cancel')}
+          onPress={props.onCancel}
+          buttonStyle={props.cancelButtonStyle}
         />
       </View>
     </BaseModal>
@@ -113,23 +112,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   controlsContainer: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
-    alignSelf: 'stretch',
     paddingTop: 16,
     paddingBottom: 16,
-  },
-  acceptButton: {
-    width: 120,
-    borderRadius: 8,
-  },
-  acceptButtonContainer: {
-    borderRadius: 8,
-  },
-  cancelButton: {
-    width: 120,
-    borderRadius: 8,
-    backgroundColor: theme.colors.cardBackground3
   },
   gasPrice: {
     paddingBottom: 16,
@@ -146,6 +131,10 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'space-between',
   },
+  acceptContainer: {
+    marginTop: 8,
+    marginBottom: 8,
+  }
 });
 
 export default EthFeeAdvancedModal;

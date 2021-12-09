@@ -1,5 +1,5 @@
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {parseDataFromQr} from '@slavi/wallet-core/src/utils/qr';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
@@ -31,7 +31,6 @@ import SolidButton from '../../components/buttons/solid-button';
 import theme from '../../theme';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
-import LinearGradient from 'react-native-linear-gradient';
 
 export interface SendBtcScreenProps {
   coin: string;
@@ -77,11 +76,11 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
   const coinPatternService = useCoinPatternService();
   const readQr = useCallback((index: number): void => setActiveQR(index), []);
 
-  const pattern = coinPatternService.createBtcPattern(
+  const pattern = useMemo(() => coinPatternService.createBtcPattern(
     props.coin,
     addressService.getGetterDelegate(props.coin),
     addressService.getCreatorDelegate(props.coin),
-  );
+  ), [coinPatternService]);
 
   const onQrReadFailed = useCallback(
     () => SimpleToast.show(t('Can not read qr')),
@@ -249,66 +248,64 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
-        <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-          <View>
-            <CoinBalanceHeader
-              balance={balance}
-              name={coinDetails.name}
-              cryptoBalance={coinDetails.spendableCryptoBalance}
-              cryptoTicker={coinDetails.crypto}
-              fiatBalance={coinDetails.spendableFiatBalance}
-              fiatTicker={coinDetails.fiat}
-              logo={coinDetails.logo}
-              type={coinDetails.type}
-            />
-            <SendManyView
-              readQr={readQr}
-              coin={props.coin}
-              balance={balance}
-              recipients={recipients}
-              onRecipientChange={onRecipientChange}
-              onRecipientAdd={onRecipientAdd}
-              onRecipientRemove={onRecipientRemove}
-              setRecipientPayFee={trySetRecipientPayFee}
-              errors={voutErrors}
-            />
-            <TxPriorityButtonGroup
-              label={t('Transaction fee')}
-              selectedIndex={txPriority}
-              onSelected={setTxPriority}
-              advancedIsAllowed={false}
-            />
-            {!isValid && errors.length > 0 && (
-              <View style={styles.errors}>
-                {errors.map((error, index) => (
-                  <AlertRow text={error} key={'general_error_' + index} />
-                ))}
-              </View>
-            )}
-          </View>
-          <View style={styles.submitButton}>
-            <SolidButton
-              title={t('Send')}
-              onPress={onSubmit}
-              disabled={!isValid || locked}
-              loading={locked}
-            />
-          </View>
-          <QrReaderModal
-            visible={activeQR >= 0}
-            onQRRead={onQRRead}
-            onClose={() => setActiveQR(-1)}
+      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+        <View>
+          <CoinBalanceHeader
+            balance={balance}
+            name={coinDetails.name}
+            cryptoBalance={coinDetails.spendableCryptoBalance}
+            cryptoTicker={coinDetails.crypto}
+            fiatBalance={coinDetails.spendableFiatBalance}
+            fiatTicker={coinDetails.fiat}
+            logo={coinDetails.logo}
+            type={coinDetails.type}
           />
-          <ConfirmationModal
-            visible={confIsShown}
-            vouts={txResult?.vouts || []}
-            fee={txResult?.fee}
-            onAccept={send}
-            onCancel={cancelConfirmSending}
+          <SendManyView
+            readQr={readQr}
+            coin={props.coin}
+            balance={balance}
+            recipients={recipients}
+            onRecipientChange={onRecipientChange}
+            onRecipientAdd={onRecipientAdd}
+            onRecipientRemove={onRecipientRemove}
+            setRecipientPayFee={trySetRecipientPayFee}
+            errors={voutErrors}
           />
-        </ScrollView>
-      </LinearGradient>
+          <TxPriorityButtonGroup
+            label={t('Transaction fee')}
+            selectedIndex={txPriority}
+            onSelected={setTxPriority}
+            advancedIsAllowed={false}
+          />
+          {!isValid && errors.length > 0 && (
+            <View style={styles.errors}>
+              {errors.map((error, index) => (
+                <AlertRow text={error} key={'general_error_' + index} />
+              ))}
+            </View>
+          )}
+        </View>
+        <View style={styles.submitButton}>
+          <SolidButton
+            title={t('Send')}
+            onPress={onSubmit}
+            disabled={!isValid || locked}
+            loading={locked}
+          />
+        </View>
+        <QrReaderModal
+          visible={activeQR >= 0}
+          onQRRead={onQRRead}
+          onClose={() => setActiveQR(-1)}
+        />
+        <ConfirmationModal
+          visible={confIsShown}
+          vouts={txResult?.vouts || []}
+          fee={txResult?.fee}
+          onAccept={send}
+          onCancel={cancelConfirmSending}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -318,13 +315,11 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   errors: {
-    marginTop: 30,
+    padding: 32,
   },
   container: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   scroll: {
     flexGrow: 1,

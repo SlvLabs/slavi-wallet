@@ -1,12 +1,10 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {State} from '../../store';
-import PageHeader from '../../components/page-header';
 import MnemonicArea from '../../components/mnemonic/mnemonic-area';
 import ControlButtons from '../../components/mnemonic/control-buttons';
 import theme from '../../theme';
-import PageDescription from '../../components/settings/page-description';
 import {useTranslation} from 'react-i18next';
 
 const MnemonicExportScreen = () => {
@@ -14,42 +12,66 @@ const MnemonicExportScreen = () => {
   const words = mnemonic.split(' ');
   const {t} = useTranslation();
   return (
-    <SafeAreaView>
-      <View>
-        <PageHeader text={t('Your secret phrases')} />
-        <PageDescription
-          text={t(
+    <SafeAreaView style={styles.container}>
+      <View style={styles.textBlock}>
+        <Text style={styles.description}>
+          {t(
             "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
           )}
-        />
-        <MnemonicArea words={words} style={styles.mnemonicContainer} />
-        <ControlButtons
-          mnemonic={mnemonic}
-          containerStyle={styles.controlButtonContainer}
-        />
+        </Text>
       </View>
+      <MnemonicArea words={words} style={styles.mnemonicContainer} wordStyle={styles.mnemonicWord}/>
+      <ControlButtons
+        mnemonic={mnemonic}
+        containerStyle={styles.controlButtonContainer}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    marginBottom: 15,
-    marginTop: 10,
+  container: {
+    flex: 1,
+    height: '100%',
+    padding: 16,
+    backgroundColor: theme.colors.screenBackground,
   },
   descriptionContainer: {
     margin: 20,
   },
-  mnemonicContainer: {
-    margin: 30,
-  },
   controlButtonContainer: {
     margin: 30,
   },
-  description: {
-    color: theme.colorsOld.secondary,
-    textAlign: 'center',
+  textBlock: {
+    marginBottom: 30,
   },
+  description: {
+    fontFamily: theme.fonts.default,
+    alignSelf: 'center',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 22,
+    color: theme.colors.textLightGray,
+    textAlign: 'left',
+  },
+  buttonsBlock: {
+    justifyContent: 'flex-end',
+  },
+  mnemonicContainer: {
+    borderBottomWidth: 0,
+    borderRadius: 12,
+    paddingTop: 14,
+    paddingBottom: 14,
+    padding: 14,
+    backgroundColor: theme.colors.cardBackground2,
+  },
+  mnemonicWord: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: theme.colors.wordBorder,
+    borderRadius: 6,
+  }
 });
 
 export default MnemonicExportScreen;

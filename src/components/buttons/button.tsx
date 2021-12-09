@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   defaultTitle: {
+    fontFamily: theme.fonts.default,
     color: theme.colors.white,
     fontSize: 13,
     fontStyle: 'normal',

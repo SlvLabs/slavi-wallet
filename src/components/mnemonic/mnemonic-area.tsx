@@ -7,7 +7,7 @@ export interface MnemonicAreaProps {
   words: string[];
   style?: ViewStyle;
   wordStyle?: ViewStyle;
-  onPressWorld?: (word: string) => void;
+  onPressWorld?: (word: string, index?: number) => void;
 }
 
 const MnemonicArea = (props: MnemonicAreaProps) => {
@@ -19,7 +19,7 @@ const MnemonicArea = (props: MnemonicAreaProps) => {
         <MnemonicWord
           word={word}
           key={key}
-          onPressWord={onPressWorld}
+          onPressWord={(word) => onPressWorld?.(word, key)}
           style={wordStyle}
         />
       );

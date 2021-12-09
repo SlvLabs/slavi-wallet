@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 4,
     borderRadius: 4,
-    backgroundColor: theme.colorsOld.cultured,
+    backgroundColor: theme.colors.lightGray,
     justifyContent: 'center',
     textAlignVertical: 'center',
     alignItems: 'center',
@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     letterSpacing: 0.4,
     fontSize: 10,
-    lineHeight: 10,
-    color: theme.colorsOld.gray,
+    lineHeight: 16,
+    color: theme.colors.lightGray,
     textTransform: 'uppercase',
   },
 });

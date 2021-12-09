@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '400',
-    lineHeight: 17,
+    lineHeight: 18,
     color: theme.colors.textLightGray,
     textAlign: 'left',
   },

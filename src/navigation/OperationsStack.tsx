@@ -1,14 +1,15 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import OperationsListScreen from '../containers/operations/OperationsListScreen';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
 import {useTranslation} from 'react-i18next';
 
+const StackNavigator = createStackNavigator();
+
 const OperationsStack = () => {
-  const StackNavigator = createStackNavigator();
   const {t} = useTranslation();
-  return (
+  return useMemo(() => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.OPERATIONS.LIST}
       headerMode={'screen'}
@@ -19,7 +20,7 @@ const OperationsStack = () => {
         options={{title: t('Operations history')}}
       />
     </StackNavigator.Navigator>
-  );
+  ), []);
 };
 
 export default OperationsStack;

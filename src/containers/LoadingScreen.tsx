@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   nameText: {
+    fontFamily: theme.fonts.default,
     alignSelf: 'center',
     fontSize: 34,
     fontStyle: 'normal',
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     color: theme.colors.white
   },
   welcomeText: {
+    fontFamily: theme.fonts.default,
     alignSelf: 'center',
     fontSize: 20,
     fontStyle: 'normal',
@@ -101,11 +103,13 @@ const styles = StyleSheet.create({
     marginBottom: 26,
   },
   title: {
+    fontFamily: theme.fonts.default,
     fontSize: 48,
     color: '#000',
     textAlign: 'center',
   },
   description: {
+    fontFamily: theme.fonts.default,
     fontSize: 28,
     color: 'rgba(255,255,255,0.5)',
   },

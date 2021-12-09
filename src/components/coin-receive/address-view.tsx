@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   name: {
+    fontFamily: theme.fonts.default,
     fontSize: 18,
     textAlign: 'center',
     marginTop: 10,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
   },
   address: {
+    fontFamily: theme.fonts.default,
     fontSize: 16,
     textAlign: 'center',
     marginTop: 10,

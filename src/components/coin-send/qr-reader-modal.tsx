@@ -3,7 +3,6 @@ import {Modal, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import OutlineButton from '../buttons/outline-button';
-import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
 
 export interface QrInSendModalProps {
@@ -17,7 +16,7 @@ const QrReaderModal = (props: QrInSendModalProps) => {
   const {t} = useTranslation();
   return (
     <Modal animationType="fade" transparent={false} visible={props.visible}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.background} >
+      <View style={styles.background} >
         <QRCodeScanner
           onRead={e => props.onQRRead(e.data)}
           containerStyle={styles.centeredView}
@@ -36,7 +35,7 @@ const QrReaderModal = (props: QrInSendModalProps) => {
             </View>
           }
         />
-      </LinearGradient>
+      </View>
     </Modal>
   );
 };
@@ -50,6 +49,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   bottomContainer: {
     flex: 10

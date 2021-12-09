@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   KeyboardTypeOptions,
   StyleSheet,
@@ -24,11 +24,13 @@ export interface SimpleInputProps {
   keyboardType?: KeyboardTypeOptions;
   inputContainerStyle?: ViewStyle;
   containerStyle?: ViewStyle;
-  inputStyle?: ViewStyle;
+  inputStyle?: ViewStyle | TextStyle;
   errorContainerStyle?: ViewStyle;
   errorStyle?: TextStyle;
   label?: string;
   labelStyle?: TextStyle;
+  placeholderTextColor?: string,
+  iconLeft?: boolean;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -61,6 +63,14 @@ const SimpleInput = (props: SimpleInputProps) => {
     setFocusStyle({});
   }, []);
 
+  const IconElement = useMemo<React.ReactNode>(() => (
+    props.icon && (
+      <TouchableOpacity onPress={props.onIconPress} style={styles.iconWrap}>
+        {props.icon}
+      </TouchableOpacity>
+      )
+  ), [props.icon, props.onIconPress]);
+
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
       <View
@@ -71,11 +81,10 @@ const SimpleInput = (props: SimpleInputProps) => {
           ...errorStyle,
           ...props.inputContainerStyle,
         }}>
+        {props.iconLeft && IconElement}
         <View style={styles.leftCol}>
-          {props.label && (
-            <View>
-              <Text style={styles.label}>{props.label}</Text>
-            </View>
+          {!!props.label && (
+            <Text style={styles.label}>{props.label}</Text>
           )}
           <TextInput
             onChangeText={props.onChange}
@@ -86,20 +95,17 @@ const SimpleInput = (props: SimpleInputProps) => {
             onFocus={onFocus}
             onBlur={onBlur}
             keyboardType={props.keyboardType}
+            placeholderTextColor={props.placeholderTextColor}
           />
         </View>
-        {props.buttonText && (
+        {!!props.buttonText && (
           <TouchableOpacity
             onPress={props.onButtonPress}
             style={styles.buttonWrap}>
             <Text style={styles.button}>{props.buttonText}</Text>
           </TouchableOpacity>
         )}
-        {props.icon && (
-          <TouchableOpacity onPress={props.onIconPress} style={styles.iconWrap}>
-            {props.icon}
-          </TouchableOpacity>
-        )}
+        {!props.iconLeft && IconElement}
       </View>
       {!!props.errorMessage && (
         <View style={{...styles.errorContainer, ...props.errorContainerStyle}}>
@@ -127,11 +133,10 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 18,
-    lineHeight: 21,
+    lineHeight: 22,
     letterSpacing: 0.02,
     color: theme.colors.textLightGray2,
     padding: 0,
-    flex: 10,
   },
   button: {
     fontFamily: theme.fonts.default,
@@ -171,7 +176,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.borderGray,
   },
   label: {
-    ontFamily: theme.fonts.default,
+    fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,

@@ -68,16 +68,12 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
 
   const onSnapItem = useCallback(
     (index: number) => {
+      console.log(index);
       if (refs.current[index]) {
         refs.current[index].toDataURL(props.onDataChange);
       }
 
-      if (props.onSnapToItem && typeof props.onSnapToItem === 'function') {
-        props.onSnapToItem(
-          props.addresses[index].address,
-          props.addresses[index].id,
-        );
-      }
+      props.onSnapToItem?.(props.addresses[index].address, props.addresses[index].id);
     },
     [props],
   );
@@ -91,7 +87,7 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
     ) {
       onSnapItem(0);
     }
-  }, [onSnapItem, props.addresses]);
+  }, []);
 
   useEffect(() => setCurrentIndex(carousel.current?.currentIndex || 0), [carousel.current?.currentIndex]);
 

@@ -25,7 +25,7 @@ const AmountInput = (props: AmountInputProps) => {
   const {t} = useTranslation();
   const [amount, setAmount] = useState<string>('');
 
-  const {onChange, setRecipientPayFee, balance, errors} = props;
+  const {onChange, setRecipientPayFee, balance, errors, maxIsAllowed} = props;
 
   const onMaxPress = () => {
     setAmount(balance);
@@ -52,7 +52,7 @@ const AmountInput = (props: AmountInputProps) => {
             value={amount}
             errorMessage={errorMessage}
             inputType={DecimalType.Real}
-            buttonText={t('Max')} //TODO: Optional
+            buttonText={maxIsAllowed ? t('Max') : ''}
             onButtonPress={onMaxPress}
             label={props.label}
           />

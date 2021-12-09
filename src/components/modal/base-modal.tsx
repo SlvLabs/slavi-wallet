@@ -30,7 +30,7 @@ const BaseModal = (props: BaseModalProps) => {
         <View style={{...styles.modalContent, ...props.contentStyle}}>
           {!!props.showCloseIcon && (
             <View style={styles.closeButtonRow}>
-              <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3}/>
+              <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3} onPress={props.onCancel}/>
             </View>
           )}
           {props.children}

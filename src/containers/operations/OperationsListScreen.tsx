@@ -7,7 +7,6 @@ import {
   useFiatSelector,
 } from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import theme from '../../theme';
-import LinearGradient from 'react-native-linear-gradient';
 
 const OperationsListScreen = () => {
   const {isLoading, operations, updateParams, getMore} = useOperationsList({});
@@ -16,16 +15,14 @@ const OperationsListScreen = () => {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
-        <OperationsList
-          sections={operations}
-          fiatTicker={fiat}
-          cryptoTicker={crypto}
-          onEndReached={getMore}
-          filter={updateParams}
-        />
-        {isLoading && <ActivityIndicator />}
-      </LinearGradient>
+      <OperationsList
+        sections={operations}
+        fiatTicker={fiat}
+        cryptoTicker={crypto}
+        onEndReached={getMore}
+        filter={updateParams}
+      />
+      {isLoading && <ActivityIndicator />}
     </SafeAreaView>
   );
 };
@@ -33,6 +30,7 @@ const OperationsListScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   gradient: {
     flex: 1,

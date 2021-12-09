@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     letterSpacing: 0.4,
     textTransform: 'uppercase',
     color: theme.colorsOld.lightGray,

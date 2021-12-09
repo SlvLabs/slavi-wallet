@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.4,
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     color: theme.colors.textLightGray3,
   },
 });

@@ -1,7 +1,6 @@
 import {Text, View, InteractionManager, Image, StyleSheet} from 'react-native';
 import React, {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
 import ROUTES from '../../navigation/config/routes';
 import InitializationBackground from '../../components/background/initialization-background';
@@ -22,8 +21,10 @@ const AccountMenuScreen = () => {
   }, [navigation]);
 
   const onPressImport = useCallback(() => {
-    Toast.showWithGravity(t('Coming soon'), Toast.LONG, Toast.CENTER);
-  }, [t]);
+    InteractionManager.runAfterInteractions(() => {
+      navigation.navigate(ROUTES.ACCOUNT_INITIALIZATION.IMPORT_MNEMONIC);
+    });
+  }, [navigation]);
 
   return (
     <InitializationBackground>

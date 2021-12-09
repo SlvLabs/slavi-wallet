@@ -15,6 +15,7 @@ import {useTranslation} from 'react-i18next';
 
 export interface InnerAddressListProps {
   addresses: AddressEntry[];
+  ticker: string;
   onPressElement: (index: number) => void;
   containerStyle?: ViewStyle;
   placeholderContainerStyle?: ViewStyle;
@@ -40,6 +41,8 @@ const InnerAddressList = (props: InnerAddressListProps) => {
               <InnerAddressElement
                 name={element.name}
                 address={element.address}
+                balance={element.balance}
+                ticker={props.ticker}
               />
             </TouchableOpacity>
           ))}
@@ -70,7 +73,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  listContainer: {},
+  listContainer: {
+    borderBottomWidth: 1,
+    borderColor: theme.colors.borderGray,
+  },
   placeholderContainer: {
     flex: 1,
     justifyContent: 'center',

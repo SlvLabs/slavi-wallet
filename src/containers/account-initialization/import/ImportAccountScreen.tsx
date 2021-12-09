@@ -1,0 +1,103 @@
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import InitializationBackground from '../../../components/background/initialization-background';
+import theme from '../../../theme';
+import SolidButton from '../../../components/buttons/solid-button';
+import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
+import ConfirmationModal from '../../../components/modal/confirmation-modal';
+import {showFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import {useDispatch} from 'react-redux';
+import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
+import {store} from '@slavi/wallet-core';
+import InsertableTextArea from '../../../components/controls/insertable-text-area';
+
+const ImportAccountScreen = () => {
+  const [mnemonic, setMnemonic] = useState<string>('');
+  const [confIsShown, setConfIsShown] = useState<boolean>(false);
+
+  const {t} = useTranslation();
+  const dispatch = useDispatch();
+
+  const showConf = useCallback(() => setConfIsShown(true),[]);
+  const hideConf = useCallback(() => setConfIsShown(false), []);
+
+  const updateMnemonic = useCallback(async () => {
+    dispatch(setGlobalLoading());
+    dispatch(showFinish());
+    await dispatch(store.ImportMnemonic(mnemonic));
+    dispatch(unsetGlobalLoading());
+  }, [dispatch, mnemonic]);
+
+  return (
+    <InitializationBackground>
+      <View style={styles.textBlock}>
+        <Text style={styles.header}>{t('Import exists account')}</Text>
+        <Text style={styles.description}>
+          {t(
+            "Enter the secret phrase from another wallet. Usually it is 12, sometimes more, words separated by spaces",
+          )}
+        </Text>
+      </View>
+      <InsertableTextArea onChange={(value: string) => setMnemonic(value)} />
+      <View style={styles.buttonsBlock}>
+        <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
+        <View style={styles.loaderView}>
+          <PointerProgressBar stepsCount={5} activeStep={3}/>
+        </View>
+      </View>
+      <ConfirmationModal
+        onPositive={updateMnemonic}
+        title={t('Attention!')}
+        visible={confIsShown}
+        onCancel={hideConf}
+        description={t(
+          'I saved the phrase outside the wallet and I understand that in case of loss I will not be able to restore access'
+        )}
+      />
+    </InitializationBackground>
+  );
+};
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    marginBottom: 15,
+    marginTop: 10,
+  },
+  descriptionContainer: {
+    margin: 20,
+  },
+  textBlock: {
+    marginBottom: 30,
+  },
+  header: {
+    fontFamily: theme.fonts.default,
+    alignSelf: 'center',
+    fontSize: 28,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    lineHeight: 32,
+    color: theme.colors.white,
+    marginBottom: 20,
+  },
+  description: {
+    fontFamily: theme.fonts.default,
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 18,
+    color: theme.colors.lightGray,
+    textAlign: 'center',
+  },
+  buttonsBlock: {
+    flex: 1,
+    marginTop: 24,
+    justifyContent: 'space-between',
+  },
+  loaderView: {
+    paddingTop: 17,
+  },
+});
+
+export default ImportAccountScreen;

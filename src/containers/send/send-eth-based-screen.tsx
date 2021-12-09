@@ -8,7 +8,6 @@ import SendView, {
   RecipientUpdatingData,
 } from '../../components/coin-send/send-view';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
-import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
@@ -31,7 +30,6 @@ import SolidButton from '../../components/buttons/solid-button';
 import AddressSelector from '../../components/buttons/address-selector';
 import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -52,8 +50,6 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   if (!coinSpec) {
     throw new Error('Unable get coin spec for coin ' + props.coin);
   }
-
-  const balance: string = useSpendableBalance(props.coin);
 
   const [recipient, setRecipient] = useState<Recipient>({
     address: '',
@@ -150,8 +146,8 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
 
   const onRecipientChange = (data: RecipientUpdatingData) => {
     setRecipient({
-      address: data.address || recipient.address,
-      amount: data.amount || recipient.amount,
+      address: typeof data.address === 'undefined' ? recipient.address : data.address,
+      amount: typeof data.amount === 'undefined' ? recipient.amount : data.amount,
     });
   };
 
@@ -173,6 +169,12 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       }
 
       let result;
+      console.log({recipient, fromAddress, options: {
+        transactionPriority: TransactionPriority.average,
+          receiverPaysFee: recipientPayFee,
+          gasLimit: advancedGasLimit,
+          gasPrice: advancedGasPrice,
+      }})
       try {
         result = await props.pattern.createTransaction(recipient, fromAddress, {
           transactionPriority: TransactionPriority.average,
@@ -253,82 +255,83 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   const currentGasLimit =
     advancedGasLimit || props.pattern.getDefaultGasPrice();
 
+  const enableRecipientPaysFee = useCallback(() => setRecipientPayFee(true), []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
-        <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-          <View>
-            <CoinBalanceHeader
+      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+        <View>
+          <CoinBalanceHeader
+            balance={accountBalance}
+            name={coinDetails.name}
+            cryptoTicker={coinDetails.crypto}
+            fiatTicker={coinDetails.fiat}
+            logo={coinDetails.logo}
+            type={coinDetails.type}
+          />
+          <AddressSelector
+            label={t('From account')}
+            containerStyle={styles.addressSelector}
+            addresses={balancesState.balances}
+            onSelect={setSenderIndex}
+            selectedAddress={senderIndex}
+            ticker={coinDetails.ticker}
+          />
+          <View style={styles.sendContainer}>
+            <SendView
+              readQr={() => setActiveQR(true)}
+              coin={coinDetails.ticker}
               balance={accountBalance}
-              name={coinDetails.name}
-              cryptoTicker={coinDetails.crypto}
-              fiatTicker={coinDetails.fiat}
-              logo={coinDetails.logo}
-              type={coinDetails.type}
+              recipient={recipient}
+              onRecipientChange={onRecipientChange}
+              maxIsAllowed={true}
+              setRecipientPayFee={enableRecipientPaysFee}
+              errors={voutError}
             />
-            <AddressSelector
-              label={t('From account')}
-              containerStyle={styles.addressSelector}
-              addresses={balancesState.balances}
-              onSelect={setSenderIndex}
-              selectedAddress={senderIndex}
-            />
-            <View style={styles.sendContainer}>
-              <SendView
-                readQr={() => setActiveQR(true)}
-                coin={coinDetails.ticker}
-                balance={balance}
-                recipient={recipient}
-                onRecipientChange={onRecipientChange}
-                maxIsAllowed={true}
-                setRecipientPayFee={() => setRecipientPayFee(true)}
-                errors={voutError}
-              />
+          </View>
+          <TxPriorityButtonGroup
+            label={t('Transaction fee')}
+            selectedIndex={txPriority}
+            onSelected={setTxPriority}
+            advancedIsAllowed={true}
+            onAdvancedPress={() => setAdvancedModalIsShown(true)}
+          />
+          {!isValid && errors.length > 0 && (
+            <View style={styles.errors}>
+              {errors.map((error, index) => (
+                <AlertRow text={error} key={'general_error_' + index} />
+              ))}
             </View>
-            <TxPriorityButtonGroup
-              label={t('Transaction fee')}
-              selectedIndex={txPriority}
-              onSelected={setTxPriority}
-              advancedIsAllowed={true}
-              onAdvancedPress={() => setAdvancedModalIsShown(true)}
-            />
-            {!isValid && errors.length > 0 && (
-              <View style={styles.errors}>
-                {errors.map((error, index) => (
-                  <AlertRow text={error} key={'general_error_' + index} />
-                ))}
-              </View>
-            )}
-          </View>
-          <View style={styles.submitButton}>
-            <SolidButton
-              title={t('Send')}
-              onPress={onSubmit}
-              disabled={!isValid || locked}
-              loading={locked}
-            />
-          </View>
-          <QrReaderModal
-            visible={activeQR}
-            onQRRead={onQRRead}
-            onClose={() => setActiveQR(false)}
+          )}
+        </View>
+        <View style={styles.submitButton}>
+          <SolidButton
+            title={t('Send')}
+            onPress={onSubmit}
+            disabled={!isValid || locked}
+            loading={locked}
           />
-          <ConfirmationModal
-            visible={confIsShown}
-            vouts={txResult?.vouts || []}
-            fee={txResult?.fee}
-            onAccept={send}
-            onCancel={cancelConfirmSending}
-          />
-          <EthFeeAdvancedModal
-            visible={advancedModalIsShown}
-            onCancel={() => setAdvancedModalIsShown(false)}
-            onAccept={setAdvancedOptions}
-            defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
-            defaultGasLimit={currentGasLimit}
-          />
-        </ScrollView>
-      </LinearGradient>
+        </View>
+        <QrReaderModal
+          visible={activeQR}
+          onQRRead={onQRRead}
+          onClose={() => setActiveQR(false)}
+        />
+        <ConfirmationModal
+          visible={confIsShown}
+          vouts={txResult?.vouts || []}
+          fee={txResult?.fee}
+          onAccept={send}
+          onCancel={cancelConfirmSending}
+        />
+        <EthFeeAdvancedModal
+          visible={advancedModalIsShown}
+          onCancel={() => setAdvancedModalIsShown(false)}
+          onAccept={setAdvancedOptions}
+          defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
+          defaultGasLimit={currentGasLimit}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -338,10 +341,11 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   errors: {
-    marginTop: 30,
+    padding: 32,
   },
   container: {
     flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   sendContainer: {
     paddingLeft: 16,
@@ -351,9 +355,6 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     marginRight: 16,
     marginBottom: 16,
-  },
-  gradient: {
-    flex: 1,
   },
   scroll: {
     flexGrow: 1,

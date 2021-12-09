@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 
@@ -50,7 +49,7 @@ const FullScreenModal = (props: FullScreenModalProps) => {
             )}
           </TouchableOpacity>
         </View>
-        <LinearGradient {...theme.gradients.backgroundGradient} style={styles.content}>{props.children}</LinearGradient>
+        <View style={styles.content}>{props.children}</View>
       </SafeAreaView>
     </Modal>
   );
@@ -93,7 +92,8 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
   },
   content: {
-    flex: 1
+    flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
 });
 

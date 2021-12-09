@@ -35,7 +35,7 @@ const validate = (re: RegExp, value?: string): boolean => {
 const realRegExp = /^([\d])+.?([\d])*$/;
 const validateReal = (value?: string): boolean => validate(realRegExp, value);
 
-const intRegExp = /^[\d]$/;
+const intRegExp = /^[\d]+$/;
 const validateInteger = (value?: string): boolean => validate(intRegExp, value);
 
 const DecimalInput = (props: DecimalInputProps) => {

@@ -15,6 +15,8 @@ import useLanguages from '@slavi/wallet-core/src/providers/ws/hooks/use-language
 import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import {useCurrencyLists, useCurrencyService} from '@slavi/wallet-core';
 import useLanguageService from '@slavi/wallet-core/src/contexts/hooks/use-language-service';
+import mapArrayToSelectOptions from '../../utils/map-array-to-select-options';
+import Layout from '../../utils/layout';
 
 const InitializeLocalizationScreen = () => {
   const {languages, isLoading: isLoadingLanguages} = useLanguages();
@@ -42,22 +44,13 @@ const InitializeLocalizationScreen = () => {
   const goNextStep = useCallback(() => navigation.navigate(ROUTES.INITIALIZATION.LICENSE_AGREEMENT), []);
 
   const languageOptions: Record<string, string> | undefined = useMemo(
-    () => languages?.reduce((acc: Record<string, string>, element) => {
-      acc[element] = element;
-      return acc;
-    },
-    {}), [languages]);
+    () => mapArrayToSelectOptions(languages), [languages]
+  );
 
   const currencyOptions: Record<string, string> | undefined = useMemo(
-    () => fiatList?.reduce((acc: Record<string, string>, element) => {
-        acc[element] = element;
-        return acc;
-      },
-      {}), [fiatList]);
+    () => mapArrayToSelectOptions(fiatList), [fiatList]
+   );
 
-  console.log('Options');
-  console.log(languageOptions)
-  console.log(currencyOptions)
   return (
     <InitializationBackground>
         <View style={styles.logoView}>
@@ -97,13 +90,13 @@ const InitializeLocalizationScreen = () => {
 
 const styles = StyleSheet.create({
   logoView: {
-    flex: 2,
+    flex: Layout.isSmallDevice ? 1 : 2,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
   logo: {
-    width: 160,
-    height: 160,
+    width: Layout.isSmallDevice ? 100 : 160,
+    height: Layout.isSmallDevice ? 100 : 160,
     marginBottom: 10,
   },
   textBlock: {
@@ -111,6 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    fontFamily: theme.fonts.default,
     alignSelf: 'center',
     fontSize: 28,
     fontStyle: 'normal',
@@ -120,6 +114,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   description: {
+    fontFamily: theme.fonts.default,
     alignSelf: 'center',
     fontSize: 14,
     fontStyle: 'normal',

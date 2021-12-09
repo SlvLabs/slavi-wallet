@@ -16,6 +16,7 @@ import {useTranslation} from 'react-i18next';
 
 export interface AddressSelectorProps {
   addresses: AddressEntry[];
+  ticker: string;
   onSelect: (index: number) => void;
   placeholder?: string;
   label?: string;
@@ -78,6 +79,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
         modalStyle={styles.modal}
         title={t('Select address')}
         onSelect={props.onSelect}
+        ticker={props.ticker}
       />
     </View>
   );
@@ -100,14 +102,11 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     letterSpacing: 0.2,
     color: theme.colors.textLightGray1,
   },
   modal: {
-    flex: 1,
-    borderRadius: 0,
-    margin: 0,
     padding: 16,
   },
   text: {
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     letterSpacing: 0.02,
     color: theme.colors.textLightGray2,
   },
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     letterSpacing: 0.02,
     color: theme.colors.textLightGray1,
     marginBottom: 8,

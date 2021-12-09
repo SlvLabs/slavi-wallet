@@ -39,6 +39,7 @@ const TxPriorityButtonGroup = (props: TxPriorityButtonGroupProps) => {
             title={title}
             buttonStyle={styles.button}
             containerStyle={styles.buttonContainer}
+            titleStyle={styles.inactiveButtonTitle}
             onPress={() => props.onSelected(index)}
             key={key}
           />
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   button: {
-    width: 73,
+    width: 94,
     height: 48,
     marginRight: 8,
     borderRadius: 8,
@@ -118,6 +119,14 @@ const styles = StyleSheet.create({
   },
   buttonTitle: {
     color: theme.colors.textLightGray,
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 16,
+    textTransform: 'uppercase',
+  },
+  inactiveButtonTitle: {
+    color: theme.colors.white,
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '500',

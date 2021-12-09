@@ -38,6 +38,11 @@ export default {
     lighter: '#F5F5F5',
     lightGrayBackground: '#C4C4C4',
     darkWord: '#030303',
+    wordBorder: '#45464D',
+    errorRed: '#FF5456',
+    screenBackground: '#121418',
+    balanceHeaderBackground: '#0A0A0C',
+    simpleCoinBackground: 'rgba(128, 144, 173, 0.1)',
   },
   /** @deprecated */
   colorsOld: {
@@ -92,7 +97,7 @@ export default {
     },
   },
   fonts: {
-    default: 'System',
+    default: 'Roboto',
   },
   gradients: {
     header: {
@@ -112,13 +117,6 @@ export default {
     inactiveIcon: {
       colors: ['#FFE39C', '#ab9160'],
       locations: [0,0.7]
-    },
-    backgroundGradient: {
-      colors: ['#303542', '#121418',],
-      locations: [0.1, 1],
-      useAngle: true,
-      angle: 120,
-      angleCenter: { x: 0.5, y: 0.5 },
     },
     radialLoadingGradient: {
       colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],

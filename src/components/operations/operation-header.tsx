@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.4,
     fontSize: 10,
-    lineHeight: 10,
+    lineHeight: 14,
     color: theme.colorsOld.lightGray,
     textTransform: 'uppercase',
   },

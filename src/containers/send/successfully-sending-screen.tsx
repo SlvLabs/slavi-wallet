@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import {useRoute} from '@react-navigation/core';
 import {CoinSuccessfullySendingRouteProps} from '../../navigation/CoinsStack';
-import LinearGradient from 'react-native-linear-gradient';
+import Layout from '../../utils/layout';
 
 const SuccessfullySendingScreen = () => {
   const {t} = useTranslation();
@@ -30,32 +30,30 @@ const SuccessfullySendingScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>{t('Success')}</Text>
-        </View>
-        <View style={styles.content}>
-          <CustomIcon name={'check'} size={256} color={theme.colors.gold2} />
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.description}>{t('Successfully sent')}</Text>
-            <Text style={styles.description}>
-              {Object.keys(route.params.recipients).length > 1
-                ? t('To addresses')
-                : t('To address')}
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>{t('Success')}</Text>
+      </View>
+      <View style={styles.content}>
+        <CustomIcon name={'check'} size={Layout.isSmallDevice ? 64 : 64} color={theme.colors.gold2} />
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{t('Successfully sent')}</Text>
+          <Text style={styles.description}>
+            {Object.keys(route.params.recipients).length > 1
+              ? t('To addresses')
+              : t('To address')}
+          </Text>
+          {route.params.recipients.map(({address, amount}, index) => (
+            <Text
+              style={{...styles.description, ...styles.boldText}}
+              key={`recipient_${index}`}>
+              {`${address}: ${amount} ${route.params.ticker}`}
             </Text>
-            {route.params.recipients.map(({address, amount}, index) => (
-              <Text
-                style={{...styles.description, ...styles.boldText}}
-                key={`recipient_${index}`}>
-                {`${address}: ${amount} ${route.params.ticker}`}
-              </Text>
-            ))}
-          </View>
+          ))}
         </View>
-        <View style={styles.controls}>
-          <SolidButton title={t('Home')} onPress={homeOnPress} />
-        </View>
-      </LinearGradient>
+      </View>
+      <View style={styles.controls}>
+        <SolidButton title={t('Home')} onPress={homeOnPress} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -63,6 +61,7 @@ const SuccessfullySendingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
   headerContainer: {
     alignItems: 'center',
@@ -73,12 +72,12 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: 48,
-    lineHeight: 48,
+    lineHeight: 56,
     color: theme.colors.gold2,
   },
   content: {
     alignItems: 'center',
-    flex: 10,
+    flex: Layout.isSmallDevice ? 2 : 5,
     justifyContent: 'space-around',
   },
   description: {

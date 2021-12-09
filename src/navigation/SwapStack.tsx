@@ -1,12 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
 import SwapScreen from '../containers/swap/swap-screen';
 
-const SwapStack = () => {
-  const StackNavigator = createStackNavigator();
-  return (
+const StackNavigator = createStackNavigator();
+
+const SwapStack = () => useMemo( () => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.SWAP.MAIN}
       headerMode={'screen'}
@@ -17,7 +17,6 @@ const SwapStack = () => {
         options={{title: 'Swap'}}
       />
     </StackNavigator.Navigator>
-  );
-};
+  ), []);
 
 export default SwapStack;

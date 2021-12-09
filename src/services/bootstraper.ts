@@ -4,14 +4,12 @@ import CoreBootstrap from '@slavi/wallet-core/src/utils/bootstrap';
 import i18nextReactNative from 'i18next-react-native-language-detector';
 import {Store} from 'redux';
 import {networks} from '@slavi/crypto-core';
-import {DataStoreProviderInterface} from '@slavi/wallet-core/src/types';
-import {BootstrapResult as BootstrapResultCore} from '@slavi/wallet-core/src/utils/bootstrap';
+import {DataStoreProviderInterface, ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
 import {ContractAbiProviderConf} from '@slavi/wallet-core/types/services/contract-abi-provider';
 import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from "@slavi/wallet-core/src/utils/performance-monitor-interface";
 
-export interface BootstrapResult extends BootstrapResultCore {}
 
 const wsConfig = {
   url: Config.WS_URL,
@@ -35,10 +33,10 @@ const bootstrap = async (
   store: Store,
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
+  serviceLocator: ServiceLocatorCoreInterface,
   devMode?: boolean,
-): Promise<BootstrapResult> => {
-  console.log('bootstrap')
-  console.log('DETECT ' + i18nextReactNative.detect());
+  appVersion?: string,
+): Promise<void> => {
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
     systemLanguage: i18nextReactNative.detect(),
@@ -56,6 +54,8 @@ const bootstrap = async (
         SimpleToast.TOP,
       ),
     devMode: devMode,
+    appVersion: appVersion || '',
+    serviceLocator: serviceLocator,
   });
   return coreBootstrap.load();
 };

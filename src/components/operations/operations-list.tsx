@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: theme.colors.textLightGray1,
     fontSize: 20,
-    lineHeight: 20,
+    lineHeight: 28,
     marginTop: 24,
     textAlign: 'center',
   },

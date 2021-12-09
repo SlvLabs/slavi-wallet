@@ -1,20 +1,29 @@
-import {ActivityIndicator, SafeAreaView, View} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
 import useLanguages from '@slavi/wallet-core/src/providers/ws/hooks/use-languages';
-import {Picker} from '@react-native-community/picker';
 import {useTranslation} from 'react-i18next';
+import theme from '../../theme';
+import SelectableList from '../../components/controls/selectable-list';
+import mapArrayToSelectOptions from '../../utils/map-array-to-select-options';
+import useLanguageService from '@slavi/wallet-core/src/contexts/hooks/use-language-service';
+import objectMap from '@slavi/wallet-core/src/utils/object-map';
 
 const LanguageScreen = () => {
   const {languages, isLoading} = useLanguages();
   const {i18n} = useTranslation();
-  const [lang, setLang] = useState<string>(i18n.language);
+  const languageService = useLanguageService();
+
+  const {t} = useTranslation();
 
   const onChange = useCallback(
-    (value: string) => {
-      setLang(value);
-      i18n.changeLanguage(value);
-    },
-    [i18n],
+    async (value: string) => {
+      await languageService.setCurrentLanguage(value);
+      await i18n.changeLanguage(value);
+    },[i18n, languageService]
+  );
+
+  const languageOptions: Record<string, string> | undefined = useMemo(
+    () => objectMap(mapArrayToSelectOptions(languages), (lang) => t(lang)), [languages]
   );
 
   if (isLoading || !languages) {
@@ -24,17 +33,21 @@ const LanguageScreen = () => {
       </View>
     );
   }
+
   return (
-    <SafeAreaView>
-      <Picker
-        selectedValue={lang}
-        onValueChange={itemValue => onChange(itemValue as string)}>
-        {languages.map(_lang => (
-          <Picker.Item label={_lang} value={_lang} key={_lang} />
-        ))}
-      </Picker>
+    <SafeAreaView style={styles.container}>
+      <SelectableList onSelect={onChange} options={languageOptions} current={i18n.language}/>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: '100%',
+    padding: 16,
+    backgroundColor: theme.colors.screenBackground,
+  },
+});
 
 export default LanguageScreen;

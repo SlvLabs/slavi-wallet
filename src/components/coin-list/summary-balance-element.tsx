@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 34,
     color: theme.colors.whiteOpacity,
     textAlignVertical: 'bottom',
+    marginRight: 4,
   },
 });
 

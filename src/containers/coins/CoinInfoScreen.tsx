@@ -9,11 +9,10 @@ import useCoinInfo from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info
 import store from '@slavi/wallet-core/src/store';
 import {ScrollView} from 'react-native-gesture-handler';
 import CoinTabs from '../../components/coin-info/tabs/coin-tabs';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CoinControlButtons from '../../components/coin-info/coin-control-buttons';
 import theme from '../../theme';
-import LinearGradient from 'react-native-linear-gradient';
 
 const CoinInfoScreen = () => {
   const route = useRoute<CoinInfoRouteProps>();
@@ -57,7 +56,7 @@ const CoinInfoScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient {...theme.gradients.backgroundGradient} style={styles.gradient}>
+      <View style={styles.gradient}>
         <ScrollView>
           <CoinBalanceHeader
             name={data.name}
@@ -85,7 +84,7 @@ const CoinInfoScreen = () => {
             coinParams={dict}
           />
         </ScrollView>
-      </LinearGradient>
+      </View>
     </SafeAreaView>
   );
 };
@@ -96,6 +95,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+    backgroundColor: theme.colors.screenBackground,
   },
 });
 

@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useMemo} from 'react';
 import CoinsListScreen from '../containers/coins/CoinsListScreen';
 import CoinInfoScreen from '../containers/coins/CoinInfoScreen';
 import defaultScreenOption from './config/default-screen-options';
@@ -11,6 +11,7 @@ import SendScreen from '../containers/send/send-screen';
 import TokenAddingScreen from '../containers/coins/token-adding-screen';
 import {useTranslation} from 'react-i18next';
 import SuccessfullySendingScreen from '../containers/send/successfully-sending-screen';
+import CoinSelectListScreen from '../containers/coins/coin-select-list-screen';
 
 export interface CoinsStackParamList extends ParamListBase {
   List: {};
@@ -41,10 +42,11 @@ export type CoinSuccessfullySendingRouteProps = RouteProp<
   'SuccessfullySending'
 >;
 
+const StackNavigator = createStackNavigator<CoinsStackParamList>();
+
 const CoinsStack = () => {
-  const StackNavigator = createStackNavigator<CoinsStackParamList>();
   const {t} = useTranslation();
-  return (
+  return useMemo( () => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.COINS.LIST}
       headerMode={'screen'}
@@ -52,7 +54,7 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.LIST}
         component={CoinsListScreen}
-        options={{title: t('')}}
+        options={{headerShown: false}}
       />
       <StackNavigator.Screen
         name={ROUTES.COINS.INFO}
@@ -79,8 +81,13 @@ const CoinsStack = () => {
         component={SuccessfullySendingScreen}
         options={{title: t('Send coins')}}
       />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.COINS_SELECT}
+        component={CoinSelectListScreen}
+        options={{title: t('Select coin')}}
+      />
     </StackNavigator.Navigator>
-  );
+  ), []);
 };
 
 export default CoinsStack;

@@ -7,29 +7,20 @@ const ROUTES = {
   ACCOUNT_INITIALIZATION: {
     MENU: 'Account/Menu',
     READY: 'Account/Ready',
-    IMPORT_MENU: 'Account/ImportMenu',
+    IMPORT_MNEMONIC: 'Account/ImportMnemonic',
     CREATE_MNEMONIC: 'Account/CreateMnemonic',
     CONFIRM_MNEMONIC: 'Account/ConfirmMnemonic',
-  },
-  DRAWER: {
-    TABS: 'Drawer/Tabs',
-    BILLING: 'Drawer/Billing',
-    SETTINGS: 'Drawer/Settings',
-    NOTIFICATION: 'Drawer/Notification',
   },
   TABS: {
     COINS: 'Tabs/Coins',
     DEFI: 'Tabs/Defi',
     OPERATIONS: 'Tabs/Operations',
     SWAP: 'Tabs/Swap',
-    SETTINGS: 'Tabs/Exchange',
+    SETTINGS: 'Tabs/Settings',
   },
   AUTHENTICATION: {
     LOGIN: 'Authentication/Login',
     RESTORE: 'Authentication/Restore',
-  },
-  BILLING: {
-    LIST: 'Billing/List',
   },
   COINS: {
     LIST: 'Coins/List',
@@ -38,9 +29,7 @@ const ROUTES = {
     RECEIVE: 'Coins/Receive',
     TOKEN_ADDING: 'Coins/TokenAdding',
     SUCCESSFULLY_SENDING: 'Coins/SuccessfullySending',
-  },
-  EXCHANGE: {
-    MAIN: 'Exchange/Main',
+    COINS_SELECT: 'Coins/Select',
   },
   OPERATIONS: {
     LIST: 'Operations/List',

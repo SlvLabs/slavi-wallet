@@ -34,7 +34,7 @@ const SearchCoinRow = (props: SearchCoinRowProps) => {
       name={'close'}
       type={'antdesign'}
       size={24}
-      color={theme.colorsOld.lightGray}
+      color={theme.colors.lightGray}
       onPress={onClear}
     />
   );
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   searchRow: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.grayDark,
+    backgroundColor: theme.colors.darkBackground,
     borderRadius: 8,
     justifyContent: 'space-between',
   },
@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     color: theme.colors.mediumTransparent,
     fontSize: 17,
-    lineHeight: 22,
+    lineHeight: 24,
+    fontFamily: theme.fonts.default,
   },
   searchBarInput: {
     backgroundColor: 'transparent',

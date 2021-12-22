@@ -102,6 +102,9 @@ const DefiScreen = () => {
     return theme.colors.borderGray;
   }, [error, subscribed]);
 
+  console.log('subscribed ' + SUBSCRIBE_KEY);
+  console.log(data?.subscribed || subscribed)
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={loadingBackground} style={styles.background}>
@@ -143,7 +146,7 @@ const DefiScreen = () => {
                 )}
               </View>
               {!!error && <Text style={styles.error}>{t(error)}</Text>}
-              {data?.subscribed || subscribed ? (
+              {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
                 <Text style={styles.subscribedText}>{t('You’ve successfully subscribed')}</Text>
               ) : (
                 <SolidButton

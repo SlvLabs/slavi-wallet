@@ -1,17 +1,19 @@
 import React, {useCallback, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import InsertableTextArea from '../../components/controls/insertable-text-area';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {store} from '@slavi/wallet-core';
 import {useTranslation} from 'react-i18next';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
+import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/selectors';
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
+  const mnemonicError = useSelector(selectMnemonicError);
 
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -35,6 +37,7 @@ const MnemonicImportScreen = () => {
         </Text>
       </View>
       <InsertableTextArea onChange={(value: string) => setMnemonic(value)} />
+      <Text style={styles.error}>{mnemonicError}</Text>
       <View style={styles.buttonsBlock}>
         <SolidButton title={'Import'} onPress={showConf} />
       </View>
@@ -80,6 +83,16 @@ const styles = StyleSheet.create({
   buttonsBlock: {
     marginTop: 24,
     justifyContent: 'flex-end',
+  },
+  error: {
+    fontFamily: theme.fonts.default,
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 18,
+    color: theme.colors.red,
+    textAlign: 'center',
   },
 });
 

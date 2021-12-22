@@ -24,13 +24,14 @@ import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficie
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import SimpleToast from 'react-native-simple-toast';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
-import TxCreatingResult from '@slavi/wallet-core/types/services/transaction/tx-creating-result';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
 import TxPriorityButtonGroup from '../../components/coin-send/tx-priority-button-group';
 import SolidButton from '../../components/buttons/solid-button';
 import theme from '../../theme';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
+import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
+import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 
 export interface SendBtcScreenProps {
   coin: string;
@@ -119,11 +120,11 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
     [activeQR, coinSpec.bip21Name, onQrReadFailed, recipients],
   );
 
-  const validate = useCallback((): boolean => {
+  const validate = useCallback((strict?: boolean): boolean => {
     const result = validator({
       vouts: recipients,
       recipientPayFee: recipientPayFee,
-    });
+    }, strict);
 
     setIsValid(result.isSuccess());
     setErrors(result.getErrors());
@@ -176,7 +177,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
 
   const onSubmit = async () => {
     setLocked(true);
-    if (validate()) {
+    if (validate(true)) {
       if (!pattern) {
         throw new Error('Try create transaction of unknown coin');
       }
@@ -205,9 +206,17 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
             addError(
               t('Can not create transaction. Try latter or contact support.'),
             );
+          } else {
+            const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
+            if (err2) {
+              addError(
+                t('Can not create transaction. absurdly high fee.'),
+              );
+            }
           }
           throw e;
         }
+        setLocked(false);
       }
 
       if (!result) {
@@ -235,6 +244,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
       addError(t('Error of broadcast tx. Try again latter or contact support'));
       return;
     } finally {
+      setLocked(false);
       cancelConfirmSending();
     }
 
@@ -270,6 +280,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
             onRecipientRemove={onRecipientRemove}
             setRecipientPayFee={trySetRecipientPayFee}
             errors={voutErrors}
+            maximumPrecision={pattern.getMaxPrecision()}
           />
           <TxPriorityButtonGroup
             label={t('Transaction fee')}

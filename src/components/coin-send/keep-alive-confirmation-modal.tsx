@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import BaseModal, {BaseModalProps} from '../modal/base-modal';
 import {StyleSheet, Text, View} from 'react-native';
 import SolidButton from '../buttons/solid-button';
@@ -11,16 +11,18 @@ export interface KeepAliveConfirmationModalProps extends BaseModalProps {
 
 const KeepAliveConfirmationModal = (props: KeepAliveConfirmationModalProps) => {
   const {onConfirm, ...other} = props;
-  const {onCancel} = props;
+  const {onCancel, visible} = props;
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const {t} = useTranslation();
 
   const _onAccept = useCallback(() => {
     setLoading(true);
     onConfirm();
-  }, [onConfirm])
+  }, [onConfirm]);
 
-  const {t} = useTranslation();
+  useEffect(() => setLoading(false), [visible]);
 
   return (
     <BaseModal {...other} >

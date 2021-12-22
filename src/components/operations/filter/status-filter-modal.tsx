@@ -14,7 +14,7 @@ export interface StatusFilterModalProps {
 }
 
 const statuses = Object.entries(OperationStatus).map(
-  ([key, value]): ChipData => ({id: key, text: value}),
+  ([_, value]): ChipData => ({id: value, text: value}),
 );
 
 const StatusFilterModal = (props: StatusFilterModalProps) => {

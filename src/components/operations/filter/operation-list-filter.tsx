@@ -24,6 +24,7 @@ import FullFilterDate from './full-filter-date';
 export interface OperationListFilterProps {
   containerStyle?: ViewStyle;
   filter: (params: OperationListParams) => void;
+  hideCoinsFilter?: boolean;
 }
 
 const OperationListFilter = (props: OperationListFilterProps) => {
@@ -135,11 +136,13 @@ const OperationListFilter = (props: OperationListFilterProps) => {
       <TouchableOpacity style={styles.chip} onPress={showFilter}>
         <CustomIcon name={'full-filter'} size={18} color={theme.colors.green}/>
       </TouchableOpacity>
-      <ScrollFilterChip
-        text={t('Coins')}
-        onPress={showCoinFilter}
-        active={coinsIsActive}
-      />
+      {!props.hideCoinsFilter && (
+        <ScrollFilterChip
+          text={t('Coins')}
+          onPress={showCoinFilter}
+          active={coinsIsActive}
+        />
+      )}
       <ScrollFilterChip
         text={t('Date')}
         onPress={showDatePicker}
@@ -174,6 +177,7 @@ const OperationListFilter = (props: OperationListFilterProps) => {
         finishDate={finishDate}
         address={address}
         submitAddress={setAddress}
+        hideCoinsFilter={props.hideCoinsFilter}
       />
       <CoinsFilterModal
         visible={coinModalShown}

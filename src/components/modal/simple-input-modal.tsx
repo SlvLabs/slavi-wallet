@@ -1,5 +1,5 @@
 import {StyleSheet, ViewStyle} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import SolidButton from '../buttons/solid-button';
 import SimpleInput from '../controls/simple-input';
@@ -24,6 +24,8 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
       props.onSubmit(value);
     }
   }, [value, props]);
+
+  useEffect(() => setName(props.value), [props.value]);
 
   return (
     <BaseModal

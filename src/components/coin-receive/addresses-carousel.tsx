@@ -1,4 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from 'react';
 import Carousel from 'react-native-snap-carousel';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import QrView from './qr-view';
@@ -22,11 +30,16 @@ export interface AddressesCarouselProps {
   qrStyle?: ViewStyle;
   addressTextStyle?: TextStyle;
   onDataChange?: (data: string | null) => void;
-  onSnapToItem?: (address?: string, id?: number) => void;
+  onSnapToItem?: (address?: string, id?: number, addressName?: string) => void;
   containerStyle?: ViewStyle;
 }
 
-const AddressesCarousel = (props: AddressesCarouselProps) => {
+export interface AddressesCarouselHandle {
+  snapById: (id: number) => void
+}
+
+const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, AddressesCarouselProps> = (props: AddressesCarouselProps, ref) => {
+  const {addresses} = props;
   const refs = useRef<any>();
   let carousel = useRef<Carousel<any> | null>(null);
 
@@ -44,7 +57,6 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
               name: item.name,
             }}
             size={props.qrSize}
-            onDataChange={props.onDataChange}
             getRef={ref => {
               if (!refs.current) {
                 refs.current = [];
@@ -68,28 +80,38 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
 
   const onSnapItem = useCallback(
     (index: number) => {
-      console.log(index);
       if (refs.current[index]) {
         refs.current[index].toDataURL(props.onDataChange);
       }
 
-      props.onSnapToItem?.(props.addresses[index].address, props.addresses[index].id);
+      props.onSnapToItem?.(props.addresses[index].address, props.addresses[index].id, props.addresses[index].name);
     },
     [props],
   );
 
   useEffect(() => {
-    if (
-      props.addresses &&
-      props.addresses.length > 0 &&
-      refs.current &&
-      refs.current[0]
-    ) {
-      onSnapItem(0);
-    }
+    setTimeout(() => {
+      if (
+        props.addresses &&
+        props.addresses.length > 0 &&
+        refs.current &&
+        refs.current[0]
+      ) {
+        onSnapItem(0);
+      }
+    }, 300);
   }, []);
 
   useEffect(() => setCurrentIndex(carousel.current?.currentIndex || 0), [carousel.current?.currentIndex]);
+
+  useImperativeHandle(ref, () => ({
+    snapById(id: number) {
+      const index = addresses.findIndex(element => element.id === id);
+      if(index !== -1) {
+        onSnapItem(index);
+      }
+    }
+  }));
 
   const snapToNext = useCallback(() => {
     if (carousel.current) {
@@ -105,14 +127,16 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
 
   return (
     <View style={styles.carouselContainer}>
-      {currentIndex > 0 && <CarouselSlideButton icon={leftChevron} onPress={snapToPrev} />}
+      <View style={styles.leftButton}>
+        {currentIndex > 0 && <CarouselSlideButton icon={leftChevron} onPress={snapToPrev} />}
+      </View>
       <View style={styles.carouselMargin}>
         <Carousel
           renderItem={_renderItem}
           data={props.addresses}
-          sliderWidth={264}
+          sliderWidth={220}
           sliderHeight={700}
-          itemWidth={200}
+          itemWidth={120}
           loop={false}
           enableSnap={true}
           shouldOptimizeUpdates={true}
@@ -126,7 +150,9 @@ const AddressesCarousel = (props: AddressesCarouselProps) => {
           enableMomentum={true}
         />
       </View>
-      {currentIndex < (props.addresses.length - 1) && <CarouselSlideButton icon={rightChevron} onPress={snapToNext} />}
+      <View style={styles.rightButton}>
+        {currentIndex < (props.addresses.length - 1) && <CarouselSlideButton icon={rightChevron} onPress={snapToNext} />}
+      </View>
     </View>
   );
 };
@@ -145,6 +171,15 @@ const styles = StyleSheet.create({
   carouselMargin: {
     marginRight: 16,
     marginLeft: 16,
+  },
+  leftButton: {
+    width: 36,
+    alignItems: 'center'
+  },
+  rightButton: {
+    width: 36,
+    alignItems: 'center',
   }
 });
-export default AddressesCarousel;
+
+export default forwardRef(AddressesCarousel);

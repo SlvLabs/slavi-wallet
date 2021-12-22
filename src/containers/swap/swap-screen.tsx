@@ -143,7 +143,7 @@ const SwapScreen = () => {
                 )}
               </View>
               {!!error && <Text style={styles.error}>{t(error)}</Text>}
-              {data?.subscribed || subscribed ? (
+              {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
                 <Text style={styles.subscribedText}>{t('You’ve successfully subscribed')}</Text>
               ) : (
                 <SolidButton

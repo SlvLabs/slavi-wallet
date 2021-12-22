@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import SimpleInput, {SimpleInputProps} from './simple-input';
 
@@ -9,6 +9,7 @@ export enum DecimalType {
 
 export interface DecimalInputProps extends SimpleInputProps {
   inputType: DecimalType;
+  maximumPrecision?: number;
 }
 
 const filter = (value?: string): string => {
@@ -38,13 +39,19 @@ const validateReal = (value?: string): boolean => validate(realRegExp, value);
 const intRegExp = /^[\d]+$/;
 const validateInteger = (value?: string): boolean => validate(intRegExp, value);
 
+
+const toPrecision = (source: string, precision: number): string => {
+  const regExp = new RegExp(`^(\\d+(\\.\\d{0,${precision}})?)(.*)$`);
+  return regExp.exec(source)?.[1] || '';
+}
+
 const DecimalInput = (props: DecimalInputProps) => {
-  const {inputType, onChange: originalOnChange, ...otherProps} = props;
+  const {inputType, onChange: originalOnChange, value, maximumPrecision, ...otherProps} = props;
   const {t} = useTranslation();
   const [innerError, setInnerError] = useState<string>();
 
-  const onChange = (value?: string) => {
-    const filteredValue = filter(value);
+  const onChange = useCallback((value?: string) => {
+    let filteredValue = filter(value);
     let isValid: boolean;
 
     setInnerError('');
@@ -61,18 +68,22 @@ const DecimalInput = (props: DecimalInputProps) => {
     }
 
     if (isValid) {
+      if(inputType === DecimalType.Real && maximumPrecision) {
+        filteredValue = toPrecision(filteredValue, maximumPrecision);
+      }
+
       if (typeof originalOnChange !== 'undefined') {
         originalOnChange(filteredValue);
       }
     } else {
       setInnerError(t('Invalid numeric value'));
     }
-  };
+  }, [originalOnChange]);
 
   return (
     <SimpleInput
       onChange={onChange}
-      value={props.value}
+      value={value}
       errorMessage={innerError || props.errorMessage}
       keyboardType={'numeric'}
       {...otherProps}

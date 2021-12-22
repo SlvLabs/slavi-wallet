@@ -26,6 +26,7 @@ export interface OperationFilterModalProps {
   finishDate: Moment | null;
   address?: string;
   submitAddress: (address?: string) => void;
+  hideCoinsFilter?: boolean;
 }
 
 const OperationFilterModal = (props: OperationFilterModalProps) => {
@@ -106,10 +107,12 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
       rightIconOnPress={submit}
       rightIconColor={theme.colors.green}>
       <ScrollView>
-        <FullFilterCoinSection
-          selectedCoins={selectedCoins}
-          submitCoins={setSelectedCoins}
-        />
+        {!props.hideCoinsFilter && (
+          <FullFilterCoinSection
+            selectedCoins={selectedCoins}
+            submitCoins={setSelectedCoins}
+          />
+        )}
         <FullFilterDateSection
           startDate={startDate}
           finishDate={finishDate}

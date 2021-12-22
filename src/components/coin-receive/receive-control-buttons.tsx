@@ -16,6 +16,7 @@ export interface ReceiveControlButtonsProps {
   containerStyle?: ViewStyle;
   iconsSize?: number;
   iconsColor?: string;
+  addressName?: string;
 }
 
 const defaultIconSize = 32;
@@ -95,6 +96,7 @@ const ReceiveControlButtons = (props: ReceiveControlButtonsProps) => {
         onCancel={hideEditModal}
         onSubmit={submitAddress}
         label={t('Address name')}
+        value={props.addressName}
       />
       <SimpleInputModal
         visible={amountModalVisible}

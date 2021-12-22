@@ -15,6 +15,7 @@ module.exports = {
     }),
   },
   resolver: {
+    sourceExts: ['jsx', 'js', 'ts', 'tsx', 'cjs'],
     extraNodeModules: {
       crypto: require.resolve('react-native-crypto'),
       stream: require.resolve('readable-stream'),

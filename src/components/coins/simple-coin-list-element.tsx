@@ -2,16 +2,25 @@ import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import getImageSource from '../../utils/get-image-source';
 import theme from '../../theme';
+import makeRoundedBalance from '../../utils/make-rounded-balance';
 
 export interface SimpleCoinListElementProps {
   name: string;
   logo?: string;
   type?: string;
   onPress?: () => void;
+  balance?: string;
+  ticker?: string;
+  fiatBalance?: string;
+  fiatTicker?: string;
+  shownBalances?: boolean;
 }
 
+const fiatPrecision = 2;
+const cryptoPrecision = 4;
+
 export default function SimpleCoinListElement(props: SimpleCoinListElementProps) {
-  const {logo, name, type, onPress} = props;
+  const {logo, name, type, onPress, fiatBalance, fiatTicker, balance, ticker, shownBalances} = props;
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -21,10 +30,16 @@ export default function SimpleCoinListElement(props: SimpleCoinListElementProps)
           style={styles.logo}
         />
       </View>
-      <View style={styles.rightColumn}>
+      <View style={styles.centerColumn}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.type}>{type}</Text>
+        {!!type && <Text style={styles.type}>{type}</Text>}
       </View>
+      {!!shownBalances && (
+        <View style={styles.rightColumn}>
+          <Text style={styles.fiatBalance}>{`${makeRoundedBalance(fiatPrecision, fiatBalance)} ${fiatTicker}`}</Text>
+          <Text style={styles.balance}>{`${makeRoundedBalance(cryptoPrecision, balance)} ${ticker}`}</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -46,8 +61,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingRight: 16,
   },
-  rightColumn: {
+  centerColumn: {
     flex: 8,
+    justifyContent: 'center',
+  },
+  rightColumn: {
+    flex: 4,
+    alignItems: 'flex-end'
   },
   logo: {
     width: 32,
@@ -72,5 +92,22 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     color: theme.colors.textLightGray,
     textTransform: 'uppercase',
+  },
+  balance: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 10,
+    lineHeight: 14,
+    color: theme.colors.textLightGray,
+    textTransform: 'uppercase',
+  },
+  fiatBalance: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 20,
+    color: theme.colors.white,
   },
 });

@@ -17,7 +17,6 @@ import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
-import TxCreatingResult from '@slavi/wallet-core/types/services/transaction/tx-creating-result';
 import SimpleToast from 'react-native-simple-toast';
 import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import except from '@slavi/wallet-core/src/utils/typed-error/except';
@@ -32,6 +31,7 @@ import KeepAliveConfirmationModal from '../../components/coin-send/keep-alive-co
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
+import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 
 export interface SendPolkadotScreenProps {
   coin: string;
@@ -70,6 +70,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
   const balancesState = useAddressesBalance(props.coin);
   const [senderIndex, setSenderIndex] = useState<number>();
   const [keepAliveConfirm, setKeepAliveConfirm] = useState<boolean>(false);
+  const [receiverPaysFee, setReceiverPaysFee] = useState<boolean>(false);
 
   const fromAddress =
     typeof senderIndex !== 'undefined'
@@ -88,10 +89,12 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     addressService.getGetterDelegate(props.coin),
   );
 
+  const enableReceiverPaysFee = useCallback(() => setReceiverPaysFee(true), []);
+
   const onRecipientChange = (data: RecipientUpdatingData) => {
     setRecipient({
-      address: data.address || recipient.address,
-      amount: data.amount || recipient.amount,
+      address: typeof data.address === 'undefined' ? recipient.address : data.address,
+      amount: typeof data.amount === 'undefined' ? recipient.amount : data.amount,
     });
   };
 
@@ -119,6 +122,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
           amount: recipient.amount,
           isKeepAlive: isKeepAlive,
           tip: '0', // TODO: from user
+          receiverPaysFee: receiverPaysFee,
         });
       } catch (e) {
         setLocked(false);
@@ -151,9 +155,23 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
   };
 
   const onSubmit = async () => {
-    if(await createTransaction(true)) {
-      setConfIsShown(true);
-    }
+    setLocked(true);
+    setTimeout(async () => {
+      if(!validate(true)) {
+        setLocked(false);
+        return;
+      }
+
+      try {
+        if (await createTransaction(true)) {
+          setConfIsShown(true);
+        } else {
+          setLocked(false);
+        }
+      } catch (e) {
+        setLocked(false);
+      }
+    }, 300);
   }
 
   const onQrReadFailed = useCallback(
@@ -200,6 +218,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     } catch (e) {
       addError(t('Error of broadcast tx. Try again latter or contact support'));
     } finally {
+      setLocked(false);
       cancelConfirmSending();
     }
 
@@ -209,8 +228,8 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     });
   };
 
-  const validate = useCallback((): boolean => {
-    const result = validator(recipient.address, recipient.amount);
+  const validate = useCallback((strict?: boolean): boolean => {
+    const result = validator(recipient.address, recipient.amount, strict);
     setIsValid(result.isValid);
     const tmp: VoutError = {address: [], amount: []};
     if (result.address) {
@@ -249,15 +268,15 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
             fiatTicker={coinDetails.fiat}
             logo={coinDetails.logo}
           />
+          <AddressSelector
+            label={t('From account')}
+            containerStyle={styles.addressSelector}
+            addresses={balancesState.balances}
+            onSelect={setSenderIndex}
+            selectedAddress={senderIndex}
+            ticker={coinDetails.ticker}
+          />
           <View style={styles.paddingContainer}>
-            <AddressSelector
-              placeholder={t('From account')}
-              containerStyle={styles.addressSelector}
-              addresses={balancesState.balances}
-              onSelect={setSenderIndex}
-              selectedAddress={senderIndex}
-              ticker={coinDetails.ticker}
-            />
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -265,8 +284,9 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
               recipient={recipient}
               onRecipientChange={onRecipientChange}
               maxIsAllowed={true}
-              setRecipientPayFee={() => {}}
+              setRecipientPayFee={enableReceiverPaysFee}
               errors={voutError}
+              maximumPrecision={pattern.getMaxPrecision()}
             />
             {!isValid && errors.length > 0 && (
               <View style={styles.errors}>
@@ -314,7 +334,11 @@ const styles = StyleSheet.create({
   errors: {
     marginTop: 30,
   },
-  addressSelector: {},
+  addressSelector: {
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 8,
+  },
   gradient: {
     flex: 1,
   },

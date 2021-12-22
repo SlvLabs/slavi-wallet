@@ -13,15 +13,13 @@ export interface AddressViewProps {
 
 const AddressView = (props: AddressViewProps) => {
   return (
-    <View>
+    <View style={styles.container}>
       <View>
-        {!!props.name && (
-          <View style={styles.centredElement}>
-            <Text style={{...styles.name, ...props.nameStyle}}>
-              {props.name}
-            </Text>
-          </View>
-        )}
+        <View style={styles.centredElement}>
+          <Text style={{...styles.name, ...props.nameStyle}}>
+            {props.name || ''}
+          </Text>
+        </View>
         <View style={styles.centredElement}>
           <Text style={{...styles.address, ...props.addressStyle}}>
             {props.address}
@@ -33,7 +31,9 @@ const AddressView = (props: AddressViewProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
   centredElement: {
     flexDirection: 'row',
     justifyContent: 'center',

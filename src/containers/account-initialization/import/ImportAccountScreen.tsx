@@ -7,14 +7,16 @@ import SolidButton from '../../../components/buttons/solid-button';
 import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
 import ConfirmationModal from '../../../components/modal/confirmation-modal';
 import {showFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
 import {store} from '@slavi/wallet-core';
 import InsertableTextArea from '../../../components/controls/insertable-text-area';
+import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
 
 const ImportAccountScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
+  const mnemonicError = useSelector(selectMnemonicError);
 
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -39,7 +41,8 @@ const ImportAccountScreen = () => {
           )}
         </Text>
       </View>
-      <InsertableTextArea onChange={(value: string) => setMnemonic(value)} />
+      <InsertableTextArea onChange={(value: string) => setMnemonic(value.toLowerCase())} />
+      <Text style={styles.error}>{mnemonicError}</Text>
       <View style={styles.buttonsBlock}>
         <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
         <View style={styles.loaderView}>
@@ -98,6 +101,16 @@ const styles = StyleSheet.create({
   loaderView: {
     paddingTop: 17,
   },
+  error: {
+    fontFamily: theme.fonts.default,
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 18,
+    color: theme.colors.red,
+    textAlign: 'center',
+  }
 });
 
 export default ImportAccountScreen;

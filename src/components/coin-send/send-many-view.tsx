@@ -24,6 +24,7 @@ export interface SendManyViewProps {
   containerStyle?: ViewStyle;
   recipientsViewStyle?: ViewStyle;
   controlsViewStyle?: ViewStyle;
+  maximumPrecision?: number;
 }
 
 const SendManyView = (props: SendManyViewProps) => {
@@ -49,6 +50,7 @@ const SendManyView = (props: SendManyViewProps) => {
             key={`recipient_${index}`}
             errors={props.errors ? props.errors[index] : undefined}
             header={count > 1 ? t('Recipient') + ' ' + (index + 1) : undefined}
+            maximumPrecision={props.maximumPrecision}
           />
         ))}
       </View>

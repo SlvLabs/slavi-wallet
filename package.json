@@ -10,8 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@polkadot/api": "6.10",
-    "@polkadot/keyring": "^8.0.2",
+    "@babel/plugin-syntax-bigint": "^7.8.3",
+    "@polkadot/keyring": "8.0.4",
+    "@polkadot/util": "8.0.4",
+    "@polkadot/util-crypto": "8.0.4",
+    "@polkadot/x-randomvalues": "8.0.4",
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/clipboard": "^1.2.2",
     "@react-native-community/datetimepicker": "^3.0.4",
@@ -29,7 +32,9 @@
     "@slavi/crypto-core": "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master",
     "@slavi/react-native-daterange-picker": "git+ssh://git@gitlab.com/defi-wallet/react-native-daterange-picker.git#master",
     "@slavi/wallet-core": "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#master",
+    "@substrate/txwrapper-polkadot": "1.2.21",
     "@types/react-native-snap-carousel": "^3.8.3",
+    "big-integer": "^1.6.51",
     "create-hmac": "^1.1.7",
     "decimal.js": "^10.2.1",
     "i18next-react-native-language-detector": "^1.0.2",
@@ -64,6 +69,7 @@
     "vm-browserify": "^1.1.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "@react-native-community/eslint-config": "2.0.0",
     "@types/jest": "^26.0.22",
     "@types/react": "17.0.1",
@@ -73,8 +79,8 @@
     "@types/react-native-share": "^3.3.2",
     "@types/react-redux": "^7.1.8",
     "@types/react-test-renderer": "^17.0.1",
-    "@types/slavi__wallet-core": "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#master",
-    "babel-jest": "26.6.3",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.4.2",
     "babel-plugin-polyfill-corejs2": "^0.2.2",
     "eslint": "7.14.0",
     "jest": "26.6.3",
@@ -88,6 +94,11 @@
   },
   "resolutions": {
     "@polkadot/api": "6.10",
-    "@polkadot/keyring": "8.0.2"
+    "@polkadot/keyring": "8.0.4",
+    "@polkadot/wasm-crypto-asmjs": "4.4.1",
+    "@polkadot/util-crypto": "8.0.4",
+    "@polkadot/util": "8.0.4",
+    "@polkadot/wasm-crypto": "4.4.1",
+    "@polkadot/wasm-crypto-wasm": "4.4.1"
   }
 }

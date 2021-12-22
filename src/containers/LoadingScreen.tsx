@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {Image, ImageBackground, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {State} from '../store';
-import {downLogo, loadingBackground} from '../assets/images';
+import {loadingBackground, logoChristmas} from '../assets/images';
 import theme from '../theme';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
@@ -37,7 +37,7 @@ const LoadingScreen = () => {
       <ImageBackground source={loadingBackground} style={styles.background}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
           <View style={styles.logoView}>
-            <Image source={downLogo} style={styles.logo} />
+            <Image source={logoChristmas} style={styles.logo} />
           </View>
           <View style={styles.bottomText}>
             <View style={styles.welcomeView}>

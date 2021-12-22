@@ -2,7 +2,6 @@ import React from 'react';
 import RecipientInput from './recipient-input';
 import {useTranslation} from 'react-i18next';
 import AmountInput from './amount-input';
-import {VoutError} from '@slavi/wallet-core/types/validation/hooks/use-tx-vouts-validator';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
+import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 
 export interface Recipient {
   address: string;
@@ -35,11 +35,12 @@ export interface SendViewProps {
   errors?: VoutError;
   containerStyle?: ViewStyle;
   header?: string;
+  maximumPrecision?: number;
 }
 
 const SendView = (props: SendViewProps) => {
   const {t} = useTranslation();
-  const {onRecipientChange, readQr, onRemove} = props;
+  const {onRecipientChange, readQr, onRemove, maximumPrecision} = props;
   const onAmountChange = (amount: string) => onRecipientChange({amount});
 
   const onAddressChange = (address: string) => onRecipientChange({address});
@@ -81,6 +82,7 @@ const SendView = (props: SendViewProps) => {
         maxIsAllowed={props.maxIsAllowed}
         setRecipientPayFee={props.setRecipientPayFee}
         errors={props.errors?.amount}
+        maximumPrecision={maximumPrecision}
       />
     </View>
   );

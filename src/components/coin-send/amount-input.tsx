@@ -19,13 +19,14 @@ export interface AmountInputProps {
   inputStyle?: ViewStyle;
   tickerStyle?: TextStyle;
   controlsContainerStyle?: ViewStyle;
+  maximumPrecision?: number;
 }
 
 const AmountInput = (props: AmountInputProps) => {
   const {t} = useTranslation();
   const [amount, setAmount] = useState<string>('');
 
-  const {onChange, setRecipientPayFee, balance, errors, maxIsAllowed} = props;
+  const {onChange, setRecipientPayFee, balance, errors, maxIsAllowed, maximumPrecision} = props;
 
   const onMaxPress = () => {
     setAmount(balance);
@@ -34,6 +35,7 @@ const AmountInput = (props: AmountInputProps) => {
   };
 
   const onAmountChange = (inputValue: string) => {
+
     setAmount(inputValue);
     onChange(inputValue, false);
   };
@@ -55,6 +57,7 @@ const AmountInput = (props: AmountInputProps) => {
             buttonText={maxIsAllowed ? t('Max') : ''}
             onButtonPress={onMaxPress}
             label={props.label}
+            maximumPrecision={maximumPrecision}
           />
         </View>
       </View>

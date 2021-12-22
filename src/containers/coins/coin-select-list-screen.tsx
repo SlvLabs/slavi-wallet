@@ -8,15 +8,17 @@ import {useTranslation} from 'react-i18next';
 import SimpleCoinListElement from '../../components/coins/simple-coin-list-element';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {CoinDisplayData} from '../../components/coin-list/coins-list-element';
+import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 
 export default function CoinSelectListScreen() {
+  const fiatTicker = useFiatSelector();
   const {params} = useRoute();
-  const {nextScreen} = params as any;
+  const {nextScreen, filterByBalance, balanceShown} = params as any;
   if(!nextScreen) {
     throw new Error('Wrong coins routing');
   }
 
-  const coins = useCoinsSelector();
+  const coins = useCoinsSelector(filterByBalance);
 
   const [search, setSearch] = useState<string>('');
   const [filteredCoins, setFilteredCoins] = useState<CoinDisplayData[]>(coins);
@@ -27,7 +29,7 @@ export default function CoinSelectListScreen() {
   useEffect(() => setFilteredCoins(coins.filter(element =>
     element.name.toLowerCase().includes(search.toLowerCase()) ||
     element.ticker.toLowerCase().includes(search.toLowerCase())
-  )), [search]);
+  )), [search, coins]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,6 +54,11 @@ export default function CoinSelectListScreen() {
               logo={item.logo}
               onPress={() => navigation.navigate(nextScreen, {coin: item.id})}
               key={`coin_${index}`}
+              balance={item.total}
+              ticker={item.ticker}
+              fiatBalance={item.total}
+              fiatTicker={fiatTicker}
+              shownBalances={balanceShown}
             />
           ))}
         </ScrollView>

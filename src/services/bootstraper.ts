@@ -5,10 +5,10 @@ import i18nextReactNative from 'i18next-react-native-language-detector';
 import {Store} from 'redux';
 import {networks} from '@slavi/crypto-core';
 import {DataStoreProviderInterface, ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
-import {ContractAbiProviderConf} from '@slavi/wallet-core/types/services/contract-abi-provider';
 import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from "@slavi/wallet-core/src/utils/performance-monitor-interface";
+import { ContractAbiProviderConf } from '@slavi/wallet-core/src/services/contract-abi-provider';
 
 
 const wsConfig = {

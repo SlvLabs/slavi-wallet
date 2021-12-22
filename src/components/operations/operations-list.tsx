@@ -20,6 +20,7 @@ export interface OperationsListProps {
   filter: (params: OperationListParams) => void;
   containerStyle?: ViewStyle;
   placeholderStyle?: ViewStyle;
+  hideCoinsFilter?: boolean;
 }
 
 interface Section {
@@ -44,6 +45,7 @@ const OperationsList = (props: OperationsListProps) => {
       <OperationListFilter
         containerStyle={styles.filter}
         filter={props.filter}
+        hideCoinsFilter={props.hideCoinsFilter}
       />
       <View style={styles.card}>
         {sections && sections.length > 0 ? (

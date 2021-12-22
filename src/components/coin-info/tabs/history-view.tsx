@@ -27,6 +27,7 @@ const HistoryView = (props: HistoryViewProps) => {
         onEndReached={getMore}
         filter={updateParams}
         placeholderStyle={styles.placeholder}
+        hideCoinsFilter={true}
       />
       {isLoading && <ActivityIndicator />}
     </View>

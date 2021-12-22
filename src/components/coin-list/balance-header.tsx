@@ -7,6 +7,7 @@ import {chart} from '../../assets/images';
 import CustomIcon from '../custom-icon/custom-icon';
 import SimpleSolidButton from '../buttons/simple-solid-button';
 import SimpleOutlineButton from '../buttons/simple-outline-button';
+import Layout from '../../utils/layout';
 
 export interface BalanceHeaderProps {
   fiatBalance: string;
@@ -65,7 +66,8 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 18,
+    paddingBottom: 18,
+    paddingTop: 18,
     flexDirection: 'column',
     backgroundColor: theme.colors.balanceHeaderBackground,
   },
@@ -106,10 +108,11 @@ const styles = StyleSheet.create({
   chart: {
     flex: 1,
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   chartImage: {
-    width: '100%',
-    height: 100,
+    width: Layout.window.width - 8,
+    height: Layout.window.width / 3,
     resizeMode: 'contain',
   },
   profitFiat: {
@@ -156,8 +159,8 @@ const styles = StyleSheet.create({
   },
   buttonsRow: {
     flexDirection: 'row',
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingLeft: 34,
+    paddingRight: 34,
     justifyContent: 'space-between',
   },
   button: {

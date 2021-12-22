@@ -1,5 +1,5 @@
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
@@ -11,7 +11,6 @@ import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-va
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
-import TxCreatingResult from '@slavi/wallet-core/types/services/transaction/tx-creating-result';
 import SimpleToast from 'react-native-simple-toast';
 import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import {useCoinSpecsService, useDidUpdateEffect} from '@slavi/wallet-core';
@@ -30,6 +29,8 @@ import SolidButton from '../../components/buttons/solid-button';
 import AddressSelector from '../../components/buttons/address-selector';
 import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
+import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
+import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -128,8 +129,8 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     ],
   );
 
-  const validate = useCallback((): boolean => {
-    const result = validator(recipient.address, recipient.amount);
+  const validate = useCallback((strict?: boolean): boolean => {
+    const result = validator(recipient.address, recipient.amount, strict);
 
     setIsValid(result.isValid);
     const tmp: VoutError = {address: [], amount: []};
@@ -149,6 +150,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       address: typeof data.address === 'undefined' ? recipient.address : data.address,
       amount: typeof data.amount === 'undefined' ? recipient.amount : data.amount,
     });
+    setRecipientPayFee(false);
   };
 
   const addError = (error: string) => {
@@ -158,7 +160,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
 
   const onSubmit = async () => {
     setLocked(true);
-    if (validate()) {
+    if (validate(true)) {
       if (!props.pattern) {
         throw new Error('Try create transaction of unknown coin');
       }
@@ -169,12 +171,6 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       }
 
       let result;
-      console.log({recipient, fromAddress, options: {
-        transactionPriority: TransactionPriority.average,
-          receiverPaysFee: recipientPayFee,
-          gasLimit: advancedGasLimit,
-          gasPrice: advancedGasPrice,
-      }})
       try {
         result = await props.pattern.createTransaction(recipient, fromAddress, {
           transactionPriority: TransactionPriority.average,
@@ -185,11 +181,14 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       } catch (e) {
         const err = except<InsufficientFunds>(InsufficientFunds, e);
         if (err) {
-          addError(
-            t(
-              'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
-            ),
+          let text = t(
+            'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
           );
+
+          if(coinDetails.parent && err.coin === coinDetails.parent) {
+            text += ` (${coinDetails.parentName})`;
+          }
+          addError(text);
         } else {
           setLocked(false);
           const err1 = except<CreateTransactionError>(
@@ -200,13 +199,20 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             addError(
               t('Can not create transaction. Try latter or contact support.'),
             );
+          } else {
+            const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
+            if (err2) {
+              addError(
+                t('Can not create transaction. absurdly high fee.'),
+              );
+            }
           }
           throw e;
         }
       }
 
       if (!result) {
-        SimpleToast.show(t('Error of transaction creating'));
+        setLocked(false);
         return;
       }
 
@@ -231,6 +237,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       addError(t('Error of broadcast tx. Try again latter or contact support'));
       return;
     } finally {
+      setLocked(false);
       cancelConfirmSending();
     }
 
@@ -249,6 +256,12 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   };
 
   useDidUpdateEffect(() => validate(), [recipient, validate]);
+
+  useEffect(() => {
+    if(isValid) {
+      setErrors([]);
+    }
+  }, [isValid]);
 
   const currentGasPrice =
     advancedGasPrice || props.pattern.getGasLimit(txPriority) || '0';
@@ -287,6 +300,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
               maxIsAllowed={true}
               setRecipientPayFee={enableRecipientPaysFee}
               errors={voutError}
+              maximumPrecision={props.pattern.getMaxPrecision()}
             />
           </View>
           <TxPriorityButtonGroup
@@ -354,7 +368,7 @@ const styles = StyleSheet.create({
   addressSelector: {
     marginLeft: 16,
     marginRight: 16,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   scroll: {
     flexGrow: 1,

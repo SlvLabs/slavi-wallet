@@ -12,7 +12,7 @@ import useCoinsService from '@slavi/wallet-core/src/contexts/hooks/use-coins-ser
 import useTotalBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-total-balance-hook';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
-import sortByField from '@slavi/wallet-core/src/utils/sort-objects-in-array-by-field';
+import sortByField, {Comparator} from '@slavi/wallet-core/src/utils/sort-objects-in-array-by-field';
 import store from '@slavi/wallet-core/src/store/index';
 import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 
@@ -25,6 +25,7 @@ enum CoinsSortType {
 interface CoinsSortParams {
   field: string,
   direction: number,
+  comparator?: Comparator<any>,
 }
 
 const coinsSorts: Record<CoinsSortType, CoinsSortParams> = {
@@ -35,6 +36,15 @@ const coinsSorts: Record<CoinsSortType, CoinsSortParams> = {
   [CoinsSortType.value]: {
     field: 'fiatTotal',
     direction: 1,
+    comparator: (a: DisplayCoinData, b: DisplayCoinData) => {
+      if (+a.fiatTotal === +b.fiatTotal) {
+        if(+a.total > +b.total) return -1;
+        else if(+a.total < +b.total) return 1;
+        return 0;
+      }
+      else if (+a.fiatTotal > +b.fiatTotal) return -1;
+      else return 1;
+    },
   },
   [CoinsSortType.priority]: {
     field: 'priority',
@@ -78,7 +88,7 @@ const coinsReducer: CoinsReducer = (state, action) =>{
     case CoinsActionType.updateCoins: {
       const sort = coinsSorts[state.sort];
       const coins = [...action.coins];
-      sortByField(coins, sort.field as keyof DisplayCoinData, sort.direction);
+      sortByField(coins, sort.field as keyof DisplayCoinData, sort.direction, sort.comparator);
       return {
         ...state,
         coins: coins,
@@ -87,7 +97,7 @@ const coinsReducer: CoinsReducer = (state, action) =>{
     case CoinsActionType.sortCoins: {
       const sort = coinsSorts[action.sort];
       const coins = [...state.coins];
-      sortByField(coins, sort.field as keyof DisplayCoinData, sort.direction);
+      sortByField(coins, sort.field as keyof DisplayCoinData, sort.direction, sort.comparator);
       return {
         sort: action.sort,
         coins: coins,
@@ -164,7 +174,7 @@ const CoinsListScreen = () => {
     [navigation]);
 
   const navigateToSend = useCallback(() =>
-      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND}),
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filterByBalance: true, balanceShown: true}),
     [navigation]);
 
   return (

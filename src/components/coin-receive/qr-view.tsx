@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 import {QrData, formatDataForQr} from '@slavi/wallet-core/src/utils/qr';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import QRCode, {QRCodeProps} from 'react-native-qrcode-svg';
-import AddressView from './address-view';
 import theme from '../../theme';
 
 export interface AddressQrData extends QrData {
@@ -14,7 +13,6 @@ export interface QrViewProps extends QRCodeProps {
   size: number;
   containerStyle?: ViewStyle;
   textStyle?: TextStyle;
-  onDataChange?: (data: string | null) => void;
   onEdit: (name?: string) => void;
 }
 
@@ -26,20 +24,13 @@ const QrView = (props: QrViewProps) => {
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.centredElement}>
         <View style={styles.qrContainer}>
-          <View style={styles.qrContainerHorizontalOverlapping}>
-            <View style={styles.qrContainerVerticalOverlapping}>
               <QRCode
                 value={value}
                 size={size}
                 getRef={props.getRef}
                 {...otherProps}
               />
-            </View>
-          </View>
         </View>
-      </View>
-      <View style={styles.address}>
-        <AddressView address={data.address} name={data.name} />
       </View>
     </View>
   );
@@ -75,9 +66,6 @@ const styles = StyleSheet.create({
     marginBottom: -27,
     paddingBottom: 23,
   },
-  address: {
-    marginTop: 16,
-  }
 });
 
 export default QrView;

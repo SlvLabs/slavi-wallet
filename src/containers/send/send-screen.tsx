@@ -10,9 +10,11 @@ import {
   ETH_PATTERN,
   ERC20_PATTERN,
   POLKA_PATTERN,
+  SOLANA_PATTERN,
 } from '@slavi/wallet-core/src/services/coin-pattern/utils/pattern-names';
 import SendErc20Screen from './send-erc20-screen';
 import SendPolkadotScreen from './send-polkadot';
+import SendSolanaBasedScreen from './send-solana-screen';
 
 const SendScreen = () => {
   const route = useRoute<CoinSendRouteProps>();
@@ -31,6 +33,7 @@ const SendScreen = () => {
     [ETH_PATTERN, <SendEthScreen coin={coin} />],
     [ERC20_PATTERN, <SendErc20Screen coin={coin} />],
     [POLKA_PATTERN, <SendPolkadotScreen coin={coin} />],
+    [SOLANA_PATTERN, <SendSolanaBasedScreen coin={coin} />],
   ]);
 
   const screen = getHandlerByPattern(pattern, screensMap);

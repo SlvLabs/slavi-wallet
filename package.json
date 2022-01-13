@@ -66,6 +66,7 @@
     "react-redux": "^7.2.1",
     "readable-stream": "^3.6.0",
     "redux": "^4.0.5",
+    "text-encoding": "^0.7.0",
     "vm-browserify": "^1.1.2"
   },
   "devDependencies": {

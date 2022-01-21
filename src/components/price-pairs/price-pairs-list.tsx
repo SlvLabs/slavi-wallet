@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import PricePairElement from './price-pair-element';
-import {PricePairsListElement} from '@slavi/wallet-core/src/providers/ws/messages';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
+import {PricePairsListElement} from '@slavi/wallet-core/src/providers/ws/messages/currency';
 
 export interface PricePairsElementsListProps {
   elements: PricePairsListElement[];

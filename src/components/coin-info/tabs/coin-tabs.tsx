@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
 import InfoView, {CoinParams} from './info-view';
 import {StyleSheet, View} from 'react-native';
 import HistoryView from './history-view';
 import CoinTabsHeader from './coin-tabs-header';
+import useTranslation from '../../../utils/use-translation';
 
 export interface CoinTabsProps {
   infoParams: CoinListElement[];
@@ -35,11 +36,6 @@ enum ScreenKeys {
   history,
 }
 
-const names = {
-  [ScreenKeys.info]: 'Info',
-  [ScreenKeys.history]: 'History',
-};
-
 const renders = {
   [ScreenKeys.info]: renderInfo,
   [ScreenKeys.history]: renderHistory,
@@ -47,6 +43,13 @@ const renders = {
 
 const CoinTabs = (props: CoinTabsProps) => {
   const [activeScreen, setActiveScreen] = useState<ScreenKeys>(ScreenKeys.info);
+  const {t} = useTranslation();
+
+  const names = useMemo(() => ({
+    [ScreenKeys.info]: t('Info'),
+    [ScreenKeys.history]: t('History'),
+  }), [t]);
+
   return (
     <View style={styles.container}>
       <CoinTabsHeader

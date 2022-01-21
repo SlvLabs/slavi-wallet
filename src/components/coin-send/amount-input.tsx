@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {View, StyleSheet, ViewStyle, TextStyle} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
 
 export interface AmountInputProps {

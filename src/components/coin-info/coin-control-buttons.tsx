@@ -2,7 +2,7 @@ import SolidButton from '../buttons/solid-button';
 import Button from '../buttons/button';
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import OutlineButton from '../buttons/outline-button';
 
 export interface CoinControlButtonsProps {

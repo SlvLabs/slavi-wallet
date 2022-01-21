@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
 import SolidButton from '../buttons/solid-button';
 import BaseModal, {ModalProps} from './base-modal';

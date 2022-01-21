@@ -10,7 +10,7 @@ import moment, {Moment} from 'moment';
 // @ts-ignore - without types
 import DateRangePicker from '@slavi/react-native-daterange-picker';
 import theme from '../../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import {Icon} from 'react-native-elements';
 import Layout from '../../../utils/layout';
 

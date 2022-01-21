@@ -2,7 +2,7 @@ import {StyleSheet, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import theme from '../../theme';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 
 const SimpleErrorBoundary = () => {
   const {t} = useTranslation();

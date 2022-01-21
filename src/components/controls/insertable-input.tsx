@@ -1,6 +1,6 @@
 import React from 'react';
 import SimpleInput, {SimpleInputProps} from './simple-input';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import {useCallback} from 'react';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 

@@ -9,6 +9,7 @@ import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from "@slavi/wallet-core/src/utils/performance-monitor-interface";
 import { ContractAbiProviderConf } from '@slavi/wallet-core/src/services/contract-abi-provider';
+import translations from '../assets/translations/fallback';
 
 
 const wsConfig = {
@@ -57,7 +58,7 @@ const bootstrap = async (
     appVersion: appVersion || '',
     serviceLocator: serviceLocator,
   });
-  return coreBootstrap.load();
+  return coreBootstrap.load(translations);
 };
 
 export default bootstrap;

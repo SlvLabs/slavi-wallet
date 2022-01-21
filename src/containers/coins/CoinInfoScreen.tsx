@@ -13,6 +13,7 @@ import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CoinControlButtons from '../../components/coin-info/coin-control-buttons';
 import theme from '../../theme';
+import {CoinParams} from '../../components/coin-info/tabs/info-view';
 
 const CoinInfoScreen = () => {
   const route = useRoute<CoinInfoRouteProps>();
@@ -81,7 +82,7 @@ const CoinInfoScreen = () => {
             crypto={crypto}
             infoIsLoading={isLoading}
             coin={coin}
-            coinParams={dict}
+            coinParams={dict as unknown as CoinParams}
           />
         </ScrollView>
       </View>

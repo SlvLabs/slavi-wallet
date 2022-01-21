@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native';
 import SendView, {Recipient, RecipientUpdatingData} from './send-view';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import theme from '../../theme';
 

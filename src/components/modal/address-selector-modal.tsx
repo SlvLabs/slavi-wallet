@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TextStyle, ScrollView} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import BaseModal, {ModalProps} from './base-modal';
 import SimpleInput from '../controls/simple-input';
 import theme from '../../theme';

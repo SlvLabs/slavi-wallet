@@ -8,7 +8,7 @@ import MnemonicImportScreen from '../containers/settings/mnemonic-import-screen'
 import LanguageScreen from '../containers/settings/language-screen';
 import CurrencyScreen from '../containers/settings/currency-screen';
 import InvalidateCachesScreen from '../containers/settings/invalidate-caches-screen';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../utils/use-translation';
 
 const StackNavigator = createStackNavigator();
 

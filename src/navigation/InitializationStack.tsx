@@ -5,10 +5,14 @@ import InitializationPasscodeScreen from '../containers/initialization/Initializ
 import LicenseAgreementScreen from '../containers/initialization/LicenseAgreementScreen';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
+import useTranslation from '../utils/use-translation';
 
 const StackNavigator = createStackNavigator();
 
-const InitializationStack = () => useMemo( () => (
+const InitializationStack = () => {
+  const {t} = useTranslation();
+
+  return useMemo( () => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.INITIALIZATION.LOCALIZATION}
       headerMode={'screen'}
@@ -16,19 +20,20 @@ const InitializationStack = () => useMemo( () => (
       <StackNavigator.Screen
         name={ROUTES.INITIALIZATION.LOCALIZATION}
         component={InitializeLocalizationScreen}
-        options={{title: 'Welcome to slavi wallet'}}
+        options={{title: t('Welcome to slavi wallet')}}
       />
       <StackNavigator.Screen
         name={ROUTES.INITIALIZATION.PASSCODE}
         component={InitializationPasscodeScreen}
-        options={{title: 'Set passcode'}}
+        options={{title: t('Set passcode')}}
       />
       <StackNavigator.Screen
         name={ROUTES.INITIALIZATION.LICENSE_AGREEMENT}
         component={LicenseAgreementScreen}
-        options={{title: 'Licence'}}
+        options={{title: t('Licence')}}
       />
     </StackNavigator.Navigator>
   ), []);
+}
 
 export default InitializationStack;

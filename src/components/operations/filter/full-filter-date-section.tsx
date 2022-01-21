@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import FullFilterSection from './full-filter-section';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullFilterDate from './full-filter-date';
 import {Moment} from 'moment';
 import CustomIcon from '../../custom-icon/custom-icon';

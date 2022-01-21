@@ -12,7 +12,7 @@ import theme from '../../theme';
 import AddressSelectorModal, {
   AddressEntry,
 } from '../modal/address-selector-modal';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 
 export interface AddressSelectorProps {
   addresses: AddressEntry[];

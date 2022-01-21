@@ -4,7 +4,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import RadialGradient from 'react-native-radial-gradient';
 import theme from '../../theme';
 import {simpleLogo} from '../../assets/images';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SolidButton from '../../components/buttons/solid-button';
 import SimpleSelect from '../../components/controls/simple-select';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
@@ -57,9 +57,9 @@ const InitializeLocalizationScreen = () => {
           <Image source={simpleLogo} style={styles.logo} />
         </View>
         <View style={styles.textBlock}>
-          <Text style={styles.header}>{t('Сonvenient system')}</Text>
+          <Text style={styles.header}>{t('Convenient system')}</Text>
           <Text style={styles.description}>
-            {t('We offer you a convenient system that’ll help solve all your problems with cryptocurrency')}
+            {t('We offer you a convenient system that will help solve all your problems with cryptocurrency')}
           </Text>
         </View>
         <View style={styles.formBlock}>

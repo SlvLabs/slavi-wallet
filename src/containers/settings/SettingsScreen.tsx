@@ -1,7 +1,7 @@
 import {InteractionManager, SafeAreaView, StyleSheet, Text} from 'react-native';
 import React, {useCallback} from 'react';
 import {ListItem} from 'react-native-elements';
-import {useTranslation} from 'react-i18next';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import theme from '../../theme';
@@ -53,7 +53,7 @@ const SettingsScreen = () => {
       <ListItem key={3} bottomDivider onPress={goToLanguage} containerStyle={styles.listItem}>
         <ListItem.Content style={styles.content}>
           <ListItem.Title style={styles.title}>{t('Language')}</ListItem.Title>
-          <Text style={styles.subText}>{t(i18n.language)}</Text>
+          <Text style={styles.subText}>{t(i18n.language as TranslationsKey)}</Text>
         </ListItem.Content>
         {chevron}
       </ListItem>

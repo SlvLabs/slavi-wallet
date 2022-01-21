@@ -1,5 +1,5 @@
 import {Recipient} from './send-view';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import SolidButton from '../buttons/solid-button';

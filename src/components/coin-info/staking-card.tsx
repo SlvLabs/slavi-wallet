@@ -1,6 +1,6 @@
 import {BalanceViewProps} from '../coins/balance-view';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import ConvertedBalanceElement from './converted-balance-element';
 import {StyleSheet, View, Text} from 'react-native';
 import OutlineButton from '../buttons/outline-button';

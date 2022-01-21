@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import OutlineButton from '../buttons/outline-button';
 import theme from '../../theme';

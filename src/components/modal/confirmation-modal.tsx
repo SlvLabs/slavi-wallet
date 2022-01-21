@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import BaseModal, {ModalProps} from './base-modal';
 import SolidButton from '../buttons/solid-button';
-import {useTranslation} from 'react-i18next';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import {StyleSheet, Text} from 'react-native';
 import OutlineButton from '../buttons/outline-button';
 import theme from '../../theme';
@@ -53,12 +53,12 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
       )}
       <SolidButton
         onPress={_onPositive}
-        title={t(_positiveText)}
+        title={t(_positiveText as TranslationsKey)}
         containerStyle={styles.button}
       />
       <OutlineButton
         onPress={onCancel}
-        title={t(_negativeText)}
+        title={t(_negativeText as TranslationsKey)}
         containerStyle={styles.button}
       />
     </BaseModal>

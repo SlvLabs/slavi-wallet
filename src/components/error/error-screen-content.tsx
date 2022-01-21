@@ -15,7 +15,7 @@ export interface ErrorScreenContentProps {
 const defaultIcon: IconProps = {
   name: 'error-outline',
   type: 'material',
-  color: theme.colorsOld.grey,
+  color: theme.colors.grayDark,
   size: 150,
 };
 
@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 28,
     textAlign: 'center',
-    color: theme.colorsOld.darkRed,
+    color: theme.colors.grayDark,
   },
   text: {
     textAlign: 'center',
-    color: theme.colorsOld.grey,
+    color: theme.colors.grayDark,
   },
 });
 

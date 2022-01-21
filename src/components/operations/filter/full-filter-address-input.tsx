@@ -1,6 +1,6 @@
 import RecipientInput from '../../coin-send/recipient-input';
 import React, {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import SimpleToast from 'react-native-simple-toast';
 import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import QrReaderModal from '../../coin-send/qr-reader-modal';

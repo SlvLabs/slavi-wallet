@@ -1,6 +1,6 @@
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import SendView, {

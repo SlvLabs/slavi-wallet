@@ -1,6 +1,6 @@
 import {StyleSheet, ViewStyle} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SolidButton from '../buttons/solid-button';
 import SimpleInput from '../controls/simple-input';
 import BaseModal, {ModalProps} from './base-modal';

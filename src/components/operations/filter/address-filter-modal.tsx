@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import FullScreenModal from '../../modal/full-screen-modal';
 import {StyleSheet, View} from 'react-native';
 import theme from '../../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullFilterAddressInput from './full-filter-address-input';
 
 export interface AddressesFilterModalProps {

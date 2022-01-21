@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, View, ViewStyle, Text} from 'react-native';
 import {Avatar, ListItem} from 'react-native-elements';
-import {PricePairsListElement} from '@slavi/wallet-core/src/providers/ws/messages';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import getImageSource from '../../utils/get-image-source';
+import { PricePairsListElement } from '@slavi/wallet-core/src/providers/ws/messages/currency';
 
 export interface PricePairElementProps {
   element: PricePairsListElement;

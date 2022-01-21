@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import FullScreenModal from '../../modal/full-screen-modal';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullFilterCoinSection from './full-filter-coin-section';
 import FullFilterDateSection from './full-filter-date-section';
 import FullFilterStatusSection from './full-filter-status-section';

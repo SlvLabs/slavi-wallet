@@ -9,9 +9,9 @@ import ROUTES from './config/routes';
 import ReceiveScreen from '../containers/coins/ReceiveScreen';
 import SendScreen from '../containers/send/send-screen';
 import TokenAddingScreen from '../containers/coins/token-adding-screen';
-import {useTranslation} from 'react-i18next';
 import SuccessfullySendingScreen from '../containers/send/successfully-sending-screen';
 import CoinSelectListScreen from '../containers/coins/coin-select-list-screen';
+import useTranslation from '../utils/use-translation';
 
 export interface CoinsStackParamList extends ParamListBase {
   List: {};

@@ -14,7 +14,7 @@ import {
 } from '@slavi/wallet-core';
 import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
 import {Recipient} from '../../components/coin-send/send-view';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import useTxVoutsValidator, {
   VoutError,
 } from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';

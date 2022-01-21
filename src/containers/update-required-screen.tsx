@@ -1,10 +1,10 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
 import InitializationBackground from '../components/background/initialization-background';
 import {walletLogo, wavesLeft, wavesRight} from '../assets/images';
 import SolidButton from '../components/buttons/solid-button';
 import theme from '../theme';
+import useTranslation from '../utils/use-translation';
 
 const UpdateRequiredScreen = () => {
   const {t} = useTranslation();

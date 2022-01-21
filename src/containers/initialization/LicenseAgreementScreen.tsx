@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import InitializationBackground from '../../components/background/initialization-background';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SimpleCheckbox from '../../components/controls/simple-checkbox';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';

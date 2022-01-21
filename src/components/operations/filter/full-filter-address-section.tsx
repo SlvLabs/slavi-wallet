@@ -1,5 +1,5 @@
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullFilterSection from './full-filter-section';
 import FullFilterAddressInput from './full-filter-address-input';
 

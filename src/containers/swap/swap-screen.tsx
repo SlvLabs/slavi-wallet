@@ -5,7 +5,6 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import RadialGradient from 'react-native-radial-gradient';
 import {loadingBackground, screenStub} from '../../assets/images';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import Layout from '../../utils/layout';
 import {useWSRequest} from '@slavi/wallet-core';
@@ -18,6 +17,7 @@ import {
   Subscribe
 } from '@slavi/wallet-core/src/providers/ws/messages/subscribe';
 import SolidButton from '../../components/buttons/solid-button';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 
 const SUBSCRIBE_KEY = 'swap';
 
@@ -142,9 +142,9 @@ const SwapScreen = () => {
                   />
                 )}
               </View>
-              {!!error && <Text style={styles.error}>{t(error)}</Text>}
+              {!!error && <Text style={styles.error}>{t(error as TranslationsKey)}</Text>}
               {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
-                <Text style={styles.subscribedText}>{t('You’ve successfully subscribed')}</Text>
+                <Text style={styles.subscribedText}>{t('You\'ve successfully subscribed')}</Text>
               ) : (
                 <SolidButton
                   icon={

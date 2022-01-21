@@ -1,6 +1,6 @@
 import React from 'react';
 import RecipientInput from './recipient-input';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import AmountInput from './amount-input';
 import {
   StyleSheet,

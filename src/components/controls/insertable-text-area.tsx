@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 
 export interface CopiedTextAreaProps {

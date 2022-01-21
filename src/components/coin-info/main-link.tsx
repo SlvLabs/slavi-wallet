@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {View, Text, Linking, TouchableOpacity, StyleSheet} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import SimpleToast from 'react-native-simple-toast';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 
 export interface MainLinkProps {

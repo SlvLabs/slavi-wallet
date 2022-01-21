@@ -1,7 +1,7 @@
 import {Text, View, InteractionManager, Image, StyleSheet} from 'react-native';
 import React, {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import ROUTES from '../../navigation/config/routes';
 import InitializationBackground from '../../components/background/initialization-background';
 import SolidButton from '../../components/buttons/solid-button';
@@ -34,7 +34,7 @@ const AccountMenuScreen = () => {
       <View style={styles.textBlock}>
         <Text style={styles.header}>{t('Sign in to account')}</Text>
         <Text style={styles.description}>{
-          t('We offer you a convenient system that’ll help solve all your problems with cryptocurrency')
+          t('We offer you a convenient system that will help solve all your problems with cryptocurrency')
         }</Text>
       </View>
       <View style={styles.buttonsBlock}>

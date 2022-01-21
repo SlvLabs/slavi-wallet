@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import Toast from 'react-native-simple-toast';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import OutlineButton from '../buttons/outline-button';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';

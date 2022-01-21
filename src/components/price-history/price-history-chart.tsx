@@ -8,8 +8,8 @@ import {
   ViewStyle,
   processColor,
 } from 'react-native';
-import {PriceHistoryElement} from '@slavi/wallet-core/src/providers/ws/messages';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
+import { PriceHistoryElement } from '@slavi/wallet-core/src/providers/ws/messages/currency';
 
 export interface PriceHistoryChartData {
   elements: PriceHistoryElement[];

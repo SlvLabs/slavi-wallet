@@ -4,7 +4,7 @@ import useCoinsSelector, {
   DisplayCoinData,
 } from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import FullScreenModal from '../../modal/full-screen-modal';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullFilterCoinList from './full-filter-coin-list';
 import SearchInput from '../../controls/search-input';
 import theme from '../../../theme';

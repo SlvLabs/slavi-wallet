@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SimpleInput from '../controls/simple-input';
 import CustomIcon from '../custom-icon/custom-icon';
 

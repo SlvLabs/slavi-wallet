@@ -1,7 +1,7 @@
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo} from 'react';
 import useLanguages from '@slavi/wallet-core/src/providers/ws/hooks/use-languages';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import SelectableList from '../../components/controls/selectable-list';
 import mapArrayToSelectOptions from '../../utils/map-array-to-select-options';

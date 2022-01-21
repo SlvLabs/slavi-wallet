@@ -1,4 +1,4 @@
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import {
   useAddressesService,

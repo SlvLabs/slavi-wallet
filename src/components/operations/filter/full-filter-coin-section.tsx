@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import FullFilterSection from './full-filter-section';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import {Text} from 'react-native';
 import theme from '../../../theme';
 import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';

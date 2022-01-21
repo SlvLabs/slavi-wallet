@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import OperationsListScreen from '../containers/operations/OperationsListScreen';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../utils/use-translation';
 
 const StackNavigator = createStackNavigator();
 

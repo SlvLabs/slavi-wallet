@@ -24,7 +24,7 @@ const labels = {
   [ROUTES.TABS.COINS]: 'Wallet',
   [ROUTES.TABS.DEFI]: 'DeFi',
   [ROUTES.TABS.OPERATIONS]: 'Operations',
-  [ROUTES.TABS.SWAP]: 'Swap',
+  [ROUTES.TABS.SWAP]: 'Exchange',
   [ROUTES.TABS.SETTINGS]: 'Settings',
 };
 

@@ -4,7 +4,7 @@ import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coi
 import theme from '../../theme';
 import SimpleInput from '../../components/controls/simple-input';
 import CustomIcon from '../../components/custom-icon/custom-icon';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SimpleCoinListElement from '../../components/coins/simple-coin-list-element';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {CoinDisplayData} from '../../components/coin-list/coins-list-element';

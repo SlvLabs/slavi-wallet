@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Icon, SearchBar} from 'react-native-elements';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SearchParamsButton, {ParamsItem} from './search-params-button';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';

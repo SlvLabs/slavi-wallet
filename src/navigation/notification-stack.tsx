@@ -2,8 +2,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React, {useMemo} from 'react';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
-import {useTranslation} from 'react-i18next';
 import NotificationListScreen from '../containers/notification/notification-list-screen';
+import useTranslation from '../utils/use-translation';
 
 const StackNavigator = createStackNavigator();
 

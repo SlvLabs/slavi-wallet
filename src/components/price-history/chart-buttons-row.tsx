@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import {ButtonGroup} from 'react-native-elements';
 
 export interface ChartButtonsRowProps {

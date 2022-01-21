@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import InitializationBackground from '../../../components/background/initialization-background';
 import theme from '../../../theme';
 import SolidButton from '../../../components/buttons/solid-button';

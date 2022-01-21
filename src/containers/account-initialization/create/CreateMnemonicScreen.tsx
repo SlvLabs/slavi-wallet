@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import theme from '../../../theme';
 import {State} from '../../../store';
 import ROUTES from '../../../navigation/config/routes';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import InitializationBackground from '../../../components/background/initialization-background';
 import SolidButton from '../../../components/buttons/solid-button';
 import PointerProgressBar from '../../../components/progress/pointer-progress-bar';

@@ -5,7 +5,7 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import RadialGradient from 'react-native-radial-gradient';
 import {loadingBackground, screenStub} from '../../assets/images';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import Layout from '../../utils/layout';
 import {useWSRequest} from '@slavi/wallet-core';
@@ -145,9 +145,9 @@ const DefiScreen = () => {
                   />
                 )}
               </View>
-              {!!error && <Text style={styles.error}>{t(error)}</Text>}
+              {!!error && <Text style={styles.error}>{t(error as TranslationsKey)}</Text>}
               {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
-                <Text style={styles.subscribedText}>{t('You’ve successfully subscribed')}</Text>
+                <Text style={styles.subscribedText}>{t('You\'ve successfully subscribed')}</Text>
               ) : (
                 <SolidButton
                   icon={

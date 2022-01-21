@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {ActivityIndicator, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import {Icon} from 'react-native-elements';
 import theme from '../../theme';
 import {SelectModal} from '../modal/select-modal';

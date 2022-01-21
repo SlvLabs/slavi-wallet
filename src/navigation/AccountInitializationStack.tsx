@@ -6,10 +6,14 @@ import CreateMnemonicScreen from '../containers/account-initialization/create/Cr
 import ConfirmMnemonicScreen from '../containers/account-initialization/create/ConfirmMnemonicScreen';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
+import useTranslation from '../utils/use-translation';
 
 const StackNavigator = createStackNavigator();
 
-const AccountInitializationStack = () => useMemo(() => (
+const AccountInitializationStack = () => {
+  const {t} = useTranslation();
+
+  return useMemo(() => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.ACCOUNT_INITIALIZATION.MENU}
       headerMode={'screen'}
@@ -17,24 +21,25 @@ const AccountInitializationStack = () => useMemo(() => (
       <StackNavigator.Screen
         name={ROUTES.ACCOUNT_INITIALIZATION.MENU}
         component={AccountMenuScreen}
-        options={{title: 'Account creating'}}
+        options={{title: t('Account creating')}}
       />
       <StackNavigator.Screen
         name={ROUTES.ACCOUNT_INITIALIZATION.IMPORT_MNEMONIC}
         component={ImportAccountScreen}
-        options={{title: 'Account importing'}}
+        options={{title: t('Account importing')}}
       />
       <StackNavigator.Screen
         name={ROUTES.ACCOUNT_INITIALIZATION.CREATE_MNEMONIC}
         component={CreateMnemonicScreen}
-        options={{title: 'Mnemonic creation'}}
+        options={{title: t('Mnemonic creation')}}
       />
       <StackNavigator.Screen
         name={ROUTES.ACCOUNT_INITIALIZATION.CONFIRM_MNEMONIC}
         component={ConfirmMnemonicScreen}
-        options={{title: 'Mnemonic confirmation'}}
+        options={{title: t('Mnemonic confirmation')}}
       />
     </StackNavigator.Navigator>
   ), []);
+}
 
 export default AccountInitializationStack;

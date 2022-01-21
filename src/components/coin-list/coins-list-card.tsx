@@ -7,7 +7,7 @@ import CoinsList, {showCoinsEnum} from './coins-list';
 import searcher from '@slavi/wallet-core/src/utils/search-in-arrays-of-object-by-string-field';
 import TokenAddButton from '../../containers/token/token-add-button';
 import OutlineButton from '../buttons/outline-button';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 
 export interface CoinsListCardProps {

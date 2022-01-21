@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import InsertableTextArea from '../../components/controls/insertable-text-area';
 import {useDispatch, useSelector} from 'react-redux';
 import {store} from '@slavi/wallet-core';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
@@ -39,7 +39,7 @@ const MnemonicImportScreen = () => {
       <InsertableTextArea onChange={(value: string) => setMnemonic(value)} />
       <Text style={styles.error}>{mnemonicError}</Text>
       <View style={styles.buttonsBlock}>
-        <SolidButton title={'Import'} onPress={showConf} />
+        <SolidButton title={t('Import')} onPress={showConf} />
       </View>
       <ConfirmationModal
         onPositive={updateMnemonic}

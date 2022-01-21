@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import theme from '../../../theme';
 import LinearGradient from 'react-native-linear-gradient';
+import useTranslation, {TranslationsKey} from '../../../utils/use-translation';
 
 export interface FullFilterChipProps {
   title: string;
@@ -10,6 +11,10 @@ export interface FullFilterChipProps {
 }
 
 const FullFilterChip = (props: FullFilterChipProps) => {
+  const {t} = useTranslation();
+
+  const title = useMemo(() => t(props.title as TranslationsKey), [props.title, t]);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -17,13 +22,13 @@ const FullFilterChip = (props: FullFilterChipProps) => {
       {props.selected ? (
         <LinearGradient {...theme.gradients.button} style={styles.contentContainer} >
           <Text style={{...styles.title, ...styles.activeTitle}}>
-            {props.title}
+            {title}
           </Text>
         </LinearGradient>
       ) : (
         <View style={styles.contentContainer}>
           <Text style={styles.title}>
-            {props.title}
+            {title}
           </Text>
         </View>
       )}

@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SimpleInput, {SimpleInputProps} from './simple-input';
 
 export enum DecimalType {

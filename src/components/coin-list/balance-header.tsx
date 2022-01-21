@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SummaryBalanceElement from './summary-balance-element';
 import theme from '../../theme';
 import {chart} from '../../assets/images';

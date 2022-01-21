@@ -8,7 +8,7 @@ import {
   TextStyle,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import SolidButton from '../buttons/solid-button';
 import Button from '../buttons/button';
 import theme from '../../theme';

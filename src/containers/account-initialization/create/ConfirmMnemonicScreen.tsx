@@ -5,7 +5,7 @@ import MnemonicArea from '../../../components/mnemonic/mnemonic-area';
 import theme from '../../../theme';
 import AlertRow from '../../../components/error/alert-row';
 import {State} from '../../../store';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import InitializationBackground from '../../../components/background/initialization-background';
 import SolidButton from '../../../components/buttons/solid-button';
 import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
@@ -62,7 +62,7 @@ const ConfirmMnemonicScreen = () => {
         <Text style={styles.header}>{t('Type your secret phrase')}</Text>
         <Text style={styles.description}>
           {t(
-            "Write it down in the correct order, or copy it and keep it in a safe place. Don’t give it to anyone.",
+            "Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone.",
           )}
         </Text>
       </View>

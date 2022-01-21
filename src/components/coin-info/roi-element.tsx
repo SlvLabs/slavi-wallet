@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, ViewStyle, TextStyle} from 'react-native';
 import theme from '../../theme';
 import LinearGradient from 'react-native-linear-gradient';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 
 export interface RoiElementProps {
   roi: number;

@@ -3,7 +3,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {Image, Text} from 'react-native-elements';
 import getImageSource from '../../utils/get-image-source';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 
 export interface CoinListElementSoonProps {
   logo: string;

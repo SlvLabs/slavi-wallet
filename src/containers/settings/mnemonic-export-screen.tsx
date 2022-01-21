@@ -5,7 +5,7 @@ import {State} from '../../store';
 import MnemonicArea from '../../components/mnemonic/mnemonic-area';
 import ControlButtons from '../../components/mnemonic/control-buttons';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 
 const MnemonicExportScreen = () => {
   const mnemonic = useSelector((state: State) => state.account.mnemonic);

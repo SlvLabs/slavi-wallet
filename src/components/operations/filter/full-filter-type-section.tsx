@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import FullFilterSection from './full-filter-section';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullFilterChipList, {ChipData} from './full-filter-chip-list';
 import OperationType from '@slavi/wallet-core/src/utils/operation-list/operation-type';
 

@@ -1,6 +1,6 @@
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import React, {Reducer, useCallback, useEffect, useReducer, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import BalanceHeader from '../../components/coin-list/balance-header';
 import CoinListCard from '../../components/coin-list/coins-list-card';
 import theme from '../../theme';

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 
 export interface OperationParticipantsProps {

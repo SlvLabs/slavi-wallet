@@ -9,7 +9,7 @@ import {
 } from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
 import {Icon} from 'react-native-elements';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import OperationListFilter from './filter/operation-list-filter';
 
 export interface OperationsListProps {

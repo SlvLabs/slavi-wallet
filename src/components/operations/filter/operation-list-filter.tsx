@@ -9,7 +9,7 @@ import theme from '../../../theme';
 import CustomIcon from '../../custom-icon/custom-icon';
 import OperationFilterModal from './operation-filter-modal';
 import CoinsFilterModal from './coins-filter-modal';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import TypeFilterModal from './type-filter-modal';
 import StatusFilterModal from './status-filter-modal';
 import AddressFilterModal from './address-filter-modal';

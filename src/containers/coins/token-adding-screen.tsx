@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import AlertRow from '../../components/error/alert-row';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import useAddUserToken from '@slavi/wallet-core/src/providers/ws/hooks/use-add-user-token';
 import {useCoinPatternService, useGetParentCoins} from '@slavi/wallet-core';
 import SimpleSelect from '../../components/controls/simple-select';

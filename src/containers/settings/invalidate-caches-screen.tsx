@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {ListItem} from 'react-native-elements';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import {useCoinsService, useServices} from '@slavi/wallet-core';
 import {useDispatch} from 'react-redux';
 import {
@@ -96,6 +96,8 @@ const InvalidateCachesScreen = () => {
         visible={confIsShown}
         onCancel={hideConf}
         description={confirmationText}
+        positiveText={t('Yes')}
+        negativeText={t('No')}
       />
     </SafeAreaView>
   );

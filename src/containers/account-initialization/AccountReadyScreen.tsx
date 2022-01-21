@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import InitializationBackground from '../../components/background/initialization-background';
 import SolidButton from '../../components/buttons/solid-button';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import {useDispatch} from 'react-redux';
 import {hideFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';

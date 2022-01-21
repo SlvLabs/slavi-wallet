@@ -1,4 +1,4 @@
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../../utils/use-translation';
 import FullScreenModal from '../../modal/full-screen-modal';
 import {ScrollView, StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';

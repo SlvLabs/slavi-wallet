@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, ViewStyle, Text, StyleSheet, TextStyle} from 'react-native';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
 
 export interface InnerAddressElementProps {

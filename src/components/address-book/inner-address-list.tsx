@@ -11,7 +11,7 @@ import {
 import InnerAddressElement from './inner-address-element';
 import {Icon} from 'react-native-elements';
 import theme from '../../theme';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 
 export interface InnerAddressListProps {
   addresses: AddressEntry[];

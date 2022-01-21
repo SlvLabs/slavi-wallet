@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import BaseModal, {BaseModalProps} from '../modal/base-modal';
 import {StyleSheet, Text, View} from 'react-native';
 import SolidButton from '../buttons/solid-button';
-import {useTranslation} from 'react-i18next';
+import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 
 export interface KeepAliveConfirmationModalProps extends BaseModalProps {

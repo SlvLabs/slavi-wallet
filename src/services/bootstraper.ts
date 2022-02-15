@@ -30,6 +30,13 @@ const coinsServiceConfig: CoinsServiceConf = {
   diskCacheEnabled: !!Config.DISK_CACHE || true,
 };
 
+const walletConnectClientMeta = {
+  description: "Slavi wallet application",
+  url: "https://slavi.io/",
+  icons: ["https://slavi.io/images/logo.png"],
+  name: "SlaviWallet",
+}
+
 const bootstrap = async (
   store: Store,
   dataStorageProvider: DataStoreProviderInterface,
@@ -57,6 +64,7 @@ const bootstrap = async (
     devMode: devMode,
     appVersion: appVersion || '',
     serviceLocator: serviceLocator,
+    walletConnectClientMeta: walletConnectClientMeta,
   });
   return coreBootstrap.load(translations);
 };

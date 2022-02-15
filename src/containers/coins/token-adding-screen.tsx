@@ -86,8 +86,8 @@ const TokenAddingScreen = () => {
     <SafeAreaView style={styles.screen}>
       <View style={styles.textBlock}>
         <Text style={styles.description}>{
-          t('You can add a token that is missing in our wallet.\n' +
-            'To do this, select the blockchain that owns the token and specify the address of the contract')
+          t('You can add a token that is missing in our wallet.') + '\n' +
+            t('To do this, select the blockchain that owns the token and specify the address of the contract')
         }</Text>
       </View>
       <SimpleSelect onSelect={onChangeCoin} options={coinOptions} value={coin} label={t('Parent coin')}/>

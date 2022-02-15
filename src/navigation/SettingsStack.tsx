@@ -9,6 +9,7 @@ import LanguageScreen from '../containers/settings/language-screen';
 import CurrencyScreen from '../containers/settings/currency-screen';
 import InvalidateCachesScreen from '../containers/settings/invalidate-caches-screen';
 import useTranslation from '../utils/use-translation';
+import MainWalletConnectScreen from '../containers/wallet-connect/main-wallet-connect-screen';
 
 const StackNavigator = createStackNavigator();
 
@@ -49,6 +50,11 @@ const SettingsStack = () =>  {
         name={ROUTES.SETTINGS.INVALIDATE_CACHES}
         component={InvalidateCachesScreen}
         options={{title: t('Invalidate some caches')}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.SETTINGS.WALLET_CONNECT}
+        component={MainWalletConnectScreen}
+        options={{title: t('walletConnect')}}
       />
     </StackNavigator.Navigator>
   ),[]);

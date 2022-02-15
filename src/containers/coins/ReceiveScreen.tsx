@@ -12,9 +12,12 @@ import {useCoinSpecsService, useInnerAddressBookService} from '@slavi/wallet-cor
 import theme from '../../theme';
 import AddressView from '../../components/coin-receive/address-view';
 import Layout from '../../utils/layout';
+import useTranslation from '../../utils/use-translation';
 
 const ReceiveScreen = () => {
   const route = useRoute<CoinReceiveRouteProps>();
+  const {t} = useTranslation();
+
   const coin = route.params?.coin;
   if (!coin) {
     throw new Error('Unknown coin for details display');
@@ -118,7 +121,7 @@ const ReceiveScreen = () => {
           addressName={addressName}
         />
         <EditAddressButton
-          title={'Get new address'}
+          title={t('Get new address')}
           nameInputLabel={'Address name'}
           onSubmit={getNewRecvAddr}
         />

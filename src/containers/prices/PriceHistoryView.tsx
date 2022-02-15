@@ -3,8 +3,8 @@ import React, {useCallback, useEffect, useState} from 'react';
 import usePriceHistoryGet from '@slavi/wallet-core/src/providers/ws/hooks/use-price-history-get';
 import PriceHistoryChart from '../../components/price-history/price-history-chart';
 import ChartButtonsRow from '../../components/price-history/chart-buttons-row';
-import {PriceHistoryElement} from '@slavi/wallet-core/src/providers/ws/messages';
 import store from '@slavi/wallet-core/src/store/index';
+import {PriceHistoryElement} from '@slavi/wallet-core/src/providers/ws/messages/currency';
 
 export interface PriceHistoryViewProps {
   coin: string;
@@ -50,7 +50,7 @@ const PriceHistoryView = (props: PriceHistoryViewProps) => {
   );
   useEffect(() => {
     if (!isLoading) {
-      setDataToChart(history);
+      setDataToChart(history || []);
     }
   }, [history, isLoading]);
   return (

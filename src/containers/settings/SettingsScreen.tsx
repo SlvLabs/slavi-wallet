@@ -38,6 +38,11 @@ const SettingsScreen = () => {
     [navigation],
   );
 
+  const goToWalletConnect = useCallback(
+    () => navigation.navigate(ROUTES.SETTINGS.WALLET_CONNECT),
+    [navigation]
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ListItem
@@ -90,6 +95,12 @@ const SettingsScreen = () => {
       <ListItem key={2} bottomDivider onPress={goToMnemonicImport} containerStyle={styles.listItem}>
         <ListItem.Content>
           <ListItem.Title style={styles.title}>{t('Import new mnemonic phrase')}</ListItem.Title>
+        </ListItem.Content>
+        {chevron}
+      </ListItem>
+      <ListItem key={'wallet_connect'} bottomDivider onPress={goToWalletConnect} containerStyle={styles.listItem}>
+        <ListItem.Content>
+          <ListItem.Title style={styles.title}>{t('walletConnect')}</ListItem.Title>
         </ListItem.Content>
         {chevron}
       </ListItem>

@@ -21,6 +21,7 @@ module.exports = {
       stream: require.resolve('readable-stream'),
       vm: require.resolve('vm-browserify'),
       randomBytes: require.resolve('react-native-randombytes'),
+      assert: require.resolve('assert'),
     },
   },
 };

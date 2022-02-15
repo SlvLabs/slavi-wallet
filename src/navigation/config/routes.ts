@@ -41,6 +41,7 @@ const ROUTES = {
     LANGUAGE: 'Settings/Language',
     CURRENCY_CHANGE: 'Settings/CurrencyChange',
     INVALIDATE_CACHES: 'Settings/InvalidateCaches',
+    WALLET_CONNECT: 'Settings/WalletConnect',
   },
   NOTIFICATION: {
     LIST: 'Notification/List',

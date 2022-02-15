@@ -56,7 +56,7 @@ const SendManyView = (props: SendManyViewProps) => {
       </View>
       <View style={{...styles.controls, ...props.controlsViewStyle}}>
         <TouchableOpacity onPress={props.onRecipientAdd}>
-          <Text style={styles.recipientLabel}>{t('+ Add recepient')}</Text>
+          <Text style={styles.recipientLabel}>{'+ ' + t('Add recepient')}</Text>
         </TouchableOpacity>
       </View>
     </View>

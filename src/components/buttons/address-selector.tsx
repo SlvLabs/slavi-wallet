@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   StyleSheet,
   ViewStyle,
@@ -26,10 +26,12 @@ export interface AddressSelectorProps {
   iconSize?: number;
   iconColor?: string;
   textStyle?: TextStyle;
+  disabled?: boolean;
 }
 
 const defaultIconSize = 16;
 const defaultIconColor = theme.colors.lightGray;
+const defaultDisableIconColor = theme.colors.textDarkGray;
 
 const AddressSelector = (props: AddressSelectorProps) => {
   const {t} = useTranslation();
@@ -52,11 +54,19 @@ const AddressSelector = (props: AddressSelectorProps) => {
     textStyle = {...styles.text, ...props.textStyle};
   }
 
+  const containerStyle = useMemo(() =>
+    props.disabled ?
+      {...styles.container, ...props.containerStyle, ...styles.disabledContainer} :
+      {...styles.container, ...props.containerStyle},
+    [props.containerStyle, props.disabled]);
+
   return (
     <View>
       <TouchableOpacity
-        style={{...styles.container, ...props.containerStyle}}
-        onPress={showModal}>
+        style={containerStyle}
+        onPress={showModal}
+        disabled={props.disabled}
+      >
         <View>
           {props.label && (
             <View>
@@ -69,7 +79,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
           name={'down'}
           type={'antdesign'}
           size={props.iconSize || defaultIconSize}
-          color={props.iconColor || defaultIconColor}
+          color={props.disabled ? defaultDisableIconColor : (props.iconColor || defaultIconColor)}
         />
       </TouchableOpacity>
       <AddressSelectorModal
@@ -128,6 +138,9 @@ const styles = StyleSheet.create({
     color: theme.colors.textLightGray1,
     marginBottom: 8,
   },
+  disabledContainer: {
+    backgroundColor: theme.colors.lightBackground,
+  }
 });
 
 export default AddressSelector;

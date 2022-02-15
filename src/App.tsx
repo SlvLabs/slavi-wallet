@@ -34,6 +34,9 @@ import theme from './theme';
 import Config from "react-native-config";
 import { load as initializationLoad } from '@slavi/wallet-core/src/store/modules/initialization/initialization-thunk-actions';
 import SimpleToast from 'react-native-simple-toast';
+import WalletConnectSessionRequestModal from './components/wallet-connect/session-request-modal';
+import WalletConnectSignRequestModal from './components/wallet-connect/sign-request-modal';
+import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-modal';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -137,10 +140,13 @@ const App: () => ReactNode = () => {
                 isInitialized={isInitialized}
                 isAuthorized={true}
                 isAccountInitialized={isAccountInitialized}
-                isLoading={isBootstrapped}
+                isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
                 isInitializationFinished={isInitFinishShow}
                 isUpdateRequired={isUpdateRequired}
               />
+              {!isBootstrapped && <WalletConnectSessionRequestModal />}
+              {!isBootstrapped && <WalletConnectSignRequestModal />}
+              {!isBootstrapped && <WalletConnectTxRequestModal />}
             </NavigationContainer>
           </SafeAreaProvider>
         </servicesContext.Provider>

@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.black,
     paddingTop: 0,
     padding: 18,
-    height: 64,
     borderTopColor: theme.colors.lightTransparent,
     borderTopWidth: 1,
   },

@@ -12,6 +12,7 @@ import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store
 import {store} from '@slavi/wallet-core';
 import InsertableTextArea from '../../../components/controls/insertable-text-area';
 import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ImportAccountScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -41,6 +42,7 @@ const ImportAccountScreen = () => {
           )}
         </Text>
       </View>
+      <KeyboardAwareScrollView>
       <InsertableTextArea onChange={(value: string) => setMnemonic(value.toLowerCase())} />
       <Text style={styles.error}>{mnemonicError}</Text>
       <View style={styles.buttonsBlock}>
@@ -49,6 +51,7 @@ const ImportAccountScreen = () => {
           <PointerProgressBar stepsCount={5} activeStep={3}/>
         </View>
       </View>
+      </KeyboardAwareScrollView>
       <ConfirmationModal
         onPositive={updateMnemonic}
         title={t('Attention!')}

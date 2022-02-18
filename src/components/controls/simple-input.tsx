@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {
-  KeyboardAvoidingView,
   KeyboardTypeOptions, ReturnKeyTypeOptions,
   StyleSheet,
   Text,
@@ -74,7 +73,7 @@ const SimpleInput = (props: SimpleInputProps) => {
   ), [props.icon, props.onIconPress]);
 
   return (
-    <KeyboardAvoidingView style={{...styles.container, ...props.containerStyle}}>
+    <View style={{...styles.container, ...props.containerStyle}}>
       <View
         style={{
           ...styles.inputContainer,
@@ -117,7 +116,7 @@ const SimpleInput = (props: SimpleInputProps) => {
           </Text>
         </View>
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

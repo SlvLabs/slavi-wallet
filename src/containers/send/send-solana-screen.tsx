@@ -1,4 +1,4 @@
-import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -28,6 +28,7 @@ import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-hig
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import RentExemptError from '@slavi/wallet-core/src/services/errors/rent-exempt-error';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export interface SendSolanaScreenProps {
   coin: string;
@@ -304,7 +305,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <KeyboardAvoidingView style={styles.sendContainer}>
+          <KeyboardAwareScrollView style={styles.sendContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -316,7 +317,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
               errors={voutError}
               maximumPrecision={pattern.getMaxPrecision()}
             />
-          </KeyboardAvoidingView>
+          </KeyboardAwareScrollView>
           {!isValid && errors.length > 0 && (
             <View style={styles.errors}>
               {errors.map((error, index) => (

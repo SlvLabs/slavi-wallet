@@ -12,7 +12,7 @@ import SendView, {
   RecipientUpdatingData,
 } from '../../components/coin-send/send-view';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
-import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
@@ -32,6 +32,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export interface SendPolkadotScreenProps {
   coin: string;
@@ -276,7 +277,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <KeyboardAvoidingView style={styles.paddingContainer}>
+          <KeyboardAwareScrollView style={styles.paddingContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -295,7 +296,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
                 ))}
               </View>
             )}
-          </KeyboardAvoidingView>
+          </KeyboardAwareScrollView>
         </View>
         <View style={styles.submitButton}>
           <SolidButton

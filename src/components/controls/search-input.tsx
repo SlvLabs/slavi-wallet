@@ -1,6 +1,5 @@
 import React, {useCallback, useState} from 'react';
 import {
-  KeyboardAvoidingView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -30,7 +29,7 @@ const SearchInput = (props: SearchInputProps) => {
   const clear = useCallback(() => props.onChange?.(''), [props.onChange]);
 
   return (
-    <KeyboardAvoidingView style={{...styles.container, ...props.containerStyle}}>
+    <View style={{...styles.container, ...props.containerStyle}}>
       <View
         style={{
           ...styles.inputContainer,
@@ -65,7 +64,7 @@ const SearchInput = (props: SearchInputProps) => {
           </TouchableOpacity>
         )}
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

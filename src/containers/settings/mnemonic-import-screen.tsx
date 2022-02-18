@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import InsertableTextArea from '../../components/controls/insertable-text-area';
 import {useDispatch, useSelector} from 'react-redux';
 import {store} from '@slavi/wallet-core';
@@ -9,6 +9,7 @@ import SolidButton from '../../components/buttons/solid-button';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
 import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/selectors';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -29,7 +30,7 @@ const MnemonicImportScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={styles.content}>
+      <KeyboardAwareScrollView style={styles.content}>
         <View style={styles.textBlock}>
           <Text style={styles.description}>
             {t(
@@ -51,7 +52,7 @@ const MnemonicImportScreen = () => {
             'By importing a new passphrase, you may lose access to existing addresses. Make sure to save all private keys.'
           )}
         />
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

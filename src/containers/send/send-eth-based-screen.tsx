@@ -1,4 +1,4 @@
-import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -31,6 +31,7 @@ import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
 import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -290,7 +291,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <KeyboardAvoidingView style={styles.sendContainer}>
+          <KeyboardAwareScrollView style={styles.sendContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -302,7 +303,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
               errors={voutError}
               maximumPrecision={props.pattern.getMaxPrecision()}
             />
-          </KeyboardAvoidingView>
+          </KeyboardAwareScrollView>
           <TxPriorityButtonGroup
             label={t('Transaction fee')}
             selectedIndex={txPriority}

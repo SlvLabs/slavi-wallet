@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, TextInput, View} from 'react-native';
+import {Image, ImageBackground, Text, TextInput, View} from 'react-native';
 import {SafeAreaView, StyleSheet} from 'react-native';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
@@ -18,6 +18,7 @@ import {
 } from '@slavi/wallet-core/src/providers/ws/messages/subscribe';
 import SolidButton from '../../components/buttons/solid-button';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const SUBSCRIBE_KEY = 'swap';
 
@@ -121,11 +122,7 @@ const SwapScreen = () => {
             <Text style={styles.description}>{t('Stay tunes in Newsletter.')}</Text>
           </View>
           {(!!data && !isLoading) && (
-            <KeyboardAvoidingView
-              style={{width: '100%'}}
-              behavior= {(Platform.OS === 'ios')? "padding" : undefined}
-              keyboardVerticalOffset={Platform.select({ios: 100, android: 0})}
-            >
+            <KeyboardAwareScrollView style={{width: '100%'}}>
               <View style={styles.inputContainer}>
                 <TextInput
                   placeholder={t('Your Email')}
@@ -166,7 +163,7 @@ const SwapScreen = () => {
                   disabled={isLoading || postLoading || !!error}
                 />
               )}
-            </KeyboardAvoidingView>)}
+            </KeyboardAwareScrollView>)}
         </RadialGradient>
       </ImageBackground>
     </SafeAreaView>

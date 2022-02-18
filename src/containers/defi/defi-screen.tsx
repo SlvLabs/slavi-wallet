@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, TextInput, View} from 'react-native';
+import {Image, ImageBackground, Text, TextInput, View} from 'react-native';
 import {SafeAreaView, StyleSheet} from 'react-native';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
@@ -18,6 +18,7 @@ import {
   Subscribe
 } from '@slavi/wallet-core/src/providers/ws/messages/subscribe';
 import SolidButton from '../../components/buttons/solid-button';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const SUBSCRIBE_KEY = 'defi';
 
@@ -122,11 +123,7 @@ const DefiScreen = () => {
           </View>
           {(!!data && !isLoading) && (
             <View style={{width: '100%'}}>
-              <KeyboardAvoidingView
-                behavior= {"padding"}
-                keyboardVerticalOffset={100}
-                style={styles.inputContainer}
-              >
+              <KeyboardAwareScrollView style={styles.inputContainer}>
                 <TextInput
                   placeholder={t('Your Email')}
                   style={{...styles.input, borderColor: border}}
@@ -145,7 +142,7 @@ const DefiScreen = () => {
                     style={styles.icon}
                   />
                 )}
-              </KeyboardAvoidingView>
+              </KeyboardAwareScrollView>
               {!!error && <Text style={styles.error}>{t(error as TranslationsKey)}</Text>}
               {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
                 <Text style={styles.subscribedText}>{t('You\'ve successfully subscribed')}</Text>

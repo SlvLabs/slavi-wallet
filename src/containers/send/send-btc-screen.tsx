@@ -1,4 +1,4 @@
-import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {parseDataFromQr} from '@slavi/wallet-core/src/utils/qr';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
@@ -32,6 +32,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export interface SendBtcScreenProps {
   coin: string;
@@ -259,7 +260,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <KeyboardAvoidingView>
+        <KeyboardAwareScrollView>
           <CoinBalanceHeader
             balance={balance}
             name={coinDetails.name}
@@ -295,7 +296,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
               ))}
             </View>
           )}
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
         <View style={styles.submitButton}>
           <SolidButton
             title={t('Send')}

@@ -13,18 +13,20 @@ const MnemonicExportScreen = () => {
   const {t} = useTranslation();
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.textBlock}>
-        <Text style={styles.description}>
-          {t(
-            "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
-          )}
-        </Text>
+      <View style={styles.content}>
+        <View style={styles.textBlock}>
+          <Text style={styles.description}>
+            {t(
+              "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
+            )}
+          </Text>
+        </View>
+        <MnemonicArea words={words} style={styles.mnemonicContainer} wordStyle={styles.mnemonicWord}/>
+        <ControlButtons
+          mnemonic={mnemonic}
+          containerStyle={styles.controlButtonContainer}
+        />
       </View>
-      <MnemonicArea words={words} style={styles.mnemonicContainer} wordStyle={styles.mnemonicWord}/>
-      <ControlButtons
-        mnemonic={mnemonic}
-        containerStyle={styles.controlButtonContainer}
-      />
     </SafeAreaView>
   );
 };
@@ -33,8 +35,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
-    padding: 16,
     backgroundColor: theme.colors.screenBackground,
+  },
+  content: {
+    padding: 16,
   },
   descriptionContainer: {
     margin: 20,

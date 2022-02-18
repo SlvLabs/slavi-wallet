@@ -30,26 +30,28 @@ const FullScreenModal = (props: FullScreenModalProps) => {
       animationType={props.animationType || defaultAnimation}
       visible={props.visible}>
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.closeIcon} onPress={props.onCancel}>
-            <CustomIcon name={'close'} size={24} color={defaultIconColor} />
-          </TouchableOpacity>
-          <View style={styles.titleContainer}>
-            {props.title && <Text style={styles.title}>{props.title}</Text>}
+        <View style={styles.paddingContainer}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.closeIcon} onPress={props.onCancel}>
+              <CustomIcon name={'close'} size={24} color={defaultIconColor} />
+            </TouchableOpacity>
+            <View style={styles.titleContainer}>
+              {props.title && <Text style={styles.title}>{props.title}</Text>}
+            </View>
+            <TouchableOpacity
+              style={styles.rightIcon}
+              onPress={props.rightIconOnPress}>
+              {props.rightIconName && (
+                <CustomIcon
+                  name={props.rightIconName}
+                  size={24}
+                  color={props.rightIconColor || defaultIconColor}
+                />
+              )}
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.rightIcon}
-            onPress={props.rightIconOnPress}>
-            {props.rightIconName && (
-              <CustomIcon
-                name={props.rightIconName}
-                size={24}
-                color={props.rightIconColor || defaultIconColor}
-              />
-            )}
-          </TouchableOpacity>
+          <View style={styles.content}>{props.children}</View>
         </View>
-        <View style={styles.content}>{props.children}</View>
       </SafeAreaView>
     </Modal>
   );
@@ -58,8 +60,10 @@ const FullScreenModal = (props: FullScreenModalProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 55,
     backgroundColor: theme.colors.dark,
+  },
+  paddingContainer: {
+    paddingBottom: 55,
   },
   header: {
     flexDirection: 'row',

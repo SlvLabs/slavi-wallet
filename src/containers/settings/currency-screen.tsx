@@ -26,7 +26,9 @@ const CurrencyScreen = () => {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <SelectableList onSelect={onChange} options={options} current={fiat}/>
+      <View style={styles.content}>
+        <SelectableList onSelect={onChange} options={options} current={fiat}/>
+      </View>
     </SafeAreaView>
   );
 };
@@ -35,8 +37,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
-    padding: 16,
     backgroundColor: theme.colors.screenBackground,
+  },
+  content: {
+    padding: 16,
   }
 });
 

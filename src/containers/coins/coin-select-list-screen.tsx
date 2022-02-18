@@ -33,6 +33,7 @@ export default function CoinSelectListScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
         <View style={styles.searchContainer}>
           <SimpleInput
             value={search}
@@ -62,6 +63,7 @@ export default function CoinSelectListScreen() {
             />
           ))}
         </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -70,6 +72,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.screenBackground,
     flex: 1,
+  },
+  content: {
     padding: 16,
   },
   searchContainer: {

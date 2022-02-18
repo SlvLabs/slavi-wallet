@@ -11,6 +11,7 @@ import {
 import theme from '../../theme';
 
 import ConfirmationModal from '../../components/modal/confirmation-modal';
+import { View } from 'react-native';
 
 enum ConfirmationState {
   hidden,
@@ -70,35 +71,37 @@ const InvalidateCachesScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ListItem
-        key={'invalidate_1'}
-        onPress={showCoinsConf}
-        containerStyle={styles.itemContainer}
-      >
-        <ListItem.Content style={{backgroundColor: 'transparent'}}>
-          <ListItem.Title style={styles.label}>{t('Invalidate coins cache')}</ListItem.Title>
-        </ListItem.Content>
-        <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>
-      </ListItem>
-      <ListItem
-        key={'invalidate_2'}
-        onPress={showLanguageConf}
-        containerStyle={styles.itemContainer}
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.label}>{t('Invalidate language cache')}</ListItem.Title>
-        </ListItem.Content>
-        <ListItem.Chevron color={theme.colors.textLightGray} size={22} />
-      </ListItem>
-      <ConfirmationModal
-        onPositive={onConfirm}
-        title={t('Confirmation')}
-        visible={confIsShown}
-        onCancel={hideConf}
-        description={confirmationText}
-        positiveText={t('Yes')}
-        negativeText={t('No')}
-      />
+      <View style={styles.content}>
+        <ListItem
+          key={'invalidate_1'}
+          onPress={showCoinsConf}
+          containerStyle={styles.itemContainer}
+        >
+          <ListItem.Content style={{backgroundColor: 'transparent'}}>
+            <ListItem.Title style={styles.label}>{t('Invalidate coins cache')}</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>
+        </ListItem>
+        <ListItem
+          key={'invalidate_2'}
+          onPress={showLanguageConf}
+          containerStyle={styles.itemContainer}
+        >
+          <ListItem.Content>
+            <ListItem.Title style={styles.label}>{t('Invalidate language cache')}</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron color={theme.colors.textLightGray} size={22} />
+        </ListItem>
+        <ConfirmationModal
+          onPositive={onConfirm}
+          title={t('Confirmation')}
+          visible={confIsShown}
+          onCancel={hideConf}
+          description={confirmationText}
+          positiveText={t('Yes')}
+          negativeText={t('No')}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -107,8 +110,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
-    padding: 16,
     backgroundColor: theme.colors.screenBackground,
+  },
+  content: {
+    padding: 16,
   },
   itemContainer: {
     backgroundColor: 'transparent',

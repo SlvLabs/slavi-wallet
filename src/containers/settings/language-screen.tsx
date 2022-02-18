@@ -36,7 +36,9 @@ const LanguageScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SelectableList onSelect={onChange} options={languageOptions} current={i18n.language}/>
+      <View style={styles.content}>
+        <SelectableList onSelect={onChange} options={languageOptions} current={i18n.language}/>
+      </View>
     </SafeAreaView>
   );
 };
@@ -45,8 +47,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
-    padding: 16,
     backgroundColor: theme.colors.screenBackground,
+  },
+  content: {
+    padding: 16,
   },
 });
 

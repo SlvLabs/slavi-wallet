@@ -14,6 +14,7 @@ export interface MainLinkData {
 export interface CoinParams {
   description: string;
   mainLinks: MainLinkData[];
+  disablePriceHistory: boolean;
 }
 
 export interface InfoViewProps {

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {LineChart} from 'react-native-charts-wrapper';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ChartSelectEvent, Color, LineChart} from 'react-native-charts-wrapper';
 import {
   StyleSheet,
   Text,
@@ -10,77 +10,124 @@ import {
 } from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import { PriceHistoryElement } from '@slavi/wallet-core/src/providers/ws/messages/currency';
+import theme from '../../theme';
+import moment from 'moment';
+import makeRoundedBalance from '../../utils/make-rounded-balance';
 
 export interface PriceHistoryChartData {
   elements: PriceHistoryElement[];
   coin: string;
-  coinConvert: string;
+  precision: number;
+  coinConvert?: string;
+  currentRate?: number;
   containerStyle?: ViewStyle;
   titleStyle?: TextStyle;
 }
 
+const DATE_FORMAT = 'MMMM DD YYYY, h:mm:ss a';
+
 const PriceHistoryChart = (props: PriceHistoryChartData) => {
+  const {elements, coinConvert, currentRate, precision} = props;
+
   const [values, setValues] = useState<any[]>([]);
-  const history = props.elements;
+  const [selectedDate, setSelectedDate] = useState<number>();
+  const [selectedRate, setSelectedRate] = useState<number | undefined>(currentRate);
+  const [indicatorEnabled, setIndicatorEnabled] = useState<boolean>(false);
+
   const {t} = useTranslation();
 
   useEffect(() => {
-    let needUpdate = history.length !== values.length;
-    if (!needUpdate && history.length) {
-      let len = history.length;
+    let needUpdate = elements.length !== values.length;
+    if (!needUpdate && elements.length) {
+      let len = elements.length;
       for (let i = 0; i < len; ++i) {
-        if (+history[i].price !== values[i].y) {
+        if (+elements[i].price !== values[i].y) {
           needUpdate = true;
           break;
         }
       }
     }
     if (needUpdate) {
-      let tmp = history.map((el) => {
+      let tmp = elements.map((el) => {
         let date = new Date(el.priceDate);
         return {
-          x: Math.round(date.valueOf() / (1000 * 60)),
+          x: Math.round(date.valueOf()),
           y: +el.price,
           marker: t('date') + ': ' + date.toString(),
         };
       });
       setValues(tmp);
     }
-  }, [history, values, t]);
+  }, [elements, values, t]);
+
+  useEffect(() => setSelectedRate(currentRate), [currentRate]);
+
+  const onChartSelect = useCallback((event: ChartSelectEvent) => {
+    const {nativeEvent} = event;
+    if(!nativeEvent) {
+      return;
+    }
+
+    const {x, y} = nativeEvent;
+
+    setSelectedDate(x);
+    setSelectedRate(y);
+  }, []);
+
+  const enableIndicator = useCallback(() => setIndicatorEnabled(true), []);
+  const disableIndicator = useCallback(() => {
+    setIndicatorEnabled(false);
+    setSelectedRate(currentRate);
+    setSelectedDate(undefined);
+  }, [currentRate]);
+
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Text>{t('Price history chart')}</Text>
       <View style={styles.contentContainer}>
+        <View style={styles.valueContainer}>
+          <Text style={styles.rate}>{selectedRate ? `${makeRoundedBalance(precision, selectedRate)} ${coinConvert}`: ''}</Text>
+          <Text style={styles.date}>{selectedDate ? moment(selectedDate).format(DATE_FORMAT) : ''}</Text>
+        </View>
         <LineChart
           style={styles.chart}
-          data={{dataSets: [{values: values, label: 'a'}]}}
+          data={{
+            dataSets: [
+              {
+                values: values,
+                config: {
+                  drawValues: false,
+                  lineWidth: 2,
+                  drawCircles: false,
+                  color: (processColor(theme.colors.green) as  Color | undefined),
+                  drawFilled: true,
+                  fillGradient: {
+                    colors: [processColor(theme.colors.green) as  Color | undefined, processColor('transparent') as  Color | undefined],
+                    positions: [0, 0.5],
+                    angle: 90,
+                    orientation: "TOP_BOTTOM"
+                  },
+                  fillAlpha: 1000,
+                  drawHorizontalHighlightIndicator: false,
+                  highlightLineWidth: 2,
+                  highlightColor: (processColor(theme.colors.darkGreen1) as  Color | undefined),
+                  highlightEnabled: indicatorEnabled,
+                }
+              },
+            ]
+          }}
           chartDescription={{text: ''}}
           legend={{
             enabled: false,
           }}
           marker={{
-            enabled: true,
-            markerColor: processColor('white'),
-            textColor: processColor('black'),
+            enabled: false,
           }}
           xAxis={{
-            enabled: true,
-            granularityEnabled: true,
-            axisLineWidth: 0,
-            granularity: 1,
-            labelCount: 4,
-            position: 'BOTTOM',
-            drawGridLines: false,
-            fontFamily: 'HelveticaNeue-Medium',
-            textColor: processColor('gray'),
-            valueFormatter: 'date',
-            valueFormatterPattern: 'dd-MM-yy',
-            since: 0,
-            timeUnit: 'MINUTES',
+            enabled: false,
           }}
           yAxis={{
             left: {
-              enabled: true,
+              enabled: false,
             },
             right: {
               enabled: false,
@@ -99,12 +146,16 @@ const PriceHistoryChart = (props: PriceHistoryChartData) => {
           scaleEnabled={true}
           scaleXEnabled={true}
           scaleYEnabled={true}
-          pinchZoom={false}
+          pinchZoom={true}
           maxVisibleValueCount={16}
           doubleTapToZoomEnabled={false}
           dragDecelerationEnabled={true}
           dragDecelerationFrictionCoef={0.99}
           keepPositionOnRotation={false}
+          onSelect={onChartSelect}
+          onTouchStart={enableIndicator}
+          onTouchEnd={disableIndicator}
+          onTouchCancel={disableIndicator}
         />
       </View>
     </View>
@@ -114,18 +165,35 @@ const PriceHistoryChart = (props: PriceHistoryChartData) => {
 const styles = StyleSheet.create({
   container: {
     minHeight: 300,
-    backgroundColor: '#fff',
     flex: 1,
   },
-  title: {},
-  titleContainer: {},
   contentContainer: {
     height: 250,
   },
   chart: {
     flex: 1,
+    maxWidth: '100%',
     padding: 5,
   },
+  rate: {
+    fontFamily: theme.fonts.default,
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    lineHeight: 22,
+    color: theme.colors.white,
+  },
+  date: {
+    fontFamily: theme.fonts.default,
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 22,
+    color: theme.colors.hardTransparent,
+  },
+  valueContainer: {
+    alignItems: 'center',
+  }
 });
 
 export default PriceHistoryChart;

@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native';
 import HistoryView from './history-view';
 import CoinTabsHeader from './coin-tabs-header';
 import useTranslation from '../../../utils/use-translation';
+import RateView from './rate-view';
 
 export interface CoinTabsProps {
   infoParams: CoinListElement[];
@@ -31,24 +32,36 @@ const renderHistory = (props: CoinTabsProps) => (
   <HistoryView coin={props.coin} />
 );
 
+const renderRates = (props: CoinTabsProps) => <RateView coin={props.coin} />;
+
 enum ScreenKeys {
   info,
   history,
+  rates,
 }
 
 const renders = {
   [ScreenKeys.info]: renderInfo,
   [ScreenKeys.history]: renderHistory,
+  [ScreenKeys.rates]: renderRates,
 };
 
 const CoinTabs = (props: CoinTabsProps) => {
   const [activeScreen, setActiveScreen] = useState<ScreenKeys>(ScreenKeys.info);
   const {t} = useTranslation();
 
-  const names = useMemo(() => ({
-    [ScreenKeys.info]: t('Info'),
-    [ScreenKeys.history]: t('History'),
-  }), [t]);
+  const names = useMemo(() => {
+    const names: Record<number, string> = {
+      [ScreenKeys.info]: t('Info'),
+      [ScreenKeys.history]: t('History'),
+    };
+
+    if(!props.coinParams?.disablePriceHistory) {
+      names[ScreenKeys.rates] = t('rates');
+    }
+
+    return names;
+  }, [t, props.coinParams?.disablePriceHistory]);
 
   return (
     <View style={styles.container}>

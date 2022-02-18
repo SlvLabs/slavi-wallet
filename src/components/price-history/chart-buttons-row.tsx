@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import {ButtonGroup} from 'react-native-elements';
+import theme from '../../theme';
 
 export interface ChartButtonsRowProps {
   onTimeButtonClick: (start: number, end: number) => void;
@@ -18,8 +19,12 @@ const monthMilliseconds = 31 * dayMilliseconds;
 const yearMilliseconds = 365 * dayMilliseconds;
 
 const ChartButtonsRow = (props: ChartButtonsRowProps) => {
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState<number>(4);
+  const [selectedCurrency, setSelectedCurrency] = useState<number>(0);
+
   const {t} = useTranslation();
-  const timeButtons = [t('D'), t('W'), t('M'), t('Y'), t('All')];
+  const timeButtons = useMemo(() =>[t('D'), t('W'), t('M'), t('Y'), t('All')], [t]);
+
   const timeToSubset = [
     dayMilliseconds,
     weekMilliseconds,
@@ -27,28 +32,55 @@ const ChartButtonsRow = (props: ChartButtonsRowProps) => {
     yearMilliseconds,
     Date.now(),
   ];
-  const currencyArray = props.currencySecond
-    ? [props.currencyFirst, props.currencySecond]
-    : [props.currencyFirst];
+
+  const currencyArray = useMemo(
+    () => props.currencySecond ? [props.currencyFirst, props.currencySecond] : [props.currencyFirst],
+    [props.currencySecond, props.currencyFirst]
+  );
+
   const onClick = (index: number) => {
     let end = Date.now();
     props.onTimeButtonClick(end - timeToSubset[index], end);
+    setSelectedTimePeriod(index);
   };
+
   const onCurrencyButtonClick = (index: number) => {
     props.onCurrencyButtonClick(currencyArray[index]);
+    setSelectedCurrency(index);
   };
+
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
       <ButtonGroup
         buttons={timeButtons}
         onPress={onClick}
         containerStyle={styles.timeButtons}
+        buttonStyle={styles.button}
+        buttonContainerStyle={styles.buttonContainer}
+        selectedButtonStyle={styles.selectedButton}
+        selectedIndex={selectedTimePeriod}
+        disabled={timeButtons.length === 1}
+        disabledSelectedStyle={styles.selectedButton}
+        disabledSelectedTextStyle={styles.buttonText}
+        textStyle={styles.buttonText}
+        selectedTextStyle={styles.buttonText}
+        innerBorderStyle={styles.innerBorder}
       />
       <View style={styles.stubInRow} />
       <ButtonGroup
         buttons={currencyArray}
         containerStyle={styles.currencyButtons}
         onPress={onCurrencyButtonClick}
+        buttonStyle={styles.button}
+        buttonContainerStyle={styles.buttonContainer}
+        selectedButtonStyle={styles.selectedButton}
+        selectedIndex={selectedCurrency}
+        disabled={currencyArray.length === 1}
+        disabledSelectedStyle={styles.selectedButton}
+        disabledSelectedTextStyle={styles.buttonText}
+        textStyle={styles.buttonText}
+        selectedTextStyle={styles.buttonText}
+        innerBorderStyle={styles.innerBorder}
       />
     </View>
   );
@@ -56,22 +88,45 @@ const ChartButtonsRow = (props: ChartButtonsRowProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flexDirection: 'row',
     flex: 8,
   },
   timeButtons: {
     flex: 5,
     alignSelf: 'flex-start',
+    borderWidth: 0,
+    backgroundColor: 'transparent',
   },
   currencyButtons: {
     flex: 4,
     flexDirection: 'row-reverse',
     alignSelf: 'flex-end',
+    borderWidth: 0,
   },
   stubInRow: {
     flex: 1,
   },
+  button: {
+    backgroundColor: theme.colors.cardBackground2,
+  },
+  buttonContainer: {
+    borderWidth: 0,
+    borderColor: 'transparent',
+  },
+  selectedButton: {
+    backgroundColor: theme.colors.green,
+  },
+  buttonText: {
+    fontFamily: theme.fonts.default,
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 28,
+    color: theme.colors.white,
+  },
+  innerBorder: {
+    width: 0,
+  }
 });
 
 export default ChartButtonsRow;

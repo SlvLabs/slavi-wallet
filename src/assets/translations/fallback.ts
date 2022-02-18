@@ -258,6 +258,8 @@ const translations = {
   message: "Message",
   walletConnectRequestTxHeader: "Wallet connect request for call contract",
   fee: "Net fee",
+
+  rates: "Rates",
 }
 
 export default translations;

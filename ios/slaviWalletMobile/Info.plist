@@ -74,7 +74,7 @@
 		<string>Roboto-ThinItalic.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>Launch Screen</string>
+	<string>Launch Screen 1</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

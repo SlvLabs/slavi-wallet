@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {parseDataFromQr} from '@slavi/wallet-core/src/utils/qr';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
@@ -259,7 +259,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <View>
+        <KeyboardAvoidingView>
           <CoinBalanceHeader
             balance={balance}
             name={coinDetails.name}
@@ -295,7 +295,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
               ))}
             </View>
           )}
-        </View>
+        </KeyboardAvoidingView>
         <View style={styles.submitButton}>
           <SolidButton
             title={t('Send')}

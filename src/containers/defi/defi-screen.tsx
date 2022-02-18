@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Image, ImageBackground, Text, TextInput, View} from 'react-native';
+import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, TextInput, View} from 'react-native';
 import {SafeAreaView, StyleSheet} from 'react-native';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
@@ -102,9 +102,6 @@ const DefiScreen = () => {
     return theme.colors.borderGray;
   }, [error, subscribed]);
 
-  console.log('subscribed ' + SUBSCRIBE_KEY);
-  console.log(data?.subscribed || subscribed)
-
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={loadingBackground} style={styles.background}>
@@ -125,7 +122,11 @@ const DefiScreen = () => {
           </View>
           {(!!data && !isLoading) && (
             <View style={{width: '100%'}}>
-              <View style={styles.inputContainer}>
+              <KeyboardAvoidingView
+                behavior= {"padding"}
+                keyboardVerticalOffset={100}
+                style={styles.inputContainer}
+              >
                 <TextInput
                   placeholder={t('Your Email')}
                   style={{...styles.input, borderColor: border}}
@@ -144,7 +145,7 @@ const DefiScreen = () => {
                     style={styles.icon}
                   />
                 )}
-              </View>
+              </KeyboardAvoidingView>
               {!!error && <Text style={styles.error}>{t(error as TranslationsKey)}</Text>}
               {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
                 <Text style={styles.subscribedText}>{t('You\'ve successfully subscribed')}</Text>

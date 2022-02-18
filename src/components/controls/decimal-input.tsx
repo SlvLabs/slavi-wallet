@@ -86,6 +86,7 @@ const DecimalInput = (props: DecimalInputProps) => {
       value={value}
       errorMessage={innerError || props.errorMessage}
       keyboardType={'numeric'}
+      returnKeyType={'done'}
       {...otherProps}
     />
   );

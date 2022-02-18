@@ -12,7 +12,7 @@ import SendView, {
   RecipientUpdatingData,
 } from '../../components/coin-send/send-view';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
@@ -276,7 +276,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <View style={styles.paddingContainer}>
+          <KeyboardAvoidingView style={styles.paddingContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -295,7 +295,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
                 ))}
               </View>
             )}
-          </View>
+          </KeyboardAvoidingView>
         </View>
         <View style={styles.submitButton}>
           <SolidButton

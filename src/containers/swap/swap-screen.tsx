@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Image, ImageBackground, Text, TextInput, View} from 'react-native';
+import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, TextInput, View} from 'react-native';
 import {SafeAreaView, StyleSheet} from 'react-native';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
@@ -121,7 +121,11 @@ const SwapScreen = () => {
             <Text style={styles.description}>{t('Stay tunes in Newsletter.')}</Text>
           </View>
           {(!!data && !isLoading) && (
-            <View style={{width: '100%'}}>
+            <KeyboardAvoidingView
+              style={{width: '100%'}}
+              behavior= {(Platform.OS === 'ios')? "padding" : undefined}
+              keyboardVerticalOffset={Platform.select({ios: 100, android: 0})}
+            >
               <View style={styles.inputContainer}>
                 <TextInput
                   placeholder={t('Your Email')}
@@ -162,7 +166,7 @@ const SwapScreen = () => {
                   disabled={isLoading || postLoading || !!error}
                 />
               )}
-            </View>)}
+            </KeyboardAvoidingView>)}
         </RadialGradient>
       </ImageBackground>
     </SafeAreaView>

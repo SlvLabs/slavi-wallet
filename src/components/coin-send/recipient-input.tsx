@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import {KeyboardAvoidingView, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
@@ -34,7 +34,7 @@ const RecipientInput = (props: RecipientInputProps) => {
   );
 
   return (
-    <View style={{...styles.container, ...props.containerStyle}}>
+    <KeyboardAvoidingView style={{...styles.container, ...props.containerStyle}}>
       <SimpleInput
         onChange={props.onChange}
         value={props.value}
@@ -51,7 +51,7 @@ const RecipientInput = (props: RecipientInputProps) => {
         errorMessage={errorMessage}
         label={props.label}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

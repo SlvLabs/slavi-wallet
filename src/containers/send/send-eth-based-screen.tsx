@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -290,7 +290,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <View style={styles.sendContainer}>
+          <KeyboardAvoidingView style={styles.sendContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -302,7 +302,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
               errors={voutError}
               maximumPrecision={props.pattern.getMaxPrecision()}
             />
-          </View>
+          </KeyboardAvoidingView>
           <TxPriorityButtonGroup
             label={t('Transaction fee')}
             selectedIndex={txPriority}

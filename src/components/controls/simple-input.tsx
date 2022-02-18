@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {
-  KeyboardTypeOptions,
+  KeyboardAvoidingView,
+  KeyboardTypeOptions, ReturnKeyTypeOptions,
   StyleSheet,
   Text,
   TextInput,
@@ -31,6 +32,7 @@ export interface SimpleInputProps {
   labelStyle?: TextStyle;
   placeholderTextColor?: string,
   iconLeft?: boolean;
+  returnKeyType?: ReturnKeyTypeOptions;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -72,7 +74,7 @@ const SimpleInput = (props: SimpleInputProps) => {
   ), [props.icon, props.onIconPress]);
 
   return (
-    <View style={{...styles.container, ...props.containerStyle}}>
+    <KeyboardAvoidingView style={{...styles.container, ...props.containerStyle}}>
       <View
         style={{
           ...styles.inputContainer,
@@ -96,6 +98,7 @@ const SimpleInput = (props: SimpleInputProps) => {
             onBlur={onBlur}
             keyboardType={props.keyboardType}
             placeholderTextColor={props.placeholderTextColor}
+            returnKeyType={props.returnKeyType}
           />
         </View>
         {!!props.buttonText && (
@@ -114,7 +117,7 @@ const SimpleInput = (props: SimpleInputProps) => {
           </Text>
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

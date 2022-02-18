@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import InsertableTextArea from '../../components/controls/insertable-text-area';
 import {useDispatch, useSelector} from 'react-redux';
 import {store} from '@slavi/wallet-core';
@@ -29,7 +29,7 @@ const MnemonicImportScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView style={styles.content}>
         <View style={styles.textBlock}>
           <Text style={styles.description}>
             {t(
@@ -51,7 +51,7 @@ const MnemonicImportScreen = () => {
             'By importing a new passphrase, you may lose access to existing addresses. Make sure to save all private keys.'
           )}
         />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

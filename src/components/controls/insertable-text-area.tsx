@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text} from 'react-native';
+import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text, KeyboardAvoidingView} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import useTranslation from '../../utils/use-translation';
@@ -30,7 +30,7 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
     }
   }, [props, value]);
   return (
-    <View style={{...styles.container, ...props.containerStyle}}>
+    <KeyboardAvoidingView style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.buttonRow}>
         <Button
           title={t('Insert')}
@@ -52,7 +52,7 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
         selectionColor={theme.colors.darkWord}
         multiline={true}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

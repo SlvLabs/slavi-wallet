@@ -258,7 +258,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
         <View>
           <CoinBalanceHeader
             balance={accountBalance}
@@ -277,7 +277,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <KeyboardAwareScrollView style={styles.paddingContainer}>
+          <View style={styles.paddingContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -296,7 +296,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
                 ))}
               </View>
             )}
-          </KeyboardAwareScrollView>
+          </View>
         </View>
         <View style={styles.submitButton}>
           <SolidButton
@@ -323,7 +323,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
           onConfirm={onKeepAliveConfirm}
           onCancel={onKeepAliveDecline}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

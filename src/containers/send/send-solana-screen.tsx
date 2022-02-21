@@ -287,7 +287,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
         <View>
           <CoinBalanceHeader
             balance={accountBalance}
@@ -305,7 +305,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <KeyboardAwareScrollView style={styles.sendContainer}>
+          <View style={styles.sendContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -317,7 +317,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
               errors={voutError}
               maximumPrecision={pattern.getMaxPrecision()}
             />
-          </KeyboardAwareScrollView>
+          </View>
           {!isValid && errors.length > 0 && (
             <View style={styles.errors}>
               {errors.map((error, index) => (
@@ -359,7 +359,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
           positiveText={t('Ok')}
           negativeText={t('Cancel')}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

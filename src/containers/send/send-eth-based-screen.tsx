@@ -273,7 +273,9 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps={'handled'}
+        contentContainerStyle={styles.scroll}>
         <View>
           <CoinBalanceHeader
             balance={accountBalance}
@@ -291,7 +293,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             selectedAddress={senderIndex}
             ticker={coinDetails.ticker}
           />
-          <KeyboardAwareScrollView style={styles.sendContainer}>
+          <View style={styles.sendContainer}>
             <SendView
               readQr={() => setActiveQR(true)}
               coin={coinDetails.ticker}
@@ -303,7 +305,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
               errors={voutError}
               maximumPrecision={props.pattern.getMaxPrecision()}
             />
-          </KeyboardAwareScrollView>
+          </View>
           <TxPriorityButtonGroup
             label={t('Transaction fee')}
             selectedIndex={txPriority}
@@ -346,7 +348,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
           defaultGasLimit={currentGasLimit}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

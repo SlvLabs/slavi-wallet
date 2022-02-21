@@ -259,44 +259,42 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <KeyboardAwareScrollView>
-          <CoinBalanceHeader
-            balance={balance}
-            name={coinDetails.name}
-            cryptoBalance={coinDetails.spendableCryptoBalance}
-            cryptoTicker={coinDetails.crypto}
-            fiatBalance={coinDetails.spendableFiatBalance}
-            fiatTicker={coinDetails.fiat}
-            logo={coinDetails.logo}
-            type={coinDetails.type}
-          />
-          <SendManyView
-            readQr={readQr}
-            coin={props.coin}
-            balance={balance}
-            recipients={recipients}
-            onRecipientChange={onRecipientChange}
-            onRecipientAdd={onRecipientAdd}
-            onRecipientRemove={onRecipientRemove}
-            setRecipientPayFee={trySetRecipientPayFee}
-            errors={voutErrors}
-            maximumPrecision={pattern.getMaxPrecision()}
-          />
-          <TxPriorityButtonGroup
-            label={t('Transaction fee')}
-            selectedIndex={txPriority}
-            onSelected={setTxPriority}
-            advancedIsAllowed={false}
-          />
-          {!isValid && errors.length > 0 && (
-            <View style={styles.errors}>
-              {errors.map((error, index) => (
-                <AlertRow text={error} key={'general_error_' + index} />
-              ))}
-            </View>
-          )}
-        </KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+        <CoinBalanceHeader
+          balance={balance}
+          name={coinDetails.name}
+          cryptoBalance={coinDetails.spendableCryptoBalance}
+          cryptoTicker={coinDetails.crypto}
+          fiatBalance={coinDetails.spendableFiatBalance}
+          fiatTicker={coinDetails.fiat}
+          logo={coinDetails.logo}
+          type={coinDetails.type}
+        />
+        <SendManyView
+          readQr={readQr}
+          coin={props.coin}
+          balance={balance}
+          recipients={recipients}
+          onRecipientChange={onRecipientChange}
+          onRecipientAdd={onRecipientAdd}
+          onRecipientRemove={onRecipientRemove}
+          setRecipientPayFee={trySetRecipientPayFee}
+          errors={voutErrors}
+          maximumPrecision={pattern.getMaxPrecision()}
+        />
+        <TxPriorityButtonGroup
+          label={t('Transaction fee')}
+          selectedIndex={txPriority}
+          onSelected={setTxPriority}
+          advancedIsAllowed={false}
+        />
+        {!isValid && errors.length > 0 && (
+          <View style={styles.errors}>
+            {errors.map((error, index) => (
+              <AlertRow text={error} key={'general_error_' + index} />
+            ))}
+          </View>
+        )}
         <View style={styles.submitButton}>
           <SolidButton
             title={t('Send')}
@@ -317,7 +315,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
           onAccept={send}
           onCancel={cancelConfirmSending}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

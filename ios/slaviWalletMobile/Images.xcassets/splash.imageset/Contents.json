@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "splash.png",
+      "filename" : "iphone6_splash.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "splash-1.png",
+      "filename" : "iphonex_splash.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "splash-2.png",
+      "filename" : "iphonexsmax_splash.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, ViewStyle} from 'react-native';
 import {Icon} from 'react-native-elements';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 interface AlertRowProps {
   text: string;
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     color: theme.colors.red,
-    marginTop: 16,
+    marginTop: Layout.isSmallDevice ? 4 : 16,
   },
   icon: {
     marginRight: 10,

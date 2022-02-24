@@ -4,6 +4,7 @@ import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coi
 import CoinInfoElement from '../coin-info-element';
 import MainLink from '../main-link';
 import theme from '../../../theme';
+import Layout from '../../../utils/layout';
 
 export interface MainLinkData {
   icon: string;
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   infoParamsList: {},
   descriptionContainer: {
-    margin: 24,
+    margin: Layout.isSmallDevice ? 18 : 24,
   },
   description: {
     fontFamily: theme.fonts.default,

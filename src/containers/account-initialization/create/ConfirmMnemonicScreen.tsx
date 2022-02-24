@@ -93,20 +93,21 @@ const ConfirmMnemonicScreen = () => {
 const styles = StyleSheet.create({
   availableContainer: {
     borderBottomWidth: 0,
-    flex: Layout.isSmallDevice ? 1 : 2,
-    paddingTop: 16,
-    paddingBottom: 16,
+    flex: 2,
+    paddingTop: Layout.isSmallDevice ? 8 : 16,
+    paddingBottom: Layout.isSmallDevice ? 8 : 16,
   },
   selectedContainer: {
     borderBottomWidth: 0,
     borderRadius: 8,
     backgroundColor: theme.colors.grayDark,
-    flex: Layout.isSmallDevice ? 1 : 2,
+    flex: 2,
     paddingTop: 16,
     paddingBottom: 16,
+    marginTop: 8,
   },
   textBlock: {
-    marginBottom: 30,
+    marginBottom: Layout.isSmallDevice ? 4 : 30,
     flex: 1,
     justifyContent: 'flex-end',
   },
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 32,
     color: theme.colors.white,
-    marginBottom: 20,
+    marginBottom: Layout.isSmallDevice ? 8 : 20,
   },
   description: {
     fontFamily: theme.fonts.default,
@@ -133,9 +134,10 @@ const styles = StyleSheet.create({
   buttonsBlock: {
     flex: 1,
     justifyContent: 'flex-end',
+    marginTop: Layout.isSmallDevice ? 20 : 0,
   },
   loaderView: {
-    paddingTop: 17,
+    paddingTop: Layout.isSmallDevice ? 8 : 17,
   },
   word: {
     backgroundColor: theme.colors.darkWord,

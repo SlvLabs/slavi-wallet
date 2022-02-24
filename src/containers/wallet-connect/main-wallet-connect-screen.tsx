@@ -52,48 +52,46 @@ export default function MainWalletConnectScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <ScrollView>
-          <View style={styles.header}>
-            <Text style={styles.title}>{t('walletConnectTitle')}</Text>
-            <Text style={styles.description}>{t('walletConnectDescription')}</Text>
-          </View>
-          <SolidButton title={t('newConnect')} onPress={showScanner} />
-          <View style={styles.sessionsContainer}>
-            <Text style={styles.sessionsTitle}>{t('activeSessions')}</Text>
-            {sessions.length > 0 ? (
-              sessions.map((session, index) => <Session
-                peerName={session.peerName || 'unknown'}
-                peerUrl={session.peerUrl}
-                icon={session.icon}
-                onPress={() => showKilling(session.peerId)}
-                key={`session_${index}`}
-              />)
-            ) : (
-              <View style={{...styles.placeholder}}>
-                <View style={styles.iconContainer}>
-                  <Icon
-                    type={'feather'}
-                    name={'grid'}
-                    size={64}
-                    color={theme.colors.textLightGray1}
-                  />
-                </View>
-                <Text style={styles.placeholderText}>
-                  {t('noActiveSessions')}
-                </Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>{t('walletConnectTitle')}</Text>
+          <Text style={styles.description}>{t('walletConnectDescription')}</Text>
+        </View>
+        <SolidButton title={t('newConnect')} onPress={showScanner} />
+        <View style={styles.sessionsContainer}>
+          <Text style={styles.sessionsTitle}>{t('activeSessions')}</Text>
+          {sessions.length > 0 ? (
+            sessions.map((session, index) => <Session
+              peerName={session.peerName || 'unknown'}
+              peerUrl={session.peerUrl}
+              icon={session.icon}
+              onPress={() => showKilling(session.peerId)}
+              key={`session_${index}`}
+            />)
+          ) : (
+            <View style={{...styles.placeholder}}>
+              <View style={styles.iconContainer}>
+                <Icon
+                  type={'feather'}
+                  name={'grid'}
+                  size={64}
+                  color={theme.colors.textLightGray1}
+                />
               </View>
-            )}
-          </View>
-          <QrReaderModal visible={scannerIsShown} onQRRead={onQRRead} onClose={hideScanner}/>
-          <ConfirmationModal
-            visible={!!killingCandidate}
-            onPositive={killSession}
-            title={t('killSession')}
-            onCancel={hideKilling}
-          />
-        </ScrollView>
-      </View>
+              <Text style={styles.placeholderText}>
+                {t('noActiveSessions')}
+              </Text>
+            </View>
+          )}
+        </View>
+        <QrReaderModal visible={scannerIsShown} onQRRead={onQRRead} onClose={hideScanner}/>
+        <ConfirmationModal
+          visible={!!killingCandidate}
+          onPositive={killSession}
+          title={t('killSession')}
+          onCancel={hideKilling}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }

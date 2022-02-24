@@ -4,6 +4,7 @@ import CustomIcon from '../custom-icon/custom-icon';
 import SimpleToast from 'react-native-simple-toast';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 export interface MainLinkProps {
   text: string;
@@ -43,8 +44,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: theme.colors.mediumBackground,
     borderRadius: 8,
-    width: 76,
-    height: 98,
+    width: Layout.isSmallDevice ? 71 : 76,
+    height: Layout.isSmallDevice ? 88 : 98,
   },
   label: {
     fontFamily: theme.fonts.default,

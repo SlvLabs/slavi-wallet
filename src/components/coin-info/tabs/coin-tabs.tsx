@@ -6,6 +6,7 @@ import HistoryView from './history-view';
 import CoinTabsHeader from './coin-tabs-header';
 import useTranslation from '../../../utils/use-translation';
 import RateView from './rate-view';
+import Layout from '../../../utils/layout';
 
 export interface CoinTabsProps {
   infoParams: CoinListElement[];
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     overflow: 'visible',
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingLeft: Layout.isSmallDevice ? 8 : 16,
+    paddingRight: Layout.isSmallDevice ? 8 : 16,
   },
   tabBar: {
     backgroundColor: 'transparent',

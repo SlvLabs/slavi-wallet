@@ -114,7 +114,9 @@ const DefiScreen = () => {
               height={Layout.isSmallDevice ? 165 :245}
               style={{
                 width: Layout.isSmallDevice ? 205 : 310,
-                height: Layout.isSmallDevice ? 165 :245}}
+                height: Layout.isSmallDevice ? 165 :245,
+                marginTop: 8,
+              }}
             />
             <Text style={styles.header}>{t('Slavi DeFi is coming...')}</Text>
             <View style={styles.descriptionContainer}>

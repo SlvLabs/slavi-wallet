@@ -34,33 +34,35 @@ const ImportAccountScreen = () => {
 
   return (
     <InitializationBackground>
-      <View style={styles.textBlock}>
-        <Text style={styles.header}>{t('Import exists account')}</Text>
-        <Text style={styles.description}>
-          {t(
-            "Enter the secret phrase from another wallet. Usually it is 12, sometimes more, words separated by spaces",
-          )}
-        </Text>
-      </View>
       <KeyboardAwareScrollView>
-      <InsertableTextArea onChange={(value: string) => setMnemonic(value.toLowerCase())} />
-      <Text style={styles.error}>{mnemonicError}</Text>
-      <View style={styles.buttonsBlock}>
-        <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
-        <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={5} activeStep={3}/>
+        <View style={styles.textBlock}>
+          <Text style={styles.header}>{t('Import exists account')}</Text>
+          <Text style={styles.description}>
+            {t(
+              "Enter the secret phrase from another wallet. Usually it is 12, sometimes more, words separated by spaces",
+            )}
+          </Text>
         </View>
-      </View>
+        
+        <InsertableTextArea onChange={(value: string) => setMnemonic(value.toLowerCase())} />
+        <Text style={styles.error}>{mnemonicError}</Text>
+        <View style={styles.buttonsBlock}>
+          <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
+          <View style={styles.loaderView}>
+            <PointerProgressBar stepsCount={5} activeStep={3}/>
+          </View>
+        </View>
+        
+        <ConfirmationModal
+          onPositive={updateMnemonic}
+          title={t('Attention!')}
+          visible={confIsShown}
+          onCancel={hideConf}
+          description={t(
+            'I saved the phrase outside the wallet and I understand that in case of loss I will not be able to restore access'
+          )}
+        />
       </KeyboardAwareScrollView>
-      <ConfirmationModal
-        onPositive={updateMnemonic}
-        title={t('Attention!')}
-        visible={confIsShown}
-        onCancel={hideConf}
-        description={t(
-          'I saved the phrase outside the wallet and I understand that in case of loss I will not be able to restore access'
-        )}
-      />
     </InitializationBackground>
   );
 };

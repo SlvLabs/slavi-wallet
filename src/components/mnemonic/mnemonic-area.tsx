@@ -2,6 +2,7 @@ import {View, StyleSheet, ViewStyle} from 'react-native';
 import React, {useCallback} from 'react';
 import MnemonicWord from './mnemonic-word';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 export interface MnemonicAreaProps {
   words: string[];
@@ -35,8 +36,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingTop: Layout.isSmallDevice ? 20 : 40,
+    paddingBottom: Layout.isSmallDevice ? 20 : 40,
     borderBottomColor: theme.colors.textDarkGray,
     borderBottomWidth: 1,
     width: '100%',

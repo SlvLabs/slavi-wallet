@@ -69,6 +69,7 @@ const InitializeLocalizationScreen = () => {
             options={languageOptions}
             label={t('Language')}
             isLoading={isLoadingLanguages}
+            containerStyle={styles.select}
           />
           <SimpleSelect
             onSelect={onCurrencySelect}
@@ -76,6 +77,7 @@ const InitializeLocalizationScreen = () => {
             options={currencyOptions}
             label={t('Currency')}
             isLoading={isLoadingCurrency}
+            containerStyle={styles.select}
           />
         </View>
         <View style={styles.buttonsView}>
@@ -136,12 +138,15 @@ const styles = StyleSheet.create({
     color: theme.colors.dark1,
   },
   buttonsView: {
-    marginTop: 16,
+    marginTop: Layout.isSmallDevice ? 4: 16,
     justifyContent: 'flex-end',
     flex: 1,
   },
   loaderView: {
     paddingTop: 17,
+  },
+  select: {
+    padding: Layout.isSmallDevice ? 8 : 16,
   }
 });
 

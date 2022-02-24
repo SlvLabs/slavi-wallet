@@ -17,6 +17,7 @@ import InitializationBackground from '../../../components/background/initializat
 import SolidButton from '../../../components/buttons/solid-button';
 import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
 import ConfirmationModal from '../../../components/modal/confirmation-modal';
+import Layout from '../../../utils/layout';
 
 const CreateMnemonicScreen = () => {
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
@@ -74,17 +75,18 @@ const CreateMnemonicScreen = () => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginBottom: 15,
+    marginBottom: Layout.isSmallDevice ? 4 : 15,
     marginTop: 10,
   },
   descriptionContainer: {
-    margin: 20,
+    margin: Layout.isSmallDevice ? 8 : 20,
   },
   controlButtonContainer: {
-    margin: 30,
+    margin: Layout.isSmallDevice ? 8 : 30,
+    alignItems: 'center',
   },
   textBlock: {
-    marginBottom: 30,
+    marginBottom: Layout.isSmallDevice ? 15 : 30,
     flex: 1,
   },
   header: {
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 32,
     color: theme.colors.white,
-    marginBottom: 20,
+    marginBottom: Layout.isSmallDevice ? 8 : 20,
   },
   description: {
     alignSelf: 'center',
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   loaderView: {
-    paddingTop: 17,
+    paddingTop: Layout.isSmallDevice ? 8 : 17,
   },
 });
 export default CreateMnemonicScreen;

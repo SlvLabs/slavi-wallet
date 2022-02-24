@@ -9,6 +9,7 @@ import OutlineButton from '../../components/buttons/outline-button';
 import {keyLogo} from '../../assets/images';
 import theme from '../../theme';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
+import Layout from '../../utils/layout';
 
 const AccountMenuScreen = () => {
   const navigation = useNavigation();
@@ -50,13 +51,13 @@ const AccountMenuScreen = () => {
 
 const styles = StyleSheet.create({
   logoView: {
-    flex: 2,
+    flex: Layout.isSmallDevice ? 1 : 2,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: Layout.isSmallDevice ? 110 : 200,
+    height: Layout.isSmallDevice ? 110 : 200,
     marginBottom: 15,
   },
   textBlock: {

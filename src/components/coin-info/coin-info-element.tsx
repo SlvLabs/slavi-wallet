@@ -4,6 +4,7 @@ import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coi
 import TextWithLabel from './info-elements/text-with-label';
 import IconTextWithLabel from './info-elements/icon-text-with-label';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 export interface CoinInfoElementProps {
   info: CoinListElement;
@@ -49,8 +50,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.cardBackground2,
     borderRadius: 8,
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: Layout.isSmallDevice ? 3 : 8,
+    marginBottom: Layout.isSmallDevice ? 3 : 8,
     paddingRight: 16,
     paddingLeft: 16,
     paddingTop: 13,

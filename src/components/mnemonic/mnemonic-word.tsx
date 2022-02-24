@@ -27,7 +27,7 @@ const MnemonicWord = (props: MnemonicWordProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: Layout.isSmallDevice ? 60: 97,
+    width: Layout.isSmallDevice ? 60 : 97,
     height: 32,
     alignItems: 'center',
     justifyContent: 'center',
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: 'flex-start',
     textAlign: 'center',
-    margin: 5,
+    margin: Layout.isSmallDevice ? 2 : 5,
   },
   label: {
     alignSelf: 'center',

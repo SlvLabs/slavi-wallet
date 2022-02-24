@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
   },
   buttonsRow: {
     flexDirection: 'row',
-    paddingLeft: 34,
-    paddingRight: 34,
+    paddingLeft: Layout.isSmallDevice ? 18 : 34,
+    paddingRight: Layout.isSmallDevice ? 18 : 34,
     justifyContent: 'space-between',
   },
   button: {
-    width: 140,
+    width: Layout.isSmallDevice ? 130 : 140,
     justifyContent: 'space-between',
   }
 });

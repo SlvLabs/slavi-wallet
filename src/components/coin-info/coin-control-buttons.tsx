@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import useTranslation from '../../utils/use-translation';
 import OutlineButton from '../buttons/outline-button';
+import Layout from '../../utils/layout';
 
 export interface CoinControlButtonsProps {
   onPressSend: () => void;
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   button: {
-    width: 100,
+    width: Layout.isSmallDevice ? 88 : 100,
   },
 });
 

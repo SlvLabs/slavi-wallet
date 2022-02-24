@@ -1,9 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text} from 'react-native';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
+import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text, Touchable} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export interface CopiedTextAreaProps {
   onChange?: (value: string) => void;
@@ -29,6 +30,15 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
       props.onChange(value);
     }
   }, [props, value]);
+
+  const inputRef = useRef<TextInput>(null);
+
+  const onPressContainer = useCallback(() => {
+    if(inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, []);
+
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.buttonRow}>
@@ -40,7 +50,9 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
           onPress={onPress}
         />
         {!value && (
-          <Text style={styles.placeholder}>{t('Enter here...')}</Text>
+          <TouchableOpacity onPress={onPressContainer}>
+            <Text style={styles.placeholder}>{t('Enter here...')}</Text>
+          </TouchableOpacity>
         )}
       </View>
       <TextInput
@@ -51,6 +63,10 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
         textAlignVertical={'top'}
         selectionColor={theme.colors.darkWord}
         multiline={true}
+        returnKeyType={'done'}
+        enablesReturnKeyAutomatically={true}
+        blurOnSubmit={true}
+        ref={inputRef}
       />
     </View>
   );

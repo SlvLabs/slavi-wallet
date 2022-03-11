@@ -39,6 +39,8 @@
     "big-integer": "^1.6.51",
     "create-hmac": "^1.1.7",
     "decimal.js": "^10.2.1",
+    "expo": ">=44.0.0-0 <45.0.0",
+    "expo-local-authentication": "~12.1.0",
     "i18next-react-native-language-detector": "^1.0.2",
     "moment": "^2.29.1",
     "process": "^0.11.10",

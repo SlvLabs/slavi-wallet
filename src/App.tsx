@@ -37,6 +37,7 @@ import SimpleToast from 'react-native-simple-toast';
 import WalletConnectSessionRequestModal from './components/wallet-connect/session-request-modal';
 import WalletConnectSignRequestModal from './components/wallet-connect/sign-request-modal';
 import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-modal';
+import {authenticateAsync} from 'expo-local-authentication';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -123,6 +124,10 @@ const App: () => ReactNode = () => {
       );
     }
   }, [isUpdateAvailable]);
+
+  useEffect(() => {
+    authenticateAsync().then(result => console.log(result))
+  })
 
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>

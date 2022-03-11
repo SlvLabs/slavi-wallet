@@ -186,6 +186,7 @@ const CoinsListScreen = () => {
           onReceiveClick={navigateToReceive}
           onSendClick={navigateToSend}
         />
+
         <CoinListCard
           containerStyle={styles.coinsCard}
           sortingMethods={sortingMethods}

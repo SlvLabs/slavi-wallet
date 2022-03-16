@@ -14,7 +14,7 @@ import {StatusBar, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {initStore} from './store';
-import {NavigationContainer} from '@react-navigation/native';
+import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './navigation/MainNavigator';
 import bootstrap from './services/bootstraper';
 import {ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
@@ -136,7 +136,7 @@ const App: () => ReactNode = () => {
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
           <SafeAreaProvider>
-            <NavigationContainer>
+            <NavigationContainer theme={DarkTheme}>
               <StatusBar barStyle="dark-content" />
               {devMode && <Text>This is development version!</Text>}
               <MainNavigator

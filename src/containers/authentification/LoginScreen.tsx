@@ -22,7 +22,7 @@ export default function LoginScreen() {
   const authService = useAuthService();
 
   const onBiometric = useCallback(async () => {
-    const result = await authenticateAsync();
+    const result = await authenticateAsync({disableDeviceFallback: true, cancelLabel: t('Cancel')});
 
     if(result.success) {
       authService.authorize();
@@ -30,7 +30,11 @@ export default function LoginScreen() {
   }, [authService]);
 
   const onBackspace = () => setPin(pin?.slice(0, -1));
-  const onPress = (num: number) => setPin(!pin ? `${num}` : `${pin}${num}`);
+  const onPress = (num: number) => {
+    if(!pin || pin.length < PIN_LENGTH) {
+      setPin(!pin ? `${num}` : `${pin}${num}`);
+    }
+  }
 
   const onRestore = useCallback(
     () => navigation.navigate(ROUTES.AUTHENTICATION.RESTORE),
@@ -41,6 +45,8 @@ export default function LoginScreen() {
     if(pin && pin.length === PIN_LENGTH) {
       if(authService.checkPin(pin)) {
         authService.authorize();
+      } else {
+        setPin(undefined);
       }
     }
   }, [pin]);

@@ -83,7 +83,7 @@ const InitializeLocalizationScreen = () => {
         <View style={styles.buttonsView}>
           <SolidButton title={t('Continue')} onPress={goNextStep}/>
           <View style={styles.loaderView}>
-            <PointerProgressBar stepsCount={5} activeStep={0}/>
+            <PointerProgressBar stepsCount={6} activeStep={0}/>
           </View>
         </View>
     </InitializationBackground>

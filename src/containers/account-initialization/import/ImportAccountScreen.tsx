@@ -43,16 +43,16 @@ const ImportAccountScreen = () => {
             )}
           </Text>
         </View>
-        
+
         <InsertableTextArea onChange={(value: string) => setMnemonic(value.toLowerCase())} />
         <Text style={styles.error}>{mnemonicError}</Text>
         <View style={styles.buttonsBlock}>
           <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
           <View style={styles.loaderView}>
-            <PointerProgressBar stepsCount={5} activeStep={3}/>
+            <PointerProgressBar stepsCount={6} activeStep={4}/>
           </View>
         </View>
-        
+
         <ConfirmationModal
           onPositive={updateMnemonic}
           title={t('Attention!')}

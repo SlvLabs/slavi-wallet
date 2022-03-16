@@ -37,7 +37,6 @@ import SimpleToast from 'react-native-simple-toast';
 import WalletConnectSessionRequestModal from './components/wallet-connect/session-request-modal';
 import WalletConnectSignRequestModal from './components/wallet-connect/sign-request-modal';
 import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-modal';
-import {authenticateAsync} from 'expo-local-authentication';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -47,6 +46,7 @@ const App: () => ReactNode = () => {
   const [isInitFinishShow, setInitFinishShow] = useState<boolean>(false);
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
   const [isUpdateRequired, setIsUpdateRequired] = useState<boolean>(false);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
   const services = useRef<ServiceLocatorCoreInterface>({
     dataStoreProvider: asyncStorageProvider,
@@ -81,6 +81,8 @@ const App: () => ReactNode = () => {
   store.subscribe(() => {
     setIsUpdateRequired(store.getState().initialization.updateRequired);
   });
+
+  store.subscribe(() => setIsAuthorized(store.getState().auth.authorized));
 
   useEffect(() => {
     let performanceMonitor: PerformanceMonitorInterface;
@@ -125,10 +127,6 @@ const App: () => ReactNode = () => {
     }
   }, [isUpdateAvailable]);
 
-  useEffect(() => {
-    authenticateAsync().then(result => console.log(result))
-  })
-
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar
@@ -143,7 +141,7 @@ const App: () => ReactNode = () => {
               {devMode && <Text>This is development version!</Text>}
               <MainNavigator
                 isInitialized={isInitialized}
-                isAuthorized={true}
+                isAuthorized={isAuthorized}
                 isAccountInitialized={isAccountInitialized}
                 isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
                 isInitializationFinished={isInitFinishShow}

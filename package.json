@@ -31,7 +31,7 @@
     "@reduxjs/toolkit": "^1.3.6",
     "@slavi/crypto-core": "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master",
     "@slavi/react-native-daterange-picker": "git+ssh://git@gitlab.com/defi-wallet/react-native-daterange-picker.git#master",
-    "@slavi/wallet-core": "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#wallet-connect",
+    "@slavi/wallet-core": "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#auth",
     "@substrate/txwrapper-polkadot": "1.2.21",
     "@types/react-native-snap-carousel": "^3.8.3",
     "@walletconnect/client": "^1.7.1",
@@ -61,6 +61,7 @@
     "react-native-radial-gradient": "^1.0.9",
     "react-native-randombytes": "^3.6.0",
     "react-native-reanimated": "^1.8.0",
+    "react-native-restart": "^0.0.24",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "^2.7.0",
     "react-native-share": "5.2.2",
@@ -105,6 +106,7 @@
     "@polkadot/util-crypto": "8.0.4",
     "@polkadot/util": "8.0.4",
     "@polkadot/wasm-crypto": "4.4.1",
-    "@polkadot/wasm-crypto-wasm": "4.4.1"
+    "@polkadot/wasm-crypto-wasm": "4.4.1",
+    "@solana/web3.js": "1.34.0"
   }
 }

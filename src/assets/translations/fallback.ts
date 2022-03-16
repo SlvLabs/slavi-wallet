@@ -260,6 +260,22 @@ const translations = {
   fee: "Net fee",
 
   rates: "Rates",
+
+  // pin
+  pinLabel: 'Enter code',
+  restoreLabel: 'Forgot the code?',
+  security: 'Security',
+  pinEnabled: 'Enabled',
+  biometricEnabled: 'Biometric is enabled',
+  pinUnequal: 'Pin codes not equal',
+  repeatPin: 'Repeat pin code',
+  restoreHeader: 'Reset the wallet?',
+  restoreDescription: 'To recover your pin code, you need to completely reset your app data, including your passphrase and all private address keys.',
+  restoreAccept: 'Accept',
+  restoreDecline: 'Back',
+  pinCode: 'Pin code',
+  disablePinConf: 'Disable pin code',
+  initPinDescription: 'Set the security settings for accessing the application that are convenient for you. PIN code and biometric authentication. these measures will protect your wallet from unauthorized access in case of loss of the device.',
 }
 
 export default translations;

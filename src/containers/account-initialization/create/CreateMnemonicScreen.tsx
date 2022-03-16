@@ -57,7 +57,7 @@ const CreateMnemonicScreen = () => {
       <View style={styles.buttonsBlock}>
         <SolidButton title={t('Continue')} onPress={showConf} />
         <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={5} activeStep={3}/>
+          <PointerProgressBar stepsCount={6} activeStep={4}/>
         </View>
       </View>
       <ConfirmationModal

@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import FullScreenModal from './full-screen-modal';
 import useTranslation from '../../utils/use-translation';
 import PinInput from '../controls/pin-input';
+import theme from '../../theme';
 
 export interface PinCodeModalProps {
   visible: boolean;
@@ -50,7 +51,9 @@ export default function PinCodeModal(props: PinCodeModalProps) {
   }, [currentPin]);
 
   useEffect(() => {
-    setError(undefined);
+    if(error && currentPin) {
+      setError(undefined);
+    }
   }, [currentPin]);
 
   useEffect(() => {
@@ -73,7 +76,6 @@ export default function PinCodeModal(props: PinCodeModalProps) {
           onBackspacePress={onBackspace}
           label={firstPin ? t('repeatPin') : t('pinLabel')}
         />
-        {/*//TODO: design it*/}
         <Text style={styles.error}>{error}</Text>
       </View>
     </FullScreenModal>
@@ -82,5 +84,13 @@ export default function PinCodeModal(props: PinCodeModalProps) {
 
 const styles = StyleSheet.create({
   content: {},
-  error: {},
+  error: {
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 16,
+    color: theme.colors.errorRed,
+    marginTop: 20,
+  },
 });

@@ -52,6 +52,23 @@ export default function LoginScreen() {
     [navigation]
   );
 
+  const ban =  useCallback((banTime: number) => {
+    setLocked(true);
+
+    if(timer.current) {
+      clearInterval(timer.current);
+    }
+    timerValue.current = banTime;
+
+    timer.current = setInterval(() => {
+      timerValue.current--;
+      setErrorTimer(timerValue.current);
+      if(timerValue.current === 0 && timer.current) {
+        clearInterval(timer.current);
+      }
+    }, 1000);
+  }, []);
+
   useEffect(() => {
     if(pin && pin.length === PIN_LENGTH) {
       authService.checkPin(pin).then(result => {
@@ -68,27 +85,34 @@ export default function LoginScreen() {
             break;
           case CheckAuthError.ban: {
             if(result.time) {
-              setLocked(true);
-
-              if(timer.current) {
-                clearInterval(timer.current);
-              }
-              timerValue.current = result.time;
-
-              timer.current = setInterval(() => {
-                timerValue.current--;
-                setErrorTimer(timerValue.current);
-                if(timerValue.current === 0 && timer.current) {
-                  clearInterval(timer.current);
-                }
-              }, 1000);
-              break;
+              setErrorTimer(result.time);
+              ban(result.time);
             }
+            break;
           }
         }
       });
     }
-  }, [pin, t]);
+  }, [pin, t, ban]);
+
+  useEffect(() => {
+    if(!authService) {
+      return;
+    }
+
+    const result = authService.checkBan();
+
+    if(result.success) {
+      setLocked(false);
+      return;
+    }
+
+    if(result.error === CheckAuthError.ban && result.time) {
+      setLocked(true);
+      setErrorTimer(result.time);
+      ban(result.time);
+    }
+  }, [authService, ban]);
 
   useEffect(() => {
     supportedAuthenticationTypesAsync().then((types => {

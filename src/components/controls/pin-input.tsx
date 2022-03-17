@@ -101,7 +101,7 @@ export default function PinInput(props: PinInputProps) {
       <View style={styles.lastRowContainer}>
         <TouchableOpacity
           style={styles.restoreButton}
-          disabled={disabled || !restoreIsAvailable}
+          disabled={!restoreIsAvailable}
           onPress={onRestorePress}
         >
           {restoreIsAvailable && <Text style={styles.restoreLabel}>{t('restoreLabel')}</Text>}

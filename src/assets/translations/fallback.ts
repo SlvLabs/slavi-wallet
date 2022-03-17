@@ -276,6 +276,8 @@ const translations = {
   pinCode: 'Pin code',
   disablePinConf: 'Disable pin code',
   initPinDescription: 'Set the security settings for accessing the application that are convenient for you. PIN code and biometric authentication. these measures will protect your wallet from unauthorized access in case of loss of the device.',
+  pinNotMatch: 'Pin not match',
+  tooMatchErrors: 'Too many wrong attempts. try later',
 }
 
 export default translations;

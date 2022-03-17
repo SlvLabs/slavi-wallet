@@ -1,5 +1,5 @@
-import {SafeAreaView, StyleSheet} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import theme from '../../theme';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
@@ -9,6 +9,7 @@ import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-servi
 import {authenticateAsync, AuthenticationType, supportedAuthenticationTypesAsync} from 'expo-local-authentication';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
+import {CheckAuthError} from '@slavi/wallet-core/src/types';
 
 const PIN_LENGTH = 4;
 
@@ -16,10 +17,16 @@ export default function LoginScreen() {
   const [pin, setPin] = useState<string>();
   const [touchIdIsAvailable, setTouchIdIsAvailable] = useState<boolean>(false);
   const [faceIdIsAvailable, setFaceIdIsAvailable] = useState<boolean>(false);
+  const [error, setError] = useState<string|undefined>();
+  const [errorTimer, setErrorTimer] = useState<number>(0);
+  const [locked, setLocked] = useState<boolean>(false);
 
   const {t} = useTranslation();
   const navigation = useNavigation();
   const authService = useAuthService();
+
+  const timer = useRef<any>(null);
+  const timerValue = useRef<number>(0);
 
   const onBiometric = useCallback(async () => {
     const result = await authenticateAsync({disableDeviceFallback: true, cancelLabel: t('Cancel')});
@@ -31,6 +38,10 @@ export default function LoginScreen() {
 
   const onBackspace = () => setPin(pin?.slice(0, -1));
   const onPress = (num: number) => {
+    if(locked) {
+      return;
+    }
+
     if(!pin || pin.length < PIN_LENGTH) {
       setPin(!pin ? `${num}` : `${pin}${num}`);
     }
@@ -43,13 +54,41 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if(pin && pin.length === PIN_LENGTH) {
-      if(authService.checkPin(pin)) {
-        authService.authorize();
-      } else {
+      authService.checkPin(pin).then(result => {
+        if(result.success) {
+          authService.authorize();
+          return;
+        }
+
         setPin(undefined);
-      }
+
+        switch (result.error) {
+          case CheckAuthError.notMatch:
+            setError(t('pinNotMatch'));
+            break;
+          case CheckAuthError.ban: {
+            if(result.time) {
+              setLocked(true);
+
+              if(timer.current) {
+                clearInterval(timer.current);
+              }
+              timerValue.current = result.time;
+
+              timer.current = setInterval(() => {
+                timerValue.current--;
+                setErrorTimer(timerValue.current);
+                if(timerValue.current === 0 && timer.current) {
+                  clearInterval(timer.current);
+                }
+              }, 1000);
+              break;
+            }
+          }
+        }
+      });
     }
-  }, [pin]);
+  }, [pin, t]);
 
   useEffect(() => {
     supportedAuthenticationTypesAsync().then((types => {
@@ -65,6 +104,22 @@ export default function LoginScreen() {
     }));
   }, [authService]);
 
+  useEffect(() => {
+    if(errorTimer && errorTimer > 0) {
+      setLocked(true);
+      setError(`${t('tooMatchErrors')} ${errorTimer}`);
+    } else {
+      setLocked(false);
+      setError(undefined);
+    }
+  }, [errorTimer]);
+
+  useEffect(() => {
+    if(error) {
+      setError(undefined);
+    }
+  }, [pin]);
+
   return (
     <SafeAreaView style={styles.container}>
       <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
@@ -79,7 +134,9 @@ export default function LoginScreen() {
           faceIdIsAvailable={faceIdIsAvailable}
           touchIdIsAvailable={touchIdIsAvailable}
           restoreIsAvailable={true}
+          disabled={locked}
         />
+        <Text style={styles.error}>{error} {!!errorTimer}</Text>
       </RadialGradient>
     </SafeAreaView>
   );
@@ -96,4 +153,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  error: {
+    alignSelf: 'center',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 16,
+    color: theme.colors.errorRed,
+    marginTop: 20,
+  }
 });

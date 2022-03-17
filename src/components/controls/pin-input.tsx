@@ -15,6 +15,7 @@ export interface PinInputProps {
   restoreIsAvailable?: boolean;
   onRestorePress?: () => void;
   onBiometricPress?: () => void;
+  disabled?: boolean;
 }
 
 const NUMBERS = [1,2,3,4,5,6,7,8,9];
@@ -31,6 +32,7 @@ export default function PinInput(props: PinInputProps) {
     onBiometricPress,
     restoreIsAvailable,
     onRestorePress,
+    disabled,
   } = props;
 
   const {t} = useTranslation();
@@ -41,7 +43,11 @@ export default function PinInput(props: PinInputProps) {
         name={'backspace'}
         size={36}
         color={theme.colors.white}
-        onPress={onBackspacePress}
+        onPress={() => {
+          if(!disabled) {
+            onBackspacePress();
+          }
+        }}
       />
     }
 
@@ -50,7 +56,11 @@ export default function PinInput(props: PinInputProps) {
         name={'scan-outline'}
         size={36}
         color={theme.colors.white}
-        onPress={onBiometricPress}
+        onPress={ () => {
+          if(!disabled) {
+            onBiometricPress?.();
+          }
+        }}
       />
     }
 
@@ -59,12 +69,16 @@ export default function PinInput(props: PinInputProps) {
         name={'finger-print-outline'}
         size={36}
         color={theme.colors.white}
-        onPress={onBiometricPress}
+        onPress={ () => {
+          if(!disabled) {
+            onBiometricPress?.();
+          }
+        }}
       />
     }
 
     return undefined;
-  }, [enteredCount, faceIdIsAvailable, touchIdIsAvailable]);
+  }, [enteredCount, faceIdIsAvailable, touchIdIsAvailable, disabled]);
 
   return (
     <View style={styles.container}>
@@ -78,22 +92,28 @@ export default function PinInput(props: PinInputProps) {
             key={`number_${number}`}
             style={styles.numberButton}
             onPress={() => onPress(number)}
+            disabled={disabled}
           >
-            <Text style={styles.numberText}>{number}</Text>
+            <Text style={disabled ? styles.disabledText : styles.numberText}>{number}</Text>
           </TouchableOpacity>
         ))}
       </View>
       <View style={styles.lastRowContainer}>
-        <TouchableOpacity style={styles.restoreButton} disabled={!restoreIsAvailable} onPress={onRestorePress}>
+        <TouchableOpacity
+          style={styles.restoreButton}
+          disabled={disabled || !restoreIsAvailable}
+          onPress={onRestorePress}
+        >
           {restoreIsAvailable && <Text style={styles.restoreLabel}>{t('restoreLabel')}</Text>}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.numberButton}
           onPress={() => onPress(0)}
+          disabled={disabled}
         >
-          <Text style={styles.numberText}>0</Text>
+          <Text style={disabled ? styles.disabledText : styles.numberText}>0</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.biometricButton}>
+        <TouchableOpacity style={styles.biometricButton} disabled={disabled}>
           {!!biometricIcon && biometricIcon}
         </TouchableOpacity>
       </View>
@@ -154,6 +174,15 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 35,
     color: theme.colors.white,
+    textAlign: 'center',
+  },
+  disabledText: {
+    fontFamily: theme.fonts.default,
+    fontSize: 32,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 35,
+    color: theme.colors.textLightGray1,
     textAlign: 'center',
   },
   lastRowContainer: {

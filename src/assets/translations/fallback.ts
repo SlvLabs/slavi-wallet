@@ -307,6 +307,7 @@ const translations = {
   price: 'Price',
   per: 'per',
   internalErrorDesc: 'The server is temporarily unavailable. Try again later or contact support.',
+  sleepingToleranceError: 'Failed to calculate the exchange. Try increasing slippage tolerance.',
 }
 
 export default translations;

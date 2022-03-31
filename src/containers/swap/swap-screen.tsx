@@ -63,8 +63,10 @@ const SwapScreen = () => {
   const [errorModalIsShown, setErrorModalIsShown] = useState<boolean>(false);
   const [approveSubmitting, setApproveSubmitting] = useState<boolean>(false);
   const [swapSubmitting, setSwapSubmitting] = useState<boolean>(false);
+  const [waitSwapProvider, setWaitSwapProvider] = useState<boolean>(false);
 
   const approvingTimer = useRef<NodeJS.Timer | null>(null);
+  const waitSwapProviderTimer = useRef<NodeJS.Timer | null>(null);
 
   const coinService = useCoinsService();
   const patternService = useCoinPatternService();
@@ -165,7 +167,7 @@ const SwapScreen = () => {
     fromCoin: inCoin,
     address: address,
     toCoin: dstCoin,
-    gasPrice: 1,
+    gasPrice: gasPrice,
     amount: inAmount
   });
 
@@ -190,6 +192,7 @@ const SwapScreen = () => {
 
   const onApproveSubmit = useCallback(() => {
     setLoading(true);
+
     const f = async () => {
       if(!inCoin
         || !inAmount
@@ -199,6 +202,7 @@ const SwapScreen = () => {
         || !insufficientAmount
         || !coinPattern
       ) {
+        setLoading(false);
         return;
       }
 
@@ -213,6 +217,7 @@ const SwapScreen = () => {
         setApproveTxs(approve.transactions);
         showApproveConf();
       } catch (e) {
+        setLoading(false);
         setError(t('internal error'));
         return;
       }
@@ -250,7 +255,10 @@ const SwapScreen = () => {
       coin: inCoin,
       contract: contractAddress,
     })
-      .then(() => setApproving(true))
+      .then(() => {
+        setApproving(true);
+        setApprovingTimer();
+      })
       .catch(() => {
       if(approvingTimer.current) {
         clearInterval(approvingTimer.current);
@@ -300,11 +308,13 @@ const SwapScreen = () => {
           dstAmount: receiveAmount,
         });
       } catch (e) {
+        setLoading(false);
+        setError(t('internal error'));
         return;
       } finally {
         hideSwapConf();
         setLoading(false);
-        setApproveSubmitting(false);
+        setSwapSubmitting(false);
       }
 
       navigation.navigate(ROUTES.COINS.LIST);
@@ -383,9 +393,16 @@ const SwapScreen = () => {
 
   useEffect(() => {
     if(tx && network && networkPattern && submitSwap) {
-      setFee(networkPattern.getFee(txPriority, tx.gas));
+      const estimateFee = networkPattern.getFee(txPriority, tx.gas);
+      const networkBalance = (coins.find((c) => c.id === network))?.total || '0'
+      if(stringNumberGt(networkBalance, estimateFee)) {
+        setFee(estimateFee);
+        showSwapConf();
+      } else {
+        setLoading(false);
+        setError(t('insufficientNetworkFunds'));
+      }
 
-      showSwapConf();
       setSubmitSwap(false);
       setBlocked(false);
     }
@@ -414,6 +431,11 @@ const SwapScreen = () => {
 
     if(txError === 'insufficient funds') {
       setError(`${t('insufficientNetworkFunds')} ${network}`);
+      return;
+    }
+
+    if(txError === 'cannot estimate' || getInfoError === 'cannot estimate') {
+      setError(t('sleepingToleranceError'));
       return;
     }
 
@@ -479,15 +501,18 @@ const SwapScreen = () => {
   useEffect(() => {
     if(!approvalsLoading) {
       if(approvals && approvals.length > 0) {
+        console.log('approvals');
         setApproving(true);
+        setWaitSwapProvider(true);
       } else {
         if(approvingTimer.current) {
           clearInterval(approvingTimer.current);
         }
-        setTimeout(() => setApproving(false), APPROVE_INTERVAL_CHECK * 3);
+
+        setApproving(false);
       }
     }
-  }, [approvals, approvalsLoading]);
+  }, [approvals, approvalsLoading, requestInsufficientApprovedAmount]);
 
   useEffect(() => {
     setApprovingTimer();
@@ -504,7 +529,7 @@ const SwapScreen = () => {
 
   useEffect(() => {
     setError(undefined);
-  }, [inCoin, network, dstCoin, inAmount]);
+  }, [inCoin, network, dstCoin, inAmount, address]);
 
   useEffect(() => {
       if(inAmount && balance && stringNumberGt(inAmount, balance)) {
@@ -536,6 +561,26 @@ const SwapScreen = () => {
     });
   }, [navigation, balancesState.isLoading, balancesState.request]);
 
+  useEffect(() => {
+    if(waitSwapProvider && !approving && !insufficientAmount) {
+      if(waitSwapProviderTimer.current){
+        clearInterval(waitSwapProviderTimer.current);
+      }
+      console.log('got allowence', waitSwapProvider, insufficientAmount, approving);
+      setWaitSwapProvider(false);
+    }
+  }, [waitSwapProvider, insufficientAmount, approving]);
+
+  useEffect(() => {
+    if(waitSwapProvider && !approving && !waitSwapProviderTimer.current) {
+      console.log('set timeout', waitSwapProvider, approving)
+      waitSwapProviderTimer.current = setInterval(() => {
+        requestInsufficientApprovedAmount();
+      }, APPROVE_INTERVAL_CHECK);
+    }
+  }, [waitSwapProvider, approving]);
+
+  console.log(waitSwapProvider, approving, insufficientAmount);
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
@@ -587,7 +632,7 @@ const SwapScreen = () => {
               {(!!price && price !== '0') && `${makeRoundedBalance(4,price)} ${srcTicker} ${t('per')} 1 ${dstTicker}`}
             </Text>
           </View>
-        {approving ? (
+        {approving || waitSwapProvider ? (
           <View style={styles.approvingView}>
             <CustomIcon name={'timer'} size={20} color={theme.colors.white} />
             <Text style={styles.approvingText}>{t('approving')}</Text>

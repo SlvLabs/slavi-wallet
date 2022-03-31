@@ -83,7 +83,7 @@ const ConfirmMnemonicScreen = () => {
       <View style={styles.buttonsBlock}>
         <SolidButton title={t('Continue')} onPress={goNext} disabled={selectWords.length != words.length || isWrong}/>
         <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={5} activeStep={3}/>
+          <PointerProgressBar stepsCount={6} activeStep={4}/>
         </View>
       </View>
     </InitializationBackground>

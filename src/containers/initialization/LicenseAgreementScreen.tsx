@@ -7,16 +7,16 @@ import SimpleCheckbox from '../../components/controls/simple-checkbox';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import ScrollableArea from '../../components/controls/scrollable-area';
-import {useDispatch} from 'react-redux';
-import { save } from '@slavi/wallet-core/src/store/modules/initialization/initialization-thunk-actions';
+import {useNavigation} from '@react-navigation/native';
+import ROUTES from '../../navigation/config/routes';
 
 const LicenseAgreementScreen = () => {
   const [accepted, setAccepted] = useState<boolean>(false);
+
   const {t} = useTranslation();
+  const navigation = useNavigation();
 
-  const dispatch = useDispatch();
-
-  const goNextStep = useCallback(() => dispatch(save()), [dispatch]);
+  const goNextStep = useCallback(() => navigation.navigate(ROUTES.INITIALIZATION.PASSCODE), [navigation]);
 
   return (
     <InitializationBackground>
@@ -31,7 +31,7 @@ const LicenseAgreementScreen = () => {
       </View>
       <SolidButton title={t('Continue')} onPress={goNextStep} disabled={!accepted}/>
       <View style={styles.loaderView}>
-        <PointerProgressBar stepsCount={5} activeStep={1}/>
+        <PointerProgressBar stepsCount={6} activeStep={1}/>
       </View>
     </InitializationBackground>
   );

@@ -43,6 +43,8 @@ export default {
     screenBackground: '#121418',
     balanceHeaderBackground: '#0A0A0C',
     simpleCoinBackground: 'rgba(128, 144, 173, 0.1)',
+    inactiveGray: '#51545B',
+    opacityButton: 'rgba(255, 255, 255, 0.2)',
   },
   /** @deprecated */
   colorsOld: {

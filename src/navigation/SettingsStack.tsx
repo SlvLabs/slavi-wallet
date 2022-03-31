@@ -10,6 +10,7 @@ import CurrencyScreen from '../containers/settings/currency-screen';
 import InvalidateCachesScreen from '../containers/settings/invalidate-caches-screen';
 import useTranslation from '../utils/use-translation';
 import MainWalletConnectScreen from '../containers/wallet-connect/main-wallet-connect-screen';
+import SecurityScreen from '../containers/settings/security-screen';
 
 const StackNavigator = createStackNavigator();
 
@@ -55,6 +56,11 @@ const SettingsStack = () =>  {
         name={ROUTES.SETTINGS.WALLET_CONNECT}
         component={MainWalletConnectScreen}
         options={{title: t('walletConnect')}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.SETTINGS.SECURITY}
+        component={SecurityScreen}
+        options={{title: t('security')}}
       />
     </StackNavigator.Navigator>
   ),[]);

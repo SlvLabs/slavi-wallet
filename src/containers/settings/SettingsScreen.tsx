@@ -43,6 +43,11 @@ const SettingsScreen = () => {
     [navigation]
   );
 
+  const goToSecurity = useCallback(
+    () => navigation.navigate(ROUTES.SETTINGS.SECURITY),
+    [navigation]
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ListItem
@@ -101,6 +106,12 @@ const SettingsScreen = () => {
       <ListItem key={'wallet_connect'} bottomDivider onPress={goToWalletConnect} containerStyle={styles.listItem}>
         <ListItem.Content>
           <ListItem.Title style={styles.title}>{t('walletConnect')}</ListItem.Title>
+        </ListItem.Content>
+        {chevron}
+      </ListItem>
+      <ListItem key={'security'} bottomDivider onPress={goToSecurity} containerStyle={styles.listItem}>
+        <ListItem.Content>
+          <ListItem.Title style={styles.title}>{t('security')}</ListItem.Title>
         </ListItem.Content>
         {chevron}
       </ListItem>

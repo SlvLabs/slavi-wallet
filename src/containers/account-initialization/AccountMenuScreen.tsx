@@ -42,7 +42,7 @@ const AccountMenuScreen = () => {
         <SolidButton title={t('Create new account')} onPress={onPressCreate} containerStyle={styles.button}/>
         <OutlineButton title={t('Sign in')} onPress={onPressImport} containerStyle={styles.button}/>
         <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={5} activeStep={2}/>
+          <PointerProgressBar stepsCount={6} activeStep={3}/>
         </View>
       </View>
     </InitializationBackground>

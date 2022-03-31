@@ -138,7 +138,7 @@ const App: () => ReactNode = () => {
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme}>
               <StatusBar barStyle="dark-content" />
-              {devMode && <Text>This is development version!</Text>}
+              {devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}
               <MainNavigator
                 isInitialized={isInitialized}
                 isAuthorized={isAuthorized}

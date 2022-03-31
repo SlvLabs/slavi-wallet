@@ -45,6 +45,9 @@ export default {
     simpleCoinBackground: 'rgba(128, 144, 173, 0.1)',
     inactiveGray: '#51545B',
     opacityButton: 'rgba(255, 255, 255, 0.2)',
+    buttonBackground: 'rgba(14, 16, 24, 0.5)',
+    contentBackground: '#0B0B0B',
+    disabledButton: '#7D7D7D',
   },
   /** @deprecated */
   colorsOld: {
@@ -100,6 +103,7 @@ export default {
   },
   fonts: {
     default: 'Roboto',
+    gilroy: 'Roboto',
   },
   gradients: {
     header: {

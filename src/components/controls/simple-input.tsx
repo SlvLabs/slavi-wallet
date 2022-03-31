@@ -32,6 +32,8 @@ export interface SimpleInputProps {
   placeholderTextColor?: string,
   iconLeft?: boolean;
   returnKeyType?: ReturnKeyTypeOptions;
+  disableFocusStyle?: boolean;
+  disableErrorStyle?: boolean;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -48,7 +50,7 @@ const SimpleInput = (props: SimpleInputProps) => {
     };
   }
 
-  if (props.errorMessage) {
+  if (props.errorMessage && !props.disableErrorStyle) {
     errorStyle = {
       backgroundColor: theme.colors.grayDark,
       borderWidth: 1,
@@ -57,8 +59,10 @@ const SimpleInput = (props: SimpleInputProps) => {
   }
 
   const onFocus = useCallback(() => {
-    setFocusStyle(styles.focused);
-  }, []);
+    if(!disabledStyle) {
+      setFocusStyle(styles.focused);
+    }
+  }, [props.disableFocusStyle]);
 
   const onBlur = useCallback(() => {
     setFocusStyle({});

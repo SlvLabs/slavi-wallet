@@ -25,7 +25,7 @@ export default function WalletConnectSessionRequestModal() {
   const sessionRequest = useSelectWalletConnectSessionRequest();
   const coins = useSelectCoinsForWalletConnect();
   const walletConnectService = useWalletConnectService();
-  const balancesState = useAddressesBalance(coin?.id || 'stub');
+  const balancesState = useAddressesBalance(coin?.id);
 
   const onApprove = useCallback(() => {
     if(sessionRequest.peerId && coin && account) {

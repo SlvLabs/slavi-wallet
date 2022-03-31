@@ -90,6 +90,6 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
 	<key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+	<string>Light</string>
 </dict>
 </plist>

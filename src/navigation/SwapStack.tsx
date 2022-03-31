@@ -18,7 +18,7 @@ const SwapStack = () => {
       <StackNavigator.Screen
         name={ROUTES.SWAP.MAIN}
         component={SwapScreen}
-        options={{title: t('Swap')}}
+        options={{title: t('Swap'), headerShown: false}}
       />
     </StackNavigator.Navigator>
   ), []);

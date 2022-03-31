@@ -18,7 +18,9 @@ export interface PinInputProps {
   disabled?: boolean;
 }
 
-const NUMBERS = [1,2,3,4,5,6,7,8,9];
+const NUMBERS_LINE_1 = [1,2,3];
+const NUMBERS_LINE_2 = [4,5,6];
+const NUMBERS_LINE_3 = [7,8,9];
 
 export default function PinInput(props: PinInputProps) {
   const {
@@ -87,16 +89,42 @@ export default function PinInput(props: PinInputProps) {
         {[...Array(length)].map((_, index) => <View style={{...styles.point, ...(index < enteredCount ? styles.activePoint : styles.inactivePoint)}} key={`pin_indicator_${index}`}/>)}
       </View>
       <View style={styles.keyboardContainer}>
-        {NUMBERS.map(number => (
-          <TouchableOpacity
-            key={`number_${number}`}
-            style={styles.numberButton}
-            onPress={() => onPress(number)}
-            disabled={disabled}
-          >
-            <Text style={disabled ? styles.disabledText : styles.numberText}>{number}</Text>
-          </TouchableOpacity>
-        ))}
+        <View style={styles.line}>
+          {NUMBERS_LINE_1.map(number => (
+            <TouchableOpacity
+              key={`number_${number}`}
+              style={styles.numberButton}
+              onPress={() => onPress(number)}
+              disabled={disabled}
+            >
+              <Text style={disabled ? styles.disabledText : styles.numberText}>{number}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={styles.line}>
+          {NUMBERS_LINE_2.map(number => (
+            <TouchableOpacity
+              key={`number_${number}`}
+              style={styles.numberButton}
+              onPress={() => onPress(number)}
+              disabled={disabled}
+            >
+              <Text style={disabled ? styles.disabledText : styles.numberText}>{number}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={styles.line}>
+          {NUMBERS_LINE_3.map(number => (
+            <TouchableOpacity
+              key={`number_${number}`}
+              style={styles.numberButton}
+              onPress={() => onPress(number)}
+              disabled={disabled}
+            >
+              <Text style={disabled ? styles.disabledText : styles.numberText}>{number}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
       <View style={styles.lastRowContainer}>
         <TouchableOpacity
@@ -153,10 +181,13 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.green,
   },
   keyboardContainer: {
-    flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 64,
+  },
+  line: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   numberButton: {
     width: 70,

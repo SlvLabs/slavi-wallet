@@ -1,175 +1,645 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Image, ImageBackground, Text, TextInput, View} from 'react-native';
-import {SafeAreaView, StyleSheet} from 'react-native';
-// @ts-ignore
-import RadialGradient from 'react-native-radial-gradient';
-import {loadingBackground, screenStub} from '../../assets/images';
-import theme from '../../theme';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import CustomIcon from '../../components/custom-icon/custom-icon';
-import Layout from '../../utils/layout';
-import {useWSRequest} from '@slavi/wallet-core';
-import {
-  SubscribeData,
-  SubscribeList,
-  SubscribeListData,
-  SubscribeListResponse,
-  SubscribeResponse,
-  Subscribe
-} from '@slavi/wallet-core/src/providers/ws/messages/subscribe';
+import useTranslation from '../../utils/use-translation';
+import SourceCoinElement from '../../components/swap/source-coin-element';
+import DestinationCoinElement from '../../components/swap/destination-coin-element';
+import theme from '../../theme';
+import ExchangeHeader from '../../components/swap/exchange-header';
+import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
+import {NetworksOptions} from '../../components/swap/network-selector';
+import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
+import AddressSelector from '../../components/buttons/address-selector';
+import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
 import SolidButton from '../../components/buttons/solid-button';
-import useTranslation, {TranslationsKey} from '../../utils/use-translation';
+import useGetAvailableNetworks from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-get-available-networks';
+import ApproveConfirmationModal from '../../components/swap/approve-confirmation-modal';
+import SwapConfirmationModal from '../../components/swap/swap-confirmation-modal';
+import {useGetSpenderForCoin} from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-get-spender-for-coin';
+import {useGetSwapTx} from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-get-swap-tx';
+import {useAvailableCoins} from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-available-coins';
+import {useGetSwapInfo} from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-get-swap-info';
+import useCoinsService from '@slavi/wallet-core/src/contexts/hooks/use-coins-service';
+import {useAddressesService, useCoinPatternService, useCoinSpecsService} from '@slavi/wallet-core';
+import makeRoundedBalance from '../../utils/make-rounded-balance';
+import useInsufficientApprovedAmount
+  from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-insufficient-approved-amount';
+import EthPattern from '@slavi/wallet-core/src/services/coin-pattern/eth-pattern';
+import Erc20Pattern from '@slavi/wallet-core/src/services/coin-pattern/erc-20-pattern';
+import useUnconfirmedApprovals from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-unconfirmed-approvals';
+import {useNavigation} from '@react-navigation/native';
+import ROUTES from '../../navigation/config/routes';
+import stringNumberGt from '@slavi/wallet-core/src/utils/string-number-gt';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import WarningModal from '../../components/modal/warning-modal';
 
-const SUBSCRIBE_KEY = 'swap';
+const APPROVE_INTERVAL_CHECK = 5 * 1000;
 
 const SwapScreen = () => {
-  const [subscribed, setSubscribed] = useState<boolean>(true);
-  const [email, setEmail] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [network, setNetwork] = useState<string>();
+  const [txPriority, setTxPriority] = useState<TransactionPriority>(TransactionPriority.average);
+  const [slippageTolerance, setSlippageTolerance] = useState<number>(0.1);
+  const [inAmount, setInAmount] = useState<string>('0.0');
+  const [inCoin, setInCoin] = useState<string>();
+  const [dstCoin, setDstCoin] = useState<string>();
+  const [addressIndex, setAddressIndex] = useState<number>();
+  const [balance, setBalance] = useState<string>();
+  const [address, setAddress] = useState<string>();
+  const [srcTicker, setSrcTicker] = useState<string>();
+  const [srcLogo, setSrcLogo] = useState<string>();
+  const [dstTicker, setDstTicker] = useState<string>();
+  const [dstLogo, setDstLogo] = useState<string>();
+  const [approveConfIsShown, setApproveConfIsShown] = useState<boolean>(false);
+  const [swapConfIsShown, setSwapConfIsShown] = useState<boolean>(false);
+  const [fee, setFee] = useState<string>();
+  const [approveTxs, setApproveTxs] = useState<string[]|undefined>();
+  const [blocked, setBlocked] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+  const [gasPrice, setGasPrice] = useState<string>();
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [submitSwap, setSubmitSwap] = useState<boolean>(false);       //flag for prevent double modal show
+  const [approving, setApproving] = useState<boolean>(false);
+  const [errorModalIsShown, setErrorModalIsShown] = useState<boolean>(false);
+  const [approveSubmitting, setApproveSubmitting] = useState<boolean>(false);
+  const [swapSubmitting, setSwapSubmitting] = useState<boolean>(false);
 
-  const {state: {data, error: getError, isLoading}, request} = useWSRequest<SubscribeListData, SubscribeListResponse>();
-  const {
-    state: {
-      data: postData,
-      isLoading: postLoading,
-      error: postError,
-      errors,
-    },
-    request: post
-  } = useWSRequest<SubscribeData, SubscribeResponse>();
+  const approvingTimer = useRef<NodeJS.Timer | null>(null);
+
+  const coinService = useCoinsService();
+  const patternService = useCoinPatternService();
+  const addressService = useAddressesService();
+  const specService = useCoinSpecsService();
+
+  const {isLoading, error: networksError, coins: parentCoins} = useGetAvailableNetworks();
+  const coins = useCoinsSelector(false, true);
+  const balancesState = useAddressesBalance(inCoin);
+
   const {t} = useTranslation();
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    request(SubscribeList());
-  }, []);
+  const {contractAddress, error: spenderError} = useGetSpenderForCoin(network);
 
-  useEffect(() => {
-    if(!isLoading && data?.available && !data?.available.includes(SUBSCRIBE_KEY)) {
-      setSubscribed(true);
-      const existsEmail = data.subscribed?.find(element => element.type === SUBSCRIBE_KEY);
-      if(existsEmail) {
-        setEmail(existsEmail.email);
+  const {
+    request: requestApproval,
+    error: approvalError,
+    loading: approvalsLoading,
+    approvals
+  } = useUnconfirmedApprovals(network, inCoin, address);
+
+  const networkPattern: EthPattern | null = useMemo(() => {
+    if(network) {
+      return patternService.createEthPattern(
+        network,
+        addressService.getGetterDelegate(network),
+      );
+    }
+
+    return null;
+  }, [network, patternService, addressService]);
+
+  const coinPattern: Erc20Pattern | null = useMemo(() => {
+    if(inCoin && network && inCoin !== network && !isLoading) {
+      return patternService.createErc20Pattern(
+        inCoin,
+        addressService.getGetterDelegate(inCoin)
+      );
+    }
+
+    return null;
+  },
+    [inCoin, patternService, addressService]);
+
+  const {
+    error: allowanceError,
+    errors: allowanceErrors,
+    insufficientAmount,
+    request: requestInsufficientApprovedAmount,
+    isLoading:  allowanceLoading
+  } =  useInsufficientApprovedAmount(address, network, inCoin, inAmount);
+
+  const {
+    spentAmount: realSpentAmount,
+    receiveAmount: realReceiveAmount,
+    tx,
+    error: txError,
+    errors: txErrors,
+    isLoading: txLoading,
+    getSwapTx
+  } = useGetSwapTx();
+
+  const networkOptions: NetworksOptions = useMemo((): NetworksOptions => {
+    if(isLoading || !parentCoins) {
+      return {};
+    }
+
+    const options: NetworksOptions = {};
+    parentCoins.forEach((coin) => {
+      options[coin.id] = {
+        id: coin.id,
+        name: coin.name,
+        logo: coins.find(element => element.id === coin.id)?.logo,
       }
-    } else {
-      setSubscribed(false);
-    }
-  }, [data, isLoading]);
+    });
 
-  const subscribe = useCallback(() => {
-    post(Subscribe({
-      email: email,
-      flags: [SUBSCRIBE_KEY],
-    }))
-  }, [email]);
+    return options;
+  }, [isLoading, parentCoins, coins]);
+
+  const filteredCoins = useMemo(() => {
+    if(!network) {
+      return coins;
+    }
+
+    return coins.filter((coin) => coin.parent === network || coin.id === network);
+  }, [network, coins]);
+
+  const {
+    error: availableCoinsError,
+    errors: availableCoinsErrors,
+    isLoading: availableCoinsLoading,
+    coins: dstCoins
+  } = useAvailableCoins(network);
+
+  const {receiveAmount, error: getInfoError, errors: getInfoErrors, price} = useGetSwapInfo({
+    coin: network,
+    fromCoin: inCoin,
+    address: address,
+    toCoin: dstCoin,
+    gasPrice: 1,
+    amount: inAmount
+  });
+
+  const showApproveConf = useCallback(() => setApproveConfIsShown(true), []);
+  const hideApproveConf = useCallback(() => setApproveConfIsShown(false), []);
+  const showSwapConf = useCallback(() => setSwapConfIsShown(true), []);
+  const hideSwapConf = useCallback(() => setSwapConfIsShown(false), []);
+  const showErrorModal = useCallback(() => setErrorModalIsShown(true), []);
+  const hideErrorModal = useCallback(() => setErrorModalIsShown(false), []);
+
+  const setApprovingTimer = useCallback(() => {
+    requestApproval();
+
+    if(approvingTimer.current) {
+      clearInterval(approvingTimer.current);
+    }
+
+    approvingTimer.current = setInterval(() => {
+      requestApproval();
+    }, APPROVE_INTERVAL_CHECK);
+  }, [requestApproval]);
+
+  const onApproveSubmit = useCallback(() => {
+    setLoading(true);
+    const f = async () => {
+      if(!inCoin
+        || !inAmount
+        || !address
+        || !contractAddress
+        || allowanceLoading
+        || !insufficientAmount
+        || !coinPattern
+      ) {
+        return;
+      }
+
+      try {
+        const approve = await coinPattern.approve(
+          address,
+          contractAddress,
+          {transactionPriority: txPriority}
+        );
+
+        setFee(approve.fee);
+        setApproveTxs(approve.transactions);
+        showApproveConf();
+      } catch (e) {
+        setError(t('internal error'));
+        return;
+      }
+    }
+
+    f();
+  }, [
+    showApproveConf,
+    contractAddress,
+    address,
+    inAmount,
+    inCoin,
+    allowanceLoading,
+    insufficientAmount,
+  ]);
+
+  const onApproveAccept = useCallback(() => {
+    if(!approveTxs
+      || approveTxs.length === 0
+      || !network
+      || !networkPattern
+      || !address
+      || !inCoin
+      || !contractAddress
+      || approveSubmitting
+    ) {
+      return;
+    }
+
+    setApproveSubmitting(true);
+    setApproving(true);
+    setApprovingTimer();
+    networkPattern.sendApproveTransactions(approveTxs, {
+      address: address,
+      coin: inCoin,
+      contract: contractAddress,
+    })
+      .then(() => setApproving(true))
+      .catch(() => {
+      if(approvingTimer.current) {
+        clearInterval(approvingTimer.current);
+      }
+    })
+      .finally(() => {
+        setLoading(false);
+        setApproveSubmitting(false);
+      });
+
+    hideApproveConf();
+  }, [approveTxs, network, hideApproveConf, t, networkPattern, setApprovingTimer, address]);
+
+  const onSwapAccept = useCallback(() => {
+    const f = async () => {
+      if(!dstCoin
+        || !network
+        || !tx
+        || !networkPattern
+        || !inCoin
+        || !receiveAmount
+        || error
+        || swapSubmitting
+      ) {
+        return;
+      }
+
+      setSwapSubmitting(true);
+
+      const nonce = await networkPattern.getNonce(tx);
+      const chainId = specService.getSpec(network)?.chainId;
+
+      const {gas, ...other} = tx;
+
+      const signedTx = await networkPattern.signTransaction({
+        ...other,
+        nonce: nonce,
+        gasLimit: gas,
+        chainId: chainId,
+      });
+
+      try {
+        await networkPattern.sendSwapTransactions([signedTx], {
+          srcCoin: inCoin,
+          srcAmount: inAmount,
+          dstCoin: dstCoin,
+          dstAmount: receiveAmount,
+        });
+      } catch (e) {
+        return;
+      } finally {
+        hideSwapConf();
+        setLoading(false);
+        setApproveSubmitting(false);
+      }
+
+      navigation.navigate(ROUTES.COINS.LIST);
+    }
+
+    setLoading(true);
+    f();
+  }, [dstCoin, coinService, tx, coinService, specService, networkPattern, insufficientAmount]);
+
+  const onSwapSubmit = useCallback(async () => {
+    if(!network
+      || !inCoin
+      || !dstCoin
+      || !inAmount
+      || !slippageTolerance
+      || !address
+      || !networkPattern
+      || !gasPrice
+    ) {
+      return;
+    }
+
+    setBlocked(true);
+    setSubmitSwap(true);
+
+    await coinService.enablePregenedCoin(dstCoin);
+
+    getSwapTx({
+      coin: network,
+      fromCoin: inCoin,
+      toCoin: dstCoin,
+      amount: inAmount,
+      slippage: slippageTolerance,
+      allowPartialFill: false,
+      gasPrice: gasPrice,
+      address: address,
+    });
+  }, [network, inCoin, dstCoin, inAmount, slippageTolerance, address, networkPattern, gasPrice]);
+
+  const onTxPriorityChange = useCallback((value) => setTxPriority(+value), []);
 
   useEffect(() => {
-    if(getError) {
-      setError(getError)
+    if(!isLoading && !network && parentCoins?.[0]?.id) {
+      setNetwork(parentCoins[0].id);
     }
-  }, [getError]);
+  }, [parentCoins, isLoading, network]);
 
   useEffect(() => {
-    if(postError) {
-      setError(postError)
+    if(!inCoin && filteredCoins?.[0]) {
+      setInCoin(filteredCoins[0].id);
     }
-  }, [postError]);
+  }, [filteredCoins, inCoin]);
 
   useEffect(() => {
-    if(errors?.email) {
-      setError(errors.email?.[0]);
+    if(typeof addressIndex !== 'undefined' && balancesState.balances[addressIndex]) {
+      setAddress(balancesState.balances[addressIndex].address);
+      setBalance(balancesState.balances[addressIndex].balance);
     }
-  }, [errors]);
+  }, [addressIndex, balancesState]);
 
   useEffect(() => {
-    if(!postLoading && postData?.success) {
-      setSubscribed(true);
-    }
-  }, [postData, postLoading]);
+    const coin = coins.find(c => c.id === inCoin);
+    setSrcTicker(coin?.ticker);
+    setSrcLogo(coin?.logo);
+  }, [inCoin]);
 
-  const onEmailChange = useCallback((email: string) => {
-    setError('');
-    setEmail(email);
+  useEffect(() => {
+    if(!dstCoins) {
+      return;
+    }
+
+    const coin = dstCoins.find(c => c.id === dstCoin);
+    setDstTicker(coin?.ticker);
+    setDstLogo(coin?.logo);
+  }, [dstCoin]);
+
+  useEffect(() => {
+    if(tx && network && networkPattern && submitSwap) {
+      setFee(networkPattern.getFee(txPriority, tx.gas));
+
+      showSwapConf();
+      setSubmitSwap(false);
+      setBlocked(false);
+    }
+  }, [tx, network, txPriority, networkPattern, submitSwap]);
+
+  useEffect(() => {
+    if(!dstCoin && dstCoins && dstCoins.length > 0) {
+      for (const c of dstCoins) {
+        if(c.id !== network) {
+          setDstCoin(c.id);
+          setDstLogo(c.logo);
+        }
+      }
+    }
+  }, [dstCoins]);
+
+  useEffect(() => {
+    if(isLoading) {
+      return;
+    }
+
+    if(getInfoError === 'insufficient liquidity' || txError === 'insufficient liquidity') {
+      setError(t('insufficientLiquidity'));
+      return;
+    }
+
+    if(txError === 'insufficient funds') {
+      setError(`${t('insufficientNetworkFunds')} ${network}`);
+      return;
+    }
+
+    if(txError === 'not enough allowance') {
+      setError(t('notEnoughAllowance'));
+      return;
+    }
+
+    if(
+      networksError
+      || allowanceError
+      || allowanceErrors
+      || spenderError
+      || availableCoinsError
+      || availableCoinsErrors
+      || txError
+      || txErrors
+      || approvalError
+    ) {
+      setBlocked(false);
+      setLoading(false);
+      showErrorModal();
+      return;
+    }
+  }, [
+    networksError,
+    allowanceError,
+    allowanceErrors,
+    spenderError,
+    availableCoinsError,
+    availableCoinsErrors,
+    getInfoError,
+    getInfoErrors,
+    txError,
+    txErrors,
+    t,
+    showErrorModal,
+    approvalError,
+  ]);
+
+  useEffect(() => {
+    if(!networkPattern) {
+      return;
+    }
+
+    setGasPrice(networkPattern.getGasLimit(txPriority));
+  }, [networkPattern, txPriority]);
+
+  useEffect(() => {
+    setLoading(isLoading || allowanceLoading || txLoading || availableCoinsLoading);
+  }, [isLoading, allowanceLoading, txLoading, availableCoinsLoading]);
+
+  useEffect(() => {
+    setDisabled(!network || !inCoin || !inAmount || !address || !!error || !stringNumberGt(inAmount, '0'));
+  }, [network, inCoin, inAmount, address, error]);
+
+  useEffect(() => {
+    if(!approving) {
+      requestInsufficientApprovedAmount();
+    }
+  }, [address, network, inCoin, approving, requestInsufficientApprovedAmount]);
+
+  useEffect(() => {
+    if(!approvalsLoading) {
+      if(approvals && approvals.length > 0) {
+        setApproving(true);
+      } else {
+        if(approvingTimer.current) {
+          clearInterval(approvingTimer.current);
+        }
+        setTimeout(() => setApproving(false), APPROVE_INTERVAL_CHECK * 3);
+      }
+    }
+  }, [approvals, approvalsLoading]);
+
+  useEffect(() => {
+    setApprovingTimer();
+  }, [setApprovingTimer]);
+
+
+  useEffect(() => {
+    return () => {
+      if(approvingTimer.current) {
+        clearInterval(approvingTimer.current);
+      }
+    }
   }, []);
 
-  const border = useMemo(() => {
+  useEffect(() => {
+    setError(undefined);
+  }, [inCoin, network, dstCoin, inAmount]);
+
+  useEffect(() => {
+      if(inAmount && balance && stringNumberGt(inAmount, balance)) {
+        setError(t('Insufficient funds'));
+      }
+  }, [inAmount, balance, t]);
+
+  useEffect(() => {
+    if(inCoin && dstCoin && inCoin === dstCoin) {
+      setError(t('sameSwap'));
+    }
+  }, [inCoin, dstCoin, t]);
+
+  useEffect(() => {
+    setInAmount('0.0');
+  }, [inCoin]);
+
+  useEffect(() => {
     if(error) {
-      return theme.colors.errorRed;
+      setLoading(false);
     }
+  }, [error]);
 
-    if(postData?.success) {
-      return theme.colors.green;
-    }
-
-    return theme.colors.borderGray;
-  }, [error, subscribed]);
+  useEffect(() => {
+    return  navigation.addListener('focus', () => {
+      if(!balancesState.isLoading) {
+        balancesState.request();
+      }
+    });
+  }, [navigation, balancesState.isLoading, balancesState.request]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground source={loadingBackground} style={styles.background}>
-        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
-          <KeyboardAwareScrollView>
-            <Image
-              source={screenStub}
-              width={Layout.isSmallDevice ? 205 : 310}
-              height={Layout.isSmallDevice ? 165 :245}
-              style={{
-                width: Layout.isSmallDevice ? 205 : 310,
-                height: Layout.isSmallDevice ? 165 :245,
-                marginTop: 8,
-              }}
-            />
-            <Text style={styles.header}>{t('Slavi Swap is coming...')}</Text>
-            <View style={styles.descriptionContainer}>
-              <Text style={styles.description}>{t('Comprehensive with versatile functionality,')}</Text>
-              <Text style={styles.description}>{t('the first version of Slavi DeFi is coming.')}</Text>
-              <Text style={styles.description}>{t('Stay tunes in Newsletter.')}</Text>
-            </View>
-            {(!!data && !isLoading) && (
-              <View style={{width: '100%'}}>
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    placeholder={t('Your Email')}
-                    style={{...styles.input, borderColor: border}}
-                    placeholderTextColor={theme.colors.textLightGray}
-                    editable={!subscribed}
-                    selectTextOnFocus={!subscribed}
-                    textContentType={'emailAddress'}
-                    value={email}
-                    onChangeText={onEmailChange}
-                  />
-                  {subscribed && (
-                    <CustomIcon
-                      name={'check'}
-                      color={theme.colors.green}
-                      size={14}
-                      style={styles.icon}
-                    />
-                  )}
-                </View>
-                {!!error && <Text style={styles.error}>{t(error as TranslationsKey)}</Text>}
-                {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
-                  <Text style={styles.subscribedText}>{t('You\'ve successfully subscribed')}</Text>
-                ) : (
-                  <SolidButton
-                    icon={
-                      <CustomIcon
-                        name={'arrow-right'}
-                        color={theme.colors.white}
-                        size={14}
-                        style={styles.buttonIcon}
-                      />
-                    }
-                    iconRight={true}
-                    title={t('Subscribe')}
-                    onPress={subscribe}
-                    containerStyle={styles.buttonContainer}
-                    disabled={isLoading || postLoading || !!error}
-                  />
-                )}
-              </View>)}
-          </KeyboardAwareScrollView>
-        </RadialGradient>
-      </ImageBackground>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+        <ExchangeHeader
+          onNetworkChange={setNetwork}
+          networks={networkOptions}
+          selectedNetwork={network}
+          txPriority={txPriority}
+          onSlippageToleranceChange={setSlippageTolerance}
+          slippageTolerance={slippageTolerance}
+          onTxPriorityChange={onTxPriorityChange}
+        />
+        <View style={styles.swapBlock}>
+          <SourceCoinElement
+            balance={balance || '0'}
+            ticker={srcTicker || ''}
+            containerStyle={styles.srcBlock}
+            amount={inAmount}
+            onAmountChange={setInAmount}
+            coins={filteredCoins}
+            onCoinSelect={setInCoin}
+            logo={srcLogo}
+          />
+          <View style={styles.swapButton}>
+            <CustomIcon name={'exchange1'} color={theme.colors.green} size={18} />
+          </View>
+          <DestinationCoinElement
+            ticker={dstTicker || ''}
+            amount={makeRoundedBalance(6, receiveAmount || '0')}
+            containerStyle={styles.destBlock}
+            coins={dstCoins || []}
+            onCoinSelect={setDstCoin}
+            logo={dstLogo}
+          />
+          <AddressSelector
+            label={t('From account')}
+            containerStyle={styles.addressSelector}
+            addresses={balancesState.balances}
+            onSelect={setAddressIndex}
+            selectedAddress={addressIndex}
+            ticker={srcTicker || ''}
+          />
+        </View>
+          <View style={styles.priceView}>
+            <Text style={styles.price}>
+              {(!!price && price !== '0') && t('price')}
+            </Text>
+            <Text style={styles.price}>
+              {(!!price && price !== '0') && `${makeRoundedBalance(4,price)} ${srcTicker} ${t('per')} 1 ${dstTicker}`}
+            </Text>
+          </View>
+        {approving ? (
+          <View style={styles.approvingView}>
+            <CustomIcon name={'timer'} size={20} color={theme.colors.white} />
+            <Text style={styles.approvingText}>{t('approving')}</Text>
+          </View>
+        ) :
+          (!!insufficientAmount ? (
+          <SolidButton
+            title={t('approve')}
+            containerStyle={styles.submitButton}
+            onPress={onApproveSubmit}
+            loading={blocked || loading}
+            disabled={disabled}
+          />
+        ) : (
+          <SolidButton
+            title={t('swap')}
+            containerStyle={styles.submitButton}
+            onPress={onSwapSubmit}
+            loading={blocked || loading}
+            disabled={disabled}
+          />
+        ))}
+        <Text style={styles.error}>{error}</Text>
+        <ApproveConfirmationModal
+          visible={approveConfIsShown}
+          onCancel={hideApproveConf}
+          onAccept={onApproveAccept}
+          contract={contractAddress || ''}
+          fee={fee || ''}
+          loading={approveSubmitting}
+        />
+        <SwapConfirmationModal
+          visible={swapConfIsShown}
+          onCancel={hideSwapConf}
+          onAccept={onSwapAccept}
+          contract={contractAddress || ''}
+          fee={fee || ''}
+          srcCoin={srcTicker || ''}
+          srcLogo={srcLogo}
+          srcAmount={makeRoundedBalance(4, realSpentAmount || '0')}
+          dstCoin={dstTicker || ''}
+          dstLogo={dstLogo}
+          dstAmount={makeRoundedBalance(4, realReceiveAmount || '0')}
+          loading={swapSubmitting}
+        />
+        <WarningModal
+          title={t('internal error')}
+          visible={errorModalIsShown}
+          onCancel={hideErrorModal}
+          description={t('internalErrorDesc')}
+        />
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
@@ -177,108 +647,121 @@ const SwapScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  background: {
-    flex: 1,
-    width: '100%',
-  },
-  gradient: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    fontFamily: theme.fonts.default,
-    alignSelf: 'center',
-    fontSize: 24,
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    lineHeight: 32,
-    color: theme.colors.white,
-  },
-  description: {
-    fontFamily: theme.fonts.default,
-    alignSelf: 'center',
-    fontSize: 14,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: 21,
-    color: theme.colors.lightGray,
-    textAlign: 'center',
-  },
-  descriptionContainer: {
-    paddingBottom: 40,
-  },
-  input: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.2,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 17,
-    paddingRight: 17,
-    backgroundColor: theme.colors.grayDark,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: theme.colors.borderGray,
-    color: theme.colors.white,
-    flex: 10,
-  },
-  inputPlaceHolder: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.2,
-  },
-  buttonContainer: {
-    width: '100%',
+    backgroundColor: theme.colors.screenBackground,
     paddingRight: 16,
     paddingLeft: 16,
   },
-  inputContainer: {
-    width: '100%',
-    paddingRight: 32,
-    paddingLeft: 32,
-    paddingBottom: 24,
-    alignItems: 'center',
+  headerBlock: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 18,
   },
-  subscribedText: {
-    fontFamily: theme.fonts.default,
-    color: theme.colors.green,
+  button: {
+    backgroundColor: theme.colors.grayDark,
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  swapBlock: {},
+  swapButton: {
+    backgroundColor: theme.colors.grayDark,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+    zIndex: 100,
+    marginTop: -12,
     alignSelf: 'center',
-    fontSize: 16,
+  },
+  header: {
+    fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    lineHeight: 20,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    marginRight: 18,
+    fontWeight: '300',
+    fontSize: 18,
+    lineHeight: 28,
+    color: theme.colors.white,
+    textTransform: 'capitalize',
   },
-  icon: {
-    marginLeft: -32,
-    flex: 1,
+  backButton: {
+    transform: [{
+      rotate: '180deg',
+    }],
   },
-  buttonIcon: {
-    marginLeft: 18,
+  destBlock: {
+    marginTop: -12,
+    height: 110,
+  },
+  srcBlock: {
+    height: 110,
+  },
+  addressSelector: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+    height: 110,
+    marginTop: 18,
+  },
+  submitButton: {
+    marginTop: 20,
+    width: '100%',
   },
   error: {
-    fontFamily: theme.fonts.default,
-    color: theme.colors.errorRed,
-    fontSize: 12,
+    fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: 18,
-    textAlign: 'left',
-    textAlignVertical: 'center',
-    marginBottom: 16,
-    paddingLeft: 32,
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 14,
+    color: theme.colors.red,
+    textTransform: 'capitalize',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: 12,
+  },
+  approvingView: {
+    borderRadius: 38,
+    padding: 12,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.disabledButton,
+    marginTop: 20,
+  },
+  approvingText: {
+    fontFamily: theme.fonts.default,
+    color: theme.colors.white,
+    fontSize: 13,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 16,
+    marginLeft: 12,
+  },
+  priceView: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingLeft: 8,
+    paddingRight: 8,
+    marginTop: 10,
+  },
+  price: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 28,
+    color: theme.colors.white,
+  },
+  scroll: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
   }
 });
 

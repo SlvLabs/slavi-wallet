@@ -36,8 +36,14 @@ export default function SimpleCoinListElement(props: SimpleCoinListElementProps)
       </View>
       {!!shownBalances && (
         <View style={styles.rightColumn}>
-          <Text style={styles.fiatBalance}>{`${makeRoundedBalance(fiatPrecision, fiatBalance)} ${fiatTicker}`}</Text>
-          <Text style={styles.balance}>{`${makeRoundedBalance(cryptoPrecision, balance)} ${ticker}`}</Text>
+          {typeof fiatBalance !== 'undefined' ? (
+            <View>
+              <Text style={styles.fiatBalance}>{`${makeRoundedBalance(fiatPrecision, fiatBalance)} ${fiatTicker}`}</Text>
+              <Text style={styles.balance}>{`${makeRoundedBalance(cryptoPrecision, balance)} ${ticker}`}</Text>
+            </View>
+          ) : (
+            <Text style={styles.fiatBalance}>{`${makeRoundedBalance(fiatPrecision, balance)} ${ticker}`}</Text>
+          )}
         </View>
       )}
     </TouchableOpacity>
@@ -67,7 +73,8 @@ const styles = StyleSheet.create({
   },
   rightColumn: {
     flex: 4,
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   logo: {
     width: 32,
@@ -106,8 +113,9 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'normal',
-    fontSize: 16,
+    fontSize: 14.,
     lineHeight: 20,
     color: theme.colors.white,
+    textAlign: 'right',
   },
 });

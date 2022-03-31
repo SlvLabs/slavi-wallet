@@ -56,6 +56,7 @@ const DecimalInput = (props: DecimalInputProps) => {
 
     setInnerError('');
 
+    console.log(inputType);
     switch (inputType) {
       case DecimalType.Integer:
         isValid = validateInteger(filteredValue);

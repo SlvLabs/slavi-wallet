@@ -7,6 +7,7 @@ import useTranslation from '../../utils/use-translation';
 import SettingsModal from './settings-modal';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
 import {useNavigation} from '@react-navigation/native';
+import Layout from '../../utils/layout';
 
 export interface ExchangeHeaderProps {
   onNetworkChange: (network: string) => void;
@@ -83,8 +84,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: theme.colors.grayDark,
-    width: 40,
-    height: 40,
+    width: Layout.isSmallDevice ? 32 : 40,
+    height: Layout.isSmallDevice ? 32 : 40,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '300',
-    fontSize: 18,
+    fontSize: Layout.isSmallDevice ? 14 : 18,
     lineHeight: 28,
     color: theme.colors.white,
     textTransform: 'capitalize',

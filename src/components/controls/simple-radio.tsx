@@ -71,5 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingRight: 8,
+    paddingLeft: 8,
   },
 });

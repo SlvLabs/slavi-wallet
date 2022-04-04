@@ -69,7 +69,7 @@ export default function SettingsModal(props: SettingsModalProps) {
         />
       </View>
       <View style={styles.slippageView}>
-        <Text style={styles.label}>{t('slippageTolerance')}</Text>
+        <Text style={styles.label}>{t('slippageTolerance')}, %</Text>
         <SlippageToleranceInput value={internalSlippageTolerance} onChange={setInternalSlippageTolerance} />
       </View>
       <Text style={styles.error}>{error}</Text>
@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 17,
-    color: theme.colors.white,
-    marginBottom: 4,
+    color: theme.colors.textLightGray1,
+    marginBottom: 6,
   },
   error: {
     alignSelf: 'center',

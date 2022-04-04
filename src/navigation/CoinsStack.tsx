@@ -84,7 +84,7 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.COINS_SELECT}
         component={CoinSelectListScreen}
-        options={{title: t('Select coin')}}
+        options={{title: t('Select coin'), headerShown: false}}
       />
     </StackNavigator.Navigator>
   ), []);

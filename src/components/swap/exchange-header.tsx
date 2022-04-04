@@ -1,8 +1,7 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
-import NetworkSelector, {NetworksOptions} from './network-selector';
 import useTranslation from '../../utils/use-translation';
 import SettingsModal from './settings-modal';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
@@ -10,20 +9,14 @@ import {useNavigation} from '@react-navigation/native';
 import Layout from '../../utils/layout';
 
 export interface ExchangeHeaderProps {
-  onNetworkChange: (network: string) => void;
-  networks: NetworksOptions;
   txPriority: TransactionPriority;
   onTxPriorityChange: (priority: TransactionPriority) => void;
   slippageTolerance: number;
   onSlippageToleranceChange: (value: number) => void;
-  selectedNetwork?: string;
 }
 
 export default function ExchangeHeader(props: ExchangeHeaderProps) {
   const {
-    networks,
-    onNetworkChange,
-    selectedNetwork,
     txPriority,
     onTxPriorityChange,
     slippageTolerance,
@@ -47,6 +40,7 @@ export default function ExchangeHeader(props: ExchangeHeaderProps) {
   const onBackPress = useCallback(() => {
     if(navigation.canGoBack()) {
       navigation.goBack();
+      Keyboard.dismiss();
     }
   }, [navigation]);
 
@@ -57,7 +51,6 @@ export default function ExchangeHeader(props: ExchangeHeaderProps) {
       </TouchableOpacity>
       <Text style={styles.header}>{t('exchange')}</Text>
       <View style={styles.controls}>
-        <NetworkSelector value={selectedNetwork} networks={networks} onSelect={onNetworkChange} />
         <TouchableOpacity style={styles.button} onPress={showSettings}>
           <CustomIcon name={'settings-outline'} size={20} color={theme.colors.textLightGray3} />
         </TouchableOpacity>

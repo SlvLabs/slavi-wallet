@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import SimpleRadio from '../controls/simple-radio';
@@ -18,10 +18,10 @@ export default function SlippageToleranceInput(props: SlippageToleranceInputProp
 
   const options = useMemo(() => ({
     'custom': t('custom'),
-    '3': '3%',
-    '1': '1%',
-    '0.5': '0.5%',
-    '0.1': '0.1%',
+    '3': '3',
+    '1': '1',
+    '0.5': '0.5',
+    '0.1': '0.1',
   }), [t]);
 
   const _onChange = useCallback((value: string) => {
@@ -37,6 +37,12 @@ export default function SlippageToleranceInput(props: SlippageToleranceInputProp
     onChange(+value);
   }, [onChange]);
 
+  useEffect(() => {
+    if(value && !Object.keys(options).includes('' + value)) {
+      setShowCustomInput(true);
+    }
+  }, [value]);
+
   return (
       <View style={styles.container}>
         <SimpleRadio
@@ -47,6 +53,7 @@ export default function SlippageToleranceInput(props: SlippageToleranceInputProp
         />
         {showCustomInput && (
           <TextInput
+            value={''+value}
             onChangeText={onCustomInput}
             style={styles.input}
             keyboardType={'numeric'}
@@ -59,7 +66,8 @@ export default function SlippageToleranceInput(props: SlippageToleranceInputProp
 const styles = StyleSheet.create({
   container: {},
   element: {
-    width: 50,
+    width: 'auto',
+    minWidth: 40,
   },
   input: {
     backgroundColor: theme.colors.balanceHeaderBackground,
@@ -71,5 +79,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     color: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+    paddingRight: 18,
+    paddingLeft: 18,
+    height: 40,
   },
 });

@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import theme from '../../theme';
 import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>;
 
@@ -50,71 +51,73 @@ const SettingsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ListItem
-        key={'head_1'}
-        bottomDivider
-        disabled={true}
-        containerStyle={{...styles.listItem, ...styles.headerContainer}}
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.header}>{t('General')}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-      <ListItem key={3} bottomDivider onPress={goToLanguage} containerStyle={styles.listItem}>
-        <ListItem.Content style={styles.content}>
-          <ListItem.Title style={styles.title}>{t('Language')}</ListItem.Title>
-          <Text style={styles.subText}>{t(i18n.language as TranslationsKey)}</Text>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
-      <ListItem key={4} bottomDivider onPress={goToCurrencyChange} containerStyle={styles.listItem}>
-        <ListItem.Content style={styles.content}>
-          <ListItem.Title style={styles.title}>{t('Currency')}</ListItem.Title>
-          <Text style={styles.subText}>{currentCurrency}</Text>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
-      <ListItem key={5} bottomDivider onPress={goToInvalidateCache} containerStyle={styles.listItem}>
-        <ListItem.Content style={styles.content}>
-          <ListItem.Title style={styles.title}>{t('Clear cache')}</ListItem.Title>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
+        <ListItem
+          key={'head_1'}
+          bottomDivider
+          disabled={true}
+          containerStyle={{...styles.listItem, ...styles.headerContainer}}
+        >
+          <ListItem.Content>
+            <ListItem.Title style={styles.header}>{t('General')}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={3} bottomDivider onPress={goToLanguage} containerStyle={styles.listItem}>
+          <ListItem.Content style={styles.content}>
+            <ListItem.Title style={styles.title}>{t('Language')}</ListItem.Title>
+            <Text style={styles.subText}>{t(i18n.language as TranslationsKey)}</Text>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={4} bottomDivider onPress={goToCurrencyChange} containerStyle={styles.listItem}>
+          <ListItem.Content style={styles.content}>
+            <ListItem.Title style={styles.title}>{t('Currency')}</ListItem.Title>
+            <Text style={styles.subText}>{currentCurrency}</Text>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={5} bottomDivider onPress={goToInvalidateCache} containerStyle={styles.listItem}>
+          <ListItem.Content style={styles.content}>
+            <ListItem.Title style={styles.title}>{t('Clear cache')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
 
-      <ListItem
-        key={'head_2'}
-        bottomDivider
-        disabled={true}
-        containerStyle={{...styles.listItem, ...styles.headerContainer}}
-      >
-        <ListItem.Content>
-          <ListItem.Title style={styles.header}>{t('Private')}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-      <ListItem key={1} bottomDivider onPress={goToMnemonicExport} containerStyle={styles.listItem}>
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{t('Export mnemonic phrase')}</ListItem.Title>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
-      <ListItem key={2} bottomDivider onPress={goToMnemonicImport} containerStyle={styles.listItem}>
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{t('Import new mnemonic phrase')}</ListItem.Title>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
-      <ListItem key={'wallet_connect'} bottomDivider onPress={goToWalletConnect} containerStyle={styles.listItem}>
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{t('walletConnect')}</ListItem.Title>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
-      <ListItem key={'security'} bottomDivider onPress={goToSecurity} containerStyle={styles.listItem}>
-        <ListItem.Content>
-          <ListItem.Title style={styles.title}>{t('security')}</ListItem.Title>
-        </ListItem.Content>
-        {chevron}
-      </ListItem>
+        <ListItem
+          key={'head_2'}
+          bottomDivider
+          disabled={true}
+          containerStyle={{...styles.listItem, ...styles.headerContainer}}
+        >
+          <ListItem.Content>
+            <ListItem.Title style={styles.header}>{t('Private')}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={1} bottomDivider onPress={goToMnemonicExport} containerStyle={styles.listItem}>
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{t('Export mnemonic phrase')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={2} bottomDivider onPress={goToMnemonicImport} containerStyle={styles.listItem}>
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{t('Import new mnemonic phrase')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={'wallet_connect'} bottomDivider onPress={goToWalletConnect} containerStyle={styles.listItem}>
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{t('walletConnect')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={'security'} bottomDivider onPress={goToSecurity} containerStyle={styles.listItem}>
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{t('security')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -166,6 +169,11 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     lineHeight: 22,
     color: theme.colors.borderGreen,
+  },
+  scroll: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
   },
 });
 

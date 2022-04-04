@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Keyboard, SafeAreaView, StyleSheet, View} from 'react-native';
 import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import theme from '../../theme';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -21,6 +21,13 @@ export default function CoinSelectListScreen() {
     [navigation]
   );
 
+  const goBack = useCallback(() => {
+    if(navigation.canGoBack()) {
+      navigation.goBack();
+      Keyboard.dismiss();
+    }
+  }, [navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -28,6 +35,7 @@ export default function CoinSelectListScreen() {
           coins={coins}
           balanceShown={balanceShown}
           onElementPress={onElementPress}
+          onBackPress={goBack}
         />
       </View>
     </SafeAreaView>

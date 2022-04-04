@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleInput from '../controls/simple-input';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
@@ -21,10 +21,11 @@ export interface CoinsSelectListProps {
   coins: CoinListElementData[];
   onElementPress: (coinId: string) => void;
   balanceShown?: boolean;
+  onBackPress?: () => void;
 }
 
 export default function CoinSelectList(props: CoinsSelectListProps) {
-  const {coins, onElementPress, balanceShown} = props;
+  const {coins, onElementPress, balanceShown, onBackPress} = props;
 
   const [search, setSearch] = useState<string>('');
   const [filteredCoins, setFilteredCoins] = useState<CoinListElementData[]>(coins);
@@ -41,6 +42,12 @@ export default function CoinSelectList(props: CoinsSelectListProps) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.headerView}>
+        <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
+          <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
+        </TouchableOpacity>
+        <Text style={styles.header}>{t('Select coins')}</Text>
+      </View>
       <View style={styles.searchContainer}>
         <SimpleInput
           value={search}
@@ -92,5 +99,35 @@ const styles = StyleSheet.create({
   },
   scroll: {
     height: Layout.window.height - 220,
+  },
+  headerView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 30,
+    marginTop: 12,
+  },
+  header: {
+    flex: 8,
+    fontFamily: theme.fonts.gilroy,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 18,
+    lineHeight: 28,
+    color: theme.colors.white,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: theme.colors.grayDark,
+    width: Layout.isSmallDevice ? 32 : 40,
+    height: Layout.isSmallDevice ? 32 : 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  backButton: {
+    transform: [{
+      rotate: '180deg',
+    }],
   },
 });

@@ -19,6 +19,7 @@ export interface FullScreenModalProps {
   rightIconName?: string;
   rightIconOnPress?: () => void;
   rightIconColor?: string;
+  hideCloseButton?: boolean;
 }
 
 const defaultAnimation = 'slide';
@@ -32,23 +33,25 @@ const FullScreenModal = (props: FullScreenModalProps) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.paddingContainer}>
           <View style={styles.header}>
-            <TouchableOpacity style={styles.closeIcon} onPress={props.onCancel}>
-              <CustomIcon name={'close'} size={24} color={defaultIconColor} />
-            </TouchableOpacity>
+            {!props.hideCloseButton && (
+              <TouchableOpacity style={styles.closeIcon} onPress={props.onCancel}>
+                <CustomIcon name={'close'} size={24} color={defaultIconColor} />
+              </TouchableOpacity>
+            )}
             <View style={styles.titleContainer}>
               {props.title && <Text style={styles.title}>{props.title}</Text>}
             </View>
-            <TouchableOpacity
+            {props.rightIconName && (
+              <TouchableOpacity
               style={styles.rightIcon}
               onPress={props.rightIconOnPress}>
-              {props.rightIconName && (
                 <CustomIcon
                   name={props.rightIconName}
                   size={24}
                   color={props.rightIconColor || defaultIconColor}
                 />
-              )}
             </TouchableOpacity>
+            )}
           </View>
           <View style={styles.content}>{props.children}</View>
         </View>
@@ -63,7 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.dark,
   },
   paddingContainer: {
-    paddingBottom: 55,
     flex: 1,
   },
   header: {

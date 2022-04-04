@@ -7,7 +7,7 @@ import DestinationCoinElement from '../../components/swap/destination-coin-eleme
 import theme from '../../theme';
 import ExchangeHeader from '../../components/swap/exchange-header';
 import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
-import {NetworksOptions} from '../../components/swap/network-selector';
+import NetworkSelector, {NetworksOptions} from '../../components/swap/network-selector';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
 import AddressSelector from '../../components/buttons/address-selector';
 import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
@@ -613,15 +613,18 @@ const SwapScreen = () => {
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
         <ExchangeHeader
-          onNetworkChange={onNetworkSelect}
-          networks={networkOptions}
-          selectedNetwork={network}
           txPriority={txPriority}
           onSlippageToleranceChange={setSlippageTolerance}
           slippageTolerance={slippageTolerance}
           onTxPriorityChange={onTxPriorityChange}
         />
         <View style={styles.swapBlock}>
+          <NetworkSelector
+            value={network}
+            networks={networkOptions}
+            onSelect={onNetworkSelect}
+            containerStyle={styles.network}
+          />
           <SourceCoinElement
             balance={balance || '0'}
             ticker={srcTicker || ''}
@@ -779,7 +782,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: theme.colors.borderGray,
-    height: 110,
+    height: 70,
     marginTop: 18,
   },
   submitButton: {
@@ -835,7 +838,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start'
-  }
+  },
+  network: {
+    marginBottom: 12,
+    height: 70,
+  },
 });
 
 export default SwapScreen;

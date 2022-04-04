@@ -1,9 +1,10 @@
 import React from 'react';
 import BaseModal, {ModalProps} from '../modal/base-modal';
 import {NetworksOptions} from './network-selector';
-import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import getImageSource from '../../utils/get-image-source';
 import theme from '../../theme';
+import useTranslation from '../../utils/use-translation';
 
 export interface NetworkSelectModalProps extends ModalProps {
   networks: NetworksOptions;
@@ -15,6 +16,8 @@ export interface NetworkSelectModalProps extends ModalProps {
 export default function NetworkSelectModal(props: NetworkSelectModalProps) {
   const {networks, visible, onCancel, onSelect} = props;
 
+  const {t} = useTranslation();
+
   return (
     <BaseModal
       visible={visible}
@@ -22,23 +25,27 @@ export default function NetworkSelectModal(props: NetworkSelectModalProps) {
       showCloseIcon={false}
       modalStyle={styles.modal}
     >
-      {Object.entries(networks).map(([id, network]) => (
-        <TouchableOpacity style={styles.networkElement} key={`net_option_${id}`} onPress={() => onSelect(id)}>
-          <Image source={getImageSource(network.logo)} style={styles.image} />
-          <Text style={styles.label}>{network.name}</Text>
-        </TouchableOpacity>
-      ))}
+      <View>
+        <Text style={styles.header}>{t('selectNetwork')}</Text>
+        {Object.entries(networks).map(([id, network]) => (
+          <TouchableOpacity style={styles.networkElement} key={`net_option_${id}`} onPress={() => onSelect(id)}>
+            <Image source={getImageSource(network.logo)} style={styles.image} />
+            <Text style={styles.label}>{network.name}</Text>
+          </TouchableOpacity>
+        ))}
+        </View>
     </BaseModal>
   );
 }
 
 const styles = StyleSheet.create({
   networkElement: {
-    paddingTop: 8,
-    paddingBottom: 8,
-    borderBottomColor: theme.colors.borderGray,
-    borderBottomWidth: 1,
+    paddingTop: 14,
+    paddingBottom: 14,
+    borderTopColor: theme.colors.borderGray,
+    borderTopWidth: 1,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   image: {
     width: 24,
@@ -55,6 +62,16 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: theme.colors.contentBackground,
-    width: 200,
-  }
+  },
+  header: {
+    marginLeft: 12,
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 18,
+    lineHeight: 21,
+    color: theme.colors.lightGray,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
 });

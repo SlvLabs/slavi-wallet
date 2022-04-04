@@ -12,12 +12,13 @@ export default function CoinsSelectModal(props: CoinsSelectModalProps) {
   const {coins, onElementPress, balanceShown, onCancel, visible} = props;
 
   return (
-    <FullScreenModal visible={visible} onCancel={onCancel}>
+    <FullScreenModal visible={visible} onCancel={onCancel} hideCloseButton={true}>
       <View style={styles.container}>
         <CoinSelectList
           coins={coins}
           balanceShown={balanceShown}
           onElementPress={onElementPress}
+          onBackPress={onCancel}
         />
       </View>
     </FullScreenModal>
@@ -25,5 +26,8 @@ export default function CoinsSelectModal(props: CoinsSelectModalProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
 });

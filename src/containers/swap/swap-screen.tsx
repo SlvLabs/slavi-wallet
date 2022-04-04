@@ -450,23 +450,28 @@ const SwapScreen = () => {
     if(getInfoError === 'insufficient liquidity' || txError === 'insufficient liquidity') {
       setError(t('insufficientLiquidity'));
       setLoading(false);
+      setBlocked(false);
       return;
     }
 
     if(txError === 'insufficient funds') {
       setError(`${t('insufficientNetworkFunds')} ${network}`);
       setLoading(false);
+      setBlocked(false);
       return;
     }
 
     if(txError === 'cannot estimate' || getInfoError === 'cannot estimate') {
       setError(t('sleepingToleranceError'));
       setLoading(false);
+      setBlocked(false);
       return;
     }
 
     if(txError === 'not enough allowance') {
       setError(t('notEnoughAllowance'));
+      setLoading(false);
+      setBlocked(false);
       return;
     }
 

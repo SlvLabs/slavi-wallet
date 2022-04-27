@@ -10,6 +10,7 @@ import {hasHardwareAsync} from 'expo-local-authentication';
 import PinCodeModal from '../../components/modal/pin-code-modal';
 import SolidButton from '../../components/buttons/solid-button';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
+import Layout from '../../utils/layout';
 
 export default function InitializationPasscodeScreen() {
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
   },
   controlsView: {
     justifyContent: 'flex-start',
-    flex: 2,
+    flex: Layout.isSmallDevice ? 1 : 2,
   },
   stepsView: {
     flex: 1,

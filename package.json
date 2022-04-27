@@ -15,7 +15,7 @@
     "@polkadot/util": "8.0.4",
     "@polkadot/util-crypto": "8.0.4",
     "@polkadot/x-randomvalues": "8.0.4",
-    "@react-native-community/async-storage": "^1.11.0",
+    "@react-native-async-storage/async-storage": "^1.17.3",
     "@react-native-community/clipboard": "^1.2.2",
     "@react-native-community/datetimepicker": "^3.0.4",
     "@react-native-community/picker": "^1.8.1",

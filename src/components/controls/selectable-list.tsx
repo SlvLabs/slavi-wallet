@@ -62,6 +62,8 @@ export default function SelectableList(props: SelectableListProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.maxTransparent,
   },
   itemText: {
     fontFamily: theme.fonts.default,

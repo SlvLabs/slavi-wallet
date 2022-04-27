@@ -1,32 +1,40 @@
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
+import PinInput from '../controls/pin-input';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
-import PinInput from '../../components/controls/pin-input';
 import useTranslation from '../../utils/use-translation';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 import {authenticateAsync, AuthenticationType, supportedAuthenticationTypesAsync} from 'expo-local-authentication';
-import {useNavigation} from '@react-navigation/native';
-import ROUTES from '../../navigation/config/routes';
 import {CheckAuthError} from '@slavi/wallet-core/src/types';
+import SolidButton from '../buttons/solid-button';
+import OutlineButton from '../buttons/outline-button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
+
+export interface AuthModalProps {
+  visible: boolean;
+}
 
 const PIN_LENGTH = 4;
 
-export default function LoginScreen() {
+export default function AuthModal(props: AuthModalProps) {
+  const {visible} = props;
+
+  const timer = useRef<any>(null);
+  const timerValue = useRef<number>(0);
+
   const [pin, setPin] = useState<string>();
   const [touchIdIsAvailable, setTouchIdIsAvailable] = useState<boolean>(false);
   const [faceIdIsAvailable, setFaceIdIsAvailable] = useState<boolean>(false);
   const [error, setError] = useState<string|undefined>();
   const [errorTimer, setErrorTimer] = useState<number>(0);
   const [locked, setLocked] = useState<boolean>(false);
+  const [restoreIsActive, setRestoreIsActive] = useState<boolean>(false);
 
   const {t} = useTranslation();
-  const navigation = useNavigation();
   const authService = useAuthService();
-
-  const timer = useRef<any>(null);
-  const timerValue = useRef<number>(0);
 
   const onBiometric = useCallback(async () => {
     const result = await authenticateAsync({disableDeviceFallback: true, cancelLabel: t('Cancel')});
@@ -48,8 +56,8 @@ export default function LoginScreen() {
   }
 
   const onRestore = useCallback(
-    () => navigation.navigate(ROUTES.AUTHENTICATION.RESTORE),
-    [navigation]
+    () => setRestoreIsActive(true),
+    []
   );
 
   const ban =  useCallback((banTime: number) => {
@@ -68,6 +76,13 @@ export default function LoginScreen() {
       }
     }, 1000);
   }, []);
+
+  const onAccept = useCallback(async () => {
+    await AsyncStorage.clear();
+    RNRestart.Restart();
+  }, []);
+
+  const onDecline = useCallback(() => setRestoreIsActive(false), []);
 
   useEffect(() => {
     if(pin && pin.length === PIN_LENGTH) {
@@ -144,32 +159,57 @@ export default function LoginScreen() {
     }
   }, [pin]);
 
+  useEffect(() => {
+    if(!visible) {
+      setPin('');
+    }
+  }, [visible]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
-        <PinInput
-          length={PIN_LENGTH}
-          enteredCount={pin?.length || 0}
-          label={t('pinLabel')}
-          onPress={onPress}
-          onBiometricPress={onBiometric}
-          onRestorePress={onRestore}
-          onBackspacePress={onBackspace}
-          faceIdIsAvailable={faceIdIsAvailable}
-          touchIdIsAvailable={touchIdIsAvailable}
-          restoreIsAvailable={true}
-          disabled={locked}
-        />
-        <Text style={styles.error}>{error} {!!errorTimer}</Text>
-      </RadialGradient>
-    </SafeAreaView>
+    <Modal
+      animationType={'none'}
+      visible={visible && authService.isAuthEnable()}>
+      <SafeAreaView style={styles.container}>
+        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
+          {!restoreIsActive ? (
+            <>
+              <PinInput
+                length={PIN_LENGTH}
+                enteredCount={pin?.length || 0}
+                label={t('pinLabel')}
+                onPress={onPress}
+                onBiometricPress={onBiometric}
+                onRestorePress={onRestore}
+                onBackspacePress={onBackspace}
+                faceIdIsAvailable={faceIdIsAvailable}
+                touchIdIsAvailable={touchIdIsAvailable}
+                restoreIsAvailable={true}
+                disabled={locked}
+              />
+              <Text style={styles.error}>{error} {!!errorTimer}</Text>
+            </>
+          ) : (
+            <>
+              <View style={styles.textContainer}>
+                <Text style={styles.header}>{t('restoreHeader')}</Text>
+                <Text style={styles.description}>{t('restoreDescription')}</Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <SolidButton title={t('restoreAccept')} onPress={onAccept} containerStyle={styles.button} />
+                <OutlineButton title={t('restoreDecline')} onPress={onDecline} containerStyle={styles.button} />
+              </View>
+            </>
+          )}
+        </RadialGradient>
+      </SafeAreaView>
+    </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.black,
+    backgroundColor: theme.colors.dark,
   },
   gradient: {
     flex: 1,
@@ -185,5 +225,39 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: theme.colors.errorRed,
     marginTop: 20,
-  }
+  },
+  header: {
+    fontFamily: theme.fonts.default,
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    lineHeight: 22,
+    color: theme.colors.white,
+    textAlign: 'center',
+    marginBottom: 30,
+    marginTop: 20,
+  },
+  description: {
+    fontFamily: theme.fonts.default,
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+    color: theme.colors.white,
+    textAlign: 'center',
+  },
+  button: {
+    width: '100%',
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    marginTop: 60,
+    width: '100%',
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  textContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
 });

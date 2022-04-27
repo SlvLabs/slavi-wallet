@@ -18,10 +18,6 @@ const ROUTES = {
     SWAP: 'Tabs/Swap',
     SETTINGS: 'Tabs/Settings',
   },
-  AUTHENTICATION: {
-    LOGIN: 'Authentication/Login',
-    RESTORE: 'Authentication/Restore',
-  },
   COINS: {
     LIST: 'Coins/List',
     INFO: 'Coins/Info',
@@ -43,6 +39,7 @@ const ROUTES = {
     INVALIDATE_CACHES: 'Settings/InvalidateCaches',
     WALLET_CONNECT: 'Settings/WalletConnect',
     SECURITY: 'Settings/Security',
+    AUTO_BLOCKING: 'Settings/AutoBlocking',
   },
   NOTIFICATION: {
     LIST: 'Notification/List',

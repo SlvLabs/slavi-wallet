@@ -15,6 +15,7 @@ import ROUTES from '../../navigation/config/routes';
 import sortByField, {Comparator} from '@slavi/wallet-core/src/utils/sort-objects-in-array-by-field';
 import store from '@slavi/wallet-core/src/store/index';
 import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
+import useCoinSortingProvider from '@slavi/wallet-core/src/contexts/hooks/use-coin-sorting-provider';
 
 enum CoinsSortType {
   name,
@@ -78,11 +79,6 @@ const CoinsSortAction = (sort: CoinsSortType): CoinsAction => ({
 
 type CoinsReducer = Reducer<CoinsState, CoinsAction>;
 
-const initialCoinsState: CoinsState = {
-  coins: [],
-  sort: CoinsSortType.priority,
-}
-
 const coinsReducer: CoinsReducer = (state, action) =>{
   switch (action.type) {
     case CoinsActionType.updateCoins: {
@@ -112,7 +108,6 @@ const coinsReducer: CoinsReducer = (state, action) =>{
 const CoinsListScreen = () => {
   const {t} = useTranslation();
   const coins = useCoinsSelector();
-  const [coinsToCardState, dispatchCoinsToCard] = useReducer<CoinsReducer>(coinsReducer, initialCoinsState);
   const fiat = store.useFiatSelector() || 'USD';
   const crypto = store.useCryptoSelector() || 'BTC';
   const fiatSymbol = useFiatSymbolSelector() || '$';
@@ -121,6 +116,12 @@ const CoinsListScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const coinService = useCoinsService();
+  const sortingProvider = useCoinSortingProvider();
+
+  const [coinsToCardState, dispatchCoinsToCard] = useReducer<CoinsReducer>(coinsReducer, {
+    coins: [],
+    sort: sortingProvider.get(),
+  });
 
   const onAddPress = () => {
     setAddClicked(!addClicked);
@@ -137,6 +138,7 @@ const CoinsListScreen = () => {
       title: t('Default'),
       onPress() {
         dispatchCoinsToCard(CoinsSortAction(CoinsSortType.priority));
+        sortingProvider.set(CoinsSortType.priority);
       },
       isActive: coinsToCardState.sort === CoinsSortType.priority,
     },
@@ -144,6 +146,7 @@ const CoinsListScreen = () => {
       title: t('By name'),
       onPress() {
         dispatchCoinsToCard(CoinsSortAction(CoinsSortType.name));
+        sortingProvider.set(CoinsSortType.name);
       },
       isActive: coinsToCardState.sort === CoinsSortType.name,
     },
@@ -151,6 +154,7 @@ const CoinsListScreen = () => {
       title: t('By value'),
       onPress() {
         dispatchCoinsToCard(CoinsSortAction(CoinsSortType.value));
+        sortingProvider.set(CoinsSortType.value);
       },
       isActive: coinsToCardState.sort === CoinsSortType.value,
     },

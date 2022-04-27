@@ -183,5 +183,8 @@ export default {
       useAngle: true,
       angle: 180,
     },
+    screenBackground: {
+
+    }
   },
 };

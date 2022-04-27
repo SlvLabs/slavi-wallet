@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import { DataStoreProviderInterface } from '@slavi/wallet-core/src/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // TODO: exception handling
 class AsyncStorageProvider implements DataStoreProviderInterface {

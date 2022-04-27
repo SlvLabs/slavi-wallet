@@ -37,6 +37,8 @@ import SimpleToast from 'react-native-simple-toast';
 import WalletConnectSessionRequestModal from './components/wallet-connect/session-request-modal';
 import WalletConnectSignRequestModal from './components/wallet-connect/sign-request-modal';
 import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-modal';
+import useAutoBlock from './utils/use-auto-block';
+import AuthModal from './components/modal/auth-modal';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -127,6 +129,8 @@ const App: () => ReactNode = () => {
     }
   }, [isUpdateAvailable]);
 
+  useAutoBlock(services.current.authService);
+
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar
@@ -135,13 +139,13 @@ const App: () => ReactNode = () => {
       />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
+          {!isBootstrapped && <AuthModal visible={!isAuthorized} />}
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme}>
               <StatusBar barStyle="dark-content" />
               {devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}
               <MainNavigator
                 isInitialized={isInitialized}
-                isAuthorized={isAuthorized}
                 isAccountInitialized={isAccountInitialized}
                 isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
                 isInitializationFinished={isInitFinishShow}

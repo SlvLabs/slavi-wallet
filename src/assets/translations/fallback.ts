@@ -310,6 +310,12 @@ const translations = {
   sleepingToleranceError: 'Failed to calculate the exchange. Try increasing slippage tolerance.',
   selectNetwork: 'Select blockchain',
   blockchain: 'Blockchain',
+  autoBlocking: 'Automatic Blocking',
+  immediately: 'Immediately',
+  oneMinute: 'In 1 minute',
+  fiveMinutes: 'In 5 minutes',
+  oneHour: 'In 1 hour',
+  fiveHour: 'In 5 hours',
 }
 
 export default translations;

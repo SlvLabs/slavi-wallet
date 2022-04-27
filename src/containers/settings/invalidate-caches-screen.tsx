@@ -75,7 +75,7 @@ const InvalidateCachesScreen = () => {
         <ListItem
           key={'invalidate_1'}
           onPress={showCoinsConf}
-          containerStyle={styles.itemContainer}
+          containerStyle={{...styles.itemContainer, ...styles.firstItem}}
         >
           <ListItem.Content style={{backgroundColor: 'transparent'}}>
             <ListItem.Title style={styles.label}>{t('Invalidate coins cache')}</ListItem.Title>
@@ -127,6 +127,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     color: theme.colors.white,
+  },
+  firstItem: {
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.maxTransparent,
   }
 });
 

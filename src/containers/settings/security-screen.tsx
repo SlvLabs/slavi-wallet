@@ -2,10 +2,14 @@ import {SafeAreaView, StyleSheet, Switch, Text, View} from 'react-native';
 import theme from '../../theme';
 import React, {useCallback, useEffect, useState} from 'react';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
-import useTranslation from '../../utils/use-translation';
+import useTranslation  from '../../utils/use-translation';
 import PinCodeModal from '../../components/modal/pin-code-modal';
 import { hasHardwareAsync } from 'expo-local-authentication';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
+import {ListItem} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
+import ROUTES from '../../navigation/config/routes';
+import useAutoBlockOptions from '../../utils/use-auto-block-options';
 
 export default function SecurityScreen() {
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
@@ -13,9 +17,13 @@ export default function SecurityScreen() {
   const [pinEnabled, setPinEnabled] = useState<boolean>(false);
   const [biometricEnabled, setBiometricEnabled] = useState<boolean>(false);
   const [biometricIsSupported, setBiometricIsSupported] = useState<boolean>(false);
+  const [autoBlockTimeout, setAutoBlockTimeout] = useState<string>();
 
   const authService = useAuthService();
   const {t} = useTranslation();
+  const navigation = useNavigation();
+
+  const options = useAutoBlockOptions();
 
   const showModal = useCallback(() => setModalIsShown(true), []);
   const hideModal = useCallback(() => setModalIsShown(false), []);
@@ -53,6 +61,11 @@ export default function SecurityScreen() {
     }
   };
 
+  const onAutoBlocking = useCallback(
+    () => navigation.navigate(ROUTES.SETTINGS.AUTO_BLOCKING),
+    [navigation]
+  );
+
   useEffect(() => {
     if(authService) {
       setPinEnabled(authService.isAuthEnable());
@@ -64,10 +77,14 @@ export default function SecurityScreen() {
     hasHardwareAsync().then((result) => setBiometricIsSupported(result));
   }, []);
 
+  useEffect(() => navigation.addListener(
+      'focus',
+      () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()])
+    ), [authService, options]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.header}>{t('pinCode')}</Text>
         <View style={styles.row}>
           <Switch
             value={pinEnabled}
@@ -91,6 +108,13 @@ export default function SecurityScreen() {
             </Text>
           </View>
         )}
+        <ListItem key={3} bottomDivider containerStyle={styles.listItem} onPress={onAutoBlocking} disabled={!pinEnabled}>
+          <ListItem.Content style={styles.listContent}>
+            <ListItem.Title style={pinEnabled ? styles.label : styles.disabledLabel}>{t('autoBlocking')}</ListItem.Title>
+          </ListItem.Content>
+          {pinEnabled && <Text style={styles.subText}>{autoBlockTimeout}</Text>}
+          <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>
+        </ListItem>
       </View>
       <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin}/>
       <ConfirmationModal visible={disableConfShown} onPositive={disablePin} title={t('disablePinConf')} />
@@ -105,7 +129,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.screenBackground,
   },
   content: {
-    padding: 16,
+    margin: 16,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.maxTransparent,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.maxTransparent,
   },
   row: {
     flexDirection: 'row',
@@ -113,7 +141,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.borderGray,
+    borderBottomColor: theme.colors.maxTransparent,
     paddingTop: 10,
     paddingBottom: 10,
   },
@@ -137,13 +165,24 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 20,
   },
-  header: {
+  listItem: {
+    backgroundColor: 'transparent',
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  subText: {
     fontFamily: theme.fonts.default,
     fontSize: 14,
     fontStyle: 'normal',
-    fontWeight: '500',
-    lineHeight: 28,
-    color: theme.colors.lightGray,
-    textTransform: 'uppercase',
+    fontWeight: 'normal',
+    lineHeight: 22,
+    color: theme.colors.borderGreen,
   },
+  listContent: {
+    paddingTop: 4,
+    paddingBottom: 4,
+  }
 });

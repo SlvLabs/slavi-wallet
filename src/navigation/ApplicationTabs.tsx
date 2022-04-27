@@ -32,8 +32,6 @@ const Tab = createBottomTabNavigator();
 
 const getScreenOptions = ({route}: any): any => useMemo(() => ({
   tabBarIcon: ({size, focused}: any) => {
-    // console.log(`getScreenOptions`)
-    // console.log(`getScreenOptions: ${route.name} ${size} ${focused}`)
     const name = icons[route.name];
     return (
       <View style={{flex: 1}}>
@@ -68,7 +66,8 @@ const getScreenOptions = ({route}: any): any => useMemo(() => ({
 }), [route])
 
 
-const ApplicationTabs = () => useMemo (() => (
+const ApplicationTabs = () => useMemo (() => {
+  return (
     <Tab.Navigator
       screenOptions={getScreenOptions}
       tabBarOptions={{
@@ -83,7 +82,7 @@ const ApplicationTabs = () => useMemo (() => (
       <Tab.Screen name={ROUTES.TABS.SWAP} component={SwapStack} />
       <Tab.Screen name={ROUTES.TABS.SETTINGS} component={SettingsStack} />
     </Tab.Navigator>
-  ), []);
+  )}, []);
 
 const styles = StyleSheet.create({
   label: {

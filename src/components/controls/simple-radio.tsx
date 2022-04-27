@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 export interface SimpleRadioProps {
   options: Record<string | number, string>;
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   },
   element: {
     height: 40,
-    width: 90,
+    width: Layout.isSmallDevice ? 60 : 90,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -53,16 +54,16 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: Layout.isSmallDevice ? 12 : 14,
+    lineHeight: Layout.isSmallDevice ? 14 : 16,
     color: theme.colors.white,
   },
   label: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: Layout.isSmallDevice ? 12 : 14,
+    lineHeight: Layout.isSmallDevice ? 14 : 16,
     color: theme.colors.textLightGray,
   },
   gradient: {

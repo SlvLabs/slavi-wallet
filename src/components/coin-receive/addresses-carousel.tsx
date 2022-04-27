@@ -148,6 +148,7 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
             carousel.current = c;
           }}
           enableMomentum={true}
+          useScrollView={true}
         />
       </View>
       <View style={styles.rightButton}>

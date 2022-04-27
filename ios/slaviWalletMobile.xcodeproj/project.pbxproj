@@ -27,6 +27,8 @@
 		6EFBC8538B4D49F38F7A3E29 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC14D9D21B1C4E5B904E1CF8 /* Roboto-Italic.ttf */; };
 		8EBC185F734A4FC6864E13CE /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A103B3B51254400AF2B6FB2 /* Roboto-LightItalic.ttf */; };
 		9EC18CCC3A464BE89A4B98EC /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4AC138A5832B496E9FB6D7AB /* Roboto-Light.ttf */; };
+		AAA02AB189BB7420D8AE270B /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365076485C81FC8C5FF158FB /* ExpoModulesProvider.swift */; };
+		BA04DEB41CDCF589E889756C /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143D27AEB8E37E905489DD6A /* ExpoModulesProvider.swift */; };
 		C13E2C2616D14BFFA7001E54 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C8B9A2388D68494E8792024B /* Roboto-Black.ttf */; };
 		C3AA15894A8EBFB1C7CD5263 /* libPods-slaviWalletMobile-slaviWalletMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB7112CC05E1FF68B9FD68A /* libPods-slaviWalletMobile-slaviWalletMobileTests.a */; };
 		C933023503944C9B98010D4D /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB565F51944C4B92AFFFA349 /* Roboto-Regular.ttf */; };
@@ -73,6 +75,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = slaviWalletMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = slaviWalletMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = slaviWalletMobile/main.m; sourceTree = "<group>"; };
+		143D27AEB8E37E905489DD6A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-slaviWalletMobile/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		16C1D7533A834986AD8CC0E2 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		1C0993CC38EB4F27BC2E6605 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../src/assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		2C739AD16F05468BA40D6FB8 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../src/assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
@@ -81,6 +84,7 @@
 		2EEEC27D0F86421C902023A6 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		3217954D0FA946BDAF226C0D /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../src/assets/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
 		35C4B3D00D464505BB04B4FF /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		365076485C81FC8C5FF158FB /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-slaviWalletMobile-slaviWalletMobileTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		3654D87C320740FC84BA48EA /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		39BA16CED555495B8F0C5937 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		4AC138A5832B496E9FB6D7AB /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
@@ -239,6 +243,7 @@
 				C659173FF2DB4A29993115FB /* Resources */,
 				0F535D01A3283F0B87DE9536 /* Pods */,
 				EDC586472628143C004B91BF /* slaviWalletMobile-Bridging-Header.h */,
+				B9F3B03E8CD7D9910643C9B5 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -254,6 +259,31 @@
 				2D02E4901E0B4A5D006451C7 /* slaviWalletMobile-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		95AF1C90241B52D84D9ADDBF /* slaviWalletMobileTests */ = {
+			isa = PBXGroup;
+			children = (
+				365076485C81FC8C5FF158FB /* ExpoModulesProvider.swift */,
+			);
+			name = slaviWalletMobileTests;
+			sourceTree = "<group>";
+		};
+		9627D12C95AE9521E8EE2D56 /* slaviWalletMobile */ = {
+			isa = PBXGroup;
+			children = (
+				143D27AEB8E37E905489DD6A /* ExpoModulesProvider.swift */,
+			);
+			name = slaviWalletMobile;
+			sourceTree = "<group>";
+		};
+		B9F3B03E8CD7D9910643C9B5 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				9627D12C95AE9521E8EE2D56 /* slaviWalletMobile */,
+				95AF1C90241B52D84D9ADDBF /* slaviWalletMobileTests */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		C659173FF2DB4A29993115FB /* Resources */ = {
@@ -568,6 +598,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -588,6 +619,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -772,6 +804,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -792,6 +825,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -879,6 +913,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* slaviWalletMobileTests.m in Sources */,
+				AAA02AB189BB7420D8AE270B /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -889,6 +924,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				EDC58653262814BA004B91BF /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				BA04DEB41CDCF589E889756C /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -988,7 +1024,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = VV9ZPWB6QA;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -997,6 +1033,7 @@
 				);
 				INFOPLIST_FILE = slaviWalletMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1017,10 +1054,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = VV9ZPWB6QA;
 				INFOPLIST_FILE = slaviWalletMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

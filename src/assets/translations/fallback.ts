@@ -316,6 +316,13 @@ const translations = {
   fiveMinutes: 'In 5 minutes',
   oneHour: 'In 1 hour',
   fiveHour: 'In 5 hours',
+  earn: 'Earn',
+  inProgress: 'In Progress',
+  staking: 'Staking',
+  stables: 'Stables',
+  swapWaitHeader: 'Please wait',
+  swapWaitDescription1: 'Your TX is in progress,',
+  swapWaitDescription2: 'wait a little bit',
 }
 
 export default translations;

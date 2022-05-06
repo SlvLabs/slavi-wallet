@@ -22,7 +22,7 @@ const icons = {
 
 const labels = {
   [ROUTES.TABS.COINS]: 'Wallet',
-  [ROUTES.TABS.DEFI]: 'DeFi',
+  [ROUTES.TABS.DEFI]: 'Earn',
   [ROUTES.TABS.OPERATIONS]: 'Operations',
   [ROUTES.TABS.SWAP]: 'Exchange',
   [ROUTES.TABS.SETTINGS]: 'Settings',

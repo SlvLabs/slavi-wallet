@@ -7,11 +7,13 @@ export interface OutlineButtonProps extends ButtonProps {}
 
 const OutlineButton = (props: OutlineButtonProps) => {
   const {buttonStyle, ...other} = props;
+  const {disabled} = props;
+
   return (
     <Button
       type={'outline'}
       buttonStyle={{
-        ...styles.defaultButtonStyle,
+        ...(disabled ? styles.disabledButtonStyle : styles.defaultButtonStyle),
         ...(buttonStyle as ViewStyle),
       }}
       {...other}
@@ -26,6 +28,11 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.textLightGray,
     borderRadius: 38,
     borderWidth: 1,
+  },
+  disabledButtonStyle: {
+    padding: 12,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
 });
 

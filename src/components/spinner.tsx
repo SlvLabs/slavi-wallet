@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Animated, Easing, StyleSheet, View, ViewStyle} from 'react-native';
 import {spinner} from '../assets/images';
 
@@ -8,21 +8,22 @@ export interface SpinnerProps {
 }
 
 const Spinner = (props: SpinnerProps) => {
-  const spinValue = new Animated.Value(0);
+  const spin = useMemo(() => {
+    const val = new Animated.Value(0);
+    Animated.loop(
+      Animated.timing(val, {
+        toValue: 1,
+        duration: 3000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
 
-  Animated.loop(
-    Animated.timing(spinValue, {
-      toValue: 1,
-      duration: 3000,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }),
-  ).start();
-
-  const spin = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+    return val.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+    });
+  }, []);
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>

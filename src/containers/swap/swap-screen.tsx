@@ -32,15 +32,22 @@ import ROUTES from '../../navigation/config/routes';
 import stringNumberGt from '@slavi/wallet-core/src/utils/string-number-gt';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import WarningModal from '../../components/modal/warning-modal';
+import SwapSuccessModal from '../../components/swap/swap-success-modal';
+import {useRoute} from '@react-navigation/core';
+import {CoinSwapRouteProps} from '../../navigation/SwapStack';
 
 const APPROVE_INTERVAL_CHECK = 5 * 1000;
 
 const SwapScreen = () => {
-  const [network, setNetwork] = useState<string>();
+  const route = useRoute<CoinSwapRouteProps>();
+  const selectedCoin = route.params?.srcCoin;
+  const selectedNetwork = route.params?.network;
+
+  const [network, setNetwork] = useState<string>(selectedNetwork);
   const [txPriority, setTxPriority] = useState<TransactionPriority>(TransactionPriority.average);
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.1);
   const [inAmount, setInAmount] = useState<string>('0.0');
-  const [inCoin, setInCoin] = useState<string>();
+  const [inCoin, setInCoin] = useState<string|undefined>(selectedCoin);
   const [dstCoin, setDstCoin] = useState<string>();
   const [addressIndex, setAddressIndex] = useState<number>();
   const [balance, setBalance] = useState<string>();
@@ -64,6 +71,8 @@ const SwapScreen = () => {
   const [approveSubmitting, setApproveSubmitting] = useState<boolean>(false);
   const [swapSubmitting, setSwapSubmitting] = useState<boolean>(false);
   const [waitSwapProvider, setWaitSwapProvider] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
+  const [successModalIsShown, setSuccessModalIsShown] = useState<boolean>(false);
 
   const approvingTimer = useRef<NodeJS.Timer | null>(null);
   const waitSwapProviderTimer = useRef<NodeJS.Timer | null>(null);
@@ -139,7 +148,7 @@ const SwapScreen = () => {
     parentCoins.forEach((coin) => {
       options[coin.id] = {
         id: coin.id,
-        name: coin.name,
+        name: coin.networkName || coin.name,
         logo: coins.find(element => element.id === coin.id)?.logo,
       }
     });
@@ -149,7 +158,7 @@ const SwapScreen = () => {
 
   const filteredCoins = useMemo(() => {
     if(!network) {
-      return coins;
+      return [];
     }
 
     return coins.filter((coin) => coin.parent === network || coin.id === network);
@@ -177,6 +186,8 @@ const SwapScreen = () => {
   const hideSwapConf = useCallback(() => setSwapConfIsShown(false), []);
   const showErrorModal = useCallback(() => setErrorModalIsShown(true), []);
   const hideErrorModal = useCallback(() => setErrorModalIsShown(false), []);
+  const showSuccessModal = useCallback(() => setSuccessModalIsShown(true), []);
+  const hideSuccessModal = useCallback(() => setSuccessModalIsShown(false), []);
 
   const setApprovingTimer = useCallback(() => {
     requestApproval();
@@ -191,7 +202,7 @@ const SwapScreen = () => {
   }, [requestApproval]);
 
   const onApproveSubmit = useCallback(() => {
-    setLoading(true);
+    setLoading(true);4
 
     const f = async () => {
       if(!inCoin
@@ -315,12 +326,12 @@ const SwapScreen = () => {
         setSwapSubmitting(false);
       }
 
-      navigation.navigate(ROUTES.COINS.LIST);
+      showSuccessModal();
     }
 
     setLoading(true);
     f();
-  }, [dstCoin, coinService, tx, coinService, specService, networkPattern, insufficientAmount]);
+  }, [dstCoin, coinService, tx, coinService, specService, networkPattern, insufficientAmount, showSuccessModal]);
 
   const onSwapSubmit = useCallback(async () => {
     if(!network
@@ -332,6 +343,12 @@ const SwapScreen = () => {
       || !networkPattern
       || !gasPrice
     ) {
+      return;
+    }
+
+    const realNetwork = coins.find(e => e.id === inCoin)?.parent;
+
+    if(realNetwork !== network) {
       return;
     }
 
@@ -367,17 +384,36 @@ const SwapScreen = () => {
     setNetwork(value);
   }, []);
 
+  const onFinish = useCallback(() => {
+    hideSuccessModal();
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.TABS.OPERATIONS,
+        },
+      ],
+    });
+  }, [navigation, hideSuccessModal])
+
   useEffect(() => {
     if(!isLoading && !network && parentCoins?.[0]?.id) {
-      setNetwork(parentCoins[0].id);
+      setNetwork(selectedNetwork || parentCoins[0].id);
     }
-  }, [parentCoins, isLoading, network]);
+  }, [parentCoins, isLoading, network, selectedCoin]);
 
   useEffect(() => {
     if(!inCoin && filteredCoins?.[0]) {
-      setInCoin(filteredCoins[0].id);
+      if(!filteredCoins.find(e => e.id === selectedCoin)) {
+        setInCoin(filteredCoins[0].id);
+      } else {
+        setInCoin(selectedCoin);
+      }
     }
-  }, [filteredCoins, inCoin]);
+  }, [filteredCoins, inCoin, selectedCoin]);
+
+  useEffect(() => setInCoin(selectedCoin), [selectedCoin]);
+  useEffect(() => setNetwork(selectedNetwork), [selectedNetwork]);
 
   useEffect(() => {
     if(!balancesState || !balancesState.balances || balancesState.balances.length === 0) {
@@ -434,7 +470,7 @@ const SwapScreen = () => {
   useEffect(() => {
     if(dstCoins && dstCoins.length > 0) {
       for (const c of dstCoins) {
-        if(c.id !== network) {
+        if(c.id !== network && c.default) {
           setDstCoin(c.id);
           setDstLogo(c.logo);
         }
@@ -545,8 +581,12 @@ const SwapScreen = () => {
   }, [approvals, approvalsLoading, requestInsufficientApprovedAmount]);
 
   useEffect(() => {
+    if(initialized) {
+      return;
+    }
     setApprovingTimer();
-  }, [setApprovingTimer]);
+    setInitialized(true);
+  }, [initialized, setApprovingTimer]);
 
 
   useEffect(() => {
@@ -719,6 +759,11 @@ const SwapScreen = () => {
           visible={errorModalIsShown}
           onCancel={hideErrorModal}
           description={t('internalErrorDesc')}
+        />
+        <SwapSuccessModal
+          visible={successModalIsShown}
+          onCancel={hideSuccessModal}
+          onAccept={onFinish}
         />
       </KeyboardAwareScrollView>
     </SafeAreaView>

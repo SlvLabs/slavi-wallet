@@ -1806,10 +1806,10 @@
   dependencies:
     "@ethersproject/logger" "^5.6.0"
 
-"@ethersproject/providers@5.6.4":
-  version "5.6.4"
-  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.4.tgz#1a49c211b57b0b2703c320819abbbfa35c83dff7"
-  integrity sha512-WAdknnaZ52hpHV3qPiJmKx401BLpup47h36Axxgre9zT+doa/4GC/Ne48ICPxTm0BqndpToHjpLP1ZnaxyE+vw==
+"@ethersproject/providers@5.6.5":
+  version "5.6.5"
+  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.5.tgz#aefecf78459817a323452e05a16d56afcf807e27"
+  integrity sha512-TRS+c2Ud+cMpWodmGAc9xbnYRPWzRNYt2zkCSnj58nJoamBQ6x4cUbBeo0lTC3y+6RDVIBeJv18OqsDbSktLVg==
   dependencies:
     "@ethersproject/abstract-provider" "^5.6.0"
     "@ethersproject/abstract-signer" "^5.6.0"
@@ -1856,10 +1856,10 @@
     "@ethersproject/logger" "^5.6.0"
     hash.js "1.1.7"
 
-"@ethersproject/signing-key@5.6.0", "@ethersproject/signing-key@^5.6.0":
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/@ethersproject/signing-key/-/signing-key-5.6.0.tgz#4f02e3fb09e22b71e2e1d6dc4bcb5dafa69ce042"
-  integrity sha512-S+njkhowmLeUu/r7ir8n78OUKx63kBdMCPssePS89So1TH4hZqnWFsThEd/GiXYp9qMxVrydf7KdM9MTGPFukA==
+"@ethersproject/signing-key@5.6.1", "@ethersproject/signing-key@^5.6.0":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@ethersproject/signing-key/-/signing-key-5.6.1.tgz#31b0a531520616254eb0465b9443e49515c4d457"
+  integrity sha512-XvqQ20DH0D+bS3qlrrgh+axRMth5kD1xuvqUQUTeezxUTXBOeR6hWz2/C6FBEu39FRytyybIWrYf7YLSAKr1LQ==
   dependencies:
     "@ethersproject/bytes" "^5.6.0"
     "@ethersproject/logger" "^5.6.0"
@@ -2965,7 +2965,7 @@
 
 "@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#master":
   version "1.0.0"
-  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#3332a58dc292a8ed5027a9078177387b7e8d1064"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#0a1be0bf328b6e0893085ac3aff768b9f567c0a3"
   dependencies:
     "@reduxjs/toolkit" "^1.3.6"
     "@slavi/crypto-core" "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master"
@@ -3164,9 +3164,9 @@
     form-data "^3.0.0"
 
 "@types/node@*":
-  version "17.0.27"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.27.tgz#f4df3981ae8268c066e8f49995639f855469081e"
-  integrity sha512-4/Ke7bbWOasuT3kceBZFGakP1dYN2XFd8v2l9bqF2LNWrmeU07JLpp56aEeG6+Q3olqO5TvXpW0yaiYnZJ5CXg==
+  version "17.0.31"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.31.tgz#a5bb84ecfa27eec5e1c802c6bbf8139bdb163a5d"
+  integrity sha512-AR0x5HbXGqkEx9CadRH3EBYx/VkiUgZIhP4wvPn/+5KIsgpNoyFaRlVe0Zlx9gRtg8fA06a9tskE2MSN7TcG4Q==
 
 "@types/node@10.12.18":
   version "10.12.18"
@@ -3179,9 +3179,9 @@
   integrity sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
 
 "@types/node@^12.12.54":
-  version "12.20.49"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.49.tgz#97897a33dd145490f514bbcbccefc178534e360f"
-  integrity sha512-5e6QNb9bkeh4Hni4ktLqUZuUqnGTX/kou2aZkXyxtuYaHXgBm+In1SHR9V+7kDzWzjB08KC2uqt2doDi7cuAAA==
+  version "12.20.50"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.50.tgz#14ba5198f1754ffd0472a2f84ab433b45ee0b65e"
+  integrity sha512-+9axpWx2b2JCVovr7Ilgt96uc6C1zBKOQMpGtRbWT9IoR/8ue32GGMfGA4woP8QyP2gBs6GQWEVM3tCybGCxDA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -5768,9 +5768,9 @@ ethereumjs-util@^6.0.0:
     rlp "^2.2.3"
 
 ethers@^5.0.23:
-  version "5.6.4"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.4.tgz#23629e9a7d4bc5802dfb53d4da420d738744b53c"
-  integrity sha512-62UIfxAQXdf67TeeOaoOoPctm5hUlYgfd0iW3wxfj7qRYKDcvvy0f+sJ3W2/Pyx77R8dblvejA8jokj+lS+ATQ==
+  version "5.6.5"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.5.tgz#3185ac7815dc640993408adf6f133ffabfbcbb63"
+  integrity sha512-9CTmplO9bv0s/aPw3HB3txGzKz3tUSI2EfO4dJo0W2WvaEq1ArgsEX6obV+bj5X3yY+Zgb1kAux8TDtJKe1FaA==
   dependencies:
     "@ethersproject/abi" "5.6.1"
     "@ethersproject/abstract-provider" "5.6.0"
@@ -5790,11 +5790,11 @@ ethers@^5.0.23:
     "@ethersproject/networks" "5.6.2"
     "@ethersproject/pbkdf2" "5.6.0"
     "@ethersproject/properties" "5.6.0"
-    "@ethersproject/providers" "5.6.4"
+    "@ethersproject/providers" "5.6.5"
     "@ethersproject/random" "5.6.0"
     "@ethersproject/rlp" "5.6.0"
     "@ethersproject/sha2" "5.6.0"
-    "@ethersproject/signing-key" "5.6.0"
+    "@ethersproject/signing-key" "5.6.1"
     "@ethersproject/solidity" "5.6.0"
     "@ethersproject/strings" "5.6.0"
     "@ethersproject/transactions" "5.6.0"
@@ -9595,9 +9595,9 @@ react-devtools-core@^4.13.0:
     ws "^7"
 
 react-i18next@^11.7.3:
-  version "11.16.7"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.7.tgz#8d0680b7f4c8e43f59996336b7183ad576a28df7"
-  integrity sha512-7yotILJLnKfvUfrl/nt9eK9vFpVFjZPLWAwBzWL6XppSZZEvlmlKk0GBGDCAPfLfs8oND7WAbry8wGzdoiW5Nw==
+  version "11.16.8"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.16.8.tgz#e71621c16f8f77152e85795a88ba6a371e46687d"
+  integrity sha512-uuhSuwY0iMOPV9HUsN1OC4cGCrATPvzZ1O8UfvLR+imz/XjPmfDgZM1e4dPS0Suc2+aCQqJ0FmWP891lUkB2Cg==
   dependencies:
     "@babel/runtime" "^7.14.5"
     html-escaper "^2.0.2"
@@ -11760,9 +11760,9 @@ ws@^7.4.5:
   integrity sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==
 
 ws@^8.5.0:
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.5.0.tgz#bfb4be96600757fe5382de12c670dab984a1ed4f"
-  integrity sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.6.0.tgz#e5e9f1d9e7ff88083d0c0dd8281ea662a42c9c23"
+  integrity sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==
 
 xcode@^2.0.0:
   version "2.1.0"

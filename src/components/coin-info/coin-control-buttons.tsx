@@ -10,26 +10,30 @@ export interface CoinControlButtonsProps {
   onPressSend: () => void;
   onPressReceive: () => void;
   onPressExchange: () => void;
+  exchangeDisabled: boolean;
 }
 
 const CoinControlButtons = (props: CoinControlButtonsProps) => {
+  const {onPressExchange, onPressReceive, onPressSend, exchangeDisabled} = props;
+
   const {t} = useTranslation();
+
   return (
     <View style={styles.container}>
       <SolidButton
         title={t('Send')}
-        onPress={props.onPressSend}
+        onPress={onPressSend}
         buttonStyle={styles.button}
       />
       <OutlineButton
         title={t('Receive')}
-        onPress={props.onPressReceive}
+        onPress={onPressReceive}
         buttonStyle={styles.button}
       />
-      <Button
+      <OutlineButton
         title={t('Exchange')}
-        disabled={true}
-        onPress={props.onPressExchange}
+        disabled={exchangeDisabled}
+        onPress={onPressExchange}
         buttonStyle={styles.button}
       />
     </View>

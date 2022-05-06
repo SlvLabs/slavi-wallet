@@ -11,3 +11,5 @@ export const walletLogo = require('./wallet-logo.png');
 export const wavesLeft = require('./waves-left.png');
 export const wavesRight = require('./waves-right.png');
 export const logoChristmas = require('./logo_сhristmas.png');
+
+export * from './earn-stubs';

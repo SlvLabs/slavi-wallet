@@ -145,7 +145,13 @@ export default {
       colors: ['rgba(116, 122, 142, 0.2)', 'rgba(35, 38, 48, 0.2)', '#2D303E'],
       locations: [0.2, 0.7, 1],
       useAngle: false,
-    }
+    },
+    screenBackground: {
+      colors: ['#272B35', '#181A20'],
+      locations: [0.3, 1],
+      useAngle: true,
+      angle: 154.67,
+    },
   },
   gradientsOld: {
     default: {
@@ -183,8 +189,5 @@ export default {
       useAngle: true,
       angle: 180,
     },
-    screenBackground: {
-
-    }
   },
 };

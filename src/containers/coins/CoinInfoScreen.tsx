@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {CoinInfoRouteProps} from '../../navigation/CoinsStack';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -14,6 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import CoinControlButtons from '../../components/coin-info/coin-control-buttons';
 import theme from '../../theme';
 import {CoinParams} from '../../components/coin-info/tabs/info-view';
+import {useCoinSpecsService} from '@slavi/wallet-core';
 
 const CoinInfoScreen = () => {
   const route = useRoute<CoinInfoRouteProps>();
@@ -30,6 +31,10 @@ const CoinInfoScreen = () => {
   const fiat = store.useFiatSelector() || 'BTC';
   const crypto = store.useCryptoSelector() || 'USD';
 
+  const specService = useCoinSpecsService();
+
+  const spec = useMemo(() => specService.getSpec(coin), [specService, coin]);
+
   const onPressReceive = useCallback(() => {
     navigation.navigate(ROUTES.COINS.RECEIVE, {
       coin: coin,
@@ -43,8 +48,16 @@ const CoinInfoScreen = () => {
   }, [coin, navigation]);
 
   const onPressExchange = useCallback(() => {
-    SimpleToast.show('Coming soon', SimpleToast.LONG);
-  }, []);
+    if(spec?.swap) {
+      navigation.navigate(ROUTES.TABS.SWAP, {
+        screen: ROUTES.SWAP.MAIN,
+        params: {
+          network: data.parent,
+          srcCoin: coin,
+        }
+      });
+    }
+  }, [spec]);
 
   const {
     state: {list, dict, isLoading},
@@ -73,6 +86,7 @@ const CoinInfoScreen = () => {
                 onPressExchange={onPressExchange}
                 onPressReceive={onPressReceive}
                 onPressSend={onPressSend}
+                exchangeDisabled={!spec?.swap}
               />
             }
           />

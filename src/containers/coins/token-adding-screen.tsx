@@ -26,7 +26,7 @@ const TokenAddingScreen = () => {
 
   const coinOptions = useMemo(() => coins?.reduce(
     (acc: Record<string, string>, element) => {
-      acc[element.id] = element.name;
+      acc[element.id] = element.networkName || element.name;
       return acc;
     }, {}), [coins])
 

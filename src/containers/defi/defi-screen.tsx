@@ -1,175 +1,189 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Image, ImageBackground, Text, TextInput, View} from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
+import {
+  Image,
+  ImageSourcePropType,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import {SafeAreaView, StyleSheet} from 'react-native';
-// @ts-ignore
-import RadialGradient from 'react-native-radial-gradient';
-import {loadingBackground, screenStub} from '../../assets/images';
+import {
+  ada,
+  atom,
+  avax,
+  bnb, busd, dai,
+  eth2,
+  near, pax,
+  polygon,
+  solana,
+  trx, usdc, usdt, ust
+} from '../../assets/images';
 import theme from '../../theme';
-import useTranslation, {TranslationsKey} from '../../utils/use-translation';
+import useTranslation from '../../utils/use-translation';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import Layout from '../../utils/layout';
-import {useWSRequest} from '@slavi/wallet-core';
-import {
-  SubscribeData,
-  SubscribeList,
-  SubscribeListData,
-  SubscribeListResponse,
-  SubscribeResponse,
-  Subscribe
-} from '@slavi/wallet-core/src/providers/ws/messages/subscribe';
-import SolidButton from '../../components/buttons/solid-button';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import { ScrollView } from 'react-native';
 
-const SUBSCRIBE_KEY = 'defi';
+interface EarnCoin {
+  name: string;
+  logo: ImageSourcePropType;
+}
+
+enum Tabs {
+  staking,
+  stables
+}
+
+const TabsCoins: Record<Tabs, EarnCoin[]> = {
+  [Tabs.staking]: [
+    {name: 'MATIC', logo: polygon},
+    {name: 'BNB', logo: bnb},
+    {name: 'SOL', logo: solana},
+    {name: 'ETH 2.0', logo: eth2},
+    {name: 'ADA', logo: ada},
+    {name: 'AVAX', logo: avax},
+    {name: 'ATOM', logo: atom},
+    {name: 'NEAR', logo: near},
+    {name: 'TRX', logo: trx},
+  ],
+  [Tabs.stables]: [
+    {name: 'BUSD', logo: busd},
+    {name: 'USDC', logo: usdc},
+    {name: 'DAI', logo: dai},
+    {name: 'USDT', logo: usdt},
+    {name: 'UST', logo: ust},
+    {name: 'PAX', logo: pax},
+  ],
+}
+
+interface PlateColumnProps {
+  coins: EarnCoin[];
+}
+
+const PlateColumn = (props: PlateColumnProps) => {
+  const {coins} = props;
+
+  return (
+    <View style={styles.plateColumn}>
+      {coins.map((coin, index) => (
+        <View style={styles.coinPlate} key={`plate_${index}`}>
+          <Image source={coin.logo} style={styles.plateLogo} />
+          <Text style={styles.plateTitle}>{coin.name}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+interface TabsContentProps {
+  coins: EarnCoin[];
+  isListDisplayMode: boolean;
+}
+
+const TabsContent = (props: TabsContentProps) => {
+  const {coins, isListDisplayMode} = props;
+
+  if (isListDisplayMode) {
+    return (
+      <View style={styles.contentRows}>
+        {coins.map((coin, index) => (
+          <View style={styles.coinRow} key={`row_${index}`}>
+            <Image source={coin.logo} style={styles.listLogo}/>
+            <Text style={styles.listTitle}>{coin.name}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
+  const firstColumn: EarnCoin[] = [];
+  const secondColumn: EarnCoin[] = [];
+
+  coins.forEach((coin, index) => {
+    if(index % 2 === 0) {
+      firstColumn.push(coin);
+    } else {
+      secondColumn.push(coin);
+    }
+  })
+
+  return (
+    <View style={styles.contentPlate}>
+      <PlateColumn coins={firstColumn} />
+      <PlateColumn coins={secondColumn} />
+    </View>
+  );
+}
 
 const DefiScreen = () => {
-  const [subscribed, setSubscribed] = useState<boolean>(true);
-  const [email, setEmail] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.staking);
+  const [isListDisplayMode, setListDisplayMode] = useState<boolean>(false);
 
-  const {state: {data, error: getError, isLoading}, request} = useWSRequest<SubscribeListData, SubscribeListResponse>();
-  const {
-    state: {
-      data: postData,
-      isLoading: postLoading,
-      error: postError,
-      errors,
-    },
-    request: post
-  } = useWSRequest<SubscribeData, SubscribeResponse>();
+  const navigation = useNavigation();
   const {t} = useTranslation();
 
-  useEffect(() => {
-    request(SubscribeList());
-  }, []);
+  const tabNames: Record<Tabs, string> = useMemo(() => ({
+    [Tabs.staking]: t('staking'),
+    [Tabs.stables]: t('stables'),
+  }), [t])
 
-  useEffect(() => {
-    if(!isLoading && data?.available && !data?.available.includes(SUBSCRIBE_KEY)) {
-      setSubscribed(true);
-      const existsEmail = data.subscribed?.find(element => element.type === SUBSCRIBE_KEY);
-      if(existsEmail) {
-        setEmail(existsEmail.email);
-      }
-    } else {
-      setSubscribed(false);
+  const onBackPress = useCallback(() => {
+    if(navigation.canGoBack()) {
+      navigation.goBack();
+      Keyboard.dismiss();
     }
-  }, [data, isLoading]);
+  }, [navigation]);
+  const switchDisplayMode = () => setListDisplayMode(!isListDisplayMode);
 
-  const subscribe = useCallback(() => {
-    post(Subscribe({
-      email: email,
-      flags: [SUBSCRIBE_KEY],
-    }))
-  }, [email]);
-
-  useEffect(() => {
-    if(getError) {
-      setError(getError)
-    }
-  }, [getError]);
-
-  useEffect(() => {
-    if(postError) {
-      setError(postError)
-    }
-  }, [postError]);
-
-  useEffect(() => {
-    if(errors?.email) {
-      setError(errors.email?.[0]);
-    }
-  }, [errors]);
-
-  useEffect(() => {
-    if(!postLoading && postData?.success) {
-      setSubscribed(true);
-    }
-  }, [postData, postLoading]);
-
-  const onEmailChange = useCallback((email: string) => {
-    setError('');
-    setEmail(email);
-  }, []);
-
-  const border = useMemo(() => {
-    if(error) {
-      return theme.colors.errorRed;
-    }
-
-    if(postData?.success) {
-      return theme.colors.green;
-    }
-
-    return theme.colors.borderGray;
-  }, [error, subscribed]);
+  const tabs = useMemo(() => Object.entries(tabNames).map(([key, name]) => {
+    const castedKey: Tabs = +key;
+    const tab = (
+      <TouchableOpacity
+        onPress={() => setActiveTab(castedKey)}
+        style={castedKey == activeTab ? styles.activeTabContainer : styles.tabContainer}
+        key={`tab_${key}`}
+      >
+        <Text style={castedKey === activeTab ? styles.activeTabLabel : styles.tabLabel}>{name}</Text>
+      </TouchableOpacity>
+    );
+    return (
+      castedKey === activeTab ? (
+        <LinearGradient {...theme.gradients.activeTab} style={styles.tabGradient}>
+          {tab}
+        </LinearGradient>
+      )
+        :
+        tab
+    );
+  }), [tabNames, activeTab]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground source={loadingBackground} style={styles.background}>
-        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
-          <KeyboardAwareScrollView>
-            <Image
-              source={screenStub}
-              width={Layout.isSmallDevice ? 205 : 310}
-              height={Layout.isSmallDevice ? 165 :245}
-              style={{
-                width: Layout.isSmallDevice ? 205 : 310,
-                height: Layout.isSmallDevice ? 165 :245,
-                marginTop: 8,
-              }}
-            />
-            <Text style={styles.header}>{t('Slavi DeFi is coming...')}</Text>
-            <View style={styles.descriptionContainer}>
-              <Text style={styles.description}>{t('Comprehensive with versatile functionality,')}</Text>
-              <Text style={styles.description}>{t('the first version of Slavi DeFi is coming.')}</Text>
-              <Text style={styles.description}>{t('Stay tunes in Newsletter.')}</Text>
-            </View>
-            {(!!data && !isLoading) && (
-              <View style={{width: '100%'}}>
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    placeholder={t('Your Email')}
-                    style={{...styles.input, borderColor: border}}
-                    placeholderTextColor={theme.colors.textLightGray}
-                    editable={!subscribed}
-                    selectTextOnFocus={!subscribed}
-                    textContentType={'emailAddress'}
-                    value={email}
-                    onChangeText={onEmailChange}
-                  />
-                  {subscribed && (
-                    <CustomIcon
-                      name={'check'}
-                      color={theme.colors.green}
-                      size={14}
-                      style={styles.icon}
-                    />
-                  )}
-                </View>
-                {!!error && <Text style={styles.error}>{t(error as TranslationsKey)}</Text>}
-                {(data?.subscribed?.find((element) => element.type == SUBSCRIBE_KEY) || subscribed) ? (
-                  <Text style={styles.subscribedText}>{t('You\'ve successfully subscribed')}</Text>
-                ) : (
-                  <SolidButton
-                    icon={
-                      <CustomIcon
-                        name={'arrow-right'}
-                        color={theme.colors.white}
-                        size={14}
-                        style={styles.buttonIcon}
-                      />
-                    }
-                    iconRight={true}
-                    title={t('Subscribe')}
-                    onPress={subscribe}
-                    containerStyle={styles.buttonContainer}
-                    disabled={isLoading || postLoading || !!error}
-                  />
-                )}
-            </View>)}
-          </KeyboardAwareScrollView>
-        </RadialGradient>
-      </ImageBackground>
+      <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
+            <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
+          </TouchableOpacity>
+          <View style={styles.titleView}>
+            <Text style={styles.header}>{t('earn')}</Text>
+            <Text style={styles.subHeader}>{`(${t('inProgress')})`}</Text>
+          </View>
+          <View style={styles.controls}>
+            <TouchableOpacity style={styles.button} onPress={switchDisplayMode}>
+              <CustomIcon name={isListDisplayMode ? 'Category' : 'lines'} size={20} color={theme.colors.textLightGray3} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.tabs}>
+          {tabs}
+        </View>
+        <ScrollView style={{flex: 1}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+          <TabsContent coins={TabsCoins[activeTab]} isListDisplayMode={isListDisplayMode} />
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 }
@@ -178,107 +192,153 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  background: {
-    flex: 1,
-    width: '100%',
-  },
   gradient: {
     flex: 1,
-    width: '100%',
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 18,
+  },
+  button: {
+    backgroundColor: theme.colors.grayDark,
+    width: Layout.isSmallDevice ? 32 : 40,
+    height: Layout.isSmallDevice ? 32 : 40,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   header: {
     fontFamily: theme.fonts.default,
-    alignSelf: 'center',
-    fontSize: 24,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    lineHeight: 32,
+    fontWeight: '300',
+    fontSize: Layout.isSmallDevice ? 14 : 18,
+    lineHeight: 28,
     color: theme.colors.white,
+    textTransform: 'capitalize',
   },
-  description: {
-    fontFamily: theme.fonts.default,
-    alignSelf: 'center',
-    fontSize: 14,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: 21,
-    color: theme.colors.lightGray,
-    textAlign: 'center',
-  },
-  descriptionContainer: {
-    paddingBottom: 40,
-  },
-  input: {
+  subHeader: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.2,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 17,
-    paddingRight: 17,
-    backgroundColor: theme.colors.grayDark,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: theme.colors.borderGray,
-    color: theme.colors.white,
-    flex: 10,
+    fontWeight: '300',
+    fontSize: Layout.isSmallDevice ? 14 : 18,
+    lineHeight: 28,
+    color: theme.colors.maxTransparent,
+    textTransform: 'capitalize',
+    marginLeft: 8,
   },
-  inputPlaceHolder: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.2,
-  },
-  buttonContainer: {
-    width: '100%',
-    paddingRight: 16,
-    paddingLeft: 16,
-  },
-  inputContainer: {
-    width: '100%',
-    paddingRight: 32,
-    paddingLeft: 32,
-    paddingBottom: 24,
+  controls: {
+    flexDirection: 'row',
     alignItems: 'center',
+  },
+  backButton: {
+    transform: [{
+      rotate: '180deg',
+    }],
+  },
+  titleView: {
     flexDirection: 'row',
   },
-  subscribedText: {
-    fontFamily: theme.fonts.default,
-    color: theme.colors.green,
-    alignSelf: 'center',
-    fontSize: 16,
+  tabs: {
+    flexDirection: 'row',
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: theme.colors.mediumBackground,
+    marginBottom: 24,
+  },
+  activeTabContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  tabContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  activeTabLabel: {
+    fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 20,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    marginRight: 18,
+    fontSize: 13,
+    lineHeight: 16,
+    color: theme.colors.white,
   },
-  icon: {
-    marginLeft: -32,
-    flex: 1,
-  },
-  buttonIcon: {
-    marginLeft: 18,
-  },
-  error: {
-    fontFamily: theme.fonts.default,
-    color: theme.colors.errorRed,
-    fontSize: 12,
+  tabLabel: {
+    fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: 18,
-    textAlign: 'left',
-    textAlignVertical: 'center',
-    marginBottom: 16,
-    paddingLeft: 32,
+    fontWeight: '600',
+    fontSize: 13,
+    lineHeight: 16,
+    color: theme.colors.textLightGray1,
+  },
+  contentRows: {},
+  contentPlate: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  coinRow: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.screenBackground,
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 8,
+    alignItems: 'center',
+  },
+  listLogo: {
+    width: 32,
+    height: 32,
+  },
+  listTitle: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 17,
+    lineHeight: 22,
+    color: theme.colors.white,
+    textTransform: 'uppercase',
+    marginLeft: 16,
+  },
+  coinPlate: {
+    backgroundColor: theme.colors.screenBackground,
+    borderRadius: 8,
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: Layout.isSmallDevice ? 148 : 165,
+    marginBottom: 8,
+  },
+  plateLogo: {
+    width: 50,
+    height: 50,
+  },
+  plateTitle: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 17,
+    lineHeight: 22,
+    color: theme.colors.white,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    marginTop: 16,
+  },
+  tabGradient: {
+    flex: 1,
+    borderRadius: 8,
+  },
+  plateColumn: {
+    flexDirection: 'column',
   }
 });
 

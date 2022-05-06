@@ -8,8 +8,6 @@ import useTranslation from '../utils/use-translation';
 const StackNavigator = createStackNavigator();
 
 const DefiStack = () => {
-  const {t} = useTranslation();
-
   return useMemo(() => (
     <StackNavigator.Navigator
       initialRouteName={ROUTES.DEFI.MAIN}
@@ -18,7 +16,7 @@ const DefiStack = () => {
       <StackNavigator.Screen
         name={ROUTES.DEFI.MAIN}
         component={DefiScreen}
-        options={{title: t('DeFi')}}
+        options={{headerShown: false}}
       />
     </StackNavigator.Navigator>
   ), []);

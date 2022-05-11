@@ -13,4 +13,4 @@ export const trx = require('./trx.png');
 export const usdc = require('./usdc.png');
 export const usdt = require('./usdt.png');
 export const ust = require('./ust.png');
-
+export const slv = require('./slv.png');

@@ -17,7 +17,7 @@ import {
   near, pax,
   polygon,
   solana,
-  trx, usdc, usdt, ust
+  trx, usdc, usdt, ust, slv
 } from '../../assets/images';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
@@ -34,22 +34,23 @@ interface EarnCoin {
 
 enum Tabs {
   staking,
-  stables
+  StableCoins
 }
 
 const TabsCoins: Record<Tabs, EarnCoin[]> = {
   [Tabs.staking]: [
+    {name: 'SLV', logo: slv},
     {name: 'MATIC', logo: polygon},
     {name: 'BNB', logo: bnb},
-    {name: 'SOL', logo: solana},
     {name: 'ETH 2.0', logo: eth2},
-    {name: 'ADA', logo: ada},
+    {name: 'SOL', logo: solana},
     {name: 'AVAX', logo: avax},
-    {name: 'ATOM', logo: atom},
+    {name: 'ADA', logo: ada},
     {name: 'NEAR', logo: near},
+    {name: 'ATOM', logo: atom},
     {name: 'TRX', logo: trx},
   ],
-  [Tabs.stables]: [
+  [Tabs.StableCoins]: [
     {name: 'BUSD', logo: busd},
     {name: 'USDC', logo: usdc},
     {name: 'DAI', logo: dai},
@@ -127,7 +128,7 @@ const DefiScreen = () => {
 
   const tabNames: Record<Tabs, string> = useMemo(() => ({
     [Tabs.staking]: t('staking'),
-    [Tabs.stables]: t('stables'),
+    [Tabs.StableCoins]: t('stableCoins'),
   }), [t])
 
   const onBackPress = useCallback(() => {

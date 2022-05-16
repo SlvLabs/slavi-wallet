@@ -141,6 +141,14 @@ export default {
       angle: 62,
       angleCenter: { x: 0.5, y: 0.5 },
     },
+
+    disabledButton: {
+      colors: ['#2C2E33', '#26282D',],
+      locations: [0.5, 1],
+      useAngle: true,
+      angle: 62,
+      angleCenter: { x: 0.5, y: 0.5 },
+    },
     activeTab: {
       colors: ['rgba(116, 122, 142, 0.2)', 'rgba(35, 38, 48, 0.2)', '#2D303E'],
       locations: [0.2, 0.7, 1],

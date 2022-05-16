@@ -26,6 +26,9 @@ const ROUTES = {
     TOKEN_ADDING: 'Coins/TokenAdding',
     SUCCESSFULLY_SENDING: 'Coins/SuccessfullySending',
     COINS_SELECT: 'Coins/Select',
+    NFT_INFO: 'Coins/NftInfo',
+    NFT_SEND: 'Coins/NftSend',
+    NFT_SUCCESS: 'Coins/NftSuccess',
   },
   OPERATIONS: {
     LIST: 'Operations/List',

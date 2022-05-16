@@ -82,8 +82,6 @@ const SearchCoinRow = (props: SearchCoinRowProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 16,
-    paddingRight: 16,
     paddingTop: 16,
   },
   searchRow: {

@@ -12,6 +12,9 @@ import TokenAddingScreen from '../containers/coins/token-adding-screen';
 import SuccessfullySendingScreen from '../containers/send/successfully-sending-screen';
 import CoinSelectListScreen from '../containers/coins/coin-select-list-screen';
 import useTranslation from '../utils/use-translation';
+import NftInfoScreen from '../containers/nft/nft-info-screen';
+import NftSendScreen from '../containers/nft/nft-send-screen';
+import NtfSuccessSendingScreen from '../containers/nft/ntf-success-sending-screen';
 
 export interface CoinsStackParamList extends ParamListBase {
   List: {};
@@ -32,6 +35,24 @@ export interface CoinsStackParamList extends ParamListBase {
     }[];
     ticker: string;
   };
+  NftInfo: {
+    network: string;
+    contract: string;
+    id: string;
+  },
+  NftSend: {
+    network: string;
+    contract: string;
+    id: string;
+  },
+  NftSuccess: {
+    name: string,
+    from: string,
+    to: string,
+    amount?: string,
+    ticker?: string,
+    image?: string,
+  }
 }
 
 export type CoinInfoRouteProps = RouteProp<CoinsStackParamList, 'Info'>;
@@ -41,6 +62,9 @@ export type CoinSuccessfullySendingRouteProps = RouteProp<
   CoinsStackParamList,
   'SuccessfullySending'
 >;
+export type NftInfoRouteProps = RouteProp<CoinsStackParamList, 'NftInfo'>;
+export type NftSendRouteProps = RouteProp<CoinsStackParamList, 'NftSend'>;
+export type NftSuccessRouteProps = RouteProp<CoinsStackParamList, 'NftSuccess'>;
 
 const StackNavigator = createStackNavigator<CoinsStackParamList>();
 
@@ -54,7 +78,7 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.LIST}
         component={CoinsListScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, headerTransparent: true}}
       />
       <StackNavigator.Screen
         name={ROUTES.COINS.INFO}
@@ -85,6 +109,21 @@ const CoinsStack = () => {
         name={ROUTES.COINS.COINS_SELECT}
         component={CoinSelectListScreen}
         options={{title: t('Select coin'), headerShown: false}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.NFT_INFO}
+        component={NftInfoScreen}
+        options={{headerShown: false}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.NFT_SEND}
+        component={NftSendScreen}
+        options={{headerShown: false}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.NFT_SUCCESS}
+        component={NtfSuccessSendingScreen}
+        options={{headerShown: false}}
       />
     </StackNavigator.Navigator>
   ), []);

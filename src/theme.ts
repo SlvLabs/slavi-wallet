@@ -48,6 +48,8 @@ export default {
     buttonBackground: 'rgba(14, 16, 24, 0.5)',
     contentBackground: '#0B0B0B',
     disabledButton: '#7D7D7D',
+    tabsColor: '#212531',
+    buttonv2: 'rgba(72, 81, 107, 0.6)'
   },
   /** @deprecated */
   colorsOld: {
@@ -142,13 +144,12 @@ export default {
       angleCenter: { x: 0.5, y: 0.5 },
     },
     activeTab: {
-      colors: ['rgba(116, 122, 142, 0.2)', 'rgba(35, 38, 48, 0.2)', '#2D303E'],
-      locations: [0.2, 0.7, 1],
+      colors: ['#2D303E', 'rgba(35, 38, 48, 0.5)'],
+      locations: [0.1, 1],
       useAngle: false,
     },
     screenBackground: {
       colors: ['#272B35', '#181A20'],
-      locations: [0.3, 1],
       useAngle: true,
       angle: 154.67,
     },

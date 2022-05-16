@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StatusBar, Text} from 'react-native';
+import {StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {initStore} from './store';
@@ -143,7 +143,7 @@ const App: () => ReactNode = () => {
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme}>
               <StatusBar barStyle="dark-content" />
-              {devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}
+              {/*{devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}*/}
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}

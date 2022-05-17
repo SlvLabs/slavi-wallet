@@ -19,6 +19,7 @@ const translations = {
   "Cancel":"Cancel",
   "Ok":"Ok",
   "Select coins":"Select coins",
+  "Select Currency":"Select Currency",
   "Unknown participants":"Unknown participants",
   "Operations not found":"Operations not found",
   "Scan the QR code found on your profile, on the website":"Scan the QR code found on your profile, on the website",
@@ -39,6 +40,12 @@ const translations = {
   "You Secret Phrase":"You Secret Phrase",
   "Copy or save this code. Never pass on to third parties it.":"Copy or save this code. Never pass on to third parties it.",
   "Exchange":"Exchange",
+  "Buy": "Buy",
+  "Disclaimer": "Disclaimer",
+  "CoinBuyDisclaimer": "Services regarding payment are provided by Bifinity which is a third party platform. Please read and agree to Bifinity Terms of Use to proceed. If you have any questions, please contact Bifinity team. Slavi wallet is not responsible for any loss or damage caused by using the Bifinity payment platform.",
+  'CoinBuyDisclaimerCheckbox': 'I have read and agree to the',
+  'CoinBuyDisclaimerCheckboxLink': 'Terms of use',
+  'bifinity terms of use link': 'https://sandbox.bifinity.org/en/about/terms-of-usage',
   "Price":"Price",
   "Pair":"Pair",
   "Coin":"Coin",
@@ -121,6 +128,7 @@ const translations = {
   "Successfully sent":"Successfully sent",
   "To addresses":"To addresses",
   "To address":"To address",
+  "To account": "To account",
   "Home":"Home",
   "Default":"Default",
   "By name":"By name",
@@ -323,6 +331,11 @@ const translations = {
   swapWaitHeader: 'Please wait',
   swapWaitDescription1: 'Your TX is in progress,',
   swapWaitDescription2: 'wait a little bit',
+
+  'Service provider': 'Service provider',
+  'Bifinity': 'Bifinity',
+  'Sorry, our service is not available in the location you are in': 'Sorry, our service is not available in the location you are in',
+  'Cannot proceed': 'Cannot proceed',
 }
 
 export default translations;

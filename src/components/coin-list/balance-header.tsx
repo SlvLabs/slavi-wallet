@@ -15,10 +15,11 @@ export interface BalanceHeaderProps {
   fiatRound?: number;
   onSendClick?: () => void;
   onReceiveClick?: () => void;
+  onBuyClick?: () => void;
 }
 
 const BalanceHeader = (props: BalanceHeaderProps) => {
-  const {fiatBalance, fiatTicker, onSendClick, onReceiveClick} = props;
+  const {fiatBalance, fiatTicker, onSendClick, onReceiveClick, onBuyClick} = props;
   const fiatRound = props.fiatRound || 2;
   const {t} = useTranslation();
   return (
@@ -55,6 +56,13 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
         <SimpleSolidButton
           title={t('Receive')}
           onPress={onReceiveClick}
+          leftIcon={<CustomIcon name={'slavi2'} color={theme.colors.white} size={24}/>}
+          rightIcon={<CustomIcon name={'arrow-down-1'} color={theme.colors.white} size={24}/>}
+          containerStyle={styles.button}
+        />
+        <SimpleSolidButton
+          title={t('Buy')}
+          onPress={onBuyClick}
           leftIcon={<CustomIcon name={'slavi2'} color={theme.colors.white} size={24}/>}
           rightIcon={<CustomIcon name={'arrow-down-1'} color={theme.colors.white} size={24}/>}
           containerStyle={styles.button}

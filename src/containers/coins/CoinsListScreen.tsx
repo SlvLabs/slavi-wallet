@@ -181,6 +181,10 @@ const CoinsListScreen = () => {
       navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filterByBalance: true, balanceShown: true}),
     [navigation]);
 
+  const navigateToBuy = useCallback(() =>
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.BUY_COIN, balanceShown: true}),
+    [navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{flex: 1}}>
@@ -189,6 +193,7 @@ const CoinsListScreen = () => {
           fiatTicker={fiatSymbol}
           onReceiveClick={navigateToReceive}
           onSendClick={navigateToSend}
+          onBuyClick={navigateToBuy}
         />
 
         <CoinListCard

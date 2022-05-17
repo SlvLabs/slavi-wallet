@@ -12,6 +12,7 @@ import TokenAddingScreen from '../containers/coins/token-adding-screen';
 import SuccessfullySendingScreen from '../containers/send/successfully-sending-screen';
 import CoinSelectListScreen from '../containers/coins/coin-select-list-screen';
 import useTranslation from '../utils/use-translation';
+import BuyCoinScreen from '../containers/coins/BuyCoinScreen';
 
 export interface CoinsStackParamList extends ParamListBase {
   List: {};
@@ -19,6 +20,9 @@ export interface CoinsStackParamList extends ParamListBase {
     coin: string;
   };
   Receive: {
+    coin: string;
+  };
+  BuyCoin: {
     coin: string;
   };
   Send: {
@@ -36,6 +40,7 @@ export interface CoinsStackParamList extends ParamListBase {
 
 export type CoinInfoRouteProps = RouteProp<CoinsStackParamList, 'Info'>;
 export type CoinReceiveRouteProps = RouteProp<CoinsStackParamList, 'Receive'>;
+export type CoinBuyRouteProps = RouteProp<CoinsStackParamList, 'BuyCoin'>;
 export type CoinSendRouteProps = RouteProp<CoinsStackParamList, 'Send'>;
 export type CoinSuccessfullySendingRouteProps = RouteProp<
   CoinsStackParamList,
@@ -70,6 +75,11 @@ const CoinsStack = () => {
         name={ROUTES.COINS.RECEIVE}
         component={ReceiveScreen}
         options={{title: t('Receive coins')}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.BUY_COIN}
+        component={BuyCoinScreen}
+        options={{title: t('Buy')}}
       />
       <StackNavigator.Screen
         name={ROUTES.COINS.TOKEN_ADDING}

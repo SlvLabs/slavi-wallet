@@ -41,6 +41,12 @@ const CoinInfoScreen = () => {
     });
   }, [coin, navigation]);
 
+  const onPressBuy = useCallback(() => {
+    navigation.navigate(ROUTES.COINS.BUY_COIN, {
+      coin: coin,
+    });
+  }, [coin, navigation]);
+
   const onPressSend = useCallback(() => {
     navigation.navigate(ROUTES.COINS.SEND, {
       coin: coin,
@@ -86,6 +92,7 @@ const CoinInfoScreen = () => {
                 onPressExchange={onPressExchange}
                 onPressReceive={onPressReceive}
                 onPressSend={onPressSend}
+                onPressBuy={onPressBuy}
                 exchangeDisabled={!spec?.swap}
               />
             }

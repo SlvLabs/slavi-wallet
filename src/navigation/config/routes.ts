@@ -23,6 +23,7 @@ const ROUTES = {
     INFO: 'Coins/Info',
     SEND: 'Coins/Send',
     RECEIVE: 'Coins/Receive',
+    BUY_COIN: 'Coins/Buy',
     TOKEN_ADDING: 'Coins/TokenAdding',
     SUCCESSFULLY_SENDING: 'Coins/SuccessfullySending',
     COINS_SELECT: 'Coins/Select',

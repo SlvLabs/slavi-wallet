@@ -4,7 +4,7 @@ import useTranslation from '../../utils/use-translation';
 import SummaryBalanceElement from './summary-balance-element';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
-import {balanceHeader, downButton, upButton} from '../../assets/images';
+import {balanceHeader, dollarButton, downButton, upButton} from '../../assets/images';
 import LinearGradient from 'react-native-linear-gradient';
 import SimpleButton from '../buttons/simple-button';
 
@@ -61,7 +61,7 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
           <SimpleButton
             title={t('Buy')}
             onPress={onBuyClick}
-            leftIcon={<Image source={downButton} style={styles.buttonImage} />}
+            leftIcon={<Image source={dollarButton} style={styles.buttonImage} />}
             containerStyle={styles.button}
             textStyle={styles.buttonText}
           />

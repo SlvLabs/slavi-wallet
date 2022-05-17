@@ -3,12 +3,18 @@ import {Keyboard, SafeAreaView, StyleSheet, View} from 'react-native';
 import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import theme from '../../theme';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import CoinSelectList from '../../components/coins/coins-select-list';
+import CoinSelectList, {CoinListElementData} from '../../components/coins/coins-select-list';
+
+export interface CoinSelectListScreenProps {
+  nextScreen?: string;
+  filterByBalance?: boolean;
+  balanceShown?: boolean;
+}
 
 export default function CoinSelectListScreen() {
   const {params} = useRoute();
-  const {nextScreen, filterByBalance, balanceShown} = params as any;
-  if(!nextScreen) {
+  const {nextScreen, filterByBalance, balanceShown} = params as unknown as CoinSelectListScreenProps;
+  if (!nextScreen) {
     throw new Error('Wrong coins routing');
   }
 
@@ -17,7 +23,7 @@ export default function CoinSelectListScreen() {
   const navigation = useNavigation();
 
   const onElementPress = useCallback(
-    (coinId: string) => navigation.navigate(nextScreen, {coin: coinId}),
+    (coin: CoinListElementData) => navigation.navigate(nextScreen, {coin: coin.id, ticker: coin.ticker}),
     [navigation]
   );
 

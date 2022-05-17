@@ -43,9 +43,10 @@ const CoinInfoScreen = () => {
 
   const onPressBuy = useCallback(() => {
     navigation.navigate(ROUTES.COINS.BUY_COIN, {
-      coin: coin,
+      coin: data.id,
+      ticker: data.ticker,
     });
-  }, [coin, navigation]);
+  }, [data, navigation]);
 
   const onPressSend = useCallback(() => {
     navigation.navigate(ROUTES.COINS.SEND, {

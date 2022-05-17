@@ -27,6 +27,7 @@ export interface CoinsStackParamList extends ParamListBase {
   };
   BuyCoin: {
     coin: string;
+    ticker: string;
   };
   Send: {
     coin: string;
@@ -103,7 +104,10 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.BUY_COIN}
         component={BuyCoinScreen}
-        options={{title: t('Buy')}}
+        options={({route}) => {
+          const params = route.params as CoinsStackParamList['BuyCoin'];
+          return {title: t('Buy') + (params?.ticker ? ' ' + params?.ticker : '')};
+        }}
       />
       <StackNavigator.Screen
         name={ROUTES.COINS.TOKEN_ADDING}

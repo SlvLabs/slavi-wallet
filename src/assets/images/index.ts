@@ -20,5 +20,6 @@ export const upButton = require('./up-button.png');
 export const downButton = require('./down-button.png');
 export const bifinity = require('./bifinity.png');
 export const ipDisconnect = require('./ip-disconnect.png');
+export const dollarButton = require('./dollar_button.png');
 
 export * from './earn-stubs';

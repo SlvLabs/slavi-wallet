@@ -9,6 +9,7 @@ import CoinsSelectModal from '../coins/coins-select-modal';
 import {DisplayCoinData} from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
+import {CoinListElementData} from '../coins/coins-select-list';
 
 export interface SourceCoinElementProps {
   balance: string;
@@ -42,8 +43,8 @@ export default function SourceCoinElement(props: SourceCoinElementProps) {
 
   const onMaxPress = useCallback(() => onAmountChange(balance), [balance, onAmountChange]);
 
-  const _onCoinSelect = useCallback((coinId: string) => {
-    onCoinSelect(coinId);
+  const _onCoinSelect = useCallback((coin: CoinListElementData) => {
+    onCoinSelect(coin.id);
     hideCoinModal();
   }, [onCoinSelect, hideCoinModal]);
 

@@ -19,7 +19,7 @@ export interface CoinListElementData {
 
 export interface CoinsSelectListProps {
   coins: CoinListElementData[];
-  onElementPress: (coinId: string) => void;
+  onElementPress: (coin: CoinListElementData) => void;
   balanceShown?: boolean;
   onBackPress?: () => void;
 }
@@ -67,7 +67,7 @@ export default function CoinSelectList(props: CoinsSelectListProps) {
             name={item.name}
             type={item.type}
             logo={item.logo}
-            onPress={() => onElementPress(item.id)}
+            onPress={() => onElementPress(item)}
             key={`coin_${index}`}
             balance={item.total}
             ticker={item.ticker}

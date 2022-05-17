@@ -15,9 +15,9 @@ import {
   bnb, busd, dai,
   eth2,
   near, pax,
-  polygon,
+  polygon, slv,
   solana,
-  trx, usdc, usdt, ust, slv
+  trx, usdc, usdt
 } from '../../assets/images';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
@@ -34,7 +34,7 @@ interface EarnCoin {
 
 enum Tabs {
   staking,
-  StableCoins
+  stables
 }
 
 const TabsCoins: Record<Tabs, EarnCoin[]> = {
@@ -42,21 +42,20 @@ const TabsCoins: Record<Tabs, EarnCoin[]> = {
     {name: 'SLV', logo: slv},
     {name: 'MATIC', logo: polygon},
     {name: 'BNB', logo: bnb},
-    {name: 'ETH 2.0', logo: eth2},
     {name: 'SOL', logo: solana},
-    {name: 'AVAX', logo: avax},
+    {name: 'ETH 2.0', logo: eth2},
     {name: 'ADA', logo: ada},
-    {name: 'NEAR', logo: near},
+    {name: 'AVAX', logo: avax},
     {name: 'ATOM', logo: atom},
+    {name: 'NEAR', logo: near},
     {name: 'TRX', logo: trx},
   ],
-  [Tabs.StableCoins]: [
+  [Tabs.stables]: [
     {name: 'BUSD', logo: busd},
     {name: 'USDC', logo: usdc},
     {name: 'DAI', logo: dai},
     {name: 'USDT', logo: usdt},
-    {name: 'UST', logo: ust},
-    {name: 'PAX', logo: pax},
+    {name: 'USDP', logo: pax},
   ],
 }
 
@@ -128,7 +127,7 @@ const DefiScreen = () => {
 
   const tabNames: Record<Tabs, string> = useMemo(() => ({
     [Tabs.staking]: t('staking'),
-    [Tabs.StableCoins]: t('stableCoins'),
+    [Tabs.stables]: t('stables'),
   }), [t])
 
   const onBackPress = useCallback(() => {
@@ -170,7 +169,6 @@ const DefiScreen = () => {
           </TouchableOpacity>
           <View style={styles.titleView}>
             <Text style={styles.header}>{t('earn')}</Text>
-            <Text style={styles.subHeader}>{`(${t('inProgress')})`}</Text>
           </View>
           <View style={styles.controls}>
             <TouchableOpacity style={styles.button} onPress={switchDisplayMode}>
@@ -202,7 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 12,
+    paddingTop: 36,
     paddingBottom: 12,
     marginBottom: 18,
   },

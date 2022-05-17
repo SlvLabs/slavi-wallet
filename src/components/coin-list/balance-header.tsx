@@ -1,13 +1,12 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import SummaryBalanceElement from './summary-balance-element';
 import theme from '../../theme';
-import {chart} from '../../assets/images';
-import CustomIcon from '../custom-icon/custom-icon';
-import SimpleSolidButton from '../buttons/simple-solid-button';
-import SimpleOutlineButton from '../buttons/simple-outline-button';
 import Layout from '../../utils/layout';
+import {balanceHeader, downButton, upButton} from '../../assets/images';
+import LinearGradient from 'react-native-linear-gradient';
+import SimpleButton from '../buttons/simple-button';
 
 export interface BalanceHeaderProps {
   fiatBalance: string;
@@ -24,61 +23,65 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
   const {t} = useTranslation();
   return (
     <View style={styles.container}>
-      <View style={styles.balances}>
-        <SummaryBalanceElement
-          balance={fiatBalance}
-          round={fiatRound}
-          ticker={fiatTicker}
-        />
-        <View style={styles.profitBlock}>
-          <Text style={styles.subLabel}>{t('Profit 24h')}</Text>
-          <View style={styles.profitRow}>
-            <View style={styles.profitFiat}>
-              <Text style={styles.profitFiatText}>{t('Coming soon')}</Text>
-            </View>
-            <View style={styles.profitPercent}>
-              <Text style={styles.profitPercentText}>0.00%</Text>
+      <ImageBackground source={balanceHeader} style={styles.image}>
+        <View style={styles.balances}>
+          <SummaryBalanceElement
+            balance={fiatBalance}
+            round={fiatRound}
+            ticker={fiatTicker}
+            containerStyle={styles.mainBalance}
+          />
+          <View style={styles.profitBlock}>
+            <Text style={styles.subLabel}>{t('Profit 24h')}</Text>
+            <View style={styles.profitRow}>
+              <LinearGradient style={styles.profitFiat} {...theme.gradients.button}>
+                <Text style={styles.profitFiatText}>{t('Coming soon')}</Text>
+              </LinearGradient>
+              <View style={styles.profitPercent}>
+                <Text style={styles.profitPercentText}>0.00%</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={styles.chart}>
-        <Image source={chart} style={styles.chartImage} />
-      </View>
-      <View style={styles.buttonsRow}>
-        <SimpleOutlineButton
-          title={t('Send')}
-          onPress={onSendClick}
-          leftIcon={<CustomIcon name={'dollar-circle'} color={theme.colors.white} size={24}/>}
-          rightIcon={<CustomIcon name={'arrow-up'} color={theme.colors.white} size={24}/>}
-          containerStyle={styles.button}
-        />
-        <SimpleSolidButton
-          title={t('Receive')}
-          onPress={onReceiveClick}
-          leftIcon={<CustomIcon name={'slavi2'} color={theme.colors.white} size={24}/>}
-          rightIcon={<CustomIcon name={'arrow-down-1'} color={theme.colors.white} size={24}/>}
-          containerStyle={styles.button}
-        />
-        <SimpleSolidButton
-          title={t('Buy')}
-          onPress={onBuyClick}
-          leftIcon={<CustomIcon name={'slavi2'} color={theme.colors.white} size={24}/>}
-          rightIcon={<CustomIcon name={'arrow-down-1'} color={theme.colors.white} size={24}/>}
-          containerStyle={styles.button}
-        />
-      </View>
+        <View style={styles.buttonsRow}>
+          <SimpleButton
+            title={t('Send')}
+            onPress={onSendClick}
+            leftIcon={<Image source={upButton} style={styles.buttonImage} />}
+            containerStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
+          <SimpleButton
+            title={t('Receive')}
+            onPress={onReceiveClick}
+            leftIcon={<Image source={downButton} style={styles.buttonImage} />}
+            containerStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
+          <SimpleButton
+            title={t('Buy')}
+            onPress={onBuyClick}
+            leftIcon={<Image source={downButton} style={styles.buttonImage} />}
+            containerStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
+        </View>
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 18,
-    paddingTop: 18,
     flexDirection: 'column',
     backgroundColor: theme.colors.balanceHeaderBackground,
   },
+  image: {
+    paddingTop: 50,
+  },
+  linerGradient: {},
+  leftGradient: {},
+  rightGradient: {},
   balances: {
     flex: 1,
     paddingLeft: 16,
@@ -124,7 +127,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   profitFiat: {
-    backgroundColor: theme.colors.black,
     borderRadius: 4,
     padding: 4,
     paddingRight: 8,
@@ -141,13 +143,13 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     fontSize: 12,
     lineHeight: 16,
-    color: theme.colors.green,
+    color: theme.colors.white,
     alignItems: 'center',
     textAlignVertical: 'center',
     justifyContent: 'center',
   },
   profitPercent: {
-    backgroundColor: theme.colors.blackoutTransparent,
+    backgroundColor: 'transparent',
     borderRadius: 4,
     padding: 4,
   },
@@ -169,12 +171,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingLeft: Layout.isSmallDevice ? 18 : 34,
     paddingRight: Layout.isSmallDevice ? 18 : 34,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    marginBottom: 20,
   },
   button: {
-    width: Layout.isSmallDevice ? 130 : 140,
-    justifyContent: 'space-between',
-  }
+    width: 100,
+    justifyContent: 'flex-start',
+    padding: 8,
+    backgroundColor: theme.colors.buttonv2,
+    borderRadius: 38,
+    alignItems: 'center',
+  },
+  mainBalance: {
+    marginBottom: 15,
+  },
+  buttonText: {
+    fontSize: 13,
+    lineHeight: 16,
+    fontWeight: '600',
+    fontStyle: 'normal',
+    fontFamily: theme.fonts.gilroy,
+    textAlign: 'center',
+  },
+  buttonImage: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
 });
 
 export default BalanceHeader;

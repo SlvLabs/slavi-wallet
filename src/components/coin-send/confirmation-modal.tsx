@@ -5,6 +5,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import SolidButton from '../buttons/solid-button';
 import BaseModal from '../modal/base-modal';
 import theme from '../../theme';
+import shrinkAddress from '../../utils/shrink-address';
 
 export interface ConfirmationModalProps {
   visible: boolean;
@@ -22,27 +23,6 @@ export interface ConfirmationModalProps {
   controlsContainerStyle?: ViewStyle;
   acceptButtonStyle?: ViewStyle;
   cancelButtonStyle?: ViewStyle;
-}
-
-const DEFAULT_BEGIN_LETTERS_COUNT = 10;
-const DEFAULT_END_LETTERS_COUNT = 10;
-const DEFAULT_MAX_LENGTH = 35;
-
-const shrinkAddress = (
-  address: string,
-  beginLettersCount?: number,
-  endLettersCount?: number,
-  maxLettersLength?: number,
-) => {
-  const beginCount = beginLettersCount || DEFAULT_BEGIN_LETTERS_COUNT;
-  const endCount = endLettersCount || DEFAULT_END_LETTERS_COUNT;
-  const maxLength = maxLettersLength || DEFAULT_MAX_LENGTH;
-
-  if(address.length <= maxLength) {
-    return address;
-  }
-
-  return `${address.slice(0, beginCount)}...${address.slice(-endCount)}`;
 }
 
 const renderVout = (vout: Recipient, index: number) => (

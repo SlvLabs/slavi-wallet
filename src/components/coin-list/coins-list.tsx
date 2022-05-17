@@ -3,7 +3,6 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import CoinsListElement, {CoinDisplayData} from './coins-list-element';
 import theme from '../../theme';
-import CoinListElementSoon from './coin-list-element-soon';
 
 export enum showCoinsEnum {
   onlyShown = 0,
@@ -73,8 +72,6 @@ const CoinsList = (props: CoinListProps) => {
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 24,
-    paddingLeft: 16,
-    paddingRight: 16,
     paddingTop: 20,
   },
   placeholder: {

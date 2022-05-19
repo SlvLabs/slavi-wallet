@@ -16,7 +16,7 @@ import {Provider} from 'react-redux';
 import {initStore} from './store';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import MainNavigator from './navigation/MainNavigator';
-import bootstrap from './services/bootstraper';
+import {createCoreBootstrap} from './services/bootstraper';
 import {ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
 import asyncStorageProvider from './services/asynс-storage-provider';
 import servicesContext from '@slavi/wallet-core/src/contexts/services-context';
@@ -31,8 +31,8 @@ import perf from '@react-native-firebase/perf';
 import DebugPerformanceMonitor from './utils/debug-performance-monitor';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import theme from './theme';
-import Config from "react-native-config";
-import { load as initializationLoad } from '@slavi/wallet-core/src/store/modules/initialization/initialization-thunk-actions';
+import Config from 'react-native-config';
+import {load as initializationLoad} from '@slavi/wallet-core/src/store/modules/initialization/initialization-thunk-actions';
 import SimpleToast from 'react-native-simple-toast';
 import WalletConnectSessionRequestModal from './components/wallet-connect/session-request-modal';
 import WalletConnectSignRequestModal from './components/wallet-connect/sign-request-modal';
@@ -49,6 +49,9 @@ const App: () => ReactNode = () => {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
   const [isUpdateRequired, setIsUpdateRequired] = useState<boolean>(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [initialLoaded, setInitialLoaded] = useState<boolean>(false);
+  const [isMnemonicConfirmed, setIsMnemonicConfirmed] =
+    useState<boolean>(false);
 
   const services = useRef<ServiceLocatorCoreInterface>({
     dataStoreProvider: asyncStorageProvider,
@@ -86,19 +89,53 @@ const App: () => ReactNode = () => {
 
   store.subscribe(() => setIsAuthorized(store.getState().auth.authorized));
 
-  useEffect(() => {
-    let performanceMonitor: PerformanceMonitorInterface;
+  store.subscribe(() =>
+    setIsMnemonicConfirmed(store.getState().account.confirmed),
+  );
+
+  const performanceMonitor = useMemo(() => {
+    let performanceMonitorInterface: PerformanceMonitorInterface;
     if (!__DEV__) {
       console.log('production performance mode');
-      performanceMonitor = perf();
+      performanceMonitorInterface = perf();
     } else {
       console.log('debug performance mode');
-      performanceMonitor = new DebugPerformanceMonitor();
+      performanceMonitorInterface = new DebugPerformanceMonitor();
+    }
+    return performanceMonitorInterface;
+  }, []);
+
+  const coreBootstraper = useMemo(
+    () =>
+      createCoreBootstrap(
+        store,
+        asyncStorageProvider,
+        performanceMonitor,
+        services.current,
+        devMode,
+        Config.APP_VERSION,
+      ),
+    [store, devMode, performanceMonitor],
+  );
+
+  useEffect(() => {
+    setInitialLoaded(false);
+    store.dispatch(setGlobalLoading());
+    coreBootstraper.loadInitial().then(() => {
+      setInitialLoaded(true);
+      store.dispatch(unsetGlobalLoading());
+    });
+  }, [store, coreBootstraper]);
+
+  useEffect(() => {
+    if (!isMnemonicConfirmed || !initialLoaded) {
+      return;
     }
 
     store.dispatch(setGlobalLoading());
     performanceMonitor.startTrace('BOOTSTRAP').then(trace => {
-      bootstrap(store, asyncStorageProvider, performanceMonitor, services.current, devMode, Config.APP_VERSION)
+      coreBootstraper
+        .loadWalletServices()
         .then(() => {
           console.log('bootstraped');
           trace.stop();
@@ -114,15 +151,23 @@ const App: () => ReactNode = () => {
         });
     });
     return () => {
-      if(services.current.ws) {
+      if (services.current.ws) {
         services.current.ws.close();
       }
-    }
-  }, [store, devMode]);
+    };
+  }, [
+    store,
+    devMode,
+    initialLoaded,
+    isMnemonicConfirmed,
+    coreBootstraper,
+    performanceMonitor,
+  ]);
 
   useEffect(() => {
-    if(isUpdateAvailable) {
-      SimpleToast.showWithGravity('A new version of the application is available. We recommend updating.',
+    if (isUpdateAvailable) {
+      SimpleToast.showWithGravity(
+        'A new version of the application is available. We recommend updating.',
         SimpleToast.LONG,
         SimpleToast.CENTER,
       );
@@ -147,7 +192,9 @@ const App: () => ReactNode = () => {
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}
-                isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
+                isLoading={
+                  isBootstrapped || store.getState().globalLoading.loading !== 0
+                }
                 isInitializationFinished={isInitFinishShow}
                 isUpdateRequired={isUpdateRequired}
               />

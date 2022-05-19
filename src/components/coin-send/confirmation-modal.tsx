@@ -42,7 +42,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
   const _onAccept = useCallback(() => {
     setLoading(true);
     onAccept();
-  }, [onAccept])
+  }, [onAccept]);
 
   return (
     <BaseModal visible={visible}>

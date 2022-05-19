@@ -2,12 +2,14 @@ import Config from 'react-native-config';
 import CoreBootstrap from '@slavi/wallet-core/src/utils/bootstrap';
 import {Store} from 'redux';
 import {networks} from '@slavi/crypto-core';
-import {DataStoreProviderInterface, ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
+import {
+  DataStoreProviderInterface,
+  ServiceLocatorCoreInterface,
+} from '@slavi/wallet-core/src/types';
 import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
-import PerformanceMonitorInterface from "@slavi/wallet-core/src/utils/performance-monitor-interface";
+import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import translations from '../assets/translations/fallback';
-
 
 const wsConfig = {
   url: Config.WS_URL,
@@ -24,20 +26,20 @@ const coinsServiceConfig: CoinsServiceConf = {
 };
 
 const walletConnectClientMeta = {
-  description: "Slavi wallet application",
-  url: "https://slavi.io/",
-  icons: ["https://slavi.io/images/logo.png"],
-  name: "SlaviWallet",
-}
+  description: 'Slavi wallet application',
+  url: 'https://slavi.io/',
+  icons: ['https://slavi.io/images/logo.png'],
+  name: 'SlaviWallet',
+};
 
-const bootstrap = async (
+export const createCoreBootstrap = (
   store: Store,
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
   serviceLocator: ServiceLocatorCoreInterface,
   devMode?: boolean,
   appVersion?: string,
-): Promise<void> => {
+) => {
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
     systemLanguage: 'en',
@@ -58,7 +60,28 @@ const bootstrap = async (
     serviceLocator: serviceLocator,
     walletConnectClientMeta: walletConnectClientMeta,
   });
-  return coreBootstrap.load(translations);
+  return {
+    loadInitial: () => coreBootstrap.loadInitial(translations),
+    loadWalletServices: () => coreBootstrap.loadWalletServices(),
+  };
+};
+const bootstrap = async (
+  store: Store,
+  dataStorageProvider: DataStoreProviderInterface,
+  performanceMonitor: PerformanceMonitorInterface,
+  serviceLocator: ServiceLocatorCoreInterface,
+  devMode?: boolean,
+  appVersion?: string,
+): Promise<void> => {
+  const coreBootstrap = createCoreBootstrap(
+    store,
+    dataStorageProvider,
+    performanceMonitor,
+    serviceLocator,
+    devMode,
+    appVersion,
+  );
+  return coreBootstrap.loadInitial();
 };
 
 export default bootstrap;

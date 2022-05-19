@@ -319,7 +319,7 @@ const translations = {
   earn: 'Earn',
   inProgress: 'In Progress',
   staking: 'Staking',
-  stableCoins: 'Stablecoins',
+  stables: 'Stables',
   swapWaitHeader: 'Please wait',
   swapWaitDescription1: 'Your TX is in progress,',
   swapWaitDescription2: 'wait a little bit',

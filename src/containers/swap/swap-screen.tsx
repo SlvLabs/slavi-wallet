@@ -348,7 +348,7 @@ const SwapScreen = () => {
 
     const realNetwork = coins.find(e => e.id === inCoin)?.parent;
 
-    if(realNetwork !== network) {
+    if(inCoin !== network && realNetwork !== network) {
       return;
     }
 

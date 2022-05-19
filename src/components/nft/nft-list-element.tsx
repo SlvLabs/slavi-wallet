@@ -23,7 +23,7 @@ export default function NftListElement(props: NftListElementProps) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <NftImage image={image} imageStyle={styles.image} placeHolderContainerStyle={styles.placeholderContainer}/>
-      <Text style={styles.name} ellipsizeMode='tail' numberOfLines={2}>{name}</Text>
+      <Text style={styles.name} ellipsizeMode='tail' numberOfLines={1}>{name}</Text>
       <View style={styles.networkRow}>
         <Image source={getImageSource(networkLogo, coinPlaceholder)} style={styles.networkLogo} />
         <Text style={styles.networkLabel}>{`${t('nftBlockchain')}:`}</Text>

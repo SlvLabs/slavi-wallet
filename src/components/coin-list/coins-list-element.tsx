@@ -94,18 +94,20 @@ const CoinsListElement = (props: CoinListElementProps) => {
         </View>
       </View>
       <View style={styles.col2}>
-        <View style={styles.fiatBalanceRow}>
-          <Text style={{...styles.fiatBalanceText, ...styles.fiatBalance}}>
-            {makeRoundedBalance(fiatPercision, fiatTotal)}
-          </Text>
-          <Text style={styles.fiatBalanceText}>{props.fiat}</Text>
-        </View>
         <View style={styles.coinBalanceRow}>
           <Text style={{...styles.coinBalanceText, ...styles.coinBalance}}>
             {makeRoundedBalance(cryptoPercision, total)}
           </Text>
           <Text style={styles.coinBalanceText}>{ticker}</Text>
         </View>
+        {fiatTotal !== '0' && (
+          <View style={styles.fiatBalanceRow}>
+            <Text style={{...styles.fiatBalanceText, ...styles.fiatBalance}}>
+              {makeRoundedBalance(fiatPercision, fiatTotal)}
+            </Text>
+            <Text style={styles.fiatBalanceText}>{props.fiat}</Text>
+          </View>
+        )}
       </View>
       {props.showControl && (
         <View style={styles.displayedSwitchContainer}>
@@ -135,6 +137,7 @@ const styles = StyleSheet.create({
   },
   col2: {
     flex: 2,
+    justifyContent: 'center',
   },
   logoPlaceholder: {
     backgroundColor: '#fff',
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  fiatBalanceText: {
+  coinBalanceText: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'normal',
@@ -200,7 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  coinBalanceText: {
+  fiatBalanceText: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'normal',

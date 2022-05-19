@@ -46,9 +46,9 @@ export default function SecurityScreen() {
   }, [authService, hideDisableConf]);
 
   const savePin = useCallback(async (pin: string) => {
-    hideModal();
     await authService.enablePin(pin);
     setPinEnabled(true);
+    hideModal();
   }, [hideModal, authService]);
 
   const onBiometricChange = async () => {
@@ -81,7 +81,6 @@ export default function SecurityScreen() {
       'focus',
       () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()])
     ), [authService, options]);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>

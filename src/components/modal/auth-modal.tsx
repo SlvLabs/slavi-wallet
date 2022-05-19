@@ -170,6 +170,10 @@ export default function AuthModal(props: AuthModalProps) {
       animationType={'none'}
       visible={visible && authService.isAuthEnable()}>
       <SafeAreaView style={styles.container}>
+        {visible && <StatusBar
+          backgroundColor={theme.colors.black}
+          barStyle={'light-content'}
+        />}
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
           {!restoreIsActive ? (
             <>
@@ -202,7 +206,6 @@ export default function AuthModal(props: AuthModalProps) {
           )}
         </RadialGradient>
       </SafeAreaView>
-      {visible && <StatusBar hidden={true}/>}
     </Modal>
   );
 }

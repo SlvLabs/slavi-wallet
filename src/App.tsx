@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {initStore} from './store';
@@ -87,7 +87,18 @@ const App: () => ReactNode = () => {
     setIsUpdateRequired(store.getState().initialization.updateRequired);
   });
 
-  store.subscribe(() => setIsAuthorized(store.getState().auth.authorized));
+  store.subscribe(() => {
+    if(!initialLoaded || !services.current.authService) {
+      setIsAuthorized(true);
+      return;
+    }
+
+    if(services.current.authService.isAuthEnable()) {
+      setIsAuthorized(store.getState().auth.authorized)
+    } else {
+      setIsAuthorized(true);
+    }
+  });
 
   store.subscribe(() =>
     setIsMnemonicConfirmed(store.getState().account.confirmed),
@@ -187,8 +198,7 @@ const App: () => ReactNode = () => {
           {!isBootstrapped && <AuthModal visible={!isAuthorized} />}
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme}>
-              <StatusBar barStyle="dark-content" />
-              {/*{devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}*/}
+              {devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}

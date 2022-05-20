@@ -5,6 +5,7 @@ import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
 import SimpleInput from '../controls/simple-input';
 import CustomIcon from '../custom-icon/custom-icon';
+import Layout from '../../utils/layout';
 
 export interface RecipientInputProps {
   onChange: (val: string) => void;
@@ -42,7 +43,7 @@ const RecipientInput = (props: RecipientInputProps) => {
         icon={
           <CustomIcon
             name={'scan'}
-            size={24}
+            size={Layout.isSmallDevice ? 20 : 24}
             color={theme.colors.textLightGray3}
           />
         }

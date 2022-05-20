@@ -83,7 +83,7 @@ const CoinsListScreen = () => {
   }, [tabIndex]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar
         backgroundColor="transparent"
         translucent={true}
@@ -106,7 +106,7 @@ const CoinsListScreen = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

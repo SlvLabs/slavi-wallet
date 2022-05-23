@@ -1,7 +1,6 @@
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
 import theme from '../../theme';
-import Layout from '../../utils/layout';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import AddressSelector from '../../components/buttons/address-selector';
 import {CurrencySelect} from '../../components/coin-buy/currency-select';
@@ -11,130 +10,14 @@ import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-a
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import {DestinationCoinAmount} from '../../components/coin-buy/destination-coin-amount';
 import {ServiceProvider} from '../../components/coin-buy/service-provider';
-import SolidButton from '../../components/buttons/solid-button';
 import {ConfirmationModal} from '../../components/coin-buy/confirmation-modal';
 import {CannotProceedModal} from '../../components/coin-buy/cannot-proceed-modal';
-import {
-  getCryptoAmountByCurrencyAmountAndPrice,
-  getCurrencyAmountByCryptoAmountAndPrice,
-} from '../../utils/currency-calculator';
 import GSolidButton from '../../components/buttons/g-solid-button';
-
-interface CoinTradePairToUser {
-  ticker: string;
-  price: string;
-  name?: string;
-  img?: string;
-  minAmountToSpend?: string;
-  maxAmountToSpend?: string;
-}
-interface WithdrawInfoForUser {
-  min?: string;
-  max?: string;
-  fee?: string;
-}
-interface BuyCoinData {
-  pairs: CoinTradePairToUser[];
-  withdrawInfo: WithdrawInfoForUser;
-}
-
-const dataStub: BuyCoinData = {
-  withdrawInfo: {
-    max: '1000',
-    min: '0',
-    fee: '0',
-  },
-  pairs: [
-    {
-      ticker: 'USD',
-      name: 'Dollar',
-      img: '/images/usdt.png',
-      price: '30000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'EUR',
-      img: '/images/firo-logo.png',
-      price: '35000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'RUB',
-      img: '/images/polka.png',
-      price: '700000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'USD1',
-      name: 'Dollar',
-      img: '/images/usdt.png',
-      price: '30000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'EUR1',
-      img: '/images/firo-logo.png',
-      price: '35000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'RUB1',
-      img: '/images/polka.png',
-      price: '700000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'USD2',
-      name: 'Dollar',
-      img: '/images/usdt.png',
-      price: '30000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'EUR2',
-      img: '/images/firo-logo.png',
-      price: '35000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'RUB2',
-      img: '/images/polka.png',
-      price: '700000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'USD3',
-      name: 'Dollar',
-      img: '/images/usdt.png',
-      price: '30000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'EUR3',
-      img: '/images/firo-logo.png',
-      price: '35000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-    {
-      ticker: 'RUB3',
-      img: '/images/polka.png',
-      price: '700000',
-      minAmountToSpend: '100',
-      maxAmountToSpend: '1000',
-    },
-  ],
-};
+import {useBuyCoin} from '@slavi/wallet-core/src/providers/ws/hooks/bifinity/buy-coin-hook';
+import AlertRow from '../../components/error/alert-row';
+import {validationErrorToString} from '@slavi/wallet-core/src/utils/validation-error';
+import ROUTES from '../../navigation/config/routes';
+import NoticeRow from '../../components/error/notice-row';
 
 const BuyCoinScreen = () => {
   const route = useRoute<CoinBuyRouteProps>();
@@ -148,21 +31,24 @@ const BuyCoinScreen = () => {
   }
 
   const {t} = useTranslation();
-  const [currency, setCurrency] = useState<string>('USD');
-  const [currencyAmount, _setCurrencyAmount] = useState<string>('0');
-  const [cryptoAmount, _setCryptoAmount] = useState<string>('0');
-  const setCurrencyAmount = useCallback((newCurrencyAmount: string) => {
-      _setCurrencyAmount(newCurrencyAmount);
-      const currentCurrency = dataStub.pairs.find(p => p.ticker === currency);
-      _setCryptoAmount(getCryptoAmountByCurrencyAmountAndPrice(newCurrencyAmount, currentCurrency?.price));
-  }, [currency]);
-  const setCryptoAmount = useCallback((newCryptoAmount: string) => {
-      _setCryptoAmount(newCryptoAmount);
-      const currentCurrency = dataStub.pairs.find(p => p.ticker === currency);
-      _setCurrencyAmount(getCurrencyAmountByCryptoAmountAndPrice(newCryptoAmount, currentCurrency?.price));
-  }, [currency]);
+  const navigation = useNavigation();
   const balancesState = useAddressesBalance(coin);
   const [receiveAddressIndex, setReceiveAddressIndex] = useState<number>(0);
+  const {
+    notAvailable,
+    pairs,
+    withdrawInfo,
+    currencyData,
+    currency,
+    currencyAmount,
+    setCurrencyAmount,
+    setCurrency,
+    setCryptoAmount,
+    cryptoAmount,
+    validationError,
+    error, initError, isLoading, submitBuyCoin,
+    createdOrder, isProcessing,
+  } = useBuyCoin(coin, coinDetails.ticker, balancesState.balances[receiveAddressIndex]?.address);
 
   const [confirmationModalVisible, setConfirmationModalVisible] = useState<boolean>(false);
   const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(false);
@@ -170,28 +56,87 @@ const BuyCoinScreen = () => {
     setConfirmationModalVisible(false);
   }, []);
 
+  const doSubmit = useCallback(() => {
+    if (createdOrder?.eternalRedirectUrl) {
+      console.log('reuse url');
+      navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {ticker: coinDetails.ticker, url: createdOrder.eternalRedirectUrl});
+    } else {
+      console.log('get new url');
+      submitBuyCoin();
+    }
+  }, [navigation, createdOrder, submitBuyCoin, coinDetails]);
+
   const onContinue = useCallback(() => {
     if (disclaimerAccepted) {
-      //SUBMIT TODO
+      doSubmit();
     } else {
       setConfirmationModalVisible(true);
     }
-  }, [disclaimerAccepted]);
+  }, [disclaimerAccepted, doSubmit]);
 
   const onSubmit = useCallback(() => {
     setDisclaimerAccepted(true);
     setConfirmationModalVisible(false);
-    //SUBMIT TODO
-  }, []);
+    doSubmit();
+  }, [doSubmit]);
 
   const [cannotProceedModalVisible, setCannotProceedModalVisible] = useState<boolean>(false);
-  const navigation = useNavigation();
+
   const onCannotProceedOK = useCallback(() => {
     setCannotProceedModalVisible(false);
     navigation.goBack();
   }, [navigation]);
 
-  return (
+  useEffect(() => {
+    if (createdOrder) {
+      navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {ticker: coinDetails.ticker, url: createdOrder.eternalRedirectUrl});
+    }
+  }, [createdOrder, navigation, coinDetails]);
+
+  const feeView = useMemo(
+    () =>
+      currencyData && typeof currencyData?.fee === 'undefined' && withdrawInfo?.feeInNetworkCoin && (
+        <View style={styles.errorContainer}>
+          <NoticeRow
+            text={validationErrorToString(t, {
+              text: 'fee will be {amount} {ticker}',
+              vars: {amount: withdrawInfo?.feeInNetworkCoin, ticker: coinDetails.parentName},
+            })}
+          />
+        </View>
+      ),
+    [t, currencyData, withdrawInfo, coinDetails],
+  );
+
+  useEffect(() => {
+    if (notAvailable || initError) {
+      setCannotProceedModalVisible(true);
+    }
+  }, [notAvailable, initError]);
+
+  console.log('error = ', error);
+
+  return isLoading || !(pairs || initError || notAvailable) ? (
+    <ActivityIndicator />
+  ) : initError ? (
+    <SafeAreaView style={styles.screen}>
+      <CannotProceedModal
+        visible={cannotProceedModalVisible}
+        onSubmit={onCannotProceedOK}
+        text={initError}
+        showImg={false}
+      />
+    </SafeAreaView>
+  ) : notAvailable ? (
+    <SafeAreaView style={styles.screen}>
+      <CannotProceedModal
+        visible={cannotProceedModalVisible}
+        onSubmit={onCannotProceedOK}
+        text={'Sorry, our service is not available in the location you are in'}
+        showImg={true}
+      />
+    </SafeAreaView>
+  ) : (
     <SafeAreaView style={styles.screen}>
       <AddressSelector
         label={t('To account')}
@@ -200,14 +145,16 @@ const BuyCoinScreen = () => {
         onSelect={setReceiveAddressIndex}
         selectedAddress={receiveAddressIndex}
         ticker={coinDetails.ticker}
+        disabled={isProcessing}
       />
       <CurrencySelect
-        currencies={dataStub.pairs}
+        currencies={pairs!}
         setCurrency={setCurrency}
         currency={currency}
         currencyAmount={currencyAmount}
         setCurrencyAmount={setCurrencyAmount}
         containerStyle={styles.currencySelect}
+        disabled={isProcessing}
       />
       <DestinationCoinAmount
         logo={coinDetails.logo}
@@ -215,28 +162,28 @@ const BuyCoinScreen = () => {
         amount={cryptoAmount}
         setAmount={setCryptoAmount}
         containerStyle={styles.destinationCoin}
+        disabled={isProcessing}
       />
       <ServiceProvider containerStyle={styles.serviceProvider} />
-      {/*<View style={styles.textBlock}>*/}
-      {/*  <Text style={styles.description}>{*/}
-      {/*    t('You can add a token that is missing in our wallet.') + '\n' +*/}
-      {/*      t('To do this, select the blockchain that owns the token and specify the address of the contract')*/}
-      {/*  }</Text>*/}
-      {/*</View>*/}
-      {/*{!!error && (*/}
-      {/*  <View style={styles.errorContainer}>*/}
-      {/*    <AlertRow text={error} />*/}
-      {/*  </View>*/}
-      {/*)}*/}
+      {!!error && (
+        <View style={styles.errorContainer}>
+          <AlertRow text={error} />
+        </View>
+      )}
+      {!!validationError && (
+        <View style={styles.errorContainer}>
+          <AlertRow text={validationErrorToString(t, validationError)} />
+        </View>
+      )}
+      {feeView}
       <GSolidButton
         title={t('Continue')}
-        loading={false}
+        loading={isProcessing}
         onPress={onContinue}
-        disabled={false}
+        disabled={!!(error || validationError || isProcessing)}
         containerStyle={styles.continue}
       />
       <ConfirmationModal visible={confirmationModalVisible} onSubmit={onSubmit} onCancel={confirmationModalCancel} />
-      <CannotProceedModal visible={cannotProceedModalVisible} onSubmit={onCannotProceedOK} />
     </SafeAreaView>
   );
 };
@@ -268,6 +215,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   serviceProvider: {
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 8,
+  },
+  errorContainer: {
     marginLeft: 16,
     marginRight: 16,
     marginBottom: 8,

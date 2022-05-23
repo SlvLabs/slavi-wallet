@@ -11,6 +11,7 @@ interface DestinationCoinAmountProps {
   containerStyle?: ViewStyle;
   ticker: string;
   logo?: string;
+  disabled?: boolean;
 }
 
 export const DestinationCoinAmount = ({
@@ -19,6 +20,7 @@ export const DestinationCoinAmount = ({
   amount,
   setAmount,
   containerStyle,
+  disabled,
 }: DestinationCoinAmountProps) => {
   const {t} = useTranslation();
   return (
@@ -33,6 +35,10 @@ export const DestinationCoinAmount = ({
           disableErrorStyle={true}
           inputContainerStyle={styles.srcInput}
           inputStyle={styles.input}
+          containerStyle={styles.simpleInputContainer}
+          disabled={disabled}
+          skipDisabledStyle={true}
+          maximumPrecision={8}
         />
       </View>
       <View style={styles.rightColumn}>
@@ -101,10 +107,14 @@ const styles = StyleSheet.create({
   },
   srcInput: {
     paddingTop: 9,
+    paddingRight: 0,
     marginTop: 0,
     paddingBottom: 5,
     paddingLeft: 0,
     marginRight: 10,
+  },
+  simpleInputContainer: {
+
   },
   input: {
     lineHeight: 21,

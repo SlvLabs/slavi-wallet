@@ -95,6 +95,7 @@ const CoinInfoScreen = () => {
                 onPressSend={onPressSend}
                 onPressBuy={onPressBuy}
                 exchangeDisabled={!spec?.swap}
+                buyEnabled={spec?.binanceTradeAllowed || false}
               />
             }
           />

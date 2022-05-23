@@ -1,4 +1,4 @@
-import useTranslation from '../../utils/use-translation';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import SolidButton from '../buttons/solid-button';
@@ -9,22 +9,26 @@ import {ipDisconnect} from '../../assets/images';
 export interface CannotProceedModalProps {
   visible: boolean;
   onSubmit: () => void;
+  text: string;
+  showImg?: boolean;
 }
 
 export const CannotProceedModal = (props: CannotProceedModalProps) => {
-  const {visible, onSubmit} = props;
+  const {visible, onSubmit, showImg, text} = props;
   const {t} = useTranslation();
 
   return (
     <BaseModal visible={visible}>
-      <View style={styles.imgContainer}>
-        <Image source={ipDisconnect} style={styles.img}/>
-      </View>
+      {showImg && (
+        <View style={styles.imgContainer}>
+          <Image source={ipDisconnect} style={styles.img} />
+        </View>
+      )}
       <View style={styles.headerContainer}>
         <Text style={styles.header}>{t('Cannot proceed')}</Text>
       </View>
       <View style={styles.bodyContainer}>
-        <Text style={styles.body}>{t('Sorry, our service is not available in the location you are in')}</Text>
+        <Text style={styles.body}>{t(text as unknown as TranslationsKey)}</Text>
       </View>
       <View style={styles.controlsContainer}>
         <SolidButton title={t('OK')} onPress={onSubmit} buttonStyle={styles.acceptButton} />
@@ -35,7 +39,6 @@ export const CannotProceedModal = (props: CannotProceedModalProps) => {
 
 const styles = StyleSheet.create({
   imgContainer: {
-
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -46,7 +49,6 @@ const styles = StyleSheet.create({
     height: 80,
   },
   headerContainer: {
-
     paddingRight: 38,
     paddingLeft: 38,
   },

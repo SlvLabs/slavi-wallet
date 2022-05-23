@@ -359,6 +359,12 @@ const translations = {
   nftNotEnoughNetwork: 'Insufficient network coin balance to pay the transfer fee',
   'Service provider': 'Service provider',
   'Bifinity': 'Bifinity',
+  'must spend more than {amount} {currency}': 'must spend more than {amount} {currency}',
+  'must spend less than {amount} {currency}': 'must spend less than {amount} {currency}',
+  'cannot withdraw less than {amount} {ticker}': 'cannot withdraw less than {amount} {ticker}',
+  'cannot withdraw more than {amount} {ticker}': 'cannot withdraw more than {amount} {ticker}',
+  'fee will be {amount} {ticker}': 'fee will be {amount} {ticker}',
+  'account not selected': 'account not selected',
   'Sorry, our service is not available in the location you are in': 'Sorry, our service is not available in the location you are in',
   'Cannot proceed': 'Cannot proceed',
 }

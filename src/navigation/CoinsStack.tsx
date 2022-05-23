@@ -16,6 +16,7 @@ import NftInfoScreen from '../containers/nft/nft-info-screen';
 import NftSendScreen from '../containers/nft/nft-send-screen';
 import NtfSuccessSendingScreen from '../containers/nft/ntf-success-sending-screen';
 import BuyCoinScreen from '../containers/coins/BuyCoinScreen';
+import {BuyCoinWebViewScreen} from '../containers/coins/BuyCoinWebViewScreen';
 
 export interface CoinsStackParamList extends ParamListBase {
   List: {};
@@ -27,6 +28,10 @@ export interface CoinsStackParamList extends ParamListBase {
   };
   BuyCoin: {
     coin: string;
+    ticker: string;
+  };
+  BuyCoinWebView: {
+    url: string;
     ticker: string;
   };
   Send: {
@@ -63,6 +68,7 @@ export interface CoinsStackParamList extends ParamListBase {
 export type CoinInfoRouteProps = RouteProp<CoinsStackParamList, 'Info'>;
 export type CoinReceiveRouteProps = RouteProp<CoinsStackParamList, 'Receive'>;
 export type CoinBuyRouteProps = RouteProp<CoinsStackParamList, 'BuyCoin'>;
+export type CoinBuyWebViewProps = RouteProp<CoinsStackParamList, 'BuyCoinWebView'>;
 export type CoinSendRouteProps = RouteProp<CoinsStackParamList, 'Send'>;
 export type CoinSuccessfullySendingRouteProps = RouteProp<
   CoinsStackParamList,
@@ -104,6 +110,14 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.BUY_COIN}
         component={BuyCoinScreen}
+        options={({route}) => {
+          const params = route.params as CoinsStackParamList['BuyCoin'];
+          return {title: t('Buy') + (params?.ticker ? ' ' + params?.ticker : '')};
+        }}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.BUY_COIN_WEB_VIEW}
+        component={BuyCoinWebViewScreen}
         options={({route}) => {
           const params = route.params as CoinsStackParamList['BuyCoin'];
           return {title: t('Buy') + (params?.ticker ? ' ' + params?.ticker : '')};

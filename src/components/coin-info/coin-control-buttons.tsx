@@ -11,13 +11,14 @@ export interface CoinControlButtonsProps {
   onPressExchange: () => void;
   onPressBuy: () => void;
   exchangeDisabled: boolean;
+  buyEnabled: boolean;
 }
 
 const CoinControlButtons = (props: CoinControlButtonsProps) => {
   const {
     onPressExchange, onPressReceive,
     onPressBuy, onPressSend,
-    exchangeDisabled,
+    exchangeDisabled, buyEnabled,
   } = props;
 
   const {t} = useTranslation();
@@ -37,6 +38,7 @@ const CoinControlButtons = (props: CoinControlButtonsProps) => {
       <OutlineButton
         title={t('Buy')}
         onPress={onPressBuy}
+        disabled={!buyEnabled}
         buttonStyle={styles.button}
       />
       <OutlineButton

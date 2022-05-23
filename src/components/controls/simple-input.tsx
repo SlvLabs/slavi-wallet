@@ -34,6 +34,7 @@ export interface SimpleInputProps {
   returnKeyType?: ReturnKeyTypeOptions;
   disableFocusStyle?: boolean;
   disableErrorStyle?: boolean;
+  skipDisabledStyle?: boolean;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -42,7 +43,7 @@ const SimpleInput = (props: SimpleInputProps) => {
 
   const [focusStyle, setFocusStyle] = useState<ViewStyle>({});
 
-  if (props.disabled) {
+  if (props.disabled && !props.skipDisabledStyle) {
     disabledStyle = {
       backgroundColor: theme.colors.borderGray,
       borderWidth: 1,
@@ -102,6 +103,7 @@ const SimpleInput = (props: SimpleInputProps) => {
             keyboardType={props.keyboardType}
             placeholderTextColor={props.placeholderTextColor}
             returnKeyType={props.returnKeyType}
+            editable={!props.disabled}
           />
         </View>
         {!!props.buttonText && (

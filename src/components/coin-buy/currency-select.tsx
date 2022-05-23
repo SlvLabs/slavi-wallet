@@ -14,16 +14,17 @@ export interface Currency {
 }
 
 export interface CurrencySelectProps {
-  currency: string;
+  currency?: string;
   setCurrency: (currency: string) => void;
   currencyAmount: string;
   setCurrencyAmount: (currencyAmount: string) => void;
   currencies: Currency[];
   containerStyle?: ViewStyle;
+  disabled?: boolean;
 }
 
 export const CurrencySelect = (props: CurrencySelectProps) => {
-  const {containerStyle, currencies, currency, currencyAmount, setCurrency, setCurrencyAmount} = props;
+  const {containerStyle, currencies, currency, currencyAmount, setCurrency, setCurrencyAmount, disabled} = props;
   const {t} = useTranslation();
   const [selectedCurrency, setSelectedCurrency] = useState(
     currencies.find(x => x.ticker === currency) || currencies[0],
@@ -48,13 +49,16 @@ export const CurrencySelect = (props: CurrencySelectProps) => {
           inputType={DecimalType.Real}
           errorContainerStyle={styles.errorInput}
           disableErrorStyle={true}
+          disabled={disabled}
           inputContainerStyle={styles.srcInput}
           inputStyle={styles.input}
+          skipDisabledStyle={true}
+          maximumPrecision={2}
         />
       </View>
       <View style={styles.rightColumn}>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.coinsRow} onPress={showCurrencyModal}>
+          <TouchableOpacity style={styles.coinsRow} onPress={showCurrencyModal} disabled={disabled}>
             <Image source={getImageSource(selectedCurrency?.img)} style={styles.image}/>
             <Text style={styles.ticker}>{selectedCurrency?.ticker}</Text>
             <CustomIcon name={'arrow-right1'} size={8} color={theme.colors.textLightGray1}/>
@@ -130,9 +134,10 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   srcInput: {
-    paddingTop: 9,
     marginTop: 0,
+    paddingTop: 9,
     paddingBottom: 5,
+    paddingRight: 0,
     paddingLeft: 0,
     marginRight: 10,
   },

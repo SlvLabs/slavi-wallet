@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   ada,
   atom,
@@ -26,6 +26,7 @@ import Layout from '../../utils/layout';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView } from 'react-native';
+import Toast from 'react-native-simple-toast';
 
 interface EarnCoin {
   name: string;
@@ -61,18 +62,19 @@ const TabsCoins: Record<Tabs, EarnCoin[]> = {
 
 interface PlateColumnProps {
   coins: EarnCoin[];
+  onCoinPress: () => void;
 }
 
 const PlateColumn = (props: PlateColumnProps) => {
-  const {coins} = props;
+  const {coins, onCoinPress} = props;
 
   return (
     <View style={styles.plateColumn}>
       {coins.map((coin, index) => (
-        <View style={styles.coinPlate} key={`plate_${index}`}>
+        <TouchableOpacity style={styles.coinPlate} key={`plate_${index}`} onPress={onCoinPress}>
           <Image source={coin.logo} style={styles.plateLogo} />
           <Text style={styles.plateTitle}>{coin.name}</Text>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );
@@ -81,19 +83,20 @@ const PlateColumn = (props: PlateColumnProps) => {
 interface TabsContentProps {
   coins: EarnCoin[];
   isListDisplayMode: boolean;
+  onCoinPress: () => void;
 }
 
 const TabsContent = (props: TabsContentProps) => {
-  const {coins, isListDisplayMode} = props;
+  const {coins, isListDisplayMode, onCoinPress} = props;
 
   if (isListDisplayMode) {
     return (
       <View style={styles.contentRows}>
         {coins.map((coin, index) => (
-          <View style={styles.coinRow} key={`row_${index}`}>
+          <TouchableOpacity style={styles.coinRow} key={`row_${index}`} onPress={onCoinPress}>
             <Image source={coin.logo} style={styles.listLogo}/>
             <Text style={styles.listTitle}>{coin.name}</Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     );
@@ -112,8 +115,8 @@ const TabsContent = (props: TabsContentProps) => {
 
   return (
     <View style={styles.contentPlate}>
-      <PlateColumn coins={firstColumn} />
-      <PlateColumn coins={secondColumn} />
+      <PlateColumn coins={firstColumn} onCoinPress={onCoinPress} />
+      <PlateColumn coins={secondColumn} onCoinPress={onCoinPress} />
     </View>
   );
 }
@@ -136,7 +139,13 @@ const DefiScreen = () => {
       Keyboard.dismiss();
     }
   }, [navigation]);
+
   const switchDisplayMode = () => setListDisplayMode(!isListDisplayMode);
+
+  const onCoinPress = useCallback(
+    () => Toast.showWithGravity(t('inDevelopment'), Toast.LONG, Toast.CENTER),
+    [t]
+  );
 
   const tabs = useMemo(() => Object.entries(tabNames).map(([key, name]) => {
     const castedKey: Tabs = +key;
@@ -161,14 +170,14 @@ const DefiScreen = () => {
   }), [tabNames, activeTab]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
         <View style={styles.headerContainer}>
           <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
             <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
           </TouchableOpacity>
           <View style={styles.titleView}>
-            <Text style={styles.header}>{t('earn')}</Text>
+            <Text style={styles.header}>{`${t('earn')} (${t('inProgress')})`}</Text>
           </View>
           <View style={styles.controls}>
             <TouchableOpacity style={styles.button} onPress={switchDisplayMode}>
@@ -180,10 +189,10 @@ const DefiScreen = () => {
           {tabs}
         </View>
         <ScrollView style={{flex: 1}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-          <TabsContent coins={TabsCoins[activeTab]} isListDisplayMode={isListDisplayMode} />
+          <TabsContent coins={TabsCoins[activeTab]} isListDisplayMode={isListDisplayMode} onCoinPress={onCoinPress} />
         </ScrollView>
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -200,7 +209,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 36,
+    paddingTop: 48,
     paddingBottom: 12,
     marginBottom: 18,
   },

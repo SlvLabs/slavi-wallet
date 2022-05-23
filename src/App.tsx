@@ -88,13 +88,15 @@ const App: () => ReactNode = () => {
   });
 
   store.subscribe(() => {
-    if(!initialLoaded || !services.current.authService) {
+    if(!services.current.authService) {
       setIsAuthorized(true);
       return;
     }
 
-    if(services.current.authService.isAuthEnable()) {
-      setIsAuthorized(store.getState().auth.authorized)
+    const state = store.getState();
+
+    if(!state.globalLoading.loading && services.current.authService.isAuthEnable()) {
+      setIsAuthorized(state.auth.authorized)
     } else {
       setIsAuthorized(true);
     }

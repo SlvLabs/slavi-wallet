@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -345,6 +345,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
           fee={txResult?.fee}
           onAccept={send}
           onCancel={cancelConfirmSending}
+          ticker={coinDetails.ticker}
         />
         <ConfirmationModal
           visible={skipRentConfIsShown}

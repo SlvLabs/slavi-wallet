@@ -349,6 +349,7 @@ const translations = {
   nftNotEnough: 'Not enough balance',
   nftNotValidAddress: 'Invalid address',
   nftNotEnoughNetwork: 'Insufficient network coin balance to pay the transfer fee',
+  inDevelopment: 'In development',
 }
 
 export default translations;

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Modal, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Modal, SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import PinInput from '../controls/pin-input';
 // @ts-ignore
@@ -170,6 +170,10 @@ export default function AuthModal(props: AuthModalProps) {
       animationType={'none'}
       visible={visible && authService.isAuthEnable()}>
       <SafeAreaView style={styles.container}>
+        {visible && <StatusBar
+          backgroundColor={theme.colors.black}
+          barStyle={'light-content'}
+        />}
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
           {!restoreIsActive ? (
             <>

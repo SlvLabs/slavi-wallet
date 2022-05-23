@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {parseDataFromQr} from '@slavi/wallet-core/src/utils/qr';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
@@ -311,9 +311,10 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         <ConfirmationModal
           visible={confIsShown}
           vouts={txResult?.vouts || []}
-          fee={txResult?.fee}
+          fee={txResult?.fee || '0'}
           onAccept={send}
           onCancel={cancelConfirmSending}
+          ticker={coinDetails.ticker}
         />
       </KeyboardAwareScrollView>
     </SafeAreaView>

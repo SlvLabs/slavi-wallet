@@ -6,10 +6,12 @@ import SolidButton from '../buttons/solid-button';
 import BaseModal from '../modal/base-modal';
 import theme from '../../theme';
 import shrinkAddress from '../../utils/shrink-address';
+import OutlineButton from '../buttons/outline-button';
 
 export interface ConfirmationModalProps {
   visible: boolean;
   vouts: Recipient[];
+  ticker: string;
   fee?: string;
   onAccept: () => void;
   onCancel: () => void;
@@ -25,15 +27,15 @@ export interface ConfirmationModalProps {
   cancelButtonStyle?: ViewStyle;
 }
 
-const renderVout = (vout: Recipient, index: number) => (
+const renderVout = (vout: Recipient, index: number, ticker: string) => (
   <View style={styles.vout} key={'conf_vouts_' + index}>
-    <Text style={styles.voutAddress}>{shrinkAddress(vout.address)}: </Text>
-    <Text style={styles.voutAmount}>{vout.amount}</Text>
+    <Text style={styles.voutAddress}>{shrinkAddress(vout.address, 9, 6)}</Text>
+    <Text style={styles.voutAmount}>{`${vout.amount} ${ticker}`}</Text>
   </View>
 );
 
 const ConfirmationModal = (props: ConfirmationModalProps) => {
-  const {visible, onAccept, onCancel} = props;
+  const {visible, onAccept, onCancel, ticker} = props;
   const {t} = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -42,50 +44,53 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
   const _onAccept = useCallback(() => {
     setLoading(true);
     onAccept();
-  }, [onAccept])
+  }, [onAccept]);
 
   return (
-    <BaseModal visible={visible}>
-      <View
-        style={{
-          ...styles.headerContainer,
-          ...props.headerContainerStyle,
-        }}>
-        <Text style={{...styles.header, ...props.headerStyle}}>
-          {t('Are you sure you want to send funds to the following addresses?')}
-        </Text>
-      </View>
-      <View
-        style={{
-          ...styles.voutsContainer,
-          ...props.voutsContainerStyle,
-        }}>
-        {props.vouts.map(renderVout)}
-      </View>
-      {props.fee && (
-        <View style={{...styles.feeContainer, ...props.feeContainerStyle}}>
-          <Text style={{...styles.fee, ...props.feeStyle}}>
-            {`${t('Fee will be')}:`}
+    <BaseModal visible={visible} showCloseIcon={true}>
+      <View style={styles.content}>
+        <View
+          style={{
+            ...styles.headerContainer,
+            ...props.headerContainerStyle,
+          }}>
+          <Text style={{...styles.header, ...props.headerStyle}}>
+            {t('Are you sure you want to send funds to the following addresses?')}
           </Text>
-          <Text style={styles.feeValue}>{props.fee}</Text>
         </View>
-      )}
-      <View
-        style={{
-          ...styles.controlsContainer,
-          ...props.controlsContainerStyle,
-        }}>
-        <SolidButton
-          title={t('Ok')}
-          onPress={_onAccept}
-          buttonStyle={{...styles.acceptButton, ...props.acceptButtonStyle}}
-          loading={loading}
-        />
-        <SolidButton
-          title={t('Cancel')}
-          onPress={onCancel}
-          buttonStyle={{...styles.cancelButton, ...props.cancelButtonStyle}}
-        />
+        <View
+          style={{
+            ...styles.voutsContainer,
+            ...props.voutsContainerStyle,
+          }}>
+          {props.vouts.map((vout, index) => renderVout(vout, index, ticker))}
+        </View>
+        {props.fee && (
+          <View style={{...styles.feeContainer, ...props.feeContainerStyle}}>
+            <Text style={{...styles.fee, ...props.feeStyle}}>
+              {`${t('Fee will be')}`}
+            </Text>
+            <Text style={styles.feeValue}>{`${props.fee} ${ticker}`}</Text>
+          </View>
+        )}
+        <View
+          style={{
+            ...styles.controlsContainer,
+            ...props.controlsContainerStyle,
+          }}>
+          <SolidButton
+            title={t('Ok')}
+            onPress={_onAccept}
+            buttonStyle={{...styles.acceptButton, ...props.acceptButtonStyle}}
+            loading={loading}
+            containerStyle={styles.acceptContainer}
+          />
+          <OutlineButton
+            title={t('Cancel')}
+            onPress={onCancel}
+            buttonStyle={{...styles.cancelButton, ...props.cancelButtonStyle}}
+          />
+        </View>
       </View>
     </BaseModal>
   );
@@ -93,76 +98,91 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingBottom: 8,
+    paddingBottom: 32,
   },
   header: {
-    fontFamily: theme.fonts.default,
+    fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 18,
+    fontWeight: '800',
+    fontSize: 18,
+    lineHeight: 25,
     letterSpacing: 0.4,
     color: theme.colors.white,
+    textAlign: 'center',
   },
   voutsContainer: {
-    paddingRight: 16,
+    width: '100%',
   },
   voutAddress: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 10,
-    lineHeight: 12,
-    letterSpacing: 0.1,
-    color: theme.colors.white,
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 18,
+    color: theme.colors.textLightGray,
   },
   voutAmount: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 10,
-    lineHeight: 12,
-    letterSpacing: 0.1,
-    color: theme.colors.white,
+    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 18,
+    color: theme.colors.green,
   },
   feeContainer: {
     flexDirection: 'row',
     paddingTop: 8,
+    justifyContent: 'space-between',
+    width: '100%',
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.borderGray,
+    marginTop: 8,
   },
   fee: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 16,
-    letterSpacing: 0.4,
-    color: theme.colors.white,
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 18,
+    color: theme.colors.textLightGray,
   },
   controlsContainer: {
-    padding: 16,
-    flexDirection: 'row',
+    width: '100%',
     justifyContent: 'space-between',
+    marginTop: 32,
   },
   acceptButton: {
-    width: 88,
+    width: '100%',
   },
   cancelButton: {
-    width: 88,
+    width: '100%',
   },
   feeValue: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 14,
-    lineHeight: 16,
-    letterSpacing: 0.4,
-    color: theme.colors.white,
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 18,
+    color: theme.colors.textLightGray,
     marginLeft: 8,
+    textTransform: 'uppercase',
   },
   vout: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   },
+  content: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingBottom: 24,
+  },
+  acceptContainer: {
+    marginBottom: 6,
+  }
 });
 
 export default ConfirmationModal;

@@ -124,7 +124,7 @@ const CoinListCard = (props: CoinsListCardProps) => {
   const crypto = store.useCryptoSelector() || 'BTC';
   const fiatSymbol = useFiatSymbolSelector() || '$';
 
-  const [coinsToList, setCoinsToList] = useState<CoinDisplayData[]>(coins);
+  const [coinsToList, setCoinsToList] = useState<CoinDisplayData[]>([]);
   const [search, setSearch] = useState<string>('');
 
   const [coinsToCardState, dispatchCoinsToCard] = useReducer<CoinsReducer>(coinsReducer, {
@@ -185,15 +185,15 @@ const CoinListCard = (props: CoinsListCardProps) => {
   useEffect(() => {
     if (search.length > 0) {
       const newList: CoinDisplayData[] = searcher(
-        coins,
+        coinsToCardState.coins,
         ['name', 'ticker'],
         search,
       );
       setCoinsToList(newList);
     } else {
-      setCoinsToList(coins);
+      setCoinsToList(coinsToCardState.coins);
     }
-  }, [coins, search]);
+  }, [coinsToCardState.coins, search]);
 
   const clearSearch = useCallback(() => {
     setSearch('');

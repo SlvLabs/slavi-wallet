@@ -12,7 +12,7 @@ import SendView, {
   RecipientUpdatingData,
 } from '../../components/coin-send/send-view';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
@@ -317,6 +317,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
           fee={txResult?.fee}
           onAccept={send}
           onCancel={cancelConfirmSending}
+          ticker={coinDetails.ticker}
         />
         <KeepAliveConfirmationModal
           visible={keepAliveConfirm}

@@ -3,7 +3,6 @@ import {useRoute, useNavigation} from '@react-navigation/native';
 import {CoinInfoRouteProps} from '../../navigation/CoinsStack';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import ROUTES from '../../navigation/config/routes';
-import SimpleToast from 'react-native-simple-toast';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import useCoinInfo from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
 import store from '@slavi/wallet-core/src/store';

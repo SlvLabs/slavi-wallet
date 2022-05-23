@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -61,6 +61,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [voutError, setVoutError] = useState<VoutError>();
   const [locked, setLocked] = useState<boolean>(false);
+  const [sendingLocked, setSendingLocked] = useState<boolean>(false);
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
   const [txResult, setTxResult] = useState<TxCreatingResult | null>(null);
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -228,16 +229,22 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     setLocked(false);
   };
   const send = async () => {
+    if(sendingLocked) {
+      return;
+    }
+
     if (!txResult) {
       throw new Error('Try send transaction before creating');
     }
 
+    setSendingLocked(true);
     try {
       await props.pattern.sendTransactions(txResult.transactions);
     } catch (e) {
       addError(t('Error of broadcast tx. Try again latter or contact support'));
       return;
     } finally {
+      setSendingLocked(false);
       setLocked(false);
       cancelConfirmSending();
     }
@@ -326,7 +333,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             title={t('Send')}
             onPress={onSubmit}
             disabled={!isValid || locked}
-            loading={locked}
+            loading={locked || sendingLocked}
           />
         </View>
         <QrReaderModal
@@ -340,6 +347,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           fee={txResult?.fee}
           onAccept={send}
           onCancel={cancelConfirmSending}
+          ticker={coinDetails.ticker}
         />
         <EthFeeAdvancedModal
           visible={advancedModalIsShown}

@@ -161,7 +161,7 @@ const DefiScreen = () => {
   }), [tabNames, activeTab]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
         <View style={styles.headerContainer}>
           <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
@@ -183,7 +183,7 @@ const DefiScreen = () => {
           <TabsContent coins={TabsCoins[activeTab]} isListDisplayMode={isListDisplayMode} />
         </ScrollView>
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 }
 

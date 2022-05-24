@@ -16,7 +16,6 @@ import Collapse from '../../components/controls/collapse';
 import NftProperty from '../../components/nft/nft-property';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
-import ScreenHeader from '../../components/screen-header';
 import NftImage from '../../components/nft/nft-image';
 
 export default function NftInfoScreen() {
@@ -47,7 +46,6 @@ export default function NftInfoScreen() {
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
-      <ScreenHeader title={t('nftExplorer')} />
       <NftImage image={data.image} imageStyle={styles.image}/>
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{data.name}</Text>

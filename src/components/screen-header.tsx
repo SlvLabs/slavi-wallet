@@ -1,22 +1,21 @@
 import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CustomIcon from './custom-icon/custom-icon';
 import theme from '../theme';
-import React, {ReactNode, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import Layout from '../utils/layout';
 import {useNavigation} from '@react-navigation/native';
 
 export interface ScreenHeaderProps {
   title: string;
-  rightContent?: ReactNode;
 }
 
 export default function ScreenHeader(props: ScreenHeaderProps) {
-  const {title, rightContent} = props;
+  const {title} = props;
 
   const navigation = useNavigation();
 
   const onBackPress = useCallback(() => {
-    if(navigation.canGoBack()) {
+    if (navigation.canGoBack()) {
       navigation.goBack();
       Keyboard.dismiss();
     }
@@ -27,9 +26,8 @@ export default function ScreenHeader(props: ScreenHeaderProps) {
       <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
         <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
       </TouchableOpacity>
-      <Text style={styles.header}>{title}</Text>
-      <View>
-        {rightContent}
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>{title}</Text>
       </View>
     </View>
   );
@@ -38,11 +36,11 @@ export default function ScreenHeader(props: ScreenHeaderProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 36,
-    paddingBottom: 12,
-    marginBottom: 18,
+    // paddingBottom: 12,
+    paddingLeft: Layout.isSmallDevice ? 8 : 16,
+    marginBottom: Layout.isSmallDevice ? 12 : 24,
     width: '100%',
   },
   button: {
@@ -57,14 +55,21 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '300',
-    fontSize: Layout.isSmallDevice ? 14 : 18,
+    fontSize: Layout.isSmallDevice ? 15 : 18,
     lineHeight: 28,
     color: theme.colors.white,
-    textTransform: 'capitalize',
+  },
+  headerContainer: {
+    marginLeft: Layout.isSmallDevice ? -32 : -40, //-button.width
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
   },
   backButton: {
-    transform: [{
-      rotate: '180deg',
-    }],
+    transform: [
+      {
+        rotate: '180deg',
+      },
+    ],
   },
 });

@@ -1,4 +1,4 @@
-import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import theme from '../../theme';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
@@ -18,6 +18,7 @@ import AlertRow from '../../components/error/alert-row';
 import {validationErrorToString} from '@slavi/wallet-core/src/utils/validation-error';
 import ROUTES from '../../navigation/config/routes';
 import NoticeRow from '../../components/error/notice-row';
+import Spinner from '../../components/spinner';
 
 const BuyCoinScreen = () => {
   const route = useRoute<CoinBuyRouteProps>();
@@ -117,7 +118,9 @@ const BuyCoinScreen = () => {
   console.log('error = ', error);
 
   return isLoading || !(pairs || initError || notAvailable) ? (
-    <ActivityIndicator />
+    <View style={styles.spinnerContainer}>
+      <Spinner />
+    </View>
   ) : initError ? (
     <SafeAreaView style={styles.screen}>
       <CannotProceedModal
@@ -193,12 +196,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.screenBackground,
   },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    paddingTop: 0,
+    width: '100%',
+  },
   addressSelector: {
     paddingTop: 14,
     paddingBottom: 14,
     marginLeft: 16,
     marginRight: 16,
-    marginTop: 24,
     marginBottom: 8,
     borderRadius: 8,
     borderWidth: 1,

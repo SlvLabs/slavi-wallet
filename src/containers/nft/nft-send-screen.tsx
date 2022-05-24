@@ -206,7 +206,6 @@ export default function NftSendScreen() {
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
-      <ScreenHeader title={t('nftSendTitle')} />
       <NftImage image={data.image} imageStyle={styles.image}/>
       <Text style={styles.title}>{data.name}</Text>
       {data.type === 'ERC-1155' && <IncrementableDecimalInput

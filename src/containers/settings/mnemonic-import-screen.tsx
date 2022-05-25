@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import InsertableTextArea from '../../components/controls/insertable-text-area';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,9 +7,9 @@ import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
-import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
 import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -23,9 +23,16 @@ const MnemonicImportScreen = () => {
   const hideConf = useCallback(() => setConfIsShown(false), []);
 
   const updateMnemonic = useCallback(async () => {
-    dispatch(setGlobalLoading());
     await dispatch(store.ImportMnemonic(mnemonic));
-    dispatch(unsetGlobalLoading());
+  }, [dispatch, mnemonic]);
+
+
+  const onMnemonicChange = useCallback((value: string) => {
+    setMnemonic(value.toLowerCase());
+  },[dispatch]);
+
+  useEffect(() => {
+    dispatch(setMnemonicError(''))
   }, [dispatch, mnemonic]);
 
   return (
@@ -38,7 +45,7 @@ const MnemonicImportScreen = () => {
             )}
           </Text>
         </View>
-        <InsertableTextArea onChange={(value: string) => setMnemonic(value)} />
+        <InsertableTextArea onChange={onMnemonicChange} />
         <Text style={styles.error}>{mnemonicError}</Text>
         <View style={styles.buttonsBlock}>
           <SolidButton title={t('Import')} onPress={showConf} />

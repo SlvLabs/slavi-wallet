@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../../utils/use-translation';
 import InitializationBackground from '../../../components/background/initialization-background';
 import theme from '../../../theme';
@@ -13,6 +13,7 @@ import {store} from '@slavi/wallet-core';
 import InsertableTextArea from '../../../components/controls/insertable-text-area';
 import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
 
 const ImportAccountScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -26,10 +27,12 @@ const ImportAccountScreen = () => {
   const hideConf = useCallback(() => setConfIsShown(false), []);
 
   const updateMnemonic = useCallback(async () => {
-    dispatch(setGlobalLoading());
-    dispatch(showFinish());
     await dispatch(store.ImportMnemonic(mnemonic));
-    dispatch(unsetGlobalLoading());
+    dispatch(showFinish());
+  }, [dispatch, mnemonic]);
+
+  useEffect(() => {
+    dispatch(setMnemonicError(''))
   }, [dispatch, mnemonic]);
 
   return (

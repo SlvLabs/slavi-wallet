@@ -177,10 +177,12 @@ const CoinListCard = (props: CoinsListCardProps) => {
   );
 
   useEffect(() => {
-    if((route.params as any)?.hideAdd) {
-      setAddClicked(false)
-    }
-  }, [(route.params as any)?.hideAdd])
+    return navigation.addListener('focus', () => {
+      if((route.params as any)?.hideAdd) {
+        setAddClicked(false)
+      }
+    });
+  }, [route.params]);
 
   useEffect(() => {
     if (search.length > 0) {

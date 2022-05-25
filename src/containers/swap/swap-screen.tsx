@@ -83,7 +83,7 @@ const SwapScreen = () => {
   const specService = useCoinSpecsService();
 
   const {isLoading, error: networksError, coins: parentCoins} = useGetAvailableNetworks();
-  const coins = useCoinsSelector(false, true);
+  const coins = useCoinsSelector({isSwap: true});
   const balancesState = useAddressesBalance(inCoin);
 
   const {t} = useTranslation();

@@ -1,9 +1,9 @@
-import SolidButton from '../buttons/solid-button';
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import useTranslation from '../../utils/use-translation';
-import OutlineButton from '../buttons/outline-button';
 import Layout from '../../utils/layout';
+import GradientRoundButton from '../buttons/gradient-round-button';
+import {buyBtn, exchangeBtn, receiveBtn, sendBtn} from '../../assets/images';
 
 export interface CoinControlButtonsProps {
   onPressSend: () => void;
@@ -25,27 +25,33 @@ const CoinControlButtons = (props: CoinControlButtonsProps) => {
 
   return (
     <View style={styles.container}>
-      <SolidButton
-        title={t('Send')}
+      <GradientRoundButton
+        label={t('Send')}
         onPress={onPressSend}
-        buttonStyle={styles.button}
+        iconName={'arrow-up1'}
+        iconSize={18}
+        image={sendBtn}
       />
-      <OutlineButton
-        title={t('Receive')}
+      <GradientRoundButton
+        label={t('Receive')}
         onPress={onPressReceive}
-        buttonStyle={styles.button}
+        iconName={'arrow-down'}
+        iconSize={18}
+        image={receiveBtn}
       />
-      <OutlineButton
-        title={t('Buy')}
+      <GradientRoundButton
+        label={t('Buy')}
         onPress={onPressBuy}
+        iconName={'wallet-3'}
         disabled={!buyEnabled}
-        buttonStyle={styles.button}
+        image={buyBtn}
       />
-      <OutlineButton
-        title={t('Exchange')}
-        disabled={exchangeDisabled}
+      <GradientRoundButton
+        label={t('Exchange')}
         onPress={onPressExchange}
-        buttonStyle={styles.button}
+        iconName={'exchange-2'}
+        disabled={exchangeDisabled}
+        image={exchangeBtn}
       />
     </View>
   );
@@ -54,8 +60,8 @@ const CoinControlButtons = (props: CoinControlButtonsProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 16,
+    justifyContent: 'center',
+    marginBottom: 20,
   },
   button: {
     width: Layout.isSmallDevice ? 88 : 100,

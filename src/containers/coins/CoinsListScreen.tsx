@@ -35,7 +35,7 @@ const CoinsListScreen = () => {
     [navigation]);
 
   const navigateToSend = useCallback(() =>
-      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filterByBalance: true, balanceShown: true}),
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filter: {positiveBalance: true}, balanceShown: true}),
     [navigation]);
 
   const routes = useMemo(() => ([

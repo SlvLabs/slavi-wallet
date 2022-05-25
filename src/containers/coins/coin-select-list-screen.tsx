@@ -7,12 +7,12 @@ import CoinSelectList from '../../components/coins/coins-select-list';
 
 export default function CoinSelectListScreen() {
   const {params} = useRoute();
-  const {nextScreen, filterByBalance, balanceShown} = params as any;
+  const {nextScreen, filter, balanceShown} = params as any;
   if(!nextScreen) {
     throw new Error('Wrong coins routing');
   }
 
-  const coins = useCoinsSelector(filterByBalance);
+  const coins = useCoinsSelector(filter);
 
   const navigation = useNavigation();
 

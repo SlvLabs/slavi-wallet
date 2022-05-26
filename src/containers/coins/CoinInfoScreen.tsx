@@ -87,16 +87,14 @@ const CoinInfoScreen = () => {
             fiatTicker={data.fiat}
             logo={data.logo}
             type={data.type}
-            extraContent={
-              <CoinControlButtons
-                onPressExchange={onPressExchange}
-                onPressReceive={onPressReceive}
-                onPressSend={onPressSend}
-                onPressBuy={onPressBuy}
-                exchangeDisabled={!spec?.swap}
-                buyEnabled={spec?.binanceTradeAllowed || false}
-              />
-            }
+          />
+          <CoinControlButtons
+            onPressExchange={onPressExchange}
+            onPressReceive={onPressReceive}
+            onPressSend={onPressSend}
+            onPressBuy={onPressBuy}
+            exchangeDisabled={!spec?.swap}
+            buyEnabled={spec?.binanceTradeAllowed || false}
           />
           <CoinTabs
             infoParams={list || []}

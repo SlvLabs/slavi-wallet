@@ -21,5 +21,13 @@ export const downButton = require('./down-button.png');
 export const bifinity = require('./bifinity.png');
 export const ipDisconnect = require('./ip-disconnect.png');
 export const dollarButton = require('./dollar_button.png');
+export const buyBtn = require('./buy-btn.png');
+export const buyBtn1 = require('./buy-btn-1.png');
+export const exchangeBtn = require('./exchange-btn.png');
+export const exchangeBtn1 = require('./exchange-btn-1.png');
+export const receiveBtn = require('./receive-btn.png');
+export const receiveBtn1 = require('./receive-btn-1.png');
+export const sendBtn = require('./send-btn.png');
+export const sendBtn1 = require('./send-btn-1.png');
 
 export * from './earn-stubs';

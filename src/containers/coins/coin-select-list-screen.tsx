@@ -17,7 +17,7 @@ export default function CoinSelectListScreen() {
   if (!nextScreen) {
     throw new Error('Wrong coins routing');
   }
-  console.log('filter: ', filter);
+
   const coins = useCoinsSelector(filter);
 
   const navigation = useNavigation();

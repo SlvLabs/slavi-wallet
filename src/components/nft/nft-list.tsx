@@ -28,7 +28,7 @@ export default function NftList() {
     );
   }
 
-  if(!list?.length) {
+  if(!isLoading && !list?.length) {
     return (
       <View style={styles.placeholderContainer}>
         <Image source={nftPlaceholder3} style={styles.placeholderImage}/>
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     alignItems: 'center',
     paddingBottom: 20,
+    minHeight: Layout.window.height - 280,
   },
   placeholderContainer: {
     alignItems: 'center',

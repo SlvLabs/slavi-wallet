@@ -173,7 +173,7 @@ const BuyCoinScreen = () => {
           <AlertRow text={error} />
         </View>
       )}
-      {!!validationError && (
+      {!!validationError && validationError.text && (
         <View style={styles.errorContainer}>
           <AlertRow text={validationErrorToString(t, validationError)} />
         </View>

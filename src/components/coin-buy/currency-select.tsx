@@ -42,7 +42,6 @@ export const CurrencySelect = (props: CurrencySelectProps) => {
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.leftColumn}>
-        <Text style={styles.label}>{t('youPay')}</Text>
         <DecimalInput
           value={currencyAmount}
           onChange={setCurrencyAmount}
@@ -54,6 +53,9 @@ export const CurrencySelect = (props: CurrencySelectProps) => {
           inputStyle={styles.input}
           skipDisabledStyle={true}
           maximumPrecision={2}
+          label={t('youPay')}
+          labelStyle={styles.label}
+          containerStyle={styles.inputContainer}
         />
       </View>
       <View style={styles.rightColumn}>
@@ -91,8 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftColumn: {
-    flex: 1,
-    marginTop: 14,
+    flex: 2,
   },
   rightColumn: {
     flex: 1,
@@ -144,4 +145,8 @@ const styles = StyleSheet.create({
   input: {
     lineHeight: 21,
   },
+  inputContainer: {
+    paddingTop: 6,
+    paddingBottom: 6,
+  }
 });

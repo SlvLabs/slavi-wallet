@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import {useSelectWalletConnectSessions} from '@slavi/wallet-core/src/store/modules/wallet-connect/selectors';
@@ -10,6 +10,7 @@ import Session from '../../components/wallet-connect/session';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {Icon} from 'react-native-elements';
 import Toast from 'react-native-simple-toast';
+import Screen from '../../components/screen';
 
 export default function MainWalletConnectScreen() {
   const [scannerIsShown, setScannerIsShown] = useState<boolean>(false);
@@ -51,8 +52,8 @@ export default function MainWalletConnectScreen() {
   }, [hideScanner, t]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+    <Screen title={t('walletConnect')}>
+      <ScrollView>
         <View style={styles.header}>
           <Text style={styles.title}>{t('walletConnectTitle')}</Text>
           <Text style={styles.description}>{t('walletConnectDescription')}</Text>
@@ -92,19 +93,11 @@ export default function MainWalletConnectScreen() {
           onCancel={hideKilling}
         />
       </ScrollView>
-    </SafeAreaView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-    height: '100%',
-  },
-  content: {
-    padding: 32,
-  },
   title: {
     fontFamily: theme.fonts.default,
     alignSelf: 'center',
@@ -113,7 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 28,
     color: theme.colors.white,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   description: {
     fontFamily: theme.fonts.default,
@@ -126,6 +119,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   header: {
+    marginTop: 20,
     marginBottom: 30,
   },
   sessionsContainer: {

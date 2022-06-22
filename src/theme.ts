@@ -48,8 +48,12 @@ export default {
     buttonBackground: 'rgba(14, 16, 24, 0.5)',
     contentBackground: '#0B0B0B',
     disabledButton: '#7D7D7D',
-    tabsColor: '#212531',
-    buttonv2: 'rgba(72, 81, 107, 0.6)'
+    tabsColor: '#242135',
+    buttonv2: 'rgba(72, 81, 107, 0.6)',
+    buttonv3: 'rgba(74, 58, 122, 0.6)',
+    tabInactiveTitle: '#62607A',
+    tatActiveTitle: '#372E51',
+    placeholderText: '#7A7A7E',
   },
   /** @deprecated */
   colorsOld: {
@@ -154,6 +158,11 @@ export default {
     activeTab: {
       colors: ['#2D303E', 'rgba(35, 38, 48, 0.5)'],
       locations: [0.1, 1],
+      useAngle: false,
+    },
+    activeTabV2: {
+      colors: ['#EBE5FC', '#b099d0'],
+      locations: [0, 1],
       useAngle: false,
     },
     screenBackground: {

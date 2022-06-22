@@ -19,6 +19,7 @@ import {validationErrorToString} from '@slavi/wallet-core/src/utils/validation-e
 import ROUTES from '../../navigation/config/routes';
 import NoticeRow from '../../components/error/notice-row';
 import Spinner from '../../components/spinner';
+import Screen from '../../components/screen';
 
 const BuyCoinScreen = () => {
   const route = useRoute<CoinBuyRouteProps>();
@@ -59,10 +60,8 @@ const BuyCoinScreen = () => {
 
   const doSubmit = useCallback(() => {
     if (createdOrder?.eternalRedirectUrl) {
-      console.log('reuse url');
       navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {ticker: coinDetails.ticker, url: createdOrder.eternalRedirectUrl});
     } else {
-      console.log('get new url');
       submitBuyCoin();
     }
   }, [navigation, createdOrder, submitBuyCoin, coinDetails]);
@@ -101,7 +100,7 @@ const BuyCoinScreen = () => {
           <NoticeRow
             text={validationErrorToString(t, {
               text: 'fee will be {amount} {ticker}',
-              vars: {amount: withdrawInfo?.feeInNetworkCoin, ticker: coinDetails.parentName},
+              vars: {amount: withdrawInfo?.feeInNetworkCoin, ticker: coinDetails.parentName || ''},
             })}
           />
         </View>
@@ -115,86 +114,91 @@ const BuyCoinScreen = () => {
     }
   }, [notAvailable, initError]);
 
-  console.log('error = ', error);
+  if (isLoading || !(pairs || initError || notAvailable)) {
+    return (
+      <View style={styles.spinnerContainer}>
+        <Spinner />
+      </View>
+    );
+  }
 
-  return isLoading || !(pairs || initError || notAvailable) ? (
-    <View style={styles.spinnerContainer}>
-      <Spinner />
-    </View>
-  ) : initError ? (
-    <SafeAreaView style={styles.screen}>
-      <CannotProceedModal
-        visible={cannotProceedModalVisible}
-        onSubmit={onCannotProceedOK}
-        text={initError}
-        showImg={false}
-      />
-    </SafeAreaView>
-  ) : notAvailable ? (
-    <SafeAreaView style={styles.screen}>
-      <CannotProceedModal
-        visible={cannotProceedModalVisible}
-        onSubmit={onCannotProceedOK}
-        text={'Sorry, our service is not available in the location you are in'}
-        showImg={true}
-      />
-    </SafeAreaView>
-  ) : (
-    <SafeAreaView style={styles.screen}>
-      <AddressSelector
-        label={t('To account')}
-        containerStyle={styles.addressSelector}
-        addresses={balancesState.balances}
-        onSelect={setReceiveAddressIndex}
-        selectedAddress={receiveAddressIndex}
-        ticker={coinDetails.ticker}
-        disabled={isProcessing}
-      />
-      <CurrencySelect
-        currencies={pairs!}
-        setCurrency={setCurrency}
-        currency={currency}
-        currencyAmount={currencyAmount}
-        setCurrencyAmount={setCurrencyAmount}
-        containerStyle={styles.currencySelect}
-        disabled={isProcessing}
-      />
-      <DestinationCoinAmount
-        logo={coinDetails.logo}
-        ticker={coinDetails.ticker}
-        amount={cryptoAmount}
-        setAmount={setCryptoAmount}
-        containerStyle={styles.destinationCoin}
-        disabled={isProcessing}
-      />
-      <ServiceProvider containerStyle={styles.serviceProvider} />
-      {!!error && (
-        <View style={styles.errorContainer}>
-          <AlertRow text={error} />
-        </View>
-      )}
-      {!!validationError && validationError.text && (
-        <View style={styles.errorContainer}>
-          <AlertRow text={validationErrorToString(t, validationError)} />
-        </View>
-      )}
-      {feeView}
-      <GSolidButton
-        title={t('Continue')}
-        loading={isProcessing}
-        onPress={onContinue}
-        disabled={!!(error || validationError || isProcessing)}
-        containerStyle={styles.continue}
-      />
-      <ConfirmationModal visible={confirmationModalVisible} onSubmit={onSubmit} onCancel={confirmationModalCancel} />
-    </SafeAreaView>
-  );
+  return (
+  <Screen title={t('Buy') + (coinDetails.ticker ? ' ' + coinDetails.ticker : '')}>
+    {initError ? (
+      <SafeAreaView style={styles.screen}>
+        <CannotProceedModal
+          visible={cannotProceedModalVisible}
+          onSubmit={onCannotProceedOK}
+          text={initError}
+          showImg={false}
+        />
+      </SafeAreaView>
+    ) : notAvailable ? (
+      <SafeAreaView style={styles.screen}>
+        <CannotProceedModal
+          visible={cannotProceedModalVisible}
+          onSubmit={onCannotProceedOK}
+          text={'Sorry, our service is not available in the location you are in'}
+          showImg={true}
+        />
+      </SafeAreaView>
+    ) : (
+      <SafeAreaView style={styles.screen}>
+        <AddressSelector
+          label={t('To account')}
+          containerStyle={styles.addressSelector}
+          addresses={balancesState.balances}
+          onSelect={setReceiveAddressIndex}
+          selectedAddress={receiveAddressIndex}
+          ticker={coinDetails.ticker}
+          disabled={isProcessing}
+        />
+        <CurrencySelect
+          currencies={pairs!}
+          setCurrency={setCurrency}
+          currency={currency}
+          currencyAmount={currencyAmount}
+          setCurrencyAmount={setCurrencyAmount}
+          containerStyle={styles.currencySelect}
+          disabled={isProcessing}
+        />
+        <DestinationCoinAmount
+          logo={coinDetails.logo}
+          ticker={coinDetails.ticker}
+          amount={cryptoAmount}
+          setAmount={setCryptoAmount}
+          containerStyle={styles.destinationCoin}
+          disabled={isProcessing}
+        />
+        <ServiceProvider containerStyle={styles.serviceProvider} />
+        {!!error && (
+          <View style={styles.errorContainer}>
+            <AlertRow text={error} />
+          </View>
+        )}
+        {!!validationError && validationError.text && (
+          <View style={styles.errorContainer}>
+            <AlertRow text={validationErrorToString(t, validationError)} />
+          </View>
+        )}
+        {feeView}
+        <GSolidButton
+          title={t('Continue')}
+          loading={isProcessing}
+          onPress={onContinue}
+          disabled={!!(error || validationError || isProcessing)}
+          containerStyle={styles.continue}
+        />
+        <ConfirmationModal visible={confirmationModalVisible} onSubmit={onSubmit} onCancel={confirmationModalCancel} />
+      </SafeAreaView>
+    )}
+  </Screen>
+  )
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: theme.colors.screenBackground,
   },
   spinnerContainer: {
     flex: 1,
@@ -207,26 +211,18 @@ const styles = StyleSheet.create({
   addressSelector: {
     paddingTop: 14,
     paddingBottom: 14,
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: theme.colors.borderGray,
   },
   currencySelect: {
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
   },
   destinationCoin: {
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
   },
   serviceProvider: {
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
   },
   errorContainer: {
@@ -237,7 +233,6 @@ const styles = StyleSheet.create({
   continue: {
     flex: 1,
     justifyContent: 'flex-end',
-    padding: 10,
     paddingBottom: 16,
     borderRadius: 44,
   },

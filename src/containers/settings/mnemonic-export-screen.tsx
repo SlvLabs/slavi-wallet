@@ -1,45 +1,41 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {State} from '../../store';
 import MnemonicArea from '../../components/mnemonic/mnemonic-area';
 import ControlButtons from '../../components/mnemonic/control-buttons';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
+import Screen from '../../components/screen';
 
 const MnemonicExportScreen = () => {
   const mnemonic = useSelector((state: State) => state.account.mnemonic);
   const words = mnemonic.split(' ');
   const {t} = useTranslation();
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.textBlock}>
-          <Text style={styles.description}>
-            {t(
-              "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
-            )}
-          </Text>
-        </View>
-        <MnemonicArea words={words} style={styles.mnemonicContainer} wordStyle={styles.mnemonicWord}/>
-        <ControlButtons
-          mnemonic={mnemonic}
-          containerStyle={styles.controlButtonContainer}
-        />
+    <Screen title={t('Export mnemonic phrase')}>
+      <View style={styles.textBlock}>
+        <Text style={styles.description}>
+          {t(
+            "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
+          )}
+        </Text>
       </View>
-    </SafeAreaView>
+      <MnemonicArea
+        words={words}
+        style={styles.mnemonicContainer}
+        wordStyle={styles.mnemonicWord}
+        showWordIndex={true}
+      />
+      <ControlButtons
+        mnemonic={mnemonic}
+        containerStyle={styles.controlButtonContainer}
+      />
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: theme.colors.screenBackground,
-  },
-  content: {
-    padding: 16,
-  },
   descriptionContainer: {
     margin: 20,
   },

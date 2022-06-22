@@ -21,11 +21,12 @@ export interface CoinsSelectListProps {
   coins: CoinListElementData[];
   onElementPress: (coin: CoinListElementData) => void;
   balanceShown?: boolean;
+  headerHidden?: boolean;
   onBackPress?: () => void;
 }
 
 export default function CoinSelectList(props: CoinsSelectListProps) {
-  const {coins, onElementPress, balanceShown, onBackPress} = props;
+  const {coins, onElementPress, balanceShown, onBackPress, headerHidden} = props;
 
   const [search, setSearch] = useState<string>('');
   const [filteredCoins, setFilteredCoins] = useState<CoinListElementData[]>(coins);
@@ -42,12 +43,14 @@ export default function CoinSelectList(props: CoinsSelectListProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerView}>
-        <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
-          <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
-        </TouchableOpacity>
-        <Text style={styles.header}>{t('Select coins')}</Text>
-      </View>
+      {!headerHidden && (
+        <View style={styles.headerView}>
+          <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
+            <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
+          </TouchableOpacity>
+          <Text style={styles.header}>{t('Select coins')}</Text>
+        </View>
+      )}
       <View style={styles.searchContainer}>
         <SimpleInput
           value={search}
@@ -61,7 +64,7 @@ export default function CoinSelectList(props: CoinsSelectListProps) {
           />}
         />
       </View>
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         {filteredCoins.map((item, index) => (
           <SimpleCoinListElement
             name={item.name}

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import InsertableTextArea from '../../components/controls/insertable-text-area';
 import {useDispatch, useSelector} from 'react-redux';
 import {store} from '@slavi/wallet-core';
@@ -10,6 +10,7 @@ import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
+import Screen from '../../components/screen';
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -36,8 +37,8 @@ const MnemonicImportScreen = () => {
   }, [dispatch, mnemonic]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView style={styles.content}>
+    <Screen title={t('Export mnemonic phrase')}>
+      <KeyboardAwareScrollView>
         <View style={styles.textBlock}>
           <Text style={styles.description}>
             {t(
@@ -60,17 +61,11 @@ const MnemonicImportScreen = () => {
           )}
         />
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    padding: 16,
-    backgroundColor: theme.colors.screenBackground,
-  },
   content: {
     padding: 16
   },

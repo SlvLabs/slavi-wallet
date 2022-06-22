@@ -17,7 +17,6 @@ import NftSendScreen from '../containers/nft/nft-send-screen';
 import NtfSuccessSendingScreen from '../containers/nft/ntf-success-sending-screen';
 import BuyCoinScreen from '../containers/coins/BuyCoinScreen';
 import {BuyCoinWebViewScreen} from '../containers/coins/BuyCoinWebViewScreen';
-import {BuyHeader} from '../components/coin-buy/buy-header';
 import ScreenHeader from '../components/screen-header';
 
 export interface CoinsStackParamList extends ParamListBase {
@@ -112,12 +111,6 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.BUY_COIN}
         component={BuyCoinScreen}
-        options={{
-            header: props => {
-              const ticker = (props.scene.route.params as CoinsStackParamList['BuyCoin']).ticker;
-              return <ScreenHeader title={t('Buy') + (ticker ? ' ' + ticker : '')} />;
-            },
-        }}
       />
       <StackNavigator.Screen
         name={ROUTES.COINS.BUY_COIN_WEB_VIEW}

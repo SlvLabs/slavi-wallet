@@ -26,7 +26,6 @@ export const DestinationCoinAmount = ({
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.leftColumn}>
-        <Text style={styles.label}>{t('youReceive')}</Text>
         <DecimalInput
           value={amount}
           onChange={setAmount}
@@ -39,6 +38,8 @@ export const DestinationCoinAmount = ({
           disabled={disabled}
           skipDisabledStyle={true}
           maximumPrecision={8}
+          label={t('youReceive')}
+          labelStyle={styles.label}
         />
       </View>
       <View style={styles.rightColumn}>
@@ -66,8 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftColumn: {
-    flex: 1,
-    marginTop: 14,
+    flex: 2,
   },
   rightColumn: {
     flex: 1,
@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   simpleInputContainer: {
-
+    paddingTop: 6,
+    paddingBottom: 6,
   },
   input: {
     lineHeight: 21,

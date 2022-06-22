@@ -6,14 +6,12 @@ import ROUTES from '../../navigation/config/routes';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import useCoinInfo from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
 import store from '@slavi/wallet-core/src/store';
-import {ScrollView} from 'react-native-gesture-handler';
 import CoinTabs from '../../components/coin-info/tabs/coin-tabs';
-import {StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import CoinControlButtons from '../../components/coin-info/coin-control-buttons';
-import theme from '../../theme';
 import {CoinParams} from '../../components/coin-info/tabs/info-view';
 import {useCoinSpecsService} from '@slavi/wallet-core';
+import useTranslation from '../../utils/use-translation';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 const CoinInfoScreen = () => {
   const route = useRoute<CoinInfoRouteProps>();
@@ -26,6 +24,8 @@ const CoinInfoScreen = () => {
   if (!data) {
     throw new Error('Unknown coin for details display');
   }
+
+  const {t} = useTranslation();
 
   const fiat = store.useFiatSelector() || 'BTC';
   const crypto = store.useCryptoSelector() || 'USD';
@@ -75,49 +75,35 @@ const CoinInfoScreen = () => {
   }, [request]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.gradient}>
-        <ScrollView>
-          <CoinBalanceHeader
-            name={data.name}
-            balance={data.balance}
-            cryptoBalance={data.cryptoBalance}
-            cryptoTicker={data.crypto}
-            fiatBalance={data.fiatBalance}
-            fiatTicker={data.fiat}
-            logo={data.logo}
-            type={data.type}
-          />
-          <CoinControlButtons
-            onPressExchange={onPressExchange}
-            onPressReceive={onPressReceive}
-            onPressSend={onPressSend}
-            onPressBuy={onPressBuy}
-            exchangeDisabled={!spec?.swap}
-            buyEnabled={spec?.binanceTradeAllowed || false}
-          />
-          <CoinTabs
-            infoParams={list || []}
-            fiat={fiat}
-            crypto={crypto}
-            infoIsLoading={isLoading}
-            coin={coin}
-            coinParams={dict as unknown as CoinParams}
-          />
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    <ScrollableScreen title={t('Coin information')}>
+      <CoinBalanceHeader
+        name={data.name}
+        balance={data.balance}
+        cryptoBalance={data.cryptoBalance}
+        cryptoTicker={data.crypto}
+        fiatBalance={data.fiatBalance}
+        fiatTicker={data.fiat}
+        logo={data.logo}
+        type={data.type}
+      />
+      <CoinControlButtons
+        onPressExchange={onPressExchange}
+        onPressReceive={onPressReceive}
+        onPressSend={onPressSend}
+        onPressBuy={onPressBuy}
+        exchangeDisabled={!spec?.swap}
+        buyEnabled={spec?.binanceTradeAllowed || false}
+      />
+      <CoinTabs
+        infoParams={list || []}
+        fiat={fiat}
+        crypto={crypto}
+        infoIsLoading={isLoading}
+        coin={coin}
+        coinParams={dict as unknown as CoinParams}
+      />
+    </ScrollableScreen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  gradient: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-  },
-});
 
 export default CoinInfoScreen;

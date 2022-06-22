@@ -3,7 +3,6 @@ import React, {useMemo} from 'react';
 import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
 import DefiScreen from '../containers/defi/defi-screen';
-import useTranslation from '../utils/use-translation';
 
 const StackNavigator = createStackNavigator();
 

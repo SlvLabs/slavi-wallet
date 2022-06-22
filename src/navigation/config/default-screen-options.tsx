@@ -12,6 +12,7 @@ const defaultScreenOption: StackNavigationOptions = {
   },
   headerTintColor: theme.colors.white,
   cardStyle: { backgroundColor: theme.colors.screenBackground },
+  headerShown: false,
 };
 
 export default defaultScreenOption;

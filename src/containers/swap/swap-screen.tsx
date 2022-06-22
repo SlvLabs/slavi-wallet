@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import useTranslation from '../../utils/use-translation';
 import SourceCoinElement from '../../components/swap/source-coin-element';
 import DestinationCoinElement from '../../components/swap/destination-coin-element';
 import theme from '../../theme';
-import ExchangeHeader from '../../components/swap/exchange-header';
 import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import NetworkSelector, {NetworksOptions} from '../../components/swap/network-selector';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
@@ -35,6 +34,9 @@ import WarningModal from '../../components/modal/warning-modal';
 import SwapSuccessModal from '../../components/swap/swap-success-modal';
 import {useRoute} from '@react-navigation/core';
 import {CoinSwapRouteProps} from '../../navigation/SwapStack';
+import Screen from '../../components/screen';
+import SettingsModal from '../../components/swap/settings-modal';
+import Layout from '../../utils/layout';
 
 const APPROVE_INTERVAL_CHECK = 5 * 1000;
 
@@ -73,6 +75,7 @@ const SwapScreen = () => {
   const [waitSwapProvider, setWaitSwapProvider] = useState<boolean>(false);
   const [initialized, setInitialized] = useState<boolean>(false);
   const [successModalIsShown, setSuccessModalIsShown] = useState<boolean>(false);
+  const [settingsIsShown, setSettingsIsShown] = useState<boolean>(false);
 
   const approvingTimer = useRef<NodeJS.Timer | null>(null);
   const waitSwapProviderTimer = useRef<NodeJS.Timer | null>(null);
@@ -654,15 +657,26 @@ const SwapScreen = () => {
     }
   }, [waitSwapProvider, approving, requestInsufficientApprovedAmount]);
 
+  const showSettings = useCallback(() => setSettingsIsShown(true), []);
+  const hideSettings = useCallback(() => setSettingsIsShown(false), []);
+
+  const onSettingsChange = useCallback((speed: TransactionPriority, value: number) => {
+    setSlippageTolerance(value);
+    onTxPriorityChange(speed);
+    hideSettings();
+  }, [onTxPriorityChange, hideSettings]);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <Screen
+      title={t('exchange')}
+      controls={(
+      <TouchableOpacity style={styles.button} onPress={showSettings}>
+        <CustomIcon name={'settings-outline'} size={20} color={theme.colors.textLightGray3} />
+      </TouchableOpacity>
+    )}
+      titleContainerStyle={styles.headerTitleContainer}
+    >
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <ExchangeHeader
-          txPriority={txPriority}
-          onSlippageToleranceChange={setSlippageTolerance}
-          slippageTolerance={slippageTolerance}
-          onTxPriorityChange={onTxPriorityChange}
-        />
         <View style={styles.swapBlock}>
           <NetworkSelector
             value={network}
@@ -766,17 +780,18 @@ const SwapScreen = () => {
           onAccept={onFinish}
         />
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+      <SettingsModal
+        speed={txPriority}
+        slippageTolerance={slippageTolerance}
+        visible={settingsIsShown}
+        onCancel={hideSettings}
+        onAccept={onSettingsChange}
+      />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-    paddingRight: 16,
-    paddingLeft: 16,
-  },
   headerBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -787,12 +802,11 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: theme.colors.grayDark,
-    width: 40,
-    height: 40,
+    width: Layout.isSmallDevice ? 32 : 40,
+    height: Layout.isSmallDevice ? 32 : 40,
     borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center',  },
   swapBlock: {},
   swapButton: {
     backgroundColor: theme.colors.grayDark,
@@ -893,6 +907,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     height: 70,
   },
+  headerTitleContainer: {
+    marginRight: Layout.isSmallDevice ? -32 : -40,
+  }
 });
 
 export default SwapScreen;

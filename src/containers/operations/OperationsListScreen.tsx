@@ -1,4 +1,4 @@
-import {ActivityIndicator, SafeAreaView, StyleSheet} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import React from 'react';
 import OperationsList from '../../components/operations/operations-list';
 import useOperationsList from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
@@ -6,15 +6,18 @@ import {
   useCryptoSelector,
   useFiatSelector,
 } from '@slavi/wallet-core/src/store/modules/currency/selectors';
-import theme from '../../theme';
+import Screen from '../../components/screen';
+import useTranslation from '../../utils/use-translation';
 
 const OperationsListScreen = () => {
   const {isLoading, operations, updateParams, getMore} = useOperationsList({});
   const fiat = useFiatSelector() || 'USD';
   const crypto = useCryptoSelector() || 'BTC';
 
+  const {t} = useTranslation();
+
   return (
-    <SafeAreaView style={styles.screen}>
+    <Screen title={t('Operations history')} disableBackButton={true}>
       <OperationsList
         sections={operations}
         fiatTicker={fiat}
@@ -23,18 +26,8 @@ const OperationsListScreen = () => {
         filter={updateParams}
       />
       {isLoading && <ActivityIndicator />}
-    </SafeAreaView>
+    </Screen>
   );
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-  },
-  gradient: {
-    flex: 1,
-  }
-});
 
 export default OperationsListScreen;

@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import {useRoute} from '@react-navigation/core';
 import {CoinReceiveRouteProps} from '../../navigation/CoinsStack';
@@ -9,10 +9,10 @@ import {useAllInnerAddressesSelector} from '@slavi/wallet-core/src/store/modules
 import EditAddressButton from '../../components/coin-receive/edit-address-button';
 import AddressesCarousel, {AddressesCarouselHandle} from '../../components/coin-receive/addresses-carousel';
 import {useCoinSpecsService, useInnerAddressBookService} from '@slavi/wallet-core';
-import theme from '../../theme';
 import AddressView from '../../components/coin-receive/address-view';
 import Layout from '../../utils/layout';
 import useTranslation from '../../utils/use-translation';
+import Screen from '../../components/screen';
 
 const ReceiveScreen = () => {
   const route = useRoute<CoinReceiveRouteProps>();
@@ -83,7 +83,7 @@ const ReceiveScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Screen title={t('Receive coins')}>
       <ScrollView keyboardShouldPersistTaps="handled">
         <CoinBalanceHeader
           logo={data.logo}
@@ -126,15 +126,11 @@ const ReceiveScreen = () => {
           onSubmit={getNewRecvAddr}
         />
       </ScrollView>
-    </SafeAreaView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-  },
   receiveControlButtons: {
     marginTop: 24,
   },

@@ -49,7 +49,7 @@ const CreateMnemonicScreen = () => {
           )}
         </Text>
       </View>
-      <MnemonicArea words={words} />
+      <MnemonicArea words={words} showWordIndex={true}/>
       <ControlButtons
         mnemonic={mnemonic}
         containerStyle={styles.controlButtonContainer}

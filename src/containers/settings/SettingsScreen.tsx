@@ -1,4 +1,4 @@
-import {InteractionManager, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {InteractionManager, StyleSheet, Text} from 'react-native';
 import React, {useCallback} from 'react';
 import {ListItem} from 'react-native-elements';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
@@ -7,6 +7,7 @@ import ROUTES from '../../navigation/config/routes';
 import theme from '../../theme';
 import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Screen from '../../components/screen';
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>;
 
@@ -50,13 +51,13 @@ const SettingsScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Screen title={t('Settings')} disableBackButton={true}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
         <ListItem
           key={'head_1'}
           bottomDivider
           disabled={true}
-          containerStyle={{...styles.listItem, ...styles.headerContainer}}
+          containerStyle={{...styles.listItem}}
         >
           <ListItem.Content>
             <ListItem.Title style={styles.header}>{t('General')}</ListItem.Title>
@@ -118,20 +119,13 @@ const SettingsScreen = () => {
           {chevron}
         </ListItem>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-    height: '100%',
-  },
   listItem: {
     backgroundColor: 'transparent',
-    marginRight: 16,
-    marginLeft: 16,
     paddingTop: 13,
     paddingBottom: 13,
     borderBottomColor: theme.colors.maxTransparent,

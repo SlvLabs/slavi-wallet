@@ -40,13 +40,13 @@ export default function NftList() {
 
   return (
     <View style={styles.container}>
-      {list?.map(entry => (
+      {list?.map((entry, index) => (
         <NftListElement
           name={entry.name}
           network={entry.network.name}
           onPress={() => onElementPress(entry.id, entry.contract, entry.network.id)}
           image={entry.image}
-          key={`nft_${entry.id}`}
+          key={`nft_${index}`}
           networkLogo={entry.network.logo}
         />
       ))}

@@ -1,7 +1,6 @@
 import useTranslation from '../../utils/use-translation';
 import {Linking, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useState} from 'react';
-import SolidButton from '../buttons/solid-button';
 import BaseModal from '../modal/base-modal';
 import theme from '../../theme';
 import SimpleCheckbox from '../controls/simple-checkbox';
@@ -25,8 +24,7 @@ export const ConfirmationModal = (props: ConfirmationModalProps) => {
   );
 
   const openTermsOfUse = useCallback(() => {
-    Linking.openURL(t('bifinity terms of use link')).catch(e => {
-    });
+    Linking.openURL(t('bifinity terms of use link')).catch(e => console.error(e));
   }, []);
   return (
     <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} header={header}>
@@ -99,16 +97,16 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     marginTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 30,
   },
   body: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '400',
-    fontSize: 13,
+    fontSize: 12,
     lineHeight: 18,
     // letterSpacing: 0.4,
-    color: theme.colors.lightGray,
+    color: theme.colors.textLightGray,
   },
   controlsContainer: {
     margin: 0,

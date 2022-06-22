@@ -1,16 +1,26 @@
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Keyboard, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 import CustomIcon from './custom-icon/custom-icon';
 import theme from '../theme';
-import React, {useCallback} from 'react';
+import React, {ReactNode, useCallback} from 'react';
 import Layout from '../utils/layout';
 import {useNavigation} from '@react-navigation/native';
 
 export interface ScreenHeaderProps {
   title: string;
+  controls?: ReactNode;
+  disableBackButton?: boolean;
+  headerContainerStyle?: ViewStyle;
+  titleContainerStyle?: ViewStyle;
 }
 
 export default function ScreenHeader(props: ScreenHeaderProps) {
-  const {title} = props;
+  const {
+    title,
+    controls,
+    headerContainerStyle,
+    titleContainerStyle,
+    disableBackButton
+  } = props;
 
   const navigation = useNavigation();
 
@@ -22,13 +32,27 @@ export default function ScreenHeader(props: ScreenHeaderProps) {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
-        <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
-      </TouchableOpacity>
-      <View style={styles.headerContainer}>
+    <View style={{...styles.container, ...headerContainerStyle}}>
+      {!disableBackButton && (
+        <TouchableOpacity style={{
+          ...styles.button,
+          ...styles.backButton,
+        }} onPress={onBackPress}>
+          <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
+        </TouchableOpacity>
+      )}
+      <View style={{
+        ...styles.headerContainer,
+        ...titleContainerStyle,
+        ...(!!disableBackButton ? {} : styles.headerContainerWithBackButton)
+      }}>
         <Text style={styles.header}>{title}</Text>
       </View>
+      {!!controls && (
+        <View style={styles.controls}>
+          {controls}
+        </View>
+      )}
     </View>
   );
 }
@@ -38,8 +62,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 36,
-    // paddingBottom: 12,
-    paddingLeft: Layout.isSmallDevice ? 8 : 16,
     marginBottom: Layout.isSmallDevice ? 12 : 24,
     width: '100%',
   },
@@ -60,7 +82,6 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
   },
   headerContainer: {
-    marginLeft: Layout.isSmallDevice ? -32 : -40, //-button.width
     display: 'flex',
     alignItems: 'center',
     width: '100%',
@@ -72,4 +93,11 @@ const styles = StyleSheet.create({
       },
     ],
   },
+  controls: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerContainerWithBackButton: {
+    marginLeft: Layout.isSmallDevice ? -32 : -40,
+  }
 });

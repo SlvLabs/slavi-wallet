@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Switch, Text, View} from 'react-native';
+import {StyleSheet, Switch, Text, View} from 'react-native';
 import theme from '../../theme';
 import React, {useCallback, useEffect, useState} from 'react';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
@@ -10,6 +10,7 @@ import {ListItem} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useAutoBlockOptions from '../../utils/use-auto-block-options';
+import Screen from '../../components/screen';
 
 export default function SecurityScreen() {
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
@@ -82,8 +83,7 @@ export default function SecurityScreen() {
       () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()])
     ), [authService, options]);
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+    <Screen title={'Security'}>
         <View style={styles.row}>
           <Switch
             value={pinEnabled}
@@ -114,26 +114,13 @@ export default function SecurityScreen() {
           {pinEnabled && <Text style={styles.subText}>{autoBlockTimeout}</Text>}
           <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>
         </ListItem>
-      </View>
       <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin}/>
       <ConfirmationModal visible={disableConfShown} onPositive={disablePin} title={t('disablePinConf')} />
-    </SafeAreaView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: theme.colors.screenBackground,
-  },
-  content: {
-    margin: 16,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.maxTransparent,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.maxTransparent,
-  },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

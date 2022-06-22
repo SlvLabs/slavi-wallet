@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -24,14 +24,13 @@ import TxPriorityButtonGroup from '../../components/coin-send/tx-priority-button
 import EthFeeAdvancedModal from '../../components/modal/eth-fee-advanced-modal';
 import EthPattern from '@slavi/wallet-core/src/services/coin-pattern/eth-pattern';
 import Erc20Pattern from '@slavi/wallet-core/src/services/coin-pattern/erc-20-pattern';
-import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import AddressSelector from '../../components/buttons/address-selector';
 import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
 import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -279,106 +278,91 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   const enableRecipientPaysFee = useCallback(() => setRecipientPayFee(true), []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView
-        keyboardShouldPersistTaps={'handled'}
-        contentContainerStyle={styles.scroll}>
-        <View>
-          <CoinBalanceHeader
-            balance={accountBalance}
-            name={coinDetails.name}
-            cryptoTicker={coinDetails.crypto}
-            fiatTicker={coinDetails.fiat}
-            logo={coinDetails.logo}
-            type={coinDetails.type}
-          />
-          <AddressSelector
-            label={t('From account')}
-            containerStyle={styles.addressSelector}
-            addresses={balancesState.balances}
-            onSelect={setSenderIndex}
-            selectedAddress={senderIndex}
-            ticker={coinDetails.ticker}
-          />
-          <View style={styles.sendContainer}>
-            <SendView
-              readQr={() => setActiveQR(true)}
-              coin={coinDetails.ticker}
-              balance={accountBalance}
-              recipient={recipient}
-              onRecipientChange={onRecipientChange}
-              maxIsAllowed={true}
-              setRecipientPayFee={enableRecipientPaysFee}
-              errors={voutError}
-              maximumPrecision={props.pattern.getMaxPrecision()}
-            />
-          </View>
-          <TxPriorityButtonGroup
-            label={t('Transaction fee')}
-            selectedIndex={txPriority}
-            onSelected={setTxPriority}
-            advancedIsAllowed={true}
-            onAdvancedPress={() => setAdvancedModalIsShown(true)}
-          />
-          {!isValid && errors.length > 0 && (
-            <View style={styles.errors}>
-              {errors.map((error, index) => (
-                <AlertRow text={error} key={'general_error_' + index} />
-              ))}
-            </View>
-          )}
-        </View>
-        <View style={styles.submitButton}>
-          <SolidButton
-            title={t('Send')}
-            onPress={onSubmit}
-            disabled={!isValid || locked}
-            loading={locked || sendingLocked}
-          />
-        </View>
-        <QrReaderModal
-          visible={activeQR}
-          onQRRead={onQRRead}
-          onClose={() => setActiveQR(false)}
+    <ScrollableScreen title={t('Send coins')} containerStyle={styles.scroll}>
+      <View>
+        <CoinBalanceHeader
+          balance={accountBalance}
+          name={coinDetails.name}
+          cryptoTicker={coinDetails.crypto}
+          fiatTicker={coinDetails.fiat}
+          logo={coinDetails.logo}
+          type={coinDetails.type}
         />
-        <ConfirmationModal
-          visible={confIsShown}
-          vouts={txResult?.vouts || []}
-          fee={txResult?.fee}
-          onAccept={send}
-          onCancel={cancelConfirmSending}
+        <AddressSelector
+          label={t('From account')}
+          containerStyle={styles.addressSelector}
+          addresses={balancesState.balances}
+          onSelect={setSenderIndex}
+          selectedAddress={senderIndex}
           ticker={coinDetails.ticker}
         />
-        <EthFeeAdvancedModal
-          visible={advancedModalIsShown}
-          onCancel={() => setAdvancedModalIsShown(false)}
-          onAccept={setAdvancedOptions}
-          defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
-          defaultGasLimit={currentGasLimit}
+        <SendView
+          readQr={() => setActiveQR(true)}
+          coin={coinDetails.ticker}
+          balance={accountBalance}
+          recipient={recipient}
+          onRecipientChange={onRecipientChange}
+          maxIsAllowed={true}
+          setRecipientPayFee={enableRecipientPaysFee}
+          errors={voutError}
+          maximumPrecision={props.pattern.getMaxPrecision()}
         />
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+        <TxPriorityButtonGroup
+          label={t('Transaction fee')}
+          selectedIndex={txPriority}
+          onSelected={setTxPriority}
+          advancedIsAllowed={true}
+          onAdvancedPress={() => setAdvancedModalIsShown(true)}
+        />
+        {!isValid && errors.length > 0 && (
+          <View style={styles.errors}>
+            {errors.map((error, index) => (
+              <AlertRow text={error} key={'general_error_' + index} />
+            ))}
+          </View>
+        )}
+      </View>
+      <View style={styles.submitButton}>
+        <SolidButton
+          title={t('Send')}
+          onPress={onSubmit}
+          disabled={!isValid || locked}
+          loading={locked || sendingLocked}
+        />
+      </View>
+      <QrReaderModal
+        visible={activeQR}
+        onQRRead={onQRRead}
+        onClose={() => setActiveQR(false)}
+      />
+      <ConfirmationModal
+        visible={confIsShown}
+        vouts={txResult?.vouts || []}
+        fee={txResult?.fee}
+        onAccept={send}
+        onCancel={cancelConfirmSending}
+        ticker={coinDetails.ticker}
+      />
+      <EthFeeAdvancedModal
+        visible={advancedModalIsShown}
+        onCancel={() => setAdvancedModalIsShown(false)}
+        onAccept={setAdvancedOptions}
+        defaultGasPrice={EthPattern.weiToGwei(currentGasPrice)}
+        defaultGasLimit={currentGasLimit}
+      />
+    </ScrollableScreen>
   );
 };
 
 const styles = StyleSheet.create({
   submitButton: {
-    padding: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   errors: {
     padding: 32,
   },
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-  },
-  sendContainer: {
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
   addressSelector: {
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
   },
   scroll: {

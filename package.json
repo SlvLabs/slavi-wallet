@@ -70,6 +70,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-tab-view": "2.16.0",
     "react-native-vector-icons": "^8.1.0",
+    "react-native-webview": "^11.18.2",
     "react-redux": "^7.2.1",
     "readable-stream": "^3.6.0",
     "redux": "^4.0.5",

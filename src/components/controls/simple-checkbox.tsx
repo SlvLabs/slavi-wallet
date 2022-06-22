@@ -4,32 +4,33 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useMemo} from 'react';
 
 export interface SimpleCheckboxProps {
-  label: string;
+  label?: string;
+  children?: React.ReactNode;
   checked: boolean;
   onPress: () => void;
 }
 
 export default function SimpleCheckbox(props: SimpleCheckboxProps) {
-  const {label, checked, onPress} = props;
+  const {label, checked, onPress, children} = props;
   const backgroundStyle = useMemo(() => ({
-    ...styles.background,
-    ...(checked ? styles.checkedBackground : styles.uncheckedBackground)}
+      ...styles.background,
+      ...(checked ? styles.checkedBackground : styles.uncheckedBackground)}
   ), [checked]);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={backgroundStyle}>
         {checked && (
           <Icon
-            type='octicon'
-            name='check'
+            type="octicon"
+            name="check"
             color={theme.colors.white}
             size={16}
           />
         )}
       </View>
-      <Text style={styles.label}>{label}</Text>
+      {children || <Text style={styles.label}>{label}</Text>}
     </TouchableOpacity>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -59,5 +60,5 @@ const styles = StyleSheet.create({
   },
   checkedBackground: {
     backgroundColor: theme.colors.green,
-  }
+  },
 });

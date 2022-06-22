@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
@@ -19,7 +19,6 @@ import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-v
 import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
-import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import AddressSelector from '../../components/buttons/address-selector';
 import ROUTES from '../../navigation/config/routes';
@@ -28,7 +27,7 @@ import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-hig
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import RentExemptError from '@slavi/wallet-core/src/services/errors/rent-exempt-error';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 export interface SendSolanaScreenProps {
   coin: string;
@@ -286,82 +285,78 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <View>
-          <CoinBalanceHeader
-            balance={accountBalance}
-            name={coinDetails.name}
-            cryptoTicker={coinDetails.crypto}
-            fiatTicker={coinDetails.fiat}
-            logo={coinDetails.logo}
-            type={coinDetails.type}
-          />
-          <AddressSelector
-            label={t('From account')}
-            containerStyle={styles.addressSelector}
-            addresses={balancesState.balances}
-            onSelect={setSenderIndex}
-            selectedAddress={senderIndex}
-            ticker={coinDetails.ticker}
-          />
-          <View style={styles.sendContainer}>
-            <SendView
-              readQr={() => setActiveQR(true)}
-              coin={coinDetails.ticker}
-              balance={accountBalance}
-              recipient={recipient}
-              onRecipientChange={onRecipientChange}
-              maxIsAllowed={true}
-              setRecipientPayFee={enableRecipientPaysFee}
-              errors={voutError}
-              maximumPrecision={pattern.getMaxPrecision()}
-            />
-          </View>
-          {!isValid && errors.length > 0 && (
-            <View style={styles.errors}>
-              {errors.map((error, index) => (
-                <AlertRow text={error} key={'general_error_' + index} />
-              ))}
-            </View>
-          )}
-        </View>
-        <View style={styles.submitButton}>
-          <SolidButton
-            title={t('Send')}
-            onPress={onSubmit}
-            disabled={!isValid || locked}
-            loading={locked}
-          />
-        </View>
-        <QrReaderModal
-          visible={activeQR}
-          onQRRead={onQRRead}
-          onClose={() => setActiveQR(false)}
+    <ScrollableScreen title={t('Send coins')} containerStyle={styles.scroll}>
+      <View>
+        <CoinBalanceHeader
+          balance={accountBalance}
+          name={coinDetails.name}
+          cryptoTicker={coinDetails.crypto}
+          fiatTicker={coinDetails.fiat}
+          logo={coinDetails.logo}
+          type={coinDetails.type}
         />
-        <ConfirmationSendModal
-          visible={confIsShown}
-          vouts={txResult?.vouts || []}
-          fee={txResult?.fee}
-          onAccept={send}
-          onCancel={cancelConfirmSending}
+        <AddressSelector
+          label={t('From account')}
+          containerStyle={styles.addressSelector}
+          addresses={balancesState.balances}
+          onSelect={setSenderIndex}
+          selectedAddress={senderIndex}
           ticker={coinDetails.ticker}
         />
-        <ConfirmationModal
-          visible={skipRentConfIsShown}
-          onCancel={onSkipRentDecline}
-          onPositive={onSkipRentConfirm}
-          title={t('Amount less then rent')}
-          description={
-            t('Address will be rented per epoch after transaction. Balance less then') + ' '
-              + coinSpec.rentExemptAmount
-            + ' ' + coinDetails.ticker
-          }
-          positiveText={t('Ok')}
-          negativeText={t('Cancel')}
+        <SendView
+          readQr={() => setActiveQR(true)}
+          coin={coinDetails.ticker}
+          balance={accountBalance}
+          recipient={recipient}
+          onRecipientChange={onRecipientChange}
+          maxIsAllowed={true}
+          setRecipientPayFee={enableRecipientPaysFee}
+          errors={voutError}
+          maximumPrecision={pattern.getMaxPrecision()}
         />
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+      </View>
+      {!isValid && errors.length > 0 && (
+        <View style={styles.errors}>
+          {errors.map((error, index) => (
+            <AlertRow text={error} key={'general_error_' + index} />
+          ))}
+        </View>
+      )}
+      <View style={styles.submitButton}>
+        <SolidButton
+          title={t('Send')}
+          onPress={onSubmit}
+          disabled={!isValid || locked}
+          loading={locked}
+        />
+      </View>
+      <QrReaderModal
+        visible={activeQR}
+        onQRRead={onQRRead}
+        onClose={() => setActiveQR(false)}
+      />
+      <ConfirmationSendModal
+        visible={confIsShown}
+        vouts={txResult?.vouts || []}
+        fee={txResult?.fee}
+        onAccept={send}
+        onCancel={cancelConfirmSending}
+        ticker={coinDetails.ticker}
+      />
+      <ConfirmationModal
+        visible={skipRentConfIsShown}
+        onCancel={onSkipRentDecline}
+        onPositive={onSkipRentConfirm}
+        title={t('Amount less then rent')}
+        description={
+          t('Address will be rented per epoch after transaction. Balance less then') + ' '
+            + coinSpec.rentExemptAmount
+          + ' ' + coinDetails.ticker
+        }
+        positiveText={t('Ok')}
+        negativeText={t('Cancel')}
+      />
+    </ScrollableScreen>
   );
 };
 
@@ -372,17 +367,7 @@ const styles = StyleSheet.create({
   errors: {
     padding: 32,
   },
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-  },
-  sendContainer: {
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
   addressSelector: {
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
   },
   scroll: {

@@ -12,7 +12,7 @@ import SendView, {
   RecipientUpdatingData,
 } from '../../components/coin-send/send-view';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import ConfirmationModal from '../../components/coin-send/confirmation-modal';
@@ -32,7 +32,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 export interface SendPolkadotScreenProps {
   coin: string;
@@ -257,75 +257,71 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
   useDidUpdateEffect(() => validate(), [recipient, validate]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <View>
-          <CoinBalanceHeader
-            balance={accountBalance}
-            name={coinDetails.name}
-            cryptoBalance={coinDetails.spendableCryptoBalance}
-            cryptoTicker={coinDetails.crypto}
-            fiatBalance={coinDetails.spendableFiatBalance}
-            fiatTicker={coinDetails.fiat}
-            logo={coinDetails.logo}
-          />
-          <AddressSelector
-            label={t('From account')}
-            containerStyle={styles.addressSelector}
-            addresses={balancesState.balances}
-            onSelect={setSenderIndex}
-            selectedAddress={senderIndex}
-            ticker={coinDetails.ticker}
-          />
-          <View style={styles.paddingContainer}>
-            <SendView
-              readQr={() => setActiveQR(true)}
-              coin={coinDetails.ticker}
-              balance={accountBalance}
-              recipient={recipient}
-              onRecipientChange={onRecipientChange}
-              maxIsAllowed={true}
-              setRecipientPayFee={enableReceiverPaysFee}
-              errors={voutError}
-              maximumPrecision={pattern.getMaxPrecision()}
-            />
-            {!isValid && errors.length > 0 && (
-              <View style={styles.errors}>
-                {errors.map((error, index) => (
-                  <AlertRow text={error} key={'general_error_' + index} />
-                ))}
-              </View>
-            )}
-          </View>
-        </View>
-        <View style={styles.submitButton}>
-          <SolidButton
-            title={t('Send')}
-            onPress={onSubmit}
-            disabled={!isValid || locked}
-            loading={locked}
-          />
-        </View>
-        <QrReaderModal
-          visible={activeQR}
-          onQRRead={onQRRead}
-          onClose={() => setActiveQR(false)}
+    <ScrollableScreen title={t('Send coins')} containerStyle={styles.scroll}>
+      <View>
+        <CoinBalanceHeader
+          balance={accountBalance}
+          name={coinDetails.name}
+          cryptoBalance={coinDetails.spendableCryptoBalance}
+          cryptoTicker={coinDetails.crypto}
+          fiatBalance={coinDetails.spendableFiatBalance}
+          fiatTicker={coinDetails.fiat}
+          logo={coinDetails.logo}
         />
-        <ConfirmationModal
-          visible={confIsShown}
-          vouts={txResult?.vouts || []}
-          fee={txResult?.fee}
-          onAccept={send}
-          onCancel={cancelConfirmSending}
+        <AddressSelector
+          label={t('From account')}
+          containerStyle={styles.addressSelector}
+          addresses={balancesState.balances}
+          onSelect={setSenderIndex}
+          selectedAddress={senderIndex}
           ticker={coinDetails.ticker}
         />
-        <KeepAliveConfirmationModal
-          visible={keepAliveConfirm}
-          onConfirm={onKeepAliveConfirm}
-          onCancel={onKeepAliveDecline}
+        <SendView
+          readQr={() => setActiveQR(true)}
+          coin={coinDetails.ticker}
+          balance={accountBalance}
+          recipient={recipient}
+          onRecipientChange={onRecipientChange}
+          maxIsAllowed={true}
+          setRecipientPayFee={enableReceiverPaysFee}
+          errors={voutError}
+          maximumPrecision={pattern.getMaxPrecision()}
         />
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+        {!isValid && errors.length > 0 && (
+          <View style={styles.errors}>
+            {errors.map((error, index) => (
+              <AlertRow text={error} key={'general_error_' + index} />
+            ))}
+          </View>
+        )}
+      </View>
+      <View style={styles.submitButton}>
+        <SolidButton
+          title={t('Send')}
+          onPress={onSubmit}
+          disabled={!isValid || locked}
+          loading={locked}
+        />
+      </View>
+      <QrReaderModal
+        visible={activeQR}
+        onQRRead={onQRRead}
+        onClose={() => setActiveQR(false)}
+      />
+      <ConfirmationModal
+        visible={confIsShown}
+        vouts={txResult?.vouts || []}
+        fee={txResult?.fee}
+        onAccept={send}
+        onCancel={cancelConfirmSending}
+        ticker={coinDetails.ticker}
+      />
+      <KeepAliveConfirmationModal
+        visible={keepAliveConfirm}
+        onConfirm={onKeepAliveConfirm}
+        onCancel={onKeepAliveDecline}
+      />
+    </ScrollableScreen>
   );
 };
 
@@ -337,8 +333,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   addressSelector: {
-    marginLeft: 16,
-    marginRight: 16,
     marginBottom: 8,
   },
   gradient: {
@@ -353,10 +347,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.screenBackground,
   },
-  paddingContainer: {
-    paddingLeft: 16,
-    paddingRight: 16,
-  }
 });
 
 export default SendPolkadotScreen;

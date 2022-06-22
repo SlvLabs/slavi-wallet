@@ -1,11 +1,10 @@
 import React, {useCallback, useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
 import SettingsModal from './settings-modal';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
-import {useNavigation} from '@react-navigation/native';
 import Layout from '../../utils/layout';
 
 export interface ExchangeHeaderProps {
@@ -26,7 +25,6 @@ export default function ExchangeHeader(props: ExchangeHeaderProps) {
   const [settingsIsShown, setSettingsIsShown] = useState<boolean>(false);
 
   const {t} = useTranslation();
-  const navigation = useNavigation();
 
   const showSettings = useCallback(() => setSettingsIsShown(true), []);
   const hideSettings = useCallback(() => setSettingsIsShown(false), []);
@@ -37,18 +35,8 @@ export default function ExchangeHeader(props: ExchangeHeaderProps) {
     hideSettings();
   }, [onSlippageToleranceChange, onTxPriorityChange, hideSettings]);
 
-  const onBackPress = useCallback(() => {
-    if(navigation.canGoBack()) {
-      navigation.goBack();
-      Keyboard.dismiss();
-    }
-  }, [navigation]);
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
-        <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
-      </TouchableOpacity>
       <Text style={styles.header}>{t('exchange')}</Text>
       <View style={styles.controls}>
         <TouchableOpacity style={styles.button} onPress={showSettings}>

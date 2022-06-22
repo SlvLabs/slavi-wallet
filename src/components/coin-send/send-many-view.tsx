@@ -66,8 +66,6 @@ const SendManyView = (props: SendManyViewProps) => {
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 16,
-    paddingRight: 16,
-    paddingLeft: 16,
   },
   recipients: {},
   controls: {

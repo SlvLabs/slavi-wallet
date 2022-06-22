@@ -12,6 +12,7 @@ import getImageSource from '../../utils/get-image-source';
 import CoinType from '@slavi/wallet-core/src/utils/coin-types';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
 import PriceWithChange from './price-with-change';
+import Layout from '../../utils/layout';
 
 export interface CoinDisplayData {
   name: string;
@@ -81,11 +82,10 @@ const CoinsListElement = (props: CoinListElementProps) => {
       </View>
       <View style={styles.col1}>
         <View style={styles.nameTypeContainer}>
-          <Text style={styles.name}>{name}</Text>
-          {!!type && <Text style={styles.type}>{type}</Text>}
+          <Text style={styles.name} ellipsizeMode={'tail'} numberOfLines={1}>{name}</Text>
         </View>
         <View style={styles.underNameRow}>
-          <Text style={styles.ticker}>{ticker}</Text>
+          {!!type && <Text style={styles.type}>{type}</Text>}
           <PriceWithChange
             price={fiatPrice || 0}
             currency={props.fiatSymbol}
@@ -120,8 +120,6 @@ const CoinsListElement = (props: CoinListElementProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.mediumTransparent,
     backgroundColor: 'transparent',
     paddingTop: 18,
     paddingBottom: 18,
@@ -133,7 +131,8 @@ const styles = StyleSheet.create({
   },
   col1: {
     justifyContent: 'center',
-    flex: 1,
+    flex: 2,
+    maxWidth: Layout.isSmallDevice ? 138 : 168,
   },
   col2: {
     flex: 2,
@@ -219,7 +218,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   type: {
-    marginLeft: 8,
+    marginRight: 8,
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'normal',

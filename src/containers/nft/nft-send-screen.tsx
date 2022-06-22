@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {useRoute} from '@react-navigation/core';
 import {NftInfoRouteProps} from '../../navigation/CoinsStack';
 import Layout from '../../utils/layout';
@@ -12,7 +12,6 @@ import IncrementableDecimalInput from '../../components/controls/incrementable-d
 import theme from '../../theme';
 import useQrReader from '../../utils/use-qr-reader';
 import {QrData} from '@slavi/wallet-core/src/utils/qr';
-import ScreenHeader from '../../components/screen-header';
 import {useAddressesService, useCoinPatternService} from '@slavi/wallet-core';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
 import {_TxCreatingResult} from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
@@ -23,6 +22,7 @@ import NftImage from '../../components/nft/nft-image';
 import {Decimal80} from '@slavi/wallet-core/src/utils/prepared-decimal';
 import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 export default function NftSendScreen() {
   const route = useRoute<NftInfoRouteProps>();
@@ -194,19 +194,14 @@ export default function NftSendScreen() {
 
   if(isLoading || !data) {
     return (
-      <View style={styles.container}>
+      <View style={styles.spinnerContainer}>
         <Spinner />
       </View>
     );
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
-      <ScreenHeader title={t('nftSendTitle')} />
+    <ScrollableScreen title={t('nftSendTitle')} containerStyle={styles.container}>
       <NftImage image={data.image} imageStyle={styles.image}/>
       <Text style={styles.title}>{data.name}</Text>
       {data.type === 'ERC-1155' && <IncrementableDecimalInput
@@ -244,7 +239,7 @@ export default function NftSendScreen() {
           fee={tx?.fee}
         />
       )}
-    </ScrollView>
+    </ScrollableScreen>
   );
 }
 
@@ -252,14 +247,14 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    paddingTop: 0,
+    paddingBottom: 24,
     width: '100%',
   },
   image: {
     width: Layout.isSmallDevice ? 240 : 327,
     height: Layout.isSmallDevice ? 240 : 327,
     borderRadius: 12,
+    alignSelf: 'center',
   },
   title: {
     fontFamily: theme.fonts.gilroy,
@@ -296,6 +291,11 @@ const styles = StyleSheet.create({
     color: theme.colors.red,
     marginTop: 16,
     textAlign: 'center',
-  }
+  },
+  spinnerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+  },
 });
 

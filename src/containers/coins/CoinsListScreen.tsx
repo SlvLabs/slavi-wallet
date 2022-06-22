@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import BalanceHeader from '../../components/coin-list/balance-header';
 import CoinListCard from '../../components/coin-list/coins-list-card';
@@ -37,7 +37,9 @@ const CoinsListScreen = () => {
   const navigateToSend = useCallback(() =>
       navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filter: {positiveBalance: true}, balanceShown: true}),
     [navigation]);
-
+  const navigateToBuy = useCallback(() =>
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.BUY_COIN, filter: {isBuyCoin: true}, balanceShown: true}),
+    [navigation]);
   const routes = useMemo(() => ([
     {key: 'coins', title: t('assets')},
     {key: 'nft', title: t('nfts')},
@@ -67,8 +69,8 @@ const CoinsListScreen = () => {
         {navigationState.routes.map((route: Route, i: number) => (
           <TouchableOpacity key={`tab_${i}`} onPress={() => setTabIndex(i)} style={styles.tabOptionContainer}>
             {tabIndex === i ? (
-              <LinearGradient {...theme.gradients.activeTab} style={{...styles.tabOption, ...styles.activeTabOption}}>
-                <Text style={styles.tabLabel}>{route.title}</Text>
+              <LinearGradient {...theme.gradients.activeTabV2} style={{...styles.tabOption, ...styles.activeTabOption}}>
+                <Text style={styles.activeTabLabel}>{route.title}</Text>
               </LinearGradient>
             ) : (
               <View style={styles.tabOption}>
@@ -84,17 +86,13 @@ const CoinsListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        backgroundColor="transparent"
-        translucent={true}
-        barStyle={'light-content'}
-      />
       <ScrollView>
         <BalanceHeader
           fiatBalance={balance.fiat}
           fiatTicker={fiatSymbol}
           onReceiveClick={navigateToReceive}
           onSendClick={navigateToSend}
+          onBuyClick={navigateToBuy}
         />
         <View style={styles.content}>
           <TabView
@@ -112,7 +110,7 @@ const CoinsListScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.black,
+    backgroundColor: theme.colors.screenBackground,
     flex: 1,
   },
   coinsCard: {
@@ -123,10 +121,10 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     flex: 1,
-    backgroundColor: theme.colors.screenBackground,
+    backgroundColor: 'transparent',
+    marginTop: -10,
   },
   tabBar: {
-    marginTop: 16,
     flexDirection: 'row',
     backgroundColor: theme.colors.tabsColor,
     borderRadius: 8,
@@ -142,7 +140,20 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tabLabel: {
-    color: theme.colors.white,
+    fontFamily: theme.fonts.gilroy,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: 13,
+    lineHeight: 16,
+    color: theme.colors.tabInactiveTitle,
+  },
+  activeTabLabel: {
+    fontFamily: theme.fonts.gilroy,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: 13,
+    lineHeight: 16,
+    color: theme.colors.tatActiveTitle,
   },
   tabOptionContainer: {
     width: '50%',

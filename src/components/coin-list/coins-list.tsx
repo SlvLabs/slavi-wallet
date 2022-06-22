@@ -72,7 +72,7 @@ const CoinsList = (props: CoinListProps) => {
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 24,
-    paddingTop: 20,
+    paddingTop: 16,
   },
   placeholder: {
     justifyContent: 'center',

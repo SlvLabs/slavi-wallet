@@ -16,6 +16,7 @@ export interface ModalProps {
   onCancel?: () => void;
   modalStyle?: ViewStyle;
   contentStyle?: ViewStyle;
+  header?: React.ReactNode;
   showCloseIcon?: boolean;
 }
 
@@ -30,6 +31,7 @@ const BaseModal = (props: BaseModalProps) => {
         <View style={{...styles.modalContent, ...props.contentStyle}}>
           {!!props.showCloseIcon && (
             <View style={styles.closeButtonRow}>
+              {props.header}
               <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3} onPress={props.onCancel}/>
             </View>
           )}
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 64,
     backgroundColor: theme.colors.grayDark,
     borderRadius: 10,
-    padding: 24,
     alignItems: 'center',
     shadowColor: theme.colors.black,
     shadowOffset: {
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 1,
+    padding: 24,
     flexDirection: 'column',
     justifyContent: 'center',
   },
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-  }
+  },
 });
 
 export default BaseModal;

@@ -68,6 +68,8 @@ const OperationsList = (props: OperationsListProps) => {
             onEndReached={props.onEndReached}
             onEndReachedThreshold={0.5}
             style={styles.list}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
           />
         ) : (
           <View style={{...styles.placeholder, ...props.placeholderStyle}}>

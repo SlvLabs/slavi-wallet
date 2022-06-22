@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {useRoute} from '@react-navigation/core';
 import {NftSendRouteProps} from '../../navigation/CoinsStack';
 import Spinner from '../../components/spinner';
@@ -16,8 +16,8 @@ import Collapse from '../../components/controls/collapse';
 import NftProperty from '../../components/nft/nft-property';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
-import ScreenHeader from '../../components/screen-header';
 import NftImage from '../../components/nft/nft-image';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 export default function NftInfoScreen() {
   const route = useRoute<NftSendRouteProps>();
@@ -35,19 +35,14 @@ export default function NftInfoScreen() {
 
   if(isLoading || !data) {
     return (
-      <View style={styles.container}>
+      <View style={styles.spinnerContainer}>
         <Spinner />
       </View>
     );
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
-      <ScreenHeader title={t('nftExplorer')} />
+    <ScrollableScreen title={t('nftExplorer')} containerStyle={styles.container}>
       <NftImage image={data.image} imageStyle={styles.image}/>
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{data.name}</Text>
@@ -92,7 +87,7 @@ export default function NftInfoScreen() {
         )}
       </View>
       <SolidButton title={t('Send')} containerStyle={styles.button} onPress={onSendPress} />
-    </ScrollView>
+    </ScrollableScreen>
   );
 }
 
@@ -100,14 +95,19 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    paddingTop: 0,
+    paddingBottom: 24,
     width: '100%',
+  },
+  spinnerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
   image: {
     width: Layout.isSmallDevice ? 240 : 327,
     height: Layout.isSmallDevice ? 240 : 327,
     borderRadius: 12,
+    alignSelf: 'center',
   },
   name: {
     fontFamily: theme.fonts.gilroy,

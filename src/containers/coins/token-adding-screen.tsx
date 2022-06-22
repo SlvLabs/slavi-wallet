@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import AlertRow from '../../components/error/alert-row';
 import useTranslation from '../../utils/use-translation';
@@ -10,6 +10,7 @@ import SolidButton from '../../components/buttons/solid-button';
 import InsertableInput from '../../components/controls/insertable-input';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
+import Screen from '../../components/screen';
 
 const TokenAddingScreen = () => {
   const [address, setAddress] = useState<string>();
@@ -83,7 +84,7 @@ const TokenAddingScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <Screen title={t('Add token')}>
       <View style={styles.textBlock}>
         <Text style={styles.description}>{
           t('You can add a token that is missing in our wallet.') + '\n' +
@@ -109,20 +110,11 @@ const TokenAddingScreen = () => {
         onPress={onSubmit}
         disabled={!!addressError || !!error}
       />
-    </SafeAreaView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
-  },
-  container: {
-    backgroundColor: theme.colors.black,
-    height: '100%',
-    padding: 16,
-  },
   addressInput: {},
   submitContainer: {
     marginTop: 18,

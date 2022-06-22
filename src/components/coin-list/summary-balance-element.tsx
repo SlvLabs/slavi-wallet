@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 export interface BalanceElementProps {
   balance: string;
@@ -33,10 +34,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   balance: {
-    fontFamily: theme.fonts.default,
+    fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 34,
+    fontWeight: '700',
+    fontSize: Layout.isSmallDevice ? 24 : 34,
     color: theme.colors.whiteOpacity,
     textAlignVertical: 'bottom',
   },
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: 'bold',
-    fontSize: 34,
+    fontSize: Layout.isSmallDevice ? 24 : 34,
     color: theme.colors.whiteOpacity,
     textAlignVertical: 'bottom',
     marginRight: 4,

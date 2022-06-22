@@ -1,11 +1,10 @@
 import React from 'react';
-import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import SummaryBalanceElement from './summary-balance-element';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
-import {balanceHeader, downButton, upButton} from '../../assets/images';
-import LinearGradient from 'react-native-linear-gradient';
+import {balanceHeader, dollarButton, downButton, upButton} from '../../assets/images';
 import SimpleButton from '../buttons/simple-button';
 
 export interface BalanceHeaderProps {
@@ -14,10 +13,11 @@ export interface BalanceHeaderProps {
   fiatRound?: number;
   onSendClick?: () => void;
   onReceiveClick?: () => void;
+  onBuyClick?: () => void;
 }
 
 const BalanceHeader = (props: BalanceHeaderProps) => {
-  const {fiatBalance, fiatTicker, onSendClick, onReceiveClick} = props;
+  const {fiatBalance, fiatTicker, onSendClick, onReceiveClick, onBuyClick} = props;
   const fiatRound = props.fiatRound || 2;
   const {t} = useTranslation();
   return (
@@ -30,17 +30,6 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
             ticker={fiatTicker}
             containerStyle={styles.mainBalance}
           />
-          <View style={styles.profitBlock}>
-            <Text style={styles.subLabel}>{t('Profit 24h')}</Text>
-            <View style={styles.profitRow}>
-              <LinearGradient style={styles.profitFiat} {...theme.gradients.button}>
-                <Text style={styles.profitFiatText}>{t('Coming soon')}</Text>
-              </LinearGradient>
-              <View style={styles.profitPercent}>
-                <Text style={styles.profitPercentText}>0.00%</Text>
-              </View>
-            </View>
-          </View>
         </View>
         <View style={styles.buttonsRow}>
           <SimpleButton
@@ -57,6 +46,13 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
             containerStyle={styles.button}
             textStyle={styles.buttonText}
           />
+          <SimpleButton
+            title={t('Buy')}
+            onPress={onBuyClick}
+            leftIcon={<Image source={dollarButton} style={styles.buttonImage} />}
+            containerStyle={styles.button}
+            textStyle={styles.buttonText}
+          />
         </View>
       </ImageBackground>
     </View>
@@ -69,109 +65,32 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.balanceHeaderBackground,
   },
   image: {
-    paddingTop: 50,
+    paddingTop: Layout.isSmallDevice ? 30 : 50,
+    height: Layout.isSmallDevice ? 163 : 243,
   },
   linerGradient: {},
   leftGradient: {},
   rightGradient: {},
   balances: {
-    flex: 1,
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  label: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 10,
-    letterSpacing: 0.4,
-    lineHeight: 14,
-    color: theme.colors.quiteTransparent,
-    textTransform: 'uppercase',
-  },
-  subLabel: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 12,
-    lineHeight: 16,
-    color: theme.colors.quiteTransparent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 4,
-    textAlignVertical: 'center',
-  },
-  profitRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
-  chart: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  chartImage: {
-    width: Layout.window.width - 8,
-    height: Layout.window.width / 3,
-    resizeMode: 'contain',
-  },
-  profitFiat: {
-    borderRadius: 4,
-    padding: 4,
-    paddingRight: 8,
-    paddingLeft: 8,
-    textAlignVertical: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 6,
-    marginRight: 8,
-  },
-  profitFiatText: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 12,
-    lineHeight: 16,
-    color: theme.colors.white,
-    alignItems: 'center',
-    textAlignVertical: 'center',
-    justifyContent: 'center',
-  },
-  profitPercent: {
-    backgroundColor: 'transparent',
-    borderRadius: 4,
-    padding: 4,
-  },
-  profitPercentText: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 12,
-    lineHeight: 16,
-    color: theme.colors.quiteTransparent,
-  },
-  profitBlock: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlignVertical: 'center',
-  },
   buttonsRow: {
     flexDirection: 'row',
     paddingLeft: Layout.isSmallDevice ? 18 : 34,
     paddingRight: Layout.isSmallDevice ? 18 : 34,
     justifyContent: 'space-around',
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: Layout.isSmallDevice ? 10 : 20,
+    marginBottom: 40,
   },
   button: {
     width: 100,
     justifyContent: 'flex-start',
     padding: 8,
-    backgroundColor: theme.colors.buttonv2,
+    backgroundColor: theme.colors.buttonv3,
     borderRadius: 38,
     alignItems: 'center',
   },
@@ -185,6 +104,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontFamily: theme.fonts.gilroy,
     textAlign: 'center',
+    letterSpacing: 0.01,
   },
   buttonImage: {
     width: 24,

@@ -192,7 +192,8 @@ const App: () => ReactNode = () => {
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar
-        backgroundColor={theme.colors.black}
+        backgroundColor="transparent"
+        translucent={true}
         barStyle={'light-content'}
       />
       <Provider store={store}>
@@ -200,7 +201,6 @@ const App: () => ReactNode = () => {
           {!isBootstrapped && <AuthModal visible={!isAuthorized} />}
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme}>
-              {devMode && <Text style={{color: theme.colors.white,  textAlign: 'center'}}>This is development version!</Text>}
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}
@@ -214,6 +214,13 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectSignRequestModal />}
               {!isBootstrapped && <WalletConnectTxRequestModal />}
             </NavigationContainer>
+            {devMode && <Text style={{
+                backgroundColor: theme.colors.black,
+                color: theme.colors.white,
+                textAlign: 'center',
+              }}>
+                This is development version!
+            </Text>}
           </SafeAreaProvider>
         </servicesContext.Provider>
       </Provider>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import SummaryBalanceElement from './summary-balance-element';
@@ -16,10 +16,20 @@ export interface BalanceHeaderProps {
   onBuyClick?: () => void;
 }
 
+const MAX_BUTTON_LABEL = 7;
+
 const BalanceHeader = (props: BalanceHeaderProps) => {
   const {fiatBalance, fiatTicker, onSendClick, onReceiveClick, onBuyClick} = props;
   const fiatRound = props.fiatRound || 2;
   const {t} = useTranslation();
+
+  const iconsIsShown = useMemo(() =>
+    !Layout.isSmallDevice  || (
+      t('Send').length <= MAX_BUTTON_LABEL &&
+      t('Receive').length <= MAX_BUTTON_LABEL &&
+      t('Buy').length <= MAX_BUTTON_LABEL
+    ), [t]);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={balanceHeader} style={styles.image}>
@@ -35,26 +45,23 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
           <SimpleButton
             title={t('Send')}
             onPress={onSendClick}
-            leftIcon={<Image source={upButton} style={styles.buttonImage} />}
-            containerStyle={styles.button}
+            leftIcon={iconsIsShown && <Image source={upButton} style={styles.buttonImage} />}
+            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0}}
             textStyle={styles.buttonText}
-            textContainerStyle={styles.buttonTextContainer}
           />
           <SimpleButton
             title={t('Receive')}
             onPress={onReceiveClick}
-            leftIcon={<Image source={downButton} style={styles.buttonImage} />}
-            containerStyle={styles.button}
+            leftIcon={iconsIsShown && <Image source={downButton} style={styles.buttonImage} />}
+            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0}}
             textStyle={styles.buttonText}
-            textContainerStyle={styles.buttonTextContainer}
           />
           <SimpleButton
             title={t('Buy')}
             onPress={onBuyClick}
-            leftIcon={<Image source={dollarButton} style={styles.buttonImage} />}
-            containerStyle={styles.button}
+            leftIcon={iconsIsShown && <Image source={dollarButton} style={styles.buttonImage} />}
+            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0}}
             textStyle={styles.buttonText}
-            textContainerStyle={styles.buttonTextContainer}
           />
         </View>
       </ImageBackground>
@@ -90,16 +97,20 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   button: {
-    width: 100,
-    padding: 8,
+    width: Layout.isSmallDevice ? 92 : 103,
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingRight: 11,
+    paddingLeft: 0,
     backgroundColor: theme.colors.buttonv3,
-    borderRadius: 38,
+    borderRadius: 40,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   mainBalance: {},
   buttonText: {
-    fontSize: 13,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 20,
     fontWeight: '600',
     fontStyle: 'normal',
     fontFamily: theme.fonts.gilroy,
@@ -107,15 +118,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.01,
   },
   buttonImage: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
   },
-  buttonTextContainer: {
-    width: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  }
 });
 
 export default BalanceHeader;

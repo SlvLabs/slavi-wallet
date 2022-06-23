@@ -10,7 +10,6 @@ interface CurrencySelectListElementProps {
 }
 
 export const CurrencySelectListElement = ({currency, onPress}: CurrencySelectListElementProps) => {
-  console.log('img ', currency.img);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.leftColumn}>

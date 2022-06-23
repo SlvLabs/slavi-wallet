@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, TouchableOpacity, Text, ViewStyle, TextStyle, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text, ViewStyle, TextStyle} from 'react-native';
 import theme from '../../theme';
 
 export interface SimpleButtonProps {
@@ -8,18 +8,15 @@ export interface SimpleButtonProps {
   rightIcon?: ReactNode;
   onPress?: () => void;
   containerStyle?: ViewStyle;
-  textContainerStyle?: ViewStyle;
   textStyle?: TextStyle;
 }
 
 export default function SimpleButton(props: SimpleButtonProps) {
-  const {title, leftIcon, rightIcon, onPress, containerStyle, textContainerStyle} = props;
+  const {title, leftIcon, rightIcon, onPress, containerStyle} = props;
   return (
     <TouchableOpacity style={{...styles.container, ...containerStyle}} onPress={onPress}>
       {leftIcon}
-      <View style={{...styles.textContainer, ...textContainerStyle}}>
-        <Text style={styles.title}>{title}</Text>
-      </View>
+      <Text style={styles.title}>{title}</Text>
       {rightIcon}
     </TouchableOpacity>
   );
@@ -42,8 +39,4 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     textAlign: 'center',
   },
-  textContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
 });

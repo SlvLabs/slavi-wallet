@@ -2,7 +2,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {
   Image,
   ImageSourcePropType,
-  Keyboard,
   Text,
   TouchableOpacity,
   View
@@ -23,10 +22,10 @@ import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import Layout from '../../utils/layout';
-import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView } from 'react-native';
 import Toast from 'react-native-simple-toast';
+import Screen from '../../components/screen';
 
 interface EarnCoin {
   name: string;
@@ -125,20 +124,12 @@ const DefiScreen = () => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.staking);
   const [isListDisplayMode, setListDisplayMode] = useState<boolean>(false);
 
-  const navigation = useNavigation();
   const {t} = useTranslation();
 
   const tabNames: Record<Tabs, string> = useMemo(() => ({
     [Tabs.staking]: t('staking'),
     [Tabs.stables]: t('stables'),
   }), [t])
-
-  const onBackPress = useCallback(() => {
-    if(navigation.canGoBack()) {
-      navigation.goBack();
-      Keyboard.dismiss();
-    }
-  }, [navigation]);
 
   const switchDisplayMode = () => setListDisplayMode(!isListDisplayMode);
 
@@ -160,7 +151,7 @@ const DefiScreen = () => {
     );
     return (
       castedKey === activeTab ? (
-        <LinearGradient {...theme.gradients.activeTab} style={styles.tabGradient}>
+        <LinearGradient {...theme.gradients.activeTab} style={styles.tabGradient} key={`tab_content_${castedKey}`}>
           {tab}
         </LinearGradient>
       )
@@ -170,29 +161,23 @@ const DefiScreen = () => {
   }), [tabNames, activeTab]);
 
   return (
-    <View style={styles.container}>
-      <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onBackPress}>
-            <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
-          </TouchableOpacity>
-          <View style={styles.titleView}>
-            <Text style={styles.header}>{`${t('earn')} (${t('inProgress')})`}</Text>
-          </View>
-          <View style={styles.controls}>
-            <TouchableOpacity style={styles.button} onPress={switchDisplayMode}>
-              <CustomIcon name={isListDisplayMode ? 'Category' : 'lines'} size={20} color={theme.colors.textLightGray3} />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.tabs}>
-          {tabs}
-        </View>
-        <ScrollView style={{flex: 1}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-          <TabsContent coins={TabsCoins[activeTab]} isListDisplayMode={isListDisplayMode} onCoinPress={onCoinPress} />
-        </ScrollView>
-      </LinearGradient>
-    </View>
+    <Screen
+      title={`${t('earn')} (${t('inProgress')})`}
+      controls={(
+        <TouchableOpacity style={styles.button} onPress={switchDisplayMode}>
+          <CustomIcon name={isListDisplayMode ? 'Category' : 'lines'} size={20} color={theme.colors.textLightGray3} />
+        </TouchableOpacity>
+      )}
+      headerContainerStyle={styles.headerContainer}
+      titleContainerStyle={styles.headerTitleContainer}
+    >
+      <View style={styles.tabs}>
+        {tabs}
+      </View>
+      <ScrollView style={{flex: 1}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+        <TabsContent coins={TabsCoins[activeTab]} isListDisplayMode={isListDisplayMode} onCoinPress={onCoinPress} />
+      </ScrollView>
+    </Screen>
   );
 }
 
@@ -206,12 +191,7 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 48,
-    paddingBottom: 12,
-    marginBottom: 18,
+    paddingLeft: 0,
   },
   button: {
     backgroundColor: theme.colors.grayDark,
@@ -239,10 +219,6 @@ const styles = StyleSheet.create({
     color: theme.colors.maxTransparent,
     textTransform: 'capitalize',
     marginLeft: 8,
-  },
-  controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   backButton: {
     transform: [{
@@ -347,6 +323,9 @@ const styles = StyleSheet.create({
   },
   plateColumn: {
     flexDirection: 'column',
+  },
+  headerTitleContainer: {
+    marginRight: Layout.isSmallDevice ? -32 : -40,
   }
 });
 

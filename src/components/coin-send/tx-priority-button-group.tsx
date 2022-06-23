@@ -89,7 +89,8 @@ const TxPriorityButtonGroup = (props: TxPriorityButtonGroupProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   header: {
     flexDirection: 'row',

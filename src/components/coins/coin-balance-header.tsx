@@ -21,7 +21,7 @@ export interface CoinBalanceHeaderProps {
 
 const CoinBalanceHeader = (props: CoinBalanceHeaderProps) => {
   return (
-    <Card>
+    <Card style={styles.container}>
       <View style={styles.row}>
         <View style={styles.logoContainer}>
           <Image source={getImageSource(props.logo)} style={styles.logoImage} />
@@ -46,6 +46,10 @@ const CoinBalanceHeader = (props: CoinBalanceHeaderProps) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginLeft: 0,
+    marginRight: 0,
+  },
   logoContainer: {
     justifyContent: 'center',
     flexDirection: 'row',

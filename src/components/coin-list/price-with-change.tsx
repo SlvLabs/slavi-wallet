@@ -3,6 +3,7 @@ import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-elements';
 import theme from '../../theme';
 import ElementWithChevron, {ChevronType} from './element-with-chevron';
+import Layout from '../../utils/layout';
 
 export interface PriceWithChangeProps {
   price: number;
@@ -43,6 +44,7 @@ const PriceWithChange = (props: PriceWithChangeProps) => {
           label={'%'}
           type={type}
           valueStyle={{...styles.change, ...props.changeStyle}}
+          labelStyle={styles.changeLabel}
           changeStyle={{...styles.change, ...props.changeStyle}}
           containerStyle={{...styles.changeContainer, ...props.changeContainerStyle}}
         />
@@ -57,7 +59,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginLeft: 9,
   },
   price: {
     color: theme.colors.white,
@@ -75,6 +76,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textTransform: 'uppercase',
+    display: Layout.isSmallDevice ? 'none' : 'flex',
+  },
+  changeLabel: {
+    display: Layout.isSmallDevice ? 'none' : 'flex',
   },
   changePositive: {
     color: theme.colors.green,

@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import useTranslation from '../../utils/use-translation';
 import {useCoinsService, useServices} from '@slavi/wallet-core';
@@ -11,7 +11,7 @@ import {
 import theme from '../../theme';
 
 import ConfirmationModal from '../../components/modal/confirmation-modal';
-import { View } from 'react-native';
+import Screen from '../../components/screen';
 
 enum ConfirmationState {
   hidden,
@@ -70,8 +70,7 @@ const InvalidateCachesScreen = () => {
   }, [confirmation, invalidateCoinsCache, invalidateLanguageCache]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+    <Screen title={t('Invalidate some caches')}>
         <ListItem
           key={'invalidate_1'}
           onPress={showCoinsConf}
@@ -101,20 +100,11 @@ const InvalidateCachesScreen = () => {
           positiveText={t('Yes')}
           negativeText={t('No')}
         />
-      </View>
-    </SafeAreaView>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: theme.colors.screenBackground,
-  },
-  content: {
-    padding: 16,
-  },
   itemContainer: {
     backgroundColor: 'transparent',
     borderBottomWidth: 1,

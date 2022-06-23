@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
   KeyboardTypeOptions, ReturnKeyTypeOptions,
   StyleSheet,
@@ -34,6 +34,7 @@ export interface SimpleInputProps {
   returnKeyType?: ReturnKeyTypeOptions;
   disableFocusStyle?: boolean;
   disableErrorStyle?: boolean;
+  skipDisabledStyle?: boolean;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -42,7 +43,9 @@ const SimpleInput = (props: SimpleInputProps) => {
 
   const [focusStyle, setFocusStyle] = useState<ViewStyle>({});
 
-  if (props.disabled) {
+  const input = useRef<TextInput | null>(null);
+
+  if (props.disabled && !props.skipDisabledStyle) {
     disabledStyle = {
       backgroundColor: theme.colors.borderGray,
       borderWidth: 1,
@@ -76,8 +79,10 @@ const SimpleInput = (props: SimpleInputProps) => {
       )
   ), [props.icon, props.onIconPress]);
 
+  const onContainerClick = useCallback(() => input.current?.focus(), [input.current]);
+
   return (
-    <View style={{...styles.container, ...props.containerStyle}}>
+    <TouchableOpacity style={{...styles.container, ...props.containerStyle}} onPress={onContainerClick}>
       <View
         style={{
           ...styles.inputContainer,
@@ -102,6 +107,12 @@ const SimpleInput = (props: SimpleInputProps) => {
             keyboardType={props.keyboardType}
             placeholderTextColor={props.placeholderTextColor}
             returnKeyType={props.returnKeyType}
+            editable={!props.disabled}
+            ref={(_input) => {
+              if(input) {
+                input.current = _input;
+              }
+            }}
           />
         </View>
         {!!props.buttonText && (
@@ -120,7 +131,7 @@ const SimpleInput = (props: SimpleInputProps) => {
           </Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 

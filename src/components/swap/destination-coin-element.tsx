@@ -33,8 +33,8 @@ export default function DestinationCoinElement(props: DestinationCoinElementProp
   const showCoinModal = useCallback(() => setCoinModalIsShown(true), []);
   const hideCoinModal = useCallback(() => setCoinModalIsShown(false), []);
 
-  const _onCoinSelect = useCallback((coinId: string) => {
-    onCoinSelect(coinId);
+  const _onCoinSelect = useCallback((coin: CoinListElementData) => {
+    onCoinSelect(coin.id);
     hideCoinModal();
   }, [onCoinSelect, hideCoinModal]);
 

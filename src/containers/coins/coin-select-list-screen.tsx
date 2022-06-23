@@ -1,67 +1,41 @@
 import React, {useCallback} from 'react';
-import {Keyboard, SafeAreaView, StyleSheet, View} from 'react-native';
-import useCoinsSelector from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
-import theme from '../../theme';
+import useCoinsSelector, { useCoinsSelectorFilter } from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import CoinSelectList from '../../components/coins/coins-select-list';
+import CoinSelectList, {CoinListElementData} from '../../components/coins/coins-select-list';
+import Screen from '../../components/screen';
+import useTranslation from '../../utils/use-translation';
+
+export interface CoinSelectListScreenProps {
+  nextScreen?: string;
+  filter?: useCoinsSelectorFilter;
+  balanceShown?: boolean;
+}
 
 export default function CoinSelectListScreen() {
   const {params} = useRoute();
-  const {nextScreen, filter, balanceShown} = params as any;
-  if(!nextScreen) {
+  const {nextScreen, filter, balanceShown} = params as unknown as CoinSelectListScreenProps;
+  if (!nextScreen) {
     throw new Error('Wrong coins routing');
   }
 
   const coins = useCoinsSelector(filter);
 
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   const onElementPress = useCallback(
-    (coinId: string) => navigation.navigate(nextScreen, {coin: coinId}),
+    (coin: CoinListElementData) => navigation.navigate(nextScreen, {coin: coin.id, ticker: coin.ticker}),
     [navigation]
   );
 
-  const goBack = useCallback(() => {
-    if(navigation.canGoBack()) {
-      navigation.goBack();
-      Keyboard.dismiss();
-    }
-  }, [navigation]);
-
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+    <Screen title={t('Select coins')}>
         <CoinSelectList
           coins={coins}
           balanceShown={balanceShown}
           onElementPress={onElementPress}
-          onBackPress={goBack}
+          headerHidden={true}
         />
-      </View>
-    </SafeAreaView>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: theme.colors.screenBackground,
-    flex: 1,
-  },
-  content: {
-    padding: 16,
-  },
-  searchContainer: {
-    marginBottom: 16,
-  },
-  inputContainer: {
-    backgroundColor: theme.colors.grayDark,
-  },
-  input: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 14,
-    lineHeight: 18,
-    color: theme.colors.textLightGray1,
-  }
-});

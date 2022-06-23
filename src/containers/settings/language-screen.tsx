@@ -1,12 +1,12 @@
-import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import React, {useCallback, useMemo} from 'react';
 import useLanguages from '@slavi/wallet-core/src/providers/ws/hooks/use-languages';
 import useTranslation from '../../utils/use-translation';
-import theme from '../../theme';
 import SelectableList from '../../components/controls/selectable-list';
 import mapArrayToSelectOptions from '../../utils/map-array-to-select-options';
 import useLanguageService from '@slavi/wallet-core/src/contexts/hooks/use-language-service';
 import objectMap from '@slavi/wallet-core/src/utils/object-map';
+import Screen from '../../components/screen';
 
 const LanguageScreen = () => {
   const {languages, isLoading} = useLanguages();
@@ -35,23 +35,10 @@ const LanguageScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <SelectableList onSelect={onChange} options={languageOptions} current={i18n.language}/>
-      </View>
-    </SafeAreaView>
+    <Screen title={t('Language')} headerContainerStyle={{paddingLeft: 0}}>
+      <SelectableList onSelect={onChange} options={languageOptions} current={i18n.language}/>
+    </Screen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: theme.colors.screenBackground,
-  },
-  content: {
-    padding: 16,
-  },
-});
 
 export default LanguageScreen;

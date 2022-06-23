@@ -1,5 +1,5 @@
 import FullScreenModal from '../modal/full-screen-modal';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Platform} from 'react-native';
 import React from 'react';
 import CurrencySelectList from './currency-select-list';
 import {Currency} from './currency-select';
@@ -27,5 +27,13 @@ const styles = StyleSheet.create({
   container: {
     paddingLeft: 12,
     paddingRight: 12,
+    ...Platform.select({
+      ios: {
+        marginTop: 48,
+      },
+      android: {
+        marginTop: 0,
+      },
+    }),
   },
 });

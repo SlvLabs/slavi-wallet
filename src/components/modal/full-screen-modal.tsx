@@ -5,10 +5,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
+import LinearGradient from 'react-native-linear-gradient';
 
 export interface FullScreenModalProps {
   visible: boolean;
@@ -30,7 +30,7 @@ const FullScreenModal = (props: FullScreenModalProps) => {
     <Modal
       animationType={props.animationType || defaultAnimation}
       visible={props.visible}>
-      <SafeAreaView style={styles.container}>
+      <LinearGradient {...theme.gradients.screenBackground} style={styles.container}>
         <View style={styles.paddingContainer}>
           <View style={styles.header}>
             {!props.hideCloseButton && (
@@ -53,9 +53,9 @@ const FullScreenModal = (props: FullScreenModalProps) => {
             </TouchableOpacity>
             )}
           </View>
-          <View style={styles.content}>{props.children}</View>
+          {props.children}
         </View>
-      </SafeAreaView>
+      </LinearGradient>
     </Modal>
   );
 };
@@ -63,14 +63,13 @@ const FullScreenModal = (props: FullScreenModalProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.dark,
   },
   paddingContainer: {
     flex: 1,
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.dark,
+    backgroundColor: 'transparent',
   },
   closeIcon: {
     padding: 16,
@@ -97,10 +96,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 28,
     color: theme.colors.white,
-  },
-  content: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
   },
 });
 

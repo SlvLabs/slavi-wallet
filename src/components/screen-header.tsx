@@ -1,4 +1,4 @@
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 import CustomIcon from './custom-icon/custom-icon';
 import theme from '../theme';
 import React, {ReactNode, useCallback} from 'react';
@@ -61,9 +61,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 36,
     marginBottom: Layout.isSmallDevice ? 12 : 24,
     width: '100%',
+    ...Platform.select({
+      ios: {
+        paddingTop: 50,
+      },
+      android: {
+        paddingTop: 36,
+      }
+    })
   },
   button: {
     backgroundColor: theme.colors.grayDark,
@@ -72,6 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 100,
   },
   header: {
     fontFamily: theme.fonts.default,

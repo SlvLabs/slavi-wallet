@@ -38,6 +38,7 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
             leftIcon={<Image source={upButton} style={styles.buttonImage} />}
             containerStyle={styles.button}
             textStyle={styles.buttonText}
+            textContainerStyle={styles.buttonTextContainer}
           />
           <SimpleButton
             title={t('Receive')}
@@ -45,6 +46,7 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
             leftIcon={<Image source={downButton} style={styles.buttonImage} />}
             containerStyle={styles.button}
             textStyle={styles.buttonText}
+            textContainerStyle={styles.buttonTextContainer}
           />
           <SimpleButton
             title={t('Buy')}
@@ -52,6 +54,7 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
             leftIcon={<Image source={dollarButton} style={styles.buttonImage} />}
             containerStyle={styles.button}
             textStyle={styles.buttonText}
+            textContainerStyle={styles.buttonTextContainer}
           />
         </View>
       </ImageBackground>
@@ -65,8 +68,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.balanceHeaderBackground,
   },
   image: {
-    paddingTop: Layout.isSmallDevice ? 30 : 50,
+    paddingTop: Layout.isSmallDevice ? 50 : 100,
     height: Layout.isSmallDevice ? 163 : 243,
+    justifyContent: 'center'
   },
   linerGradient: {},
   leftGradient: {},
@@ -74,7 +78,6 @@ const styles = StyleSheet.create({
   balances: {
     paddingLeft: 16,
     paddingRight: 16,
-    paddingBottom: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -83,20 +86,17 @@ const styles = StyleSheet.create({
     paddingLeft: Layout.isSmallDevice ? 18 : 34,
     paddingRight: Layout.isSmallDevice ? 18 : 34,
     justifyContent: 'space-around',
-    marginTop: Layout.isSmallDevice ? 10 : 20,
+    marginTop: Layout.isSmallDevice ? 30 : 40,
     marginBottom: 40,
   },
   button: {
     width: 100,
-    justifyContent: 'flex-start',
     padding: 8,
     backgroundColor: theme.colors.buttonv3,
     borderRadius: 38,
     alignItems: 'center',
   },
-  mainBalance: {
-    marginBottom: 15,
-  },
+  mainBalance: {},
   buttonText: {
     fontSize: 13,
     lineHeight: 16,
@@ -109,8 +109,13 @@ const styles = StyleSheet.create({
   buttonImage: {
     width: 24,
     height: 24,
-    marginRight: 8,
   },
+  buttonTextContainer: {
+    width: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  }
 });
 
 export default BalanceHeader;

@@ -4,7 +4,7 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
+  TouchableOpacity, Platform,
 } from 'react-native';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
@@ -63,6 +63,11 @@ const FullScreenModal = (props: FullScreenModalProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    ...Platform.select({
+      ios: {
+        paddingTop: 50,
+      },
+    })
   },
   paddingContainer: {
     flex: 1,

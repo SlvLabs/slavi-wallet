@@ -1,4 +1,9 @@
 {
   "name": "slaviWalletMobile",
-  "displayName": "slaviWallet"
+  "displayName": "slaviWallet",
+  "expo": {
+    "scheme": "wc",
+    "name": "slaviWalletMobile",
+    "slug": "slaviWalletMobile"
+  }
 }

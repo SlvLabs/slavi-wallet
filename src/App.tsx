@@ -39,6 +39,7 @@ import WalletConnectSignRequestModal from './components/wallet-connect/sign-requ
 import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-modal';
 import useAutoBlock from './utils/use-auto-block';
 import AuthModal from './components/modal/auth-modal';
+import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -200,7 +201,7 @@ const App: () => ReactNode = () => {
         <servicesContext.Provider value={services.current}>
           {!isBootstrapped && <AuthModal visible={!isAuthorized} />}
           <SafeAreaProvider>
-            <NavigationContainer theme={DarkTheme}>
+            <NavigationContainer theme={DarkTheme} >
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}
@@ -213,6 +214,7 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectSessionRequestModal />}
               {!isBootstrapped && <WalletConnectSignRequestModal />}
               {!isBootstrapped && <WalletConnectTxRequestModal />}
+              {!isBootstrapped && <WalletConnectLink />}
             </NavigationContainer>
             {devMode && <Text style={{
                 backgroundColor: theme.colors.black,

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
+import {StyleSheet, View, Text, SafeAreaView, Platform} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import theme from '../../theme';
@@ -44,7 +44,7 @@ const SuccessfullySendingScreen = () => {
           </Text>
           {route.params.recipients.map(({address, amount}, index) => (
             <Text
-              style={{...styles.description, ...styles.boldText}}
+              style={{...styles.description, ...styles.boldText, ...styles.centredText}}
               key={`recipient_${index}`}>
               {`${address}: ${amount} ${route.params.ticker}`}
             </Text>
@@ -66,6 +66,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     flex: 1,
+    ...Platform.select({
+      android: {
+        paddingTop: 36,
+      }
+    })
   },
   header: {
     fontFamily: theme.fonts.default,
@@ -104,6 +109,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 64,
     paddingBottom: 64,
+  },
+  centredText: {
+    textAlign: 'center',
   }
 });
 

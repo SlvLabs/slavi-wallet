@@ -93,7 +93,16 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-    <string>https</string>
-  </array>
+       <string>https</string>
+    </array>
+	<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>wc</string>
+				</array>
+			</dict>
+		</array>
 </dict>
 </plist>

@@ -100,7 +100,7 @@ const BuyCoinScreen = () => {
           <NoticeRow
             text={validationErrorToString(t, {
               text: 'fee will be {amount} {ticker}',
-              vars: {amount: withdrawInfo?.feeInNetworkCoin, ticker: coinDetails.parentName || ''},
+              vars: {amount: withdrawInfo?.feeInNetworkCoin, ticker: coinDetails.parentTicker || ''},
             })}
           />
         </View>

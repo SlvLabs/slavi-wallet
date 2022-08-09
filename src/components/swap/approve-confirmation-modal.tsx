@@ -11,10 +11,11 @@ export interface ApproveConfirmationModalProps extends ModalProps {
   fee: string;
   onAccept: () => void;
   loading?: boolean;
+  feeTicker: string;
 }
 
 export default function ApproveConfirmationModal(props: ApproveConfirmationModalProps) {
-  const {contract, fee, visible, onCancel, onAccept, loading} = props;
+  const {contract, fee, visible, onCancel, onAccept, loading, feeTicker} = props;
 
   const {t} = useTranslation();
 
@@ -31,6 +32,7 @@ export default function ApproveConfirmationModal(props: ApproveConfirmationModal
         contractLabel={t('swapContract')}
         fee={fee}
         feeLabel={t('approveFee')}
+        feeTicker={feeTicker}
       />
       <SolidButton title={t('Ok')} onPress={onAccept} containerStyle={styles.okButton} loading={loading} />
       <SolidButton title={t('Cancel')} onPress={onCancel} />

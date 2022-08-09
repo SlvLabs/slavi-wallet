@@ -342,6 +342,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
         onAccept={send}
         onCancel={cancelConfirmSending}
         ticker={coinDetails.ticker}
+        feeTicker={coinDetails.ticker}
       />
       <ConfirmationModal
         visible={skipRentConfIsShown}

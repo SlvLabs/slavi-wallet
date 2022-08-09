@@ -315,6 +315,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
         onAccept={send}
         onCancel={cancelConfirmSending}
         ticker={coinDetails.ticker}
+        feeTicker={coinDetails.ticker}
       />
       <KeepAliveConfirmationModal
         visible={keepAliveConfirm}

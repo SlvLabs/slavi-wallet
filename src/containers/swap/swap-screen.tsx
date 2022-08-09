@@ -55,6 +55,7 @@ const SwapScreen = () => {
   const [balance, setBalance] = useState<string>();
   const [address, setAddress] = useState<string>();
   const [srcTicker, setSrcTicker] = useState<string>();
+  const [feeTicker, setFeeTicker] = useState<string>();
   const [srcLogo, setSrcLogo] = useState<string>();
   const [dstTicker, setDstTicker] = useState<string>();
   const [dstLogo, setDstLogo] = useState<string>();
@@ -87,6 +88,7 @@ const SwapScreen = () => {
 
   const {isLoading, error: networksError, coins: parentCoins} = useGetAvailableNetworks();
   const coins = useCoinsSelector({isSwap: true});
+
   const balancesState = useAddressesBalance(inCoin);
 
   const {t} = useTranslation();
@@ -440,6 +442,7 @@ const SwapScreen = () => {
   useEffect(() => {
     const coin = coins.find(c => c.id === inCoin);
     setSrcTicker(coin?.ticker);
+    setFeeTicker(coin?.parentTicker || coin?.ticker);
     setSrcLogo(coin?.logo);
   }, [inCoin]);
 
@@ -753,6 +756,7 @@ const SwapScreen = () => {
           contract={contractAddress || ''}
           fee={fee || ''}
           loading={approveSubmitting}
+          feeTicker={feeTicker || ''}
         />
         <SwapConfirmationModal
           visible={swapConfIsShown}
@@ -767,6 +771,7 @@ const SwapScreen = () => {
           dstLogo={dstLogo}
           dstAmount={makeRoundedBalance(4, realReceiveAmount || '0')}
           loading={swapSubmitting}
+          feeTicker={feeTicker || ''}
         />
         <WarningModal
           title={t('internal error')}

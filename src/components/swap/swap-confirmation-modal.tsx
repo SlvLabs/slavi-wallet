@@ -12,6 +12,7 @@ export interface SwapConfirmationModalProps extends ModalProps, TxInfoProps {
   contract: string;
   fee: string;
   loading?: boolean;
+  feeTicker: string;
 }
 
 export default function SwapConfirmationModal(props: SwapConfirmationModalProps) {
@@ -28,6 +29,7 @@ export default function SwapConfirmationModal(props: SwapConfirmationModalProps)
     dstAmount,
     dstLogo,
     loading,
+    feeTicker,
   } = props;
 
   const {t} = useTranslation();
@@ -53,6 +55,7 @@ export default function SwapConfirmationModal(props: SwapConfirmationModalProps)
         contractLabel={t('swapContract')}
         fee={fee}
         feeLabel={t('swapFee')}
+        feeTicker={feeTicker}
       />
       <SolidButton title={t('Ok')} onPress={onAccept} containerStyle={styles.okButton} loading={loading} />
       <SolidButton title={t('Cancel')} onPress={onCancel} />

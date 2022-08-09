@@ -313,6 +313,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         onAccept={send}
         onCancel={cancelConfirmSending}
         ticker={coinDetails.ticker}
+        feeTicker={coinDetails.ticker}
       />
     </ScrollableScreen>
   );

@@ -12,6 +12,7 @@ export interface ConfirmationModalProps {
   visible: boolean;
   vouts: Recipient[];
   ticker: string;
+  feeTicker: string;
   fee?: string;
   onAccept: () => void;
   onCancel: () => void;
@@ -35,7 +36,7 @@ const renderVout = (vout: Recipient, index: number, ticker: string) => (
 );
 
 const ConfirmationModal = (props: ConfirmationModalProps) => {
-  const {visible, onAccept, onCancel, ticker} = props;
+  const {visible, onAccept, onCancel, ticker, feeTicker} = props;
   const {t} = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -47,7 +48,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
   }, [onAccept]);
 
   return (
-    <BaseModal visible={visible} showCloseIcon={true}>
+    <BaseModal visible={visible} showCloseIcon={true} onCancel={onCancel}>
       <View style={styles.content}>
         <View
           style={{
@@ -70,7 +71,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
             <Text style={{...styles.fee, ...props.feeStyle}}>
               {`${t('Fee will be')}`}
             </Text>
-            <Text style={styles.feeValue}>{`${props.fee} ${ticker}`}</Text>
+            <Text style={styles.feeValue}>{`${props.fee} ${feeTicker}`}</Text>
           </View>
         )}
         <View

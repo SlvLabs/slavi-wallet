@@ -11,19 +11,20 @@ export interface TxMetaInfoProps {
   fee: string;
   contractLabel: string;
   feeLabel: string;
+  feeTicker: string;
 }
 
 export default function TxMetaInfo(props: TxMetaInfoProps) {
-  const {contract, contractLabel, fee, feeLabel} = props;
+  const {contract, contractLabel, fee, feeLabel, feeTicker} = props;
 
   const {t} = useTranslation();
 
-  const address = useMemo(() => `${contract.slice(0,6)}...${contract.slice(-4)}`, [contract]);
+  const address = useMemo(() => `${contract.slice(0, 6)}...${contract.slice(-4)}`, [contract]);
 
   const copy = useCallback(() => {
     Clipboard.setString(contract);
-    Toast.show(t('Copied to clipboard'))
-  }, [contract]);
+    Toast.show(t('Copied to clipboard'));
+  }, [contract, t]);
 
   return (
     <View style={styles.container}>
@@ -36,7 +37,7 @@ export default function TxMetaInfo(props: TxMetaInfoProps) {
       </View>
       <View style={styles.feeRow}>
         <Text style={styles.label}>{feeLabel}</Text>
-        <Text style={styles.feeText}>{fee}</Text>
+        <Text style={styles.feeText}>{`${fee} ${feeTicker}`}</Text>
       </View>
     </View>
   );

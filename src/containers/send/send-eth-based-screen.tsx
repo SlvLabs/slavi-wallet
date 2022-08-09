@@ -342,6 +342,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
         onAccept={send}
         onCancel={cancelConfirmSending}
         ticker={coinDetails.ticker}
+        feeTicker={coinDetails.parentTicker || coinDetails.ticker}
       />
       <EthFeeAdvancedModal
         visible={advancedModalIsShown}

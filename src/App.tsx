@@ -96,10 +96,12 @@ const App: () => ReactNode = () => {
 
     const state = store.getState();
 
-    if(!state.globalLoading.loading && services.current.authService.isAuthEnable()) {
-      setIsAuthorized(state.auth.authorized)
-    } else {
-      setIsAuthorized(true);
+    if(!state.globalLoading.loading) {
+      if (services.current.authService.isAuthEnable()) {
+        setIsAuthorized(state.auth.authorized)
+      } else {
+        setIsAuthorized(true);
+      }
     }
   });
 
@@ -190,6 +192,8 @@ const App: () => ReactNode = () => {
 
   useAutoBlock(services.current.authService);
 
+  console.log(!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized)
+  console.log(!isBootstrapped, isAccountInitialized, isInitialized, isAuthorized)
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar
@@ -214,7 +218,7 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectSessionRequestModal />}
               {!isBootstrapped && <WalletConnectSignRequestModal />}
               {!isBootstrapped && <WalletConnectTxRequestModal />}
-              {!isBootstrapped && <WalletConnectLink />}
+              {!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized && <WalletConnectLink />}
             </NavigationContainer>
             {devMode && <Text style={{
                 backgroundColor: theme.colors.black,

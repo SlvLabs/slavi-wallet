@@ -3,7 +3,7 @@ import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-w
 import {useCallback, useEffect} from 'react';
 import {EventType} from 'expo-linking/src/Linking.types';
 import * as Linking from 'expo-linking';
-import parse, { QueryParser } from 'url-parse';
+import parse from 'url-parse';
 
 export default function WalletConnectLink() {
   const walletConnectService = useWalletConnectService();
@@ -12,7 +12,6 @@ export default function WalletConnectLink() {
     let url;
     if(ev.url && walletConnectService) {
       const parsedUrl = parse(ev.url, true);
-      console.log(parsedUrl);
       switch (parsedUrl.protocol) {
         case 'https:':
           url = parsedUrl.query?.uri;
@@ -25,7 +24,6 @@ export default function WalletConnectLink() {
       }
 
       if(url) {
-        console.log(url);
         walletConnectService.connect(url);
       } else {
         throw new Error('Invalid url format');

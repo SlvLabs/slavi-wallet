@@ -368,6 +368,11 @@ const translations = {
   'account not selected': 'account not selected',
   'Sorry, our service is not available in the location you are in': 'Sorry, our service is not available in the location you are in',
   'Cannot proceed': 'Cannot proceed',
-}
+  tab_Wallet: 'Wallet',
+  tab_Earn: 'Earn',
+  tab_Operations: 'Operations',
+  tab_Exchange: 'Exchange',
+  tab_Settings: 'Settings',
+};
 
 export default translations;

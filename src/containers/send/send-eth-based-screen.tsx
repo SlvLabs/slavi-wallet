@@ -186,26 +186,19 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
           );
 
-          if(coinDetails.parent && err.coin === coinDetails.parent) {
+          if (coinDetails.parent && err.coin === coinDetails.parent) {
             text += ` (${coinDetails.parentName})`;
           }
           addError(text);
         } else {
           setLocked(false);
-          const err1 = except<CreateTransactionError>(
-            CreateTransactionError,
-            e,
-          );
+          const err1 = except<CreateTransactionError>(CreateTransactionError, e);
           if (err1) {
-            addError(
-              t('Can not create transaction. Try latter or contact support.'),
-            );
+            addError(t('Can not create transaction. Try latter or contact support.'));
           } else {
             const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
             if (err2) {
-              addError(
-                t('Can not create transaction. absurdly high fee.'),
-              );
+              addError(t('Can not create transaction. absurdly high fee.'));
             }
           }
           throw e;
@@ -228,7 +221,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     setLocked(false);
   };
   const send = async () => {
-    if(sendingLocked) {
+    if (sendingLocked) {
       return;
     }
 
@@ -265,15 +258,19 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   useDidUpdateEffect(() => validate(), [recipient, validate]);
 
   useEffect(() => {
-    if(isValid) {
+    if (isValid) {
       setErrors([]);
     }
   }, [isValid]);
 
-  const currentGasPrice =
-    advancedGasPrice || props.pattern.getGasLimit(txPriority) || '0';
-  const currentGasLimit =
-    advancedGasLimit || props.pattern.getDefaultGasPrice();
+  useEffect(() => {
+    if (balancesState.balances.length === 1) {
+      setSenderIndex(0);
+    }
+  }, [balancesState.balances.length]);
+
+  const currentGasPrice = advancedGasPrice || props.pattern.getGasLimit(txPriority) || '0';
+  const currentGasLimit = advancedGasLimit || props.pattern.getDefaultGasPrice();
 
   const enableRecipientPaysFee = useCallback(() => setRecipientPayFee(true), []);
 

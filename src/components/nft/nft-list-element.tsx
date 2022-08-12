@@ -45,19 +45,23 @@ function NftListElement({
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <NftImage image={image} imageStyle={styles.image} placeHolderContainerStyle={styles.placeholderContainer} />
-      <View style={styles.nameRow}>
-        <Text style={styles.name} ellipsizeMode="tail" numberOfLines={1}>
-          {name}
-        </Text>
+      <View style={styles.columns}>
+        <View style={styles.column}>
+          <View style={styles.nameRow}>
+            <Text style={styles.name} ellipsizeMode="tail" numberOfLines={1}>
+              {name}
+            </Text>
+          </View>
+          <View style={styles.networkRow}>
+            <Image source={getImageSource(networkLogo, coinPlaceholder)} style={styles.networkLogo} />
+            <Text style={styles.networkLabel}>{`${t('nftBlockchain')}:`}</Text>
+            <Text style={styles.network}>{network}</Text>
+          </View>
+        </View>
         <TouchableOpacity style={styles.hideShowWrap} onPress={onToggleHide}>
           <Text style={styles.hideShow}>{hidden ? t('nftShow') : t('nftHide')}</Text>
           <Image source={hidden ? hide : show} style={styles.hideShowIcon} />
         </TouchableOpacity>
-      </View>
-      <View style={styles.networkRow}>
-        <Image source={getImageSource(networkLogo, coinPlaceholder)} style={styles.networkLogo} />
-        <Text style={styles.networkLabel}>{`${t('nftBlockchain')}:`}</Text>
-        <Text style={styles.network}>{network}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -73,8 +77,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.borderGray,
     marginBottom: 10,
-    padding: 20,
+    paddingTop: Layout.isSmallDevice ? 16 : 20,
+    paddingBottom: Layout.isSmallDevice ? 16 : 20,
+    paddingLeft: Layout.isSmallDevice ? 16 : 20,
+    paddingRight: Layout.isSmallDevice ? 16 : 20,
     backgroundColor: theme.colors.grayDark,
+  },
+  columns: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingTop: 13,
   },
   image: {
     width: Layout.isSmallDevice ? 256 : 300,
@@ -85,13 +104,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
   },
   hideShowWrap: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    paddingTop: Layout.isSmallDevice ? 18 : 26,
+    height: '100%',
+    flex: 1,
   },
   hideShow: {
     fontFamily: theme.fonts.gilroy,
@@ -142,8 +163,8 @@ const styles = StyleSheet.create({
   },
   placeholderContainer: {
     backgroundColor: 'transparent',
-    marginLeft: -15,
     borderWidth: 0,
     height: Layout.isSmallDevice ? 256 : 300,
+    width: Layout.isSmallDevice ? 256 : 300,
   },
 });

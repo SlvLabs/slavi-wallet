@@ -52,12 +52,14 @@ export default function NftFilterModal({
         <Text style={{...styles.header, ...styles.header2}}>{t('hiddenNFTs')}</Text>
         <View style={styles.checkboxWrap}>
           <Text style={styles.checkboxText}>{t('nftShowHiddenTokens')}</Text>
-          <Switch
-            value={showHiddenTokens}
-            onValueChange={setShowHiddenTokens}
-            thumbColor={theme.colors.white}
-            trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
-          />
+          <View style={styles.checkboxSwitchWrap}>
+            <Switch
+              value={showHiddenTokens}
+              onValueChange={setShowHiddenTokens}
+              thumbColor={theme.colors.white}
+              trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
+            />
+          </View>
         </View>
         <SolidButton title={t('apply')} containerStyle={styles.btn1} onPress={update} loading={updateLoading} />
         <OutlineButton title={t('Cancel')} onPress={onCancel} />
@@ -95,6 +97,11 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.maxTransparent,
+  },
+  checkboxSwitchWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkboxText: {
     fontFamily: theme.fonts.gilroy,

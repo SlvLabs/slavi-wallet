@@ -14,12 +14,13 @@ export default function useAutoBlock(authService?: AuthServiceInterface) {
 
       if(appState.current.match(/inactive|background/) && nextAppState === "active") {
         const now = (new Date()).getTime();
-        if(blockTime.current && blockTime.current < ( now - authService.getAutoBlockTimeout())) {
-          authService.forbid();
+        if(blockTime.current && blockTime.current >= ( now - authService.getAutoBlockTimeout())) {
+          authService.authorize();
         }
         blockTime.current = null;
       } else if(appState.current === 'active' && nextAppState.match(/inactive|background/)) {
         blockTime.current = (new Date()).getTime();
+        authService.forbid();
       }
       appState.current = nextAppState;
     });

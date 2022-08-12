@@ -40,6 +40,7 @@ import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-
 import useAutoBlock from './utils/use-auto-block';
 import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
+import * as Linking from 'expo-linking';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -90,7 +91,7 @@ const App: () => ReactNode = () => {
 
   store.subscribe(() => {
     if(!services.current.authService) {
-      setIsAuthorized(true);
+      // setIsAuthorized(true);
       return;
     }
 
@@ -192,8 +193,15 @@ const App: () => ReactNode = () => {
 
   useAutoBlock(services.current.authService);
 
+  useEffect(() => {
+    Linking.getInitialURL().then((url) => {
+      console.log(url)
+    });
+  }, [isBootstrapped, isAccountInitialized, isInitialized, isAuthorized]);
+
   console.log(!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized)
   console.log(!isBootstrapped, isAccountInitialized, isInitialized, isAuthorized)
+  Linking.getInitialURL().then((a) => console.log('app:', a))
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar
@@ -218,7 +226,7 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectSessionRequestModal />}
               {!isBootstrapped && <WalletConnectSignRequestModal />}
               {!isBootstrapped && <WalletConnectTxRequestModal />}
-              {!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized && <WalletConnectLink />}
+              {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized}/>}
             </NavigationContainer>
             {devMode && <Text style={{
                 backgroundColor: theme.colors.black,

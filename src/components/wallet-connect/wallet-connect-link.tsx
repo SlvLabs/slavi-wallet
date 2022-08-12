@@ -1,15 +1,24 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import {useCallback, useEffect} from 'react';
 import {EventType} from 'expo-linking/src/Linking.types';
 import * as Linking from 'expo-linking';
 import parse from 'url-parse';
 
-export default function WalletConnectLink() {
+export default function WalletConnectLink({loading}: {loading: boolean}) {
   const walletConnectService = useWalletConnectService();
 
-  const handleOpenURL = useCallback((ev: EventType) => {
+  const lastEvent = useRef<EventType|null>(null);
+
+  const eventHandler = useCallback((ev: EventType) => {
+    lastEvent.current = ev;
+  }, []);
+
+  const handleOpenURL = useCallback((ev: EventType|null) => {
     let url;
+    if(loading || !ev) {
+      return;
+    }
     if(ev.url && walletConnectService) {
       const parsedUrl = parse(ev.url, true);
       switch (parsedUrl.protocol) {
@@ -29,7 +38,13 @@ export default function WalletConnectLink() {
         throw new Error('Invalid url format');
       }
     }
-  }, [walletConnectService]);
+  }, [walletConnectService, loading]);
+
+  useEffect(() => {
+    Linking.addEventListener('url', eventHandler);
+
+    return () => Linking.removeEventListener('url', eventHandler);
+  }, [eventHandler]);
 
   useEffect(() => {
     Linking.getInitialURL().then((url) => {
@@ -39,10 +54,11 @@ export default function WalletConnectLink() {
     }).catch(err => {
       console.warn('An error occurred', err);
     });
-    Linking.addEventListener('url', handleOpenURL);
+  }, [loading, handleOpenURL]);
 
-    return () => Linking.removeEventListener('url', handleOpenURL);
-  }, [handleOpenURL]);
+  useEffect(() => {
+    handleOpenURL(lastEvent.current)
+  }, [lastEvent.current, handleOpenURL])
 
   return <></>;
 }

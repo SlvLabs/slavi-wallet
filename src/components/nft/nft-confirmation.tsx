@@ -22,33 +22,20 @@ export interface NftConfirmationProps extends ModalProps {
 }
 
 export default function NftConfirmation(props: NftConfirmationProps) {
-  const {
-    visible,
-    onCancel,
-    name,
-    image,
-    address,
-    amount,
-    fee,
-    ticker,
-    onAccept
-  } = props;
+  const {visible, onCancel, name, image, address, amount, fee, ticker, onAccept} = props;
 
   const {t} = useTranslation();
 
   return (
-    <BaseModal
-      visible={visible}
-      onCancel={onCancel}
-      showCloseIcon={true}
-      modalStyle={styles.modal}
-    >
+    <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
       <Text style={styles.title}>{t('nftConfTitle')}</Text>
       <Image source={getImageSource(image, nftPlaceholder1)} style={styles.image} />
       <Text style={styles.name}>{name}</Text>
       <NftInfoElement label={t('nftAddress')} value={shrinkAddress(address || '')} />
-      {amount && <NftInfoElement label={t('nftAmount')} value={`${amount} ${ticker || ''}`} valueStyle={styles.amount}/>}
-      <NftInfoElement label={t('nftFee')} value={fee} isLast={true}/>
+      {amount && (
+        <NftInfoElement label={t('nftAmount')} value={`${amount} ${ticker || ''}`} valueStyle={styles.amount} />
+      )}
+      <NftInfoElement label={t('nftFee')} value={fee} isLast={true} />
       <SolidButton title={t('Ok')} onPress={onAccept} style={styles.button} containerStyle={styles.button} />
       <OutlineButton title={t('Cancel')} onPress={onCancel} style={styles.button} />
     </BaseModal>
@@ -65,7 +52,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: Layout.isSmallDevice ? 15 : 18,
-    lineHeight: Layout.isSmallDevice ? 21: 28,
+    lineHeight: Layout.isSmallDevice ? 21 : 28,
     color: theme.colors.white,
     marginTop: 16,
     marginBottom: 20,
@@ -82,7 +69,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: Layout.isSmallDevice ? 15 : 18,
-    lineHeight: Layout.isSmallDevice ? 21: 28,
+    lineHeight: Layout.isSmallDevice ? 21 : 28,
     color: theme.colors.white,
     marginTop: 16,
     marginBottom: 20,

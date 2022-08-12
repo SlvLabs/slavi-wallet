@@ -20,7 +20,7 @@ export default function NftImage(props: NftImageProps) {
 
   const {t} = useTranslation();
 
-  if(!image) {
+  if (!image) {
     return (
       <View style={{...styles.placeHolderContainer, ...placeHolderContainerStyle}}>
         <Image source={nftPlaceholder1} style={styles.placeHolderImage} />
@@ -42,7 +42,7 @@ export default function NftImage(props: NftImageProps) {
     <View style={{...styles.container, ...containerStyle}}>
       <Image source={getImageSource(image, nftPlaceholder1)} style={{...styles.image, ...imageStyle}} />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: Layout.isSmallDevice ? 13 : 16,
-    lineHeight: Layout.isSmallDevice ? 17: 21,
+    lineHeight: Layout.isSmallDevice ? 17 : 21,
     color: theme.colors.white,
     maxWidth: Layout.isSmallDevice ? 75 : 135,
     textAlign: 'center',

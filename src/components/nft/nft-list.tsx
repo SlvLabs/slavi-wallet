@@ -9,18 +9,21 @@ import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
+import NftFilterRow from './nft-filter-row';
 
 export default function NftList() {
-  const {list, isLoading} = useNftList();
-
+  const {list, isLoading, switchHidden, filter} = useNftList();
   const {t} = useTranslation();
   const navigation = useNavigation();
 
-  const onElementPress = useCallback((id: string, contract: string, network: string) => {
-    navigation.navigate(ROUTES.COINS.NFT_INFO, {id, contract, network})
-  }, [navigation]);
+  const onElementPress = useCallback(
+    (id: string, contract: string, network: string) => {
+      navigation.navigate(ROUTES.COINS.NFT_INFO, {id, contract, network});
+    },
+    [navigation],
+  );
 
-  if(isLoading) {
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <Spinner />
@@ -28,28 +31,56 @@ export default function NftList() {
     );
   }
 
-  if(!isLoading && !list?.length) {
+  if (!list?.length) {
     return (
-      <View style={styles.placeholderContainer}>
-        <Image source={nftPlaceholder3} style={styles.placeholderImage}/>
-        <Text style={styles.placeholderTitle}>{t('noNftTitle')}</Text>
-        <Text style={styles.placeholderDescription}>{t('noNftDescription')}</Text>
+      <View style={styles.container}>
+        <NftFilterRow
+          showed={0}
+          showHiddenTokens={filter.showHiddenTokens}
+          setShowHiddenTokens={filter.setShowHiddenTokens}
+          networks={filter.networks}
+          toggleNetworkHide={filter.toggleNetworkHide}
+          update={filter.update}
+          updateLoading={filter.isUpdateLoading}
+        />
+        <View style={styles.placeholderContainer}>
+          <Image source={nftPlaceholder3} style={styles.placeholderImage} />
+          <Text style={styles.placeholderTitle}>{t('noNftTitle')}</Text>
+          <Text style={styles.placeholderDescription}>{t('noNftDescription')}</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {list?.map((entry, index) => (
-        <NftListElement
-          name={entry.name}
-          network={entry.network.name}
-          onPress={() => onElementPress(entry.id, entry.contract, entry.network.id)}
-          image={entry.image}
-          key={`nft_${index}`}
-          networkLogo={entry.network.logo}
+    <View>
+      <View style={styles.container}>
+        <NftFilterRow
+          showed={list.length}
+          showHiddenTokens={filter.showHiddenTokens}
+          setShowHiddenTokens={filter.setShowHiddenTokens}
+          networks={filter.networks}
+          toggleNetworkHide={filter.toggleNetworkHide}
+          update={filter.update}
+          updateLoading={filter.isUpdateLoading}
         />
-      ))}
+        {list?.map(entry => (
+          <NftListElement
+            name={entry.name}
+            network={entry.network.name}
+            onElementPress={onElementPress}
+            switchHidden={switchHidden}
+            hidden={entry.hidden}
+            id={entry.id}
+            contract={entry.contract}
+            network_id={entry.network.id}
+            image={entry.image}
+            key={entry.token_id}
+            networkLogo={entry.network.logo}
+            token_id={entry.token_id}
+          />
+        ))}
+      </View>
     </View>
   );
 }
@@ -63,9 +94,10 @@ const styles = StyleSheet.create({
     minHeight: Layout.window.height - 280,
   },
   placeholderContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: Layout.window.height - 280,
+    height: '100%',
   },
   placeholderImage: {
     width: 120,

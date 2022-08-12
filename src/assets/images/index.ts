@@ -29,5 +29,8 @@ export const receiveBtn = require('./receive-btn.png');
 export const receiveBtn1 = require('./receive-btn-1.png');
 export const sendBtn = require('./send-btn.png');
 export const sendBtn1 = require('./send-btn-1.png');
+export const hide = require('./hide.png');
+export const show = require('./show.png');
+export const filter = require('./filter.png');
 
 export * from './earn-stubs';

@@ -16,7 +16,7 @@ export default function NftProperty(props: NftPropertyProps) {
       <Text style={styles.mainText}>{mainText}</Text>
       {!!additionalText && <Text style={styles.additionalText}>{additionalText}</Text>}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

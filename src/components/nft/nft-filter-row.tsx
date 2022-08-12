@@ -1,9 +1,8 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
-import {Image} from 'react-native-elements';
 import {filter} from '../../assets/images';
 import NftFilterModal from './nft-filter-modal';
 

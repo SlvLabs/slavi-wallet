@@ -58,7 +58,7 @@ function NftListElement({
             <Text style={styles.network}>{network}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.hideShowWrap} onPress={onToggleHide}>
+        <TouchableOpacity style={styles.hideShowColumn} onPress={onToggleHide}>
           <Text style={styles.hideShow}>{hidden ? t('nftShow') : t('nftHide')}</Text>
           <Image source={hidden ? hide : show} style={styles.hideShowIcon} />
         </TouchableOpacity>
@@ -94,6 +94,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     paddingTop: 13,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: '75%',
+  },
+  hideShowColumn: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    paddingTop: Layout.isSmallDevice ? 18 : 26,
+    height: '100%',
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: '25%',
   },
   image: {
     width: Layout.isSmallDevice ? 256 : 300,
@@ -104,15 +118,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  hideShowWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    paddingTop: Layout.isSmallDevice ? 18 : 26,
-    height: '100%',
-    flex: 1,
   },
   hideShow: {
     fontFamily: theme.fonts.gilroy,
@@ -134,6 +139,7 @@ const styles = StyleSheet.create({
     fontSize: Layout.isSmallDevice ? 15 : 18,
     lineHeight: Layout.isSmallDevice ? 21 : 28,
     color: theme.colors.white,
+    width: '100%',
   },
   networkRow: {
     flexDirection: 'row',

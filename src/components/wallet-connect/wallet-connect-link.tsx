@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import {useCallback, useEffect} from 'react';
 import {EventType} from 'expo-linking/src/Linking.types';
@@ -8,10 +8,10 @@ import parse from 'url-parse';
 export default function WalletConnectLink({loading}: {loading: boolean}) {
   const walletConnectService = useWalletConnectService();
 
-  const lastEvent = useRef<EventType|null>(null);
+  const [lastEvent, setLastEvent] = useState<EventType|null>(null);
 
   const eventHandler = useCallback((ev: EventType) => {
-    lastEvent.current = ev;
+    setLastEvent(ev);
   }, []);
 
   const handleOpenURL = useCallback((ev: EventType|null) => {
@@ -32,6 +32,7 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
           throw new Error('Invalid url protocol');
       }
 
+      setLastEvent(null);
       if(url) {
         walletConnectService.connect(url);
       } else {
@@ -57,8 +58,8 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
   }, [loading, handleOpenURL]);
 
   useEffect(() => {
-    handleOpenURL(lastEvent.current)
-  }, [lastEvent.current, handleOpenURL])
+    handleOpenURL(lastEvent)
+  }, [lastEvent, handleOpenURL])
 
   return <></>;
 }

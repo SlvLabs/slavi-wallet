@@ -12,15 +12,17 @@ import SolidButton from '../buttons/solid-button';
 import OutlineButton from '../buttons/outline-button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
+import Spinner from '../spinner';
 
 export interface AuthModalProps {
   visible: boolean;
+  loading: boolean;
 }
 
 const PIN_LENGTH = 4;
 
 export default function AuthModal(props: AuthModalProps) {
-  const {visible} = props;
+  const {visible, loading} = props;
 
   const timer = useRef<any>(null);
   const timerValue = useRef<number>(0);
@@ -175,34 +177,38 @@ export default function AuthModal(props: AuthModalProps) {
           barStyle={'light-content'}
         />}
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
-          {!restoreIsActive ? (
-            <>
-              <PinInput
-                length={PIN_LENGTH}
-                enteredCount={pin?.length || 0}
-                label={t('pinLabel')}
-                onPress={onPress}
-                onBiometricPress={onBiometric}
-                onRestorePress={onRestore}
-                onBackspacePress={onBackspace}
-                faceIdIsAvailable={faceIdIsAvailable}
-                touchIdIsAvailable={touchIdIsAvailable}
-                restoreIsAvailable={true}
-                disabled={locked}
-              />
-              <Text style={styles.error}>{error} {!!errorTimer}</Text>
-            </>
+          {loading ? (
+            <Spinner />
           ) : (
-            <>
-              <View style={styles.textContainer}>
-                <Text style={styles.header}>{t('restoreHeader')}</Text>
-                <Text style={styles.description}>{t('restoreDescription')}</Text>
-              </View>
-              <View style={styles.buttonContainer}>
-                <SolidButton title={t('restoreAccept')} onPress={onAccept} containerStyle={styles.button} />
-                <OutlineButton title={t('restoreDecline')} onPress={onDecline} containerStyle={styles.button} />
-              </View>
-            </>
+            !restoreIsActive ? (
+              <>
+                <PinInput
+                  length={PIN_LENGTH}
+                  enteredCount={pin?.length || 0}
+                  label={t('pinLabel')}
+                  onPress={onPress}
+                  onBiometricPress={onBiometric}
+                  onRestorePress={onRestore}
+                  onBackspacePress={onBackspace}
+                  faceIdIsAvailable={faceIdIsAvailable}
+                  touchIdIsAvailable={touchIdIsAvailable}
+                  restoreIsAvailable={true}
+                  disabled={locked}
+                />
+                <Text style={styles.error}>{error} {!!errorTimer}</Text>
+              </>
+            ) : (
+              <>
+                <View style={styles.textContainer}>
+                  <Text style={styles.header}>{t('restoreHeader')}</Text>
+                  <Text style={styles.description}>{t('restoreDescription')}</Text>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <SolidButton title={t('restoreAccept')} onPress={onAccept} containerStyle={styles.button} />
+                  <OutlineButton title={t('restoreDecline')} onPress={onDecline} containerStyle={styles.button} />
+                </View>
+              </>
+            )
           )}
         </RadialGradient>
       </SafeAreaView>

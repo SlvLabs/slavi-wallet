@@ -191,7 +191,7 @@ const App: () => ReactNode = () => {
     }
   }, [isUpdateAvailable]);
 
-  useAutoBlock(services.current.authService);
+  const authLoading = useAutoBlock(services.current.authService);
 
   useEffect(() => {
     Linking.getInitialURL().then((url) => {
@@ -211,7 +211,7 @@ const App: () => ReactNode = () => {
       />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
-          {!isBootstrapped && <AuthModal visible={!isAuthorized} />}
+          {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading}/>}
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme} >
               <MainNavigator

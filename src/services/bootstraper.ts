@@ -49,12 +49,12 @@ export const createCoreBootstrap = (
     dataStorageProvider: dataStorageProvider,
     coinsServiceConfig: coinsServiceConfig,
     performanceMonitor: performanceMonitor,
-    onError: err =>
-      SimpleToast.showWithGravity(
-        JSON.stringify(err),
-        SimpleToast.LONG,
-        SimpleToast.TOP,
-      ),
+    onError: err => {
+      if (err.errors?.timestamp) {
+        return;
+      }
+      SimpleToast.showWithGravity(JSON.stringify(err), SimpleToast.LONG, SimpleToast.TOP);
+    },
     devMode: devMode,
     appVersion: appVersion || '',
     serviceLocator: serviceLocator,

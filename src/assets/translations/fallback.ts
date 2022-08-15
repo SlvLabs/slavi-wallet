@@ -383,7 +383,10 @@ const translations = {
   tab_Exchange: 'Exchange',
   tab_Settings: 'Settings',
   sent: 'Sent',
-  moreRecipients: 'More recipients'
+  moreRecipients: 'More recipients',
+  'Please set right time': 'Please set right time',
+  'The time on your device is not set correct. Change the time to the current one and refresh the application': 'The time on your device is not set correct. Change the time to the current one and refresh the application',
+  'Refresh wallet': 'Refresh wallet',
 };
 
 export default translations;

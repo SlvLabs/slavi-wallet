@@ -41,6 +41,8 @@ import useAutoBlock from './utils/use-auto-block';
 import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import * as Linking from 'expo-linking';
+import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
+import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -50,6 +52,8 @@ const App: () => ReactNode = () => {
   const [isInitFinishShow, setInitFinishShow] = useState<boolean>(false);
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
   const [isUpdateRequired, setIsUpdateRequired] = useState<boolean>(false);
+  const [isTimeFixRequired, setIsTimeFixRequired] = useState<boolean>(false);
+
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = useState<boolean>(false);
   const [isMnemonicConfirmed, setIsMnemonicConfirmed] =
@@ -62,6 +66,10 @@ const App: () => ReactNode = () => {
   const devMode = useMemo(() => Config.DEV_MODE === '1', [Config.DEV_MODE]);
 
   const store = useMemo(() => initStore(services.current), []);
+
+  const clearIsTimeFixRequired = useCallback(() => {
+    store.dispatch(unsetRequireTimeFix());
+  }, [store]);
 
   const authSubscriber = useCallback(
     () => setAccountInitialized(store.getState().account.isInitialized),
@@ -87,6 +95,10 @@ const App: () => ReactNode = () => {
 
   store.subscribe(() => {
     setIsUpdateRequired(store.getState().initialization.updateRequired);
+  });
+
+  store.subscribe(() => {
+    setIsTimeFixRequired(store.getState().initialization.timeFixRequired);
   });
 
   store.subscribe(() => {
@@ -193,15 +205,6 @@ const App: () => ReactNode = () => {
 
   const authLoading = useAutoBlock(services.current.authService);
 
-  useEffect(() => {
-    Linking.getInitialURL().then((url) => {
-      console.log(url)
-    });
-  }, [isBootstrapped, isAccountInitialized, isInitialized, isAuthorized]);
-
-  console.log(!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized)
-  console.log(!isBootstrapped, isAccountInitialized, isInitialized, isAuthorized)
-  Linking.getInitialURL().then((a) => console.log('app:', a))
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar
@@ -226,6 +229,7 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectSessionRequestModal />}
               {!isBootstrapped && <WalletConnectSignRequestModal />}
               {!isBootstrapped && <WalletConnectTxRequestModal />}
+              {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
               {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized}/>}
             </NavigationContainer>
             {devMode && <Text style={{

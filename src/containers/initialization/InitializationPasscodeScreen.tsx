@@ -27,24 +27,27 @@ export default function InitializationPasscodeScreen() {
   const showModal = useCallback(() => setModalIsShown(true), []);
   const hideModal = useCallback(() => setModalIsShown(false), []);
 
-  const onEnabledChange =  useCallback(async () => {
-    if(authService.isAuthEnable()) {
+  const onEnabledChange = useCallback(async () => {
+    if (authService.isAuthEnable()) {
       await authService.disablePin();
       setPinEnabled(false);
       setBiometricEnabled(false);
     } else {
       showModal();
     }
-  },  [authService, showModal]);
+  }, [authService, showModal]);
 
-  const savePin = useCallback(async (pin: string) => {
-    hideModal();
-    await authService.enablePin(pin);
-    setPinEnabled(true);
-  }, [hideModal, authService]);
+  const savePin = useCallback(
+    async (pin: string) => {
+      hideModal();
+      await authService.enablePin(pin);
+      setPinEnabled(true);
+    },
+    [hideModal, authService],
+  );
 
   const onBiometricChange = async () => {
-    if(biometricEnabled) {
+    if (biometricEnabled) {
       await authService.disableBiometric();
       setBiometricEnabled(false);
     } else {
@@ -54,7 +57,7 @@ export default function InitializationPasscodeScreen() {
   };
 
   useEffect(() => {
-    hasHardwareAsync().then((result) => setBiometricIsSupported(result));
+    hasHardwareAsync().then(result => setBiometricIsSupported(result));
   }, []);
 
   return (
@@ -65,46 +68,45 @@ export default function InitializationPasscodeScreen() {
           <Text style={styles.description}>{t('initPinDescription')}</Text>
         </View>
         <View style={styles.controlsView}>
-          <View style={styles.row}>
+          <View style={{...styles.row, ...styles.row1}}>
+            <Text style={styles.label}>{t('pinEnabled')}</Text>
             <Switch
               value={pinEnabled}
               onValueChange={onEnabledChange}
               thumbColor={theme.colors.white}
               trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
             />
-            <Text style={styles.label}>{t('pinEnabled')}</Text>
           </View>
           {biometricIsSupported && (
-            <View style={styles.row}>
+            <View style={{...styles.row, ...styles.row2}}>
+              <Text style={pinEnabled ? styles.label : styles.disabledLabel}>{t('biometricEnabled')}</Text>
               <Switch
                 value={biometricEnabled}
                 onValueChange={onBiometricChange}
                 disabled={!pinEnabled}
-                thumbColor={pinEnabled ? theme.colors.white : theme.colors.textLightGray1}
+                thumbColor={pinEnabled ? theme.colors.white : theme.colors.textLightGray}
                 trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
               />
-              <Text style={pinEnabled ? styles.label : styles.disabledLabel}>
-                {t('biometricEnabled')}
-              </Text>
             </View>
           )}
         </View>
         <View style={styles.stepsView}>
           <SolidButton title={t('Continue')} onPress={goNextStep} />
           <View style={styles.loaderView}>
-            <PointerProgressBar stepsCount={6} activeStep={2}/>
+            <PointerProgressBar stepsCount={6} activeStep={2} />
           </View>
         </View>
       </View>
-      <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin}/>
+      <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin} />
     </InitializationBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    paddingTop: 32,
   },
   loaderView: {
     paddingTop: 17,
@@ -128,11 +130,21 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: Layout.isSmallDevice ? 11 : 13,
+    paddingBottom: Layout.isSmallDevice ? 10 : 12,
+    borderRadius: 8,
+    borderWidth: 0,
+  },
+  row1: {
+    backgroundColor: theme.colors.cardBackground2,
+  },
+  row2: {
+    backgroundColor: theme.colors.cardBackground3,
+    marginTop: 10,
   },
   label: {
     fontFamily: theme.fonts.default,

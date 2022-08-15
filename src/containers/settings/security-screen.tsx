@@ -99,7 +99,7 @@ export default function SecurityScreen() {
               value={biometricEnabled}
               onValueChange={onBiometricChange}
               disabled={!pinEnabled}
-              thumbColor={pinEnabled ? theme.colors.white : theme.colors.textLightGray1}
+              thumbColor={pinEnabled ? theme.colors.white : theme.colors.textLightGray}
               trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
             />
             <Text style={pinEnabled ? styles.label : styles.disabledLabel}>

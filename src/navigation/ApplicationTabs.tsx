@@ -7,18 +7,16 @@ import ROUTES from './config/routes';
 import CustomIcon from '../components/custom-icon/custom-icon';
 import theme from '../theme';
 import SettingsStack from './SettingsStack';
-import LinearGradient from 'react-native-linear-gradient';
 import DefiStack from './DefiStack';
 import SwapStack from './SwapStack';
-import MaskedView from '@react-native-masked-view/masked-view';
 import useTranslation from '../utils/use-translation';
 
 const icons = {
-  [ROUTES.TABS.COINS]: 'wallet',
-  [ROUTES.TABS.DEFI]: 'defi',
-  [ROUTES.TABS.OPERATIONS]: 'history',
-  [ROUTES.TABS.SWAP]: 'swap',
-  [ROUTES.TABS.SETTINGS]: 'settings1',
+  [ROUTES.TABS.COINS]: 'wallet2',
+  [ROUTES.TABS.DEFI]: 'defi2',
+  [ROUTES.TABS.OPERATIONS]: 'history2',
+  [ROUTES.TABS.SWAP]: 'swap2',
+  [ROUTES.TABS.SETTINGS]: 'settings2',
 };
 
 const Tab = createBottomTabNavigator();
@@ -44,34 +42,16 @@ export default function ApplicationTabs() {
       tabBarIcon: ({size, focused}: any) => {
         const name = icons[route.name];
         return (
-          <View style={{flex: 1}}>
+          <View style={styles.tabElement}>
             <View
               style={{
                 height: 1,
                 width: 50,
                 backgroundColor: focused ? theme.colors.borderGreen : 'transparent',
-                marginBottom: 8,
+                marginBottom: 10,
               }}
             />
-            <MaskedView
-              maskElement={
-                <View
-                  style={{
-                    backgroundColor: 'transparent',
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <CustomIcon name={name} size={size} color={'white'} />
-                </View>
-              }
-              style={{flex: 1, flexDirection: 'row', height: '100%'}}>
-              {focused ? (
-                <LinearGradient {...theme.gradients.activeIcon} style={{flex: 1}} />
-              ) : (
-                <LinearGradient {...theme.gradients.inactiveIcon} style={{flex: 1}} />
-              )}
-            </MaskedView>
+            <CustomIcon name={name} size={size} color={focused ? theme.colors.borderGreen : theme.colors.gold2} />
           </View>
         );
       },
@@ -116,10 +96,15 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.black,
     paddingTop: 0,
     padding: 18,
-    borderTopColor: theme.colors.lightTransparent,
-    borderTopWidth: 1,
+    height: 60,
   },
   tab: {},
+  tabElement: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10
+  }
 });
 
 // export default ApplicationTabs;

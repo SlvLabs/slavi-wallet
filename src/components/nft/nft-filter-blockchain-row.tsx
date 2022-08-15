@@ -4,21 +4,18 @@ import React, {useCallback} from 'react';
 import getImageSource from '../../utils/get-image-source';
 import NetworkShownCheckbox from './network-shown-checkbox';
 
-export interface NftFilterBlockchainRowProps {
+export interface HiddenNftNetwork {
   id: string;
   name: string;
-  logo: string | undefined;
+  logo?: string;
   shown: boolean;
+}
+
+export interface NftFilterBlockchainRowProps extends HiddenNftNetwork {
   toggleNetworkHide(id: string): void;
 }
 
-export default function NftFilterBlockchainRow({
-  id,
-  shown,
-  name,
-  logo,
-  toggleNetworkHide,
-}: NftFilterBlockchainRowProps) {
+function NftFilterBlockchainRow({id, shown, name, logo, toggleNetworkHide}: NftFilterBlockchainRowProps) {
   const onPress = useCallback(() => {
     toggleNetworkHide(id);
   }, [id, toggleNetworkHide]);
@@ -30,6 +27,8 @@ export default function NftFilterBlockchainRow({
     </TouchableOpacity>
   );
 }
+
+export default React.memo(NftFilterBlockchainRow);
 
 const styles = StyleSheet.create({
   tmp: {

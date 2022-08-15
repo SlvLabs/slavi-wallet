@@ -1,11 +1,12 @@
 import BaseModal from '../modal/base-modal';
 import {StyleSheet, Switch, Text, View} from 'react-native';
 import theme from '../../theme';
-import React from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
-import NftFilterBlockchainRow from './nft-filter-blockchain-row';
+import NftFilterBlockchainRow, {HiddenNftNetwork} from './nft-filter-blockchain-row';
 import SolidButton from '../buttons/solid-button';
 import OutlineButton from '../buttons/outline-button';
+
 export interface NftFilterModalProps {
   visible: boolean;
   onCancel(): void;
@@ -15,24 +16,50 @@ export interface NftFilterModalProps {
     logo?: string;
     shown: boolean;
   }[];
-  toggleNetworkHide(id: string): void;
   showHiddenTokens: boolean;
   setShowHiddenTokens(value: boolean): void;
-  update(): void;
+  update(values: {networks: HiddenNftNetwork[]; showHiddenTokens: boolean}): void;
   updateLoading: boolean;
+}
+
+function networksReducer(networks: HiddenNftNetwork[], action: {id: string}) {
+  return networks.map(n =>
+    n.id === action.id
+      ? {
+          ...n,
+          shown: !n.shown,
+        }
+      : n,
+  );
 }
 
 export default function NftFilterModal({
   visible,
   onCancel,
-  networks,
-  toggleNetworkHide,
-  showHiddenTokens,
-  setShowHiddenTokens,
+  networks: initNetworks,
+  showHiddenTokens: init_showHiddenTokens,
   update,
   updateLoading,
 }: NftFilterModalProps) {
   const {t} = useTranslation();
+
+  const [networks, toggleNetwork] = useReducer(
+    networksReducer,
+    initNetworks.map(n => ({...n})),
+  );
+  const [showHiddenTokens, setShowHiddenTokens] = useState(init_showHiddenTokens);
+
+  const submit = useCallback(() => {
+    update({
+      showHiddenTokens: showHiddenTokens,
+      networks: networks,
+    });
+  }, [update, showHiddenTokens, networks]);
+
+  const toggleNetworkHide = useCallback((id: string) => {
+    toggleNetwork({id});
+  }, []);
+
   return (
     <BaseModal visible={visible} onCancel={onCancel}>
       <View style={styles.networksContainer}>
@@ -61,7 +88,7 @@ export default function NftFilterModal({
             />
           </View>
         </View>
-        <SolidButton title={t('apply')} containerStyle={styles.btn1} onPress={update} loading={updateLoading} />
+        <SolidButton title={t('apply')} containerStyle={styles.btn1} onPress={submit} loading={updateLoading} />
         <OutlineButton title={t('Cancel')} onPress={onCancel} />
       </View>
     </BaseModal>

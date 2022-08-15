@@ -16,6 +16,8 @@ export default function NftList() {
   const {t} = useTranslation();
   const navigation = useNavigation();
 
+  console.log(new Date(), isLoading, list?.length);
+
   const onElementPress = useCallback(
     (id: string, contract: string, network: string) => {
       navigation.navigate(ROUTES.COINS.NFT_INFO, {id, contract, network});
@@ -39,7 +41,6 @@ export default function NftList() {
           showHiddenTokens={filter.showHiddenTokens}
           setShowHiddenTokens={filter.setShowHiddenTokens}
           networks={filter.networks}
-          toggleNetworkHide={filter.toggleNetworkHide}
           update={filter.update}
           updateLoading={filter.isUpdateLoading}
         />
@@ -60,7 +61,6 @@ export default function NftList() {
           showHiddenTokens={filter.showHiddenTokens}
           setShowHiddenTokens={filter.setShowHiddenTokens}
           networks={filter.networks}
-          toggleNetworkHide={filter.toggleNetworkHide}
           update={filter.update}
           updateLoading={filter.isUpdateLoading}
         />

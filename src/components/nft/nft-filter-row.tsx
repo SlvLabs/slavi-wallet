@@ -1,23 +1,18 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
 import {filter} from '../../assets/images';
 import NftFilterModal from './nft-filter-modal';
+import type {HiddenNftNetwork} from './nft-filter-blockchain-row';
 
 export interface NftFilterRowProps {
   showed: number;
-  networks: {
-    id: string;
-    name: string;
-    logo?: string;
-    shown: boolean;
-  }[];
-  toggleNetworkHide(id: string): void;
+  networks: HiddenNftNetwork[];
   showHiddenTokens: boolean;
   setShowHiddenTokens(value: boolean): void;
-  update(): void;
+  update(values: {networks: HiddenNftNetwork[]; showHiddenTokens: boolean}): void;
   updateLoading: boolean;
 }
 function NftFilterRow({
@@ -25,7 +20,6 @@ function NftFilterRow({
   networks,
   setShowHiddenTokens,
   showHiddenTokens,
-  toggleNetworkHide,
   update,
   updateLoading,
 }: NftFilterRowProps) {
@@ -38,9 +32,8 @@ function NftFilterRow({
     setModalOpen(false);
   }, []);
 
-  const hiddenNetworkCount = useMemo(() => {
-    return networks.filter(n => !n.shown).length;
-  }, [networks]);
+  const hiddenNetworkCount = networks.filter(n => !n.shown).length;
+
   return (
     <View style={styles.container}>
       <View style={styles.showedContainer}>
@@ -56,16 +49,17 @@ function NftFilterRow({
           </Text>
         )}
       </TouchableOpacity>
-      <NftFilterModal
-        visible={modalOpen}
-        toggleNetworkHide={toggleNetworkHide}
-        networks={networks}
-        setShowHiddenTokens={setShowHiddenTokens}
-        showHiddenTokens={showHiddenTokens}
-        onCancel={closeModal}
-        update={update}
-        updateLoading={updateLoading}
-      />
+      {modalOpen && (
+        <NftFilterModal
+          visible={modalOpen}
+          networks={networks}
+          setShowHiddenTokens={setShowHiddenTokens}
+          showHiddenTokens={showHiddenTokens}
+          onCancel={closeModal}
+          update={update}
+          updateLoading={updateLoading}
+        />
+      )}
     </View>
   );
 }

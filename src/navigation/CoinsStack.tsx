@@ -44,7 +44,7 @@ export interface CoinsStackParamList extends ParamListBase {
       address: string;
       amount: string;
     }[];
-    ticker: string;
+    coin: string;
   };
   NftInfo: {
     network: string;

@@ -10,10 +10,11 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 export interface ScrollableScreenProps extends ScreenHeaderProps {
   children: ReactNode;
   containerStyle?: ViewStyle;
+  contentStyle?: ViewStyle;
 }
 
 export default function ScrollableScreen(props: ScrollableScreenProps) {
-  const {children, containerStyle, ...headerProps} = props;
+  const {children, containerStyle, contentStyle, ...headerProps} = props;
 
   return (
     <KeyboardAwareScrollView
@@ -24,7 +25,7 @@ export default function ScrollableScreen(props: ScrollableScreenProps) {
     >
       <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
         <ScreenHeader {...headerProps} />
-        <View style={styles.content}>
+        <View style={{...styles.content, ...contentStyle}}>
           {children}
         </View>
       </LinearGradient>

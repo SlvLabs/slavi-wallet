@@ -250,7 +250,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
 
     navigation.navigate(ROUTES.COINS.SUCCESSFULLY_SENDING, {
       recipients: recipients,
-      ticker: coinDetails.ticker,
+      coin: coinDetails.id,
     });
   };
 

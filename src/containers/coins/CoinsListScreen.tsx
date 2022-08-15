@@ -37,6 +37,7 @@ const CoinsListScreen = () => {
   const navigateToSend = useCallback(() =>
       navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filter: {positiveBalance: true}, balanceShown: true}),
     [navigation]);
+
   const navigateToBuy = useCallback(() =>
       navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.BUY_COIN, filter: {isBuyCoin: true}, balanceShown: true}),
     [navigation]);

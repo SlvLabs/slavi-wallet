@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Text, SafeAreaView, Platform} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 import useTranslation from '../../utils/use-translation';
-import CustomIcon from '../../components/custom-icon/custom-icon';
 import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import {useNavigation} from '@react-navigation/native';
@@ -9,11 +8,19 @@ import ROUTES from '../../navigation/config/routes';
 import {useRoute} from '@react-navigation/core';
 import {CoinSuccessfullySendingRouteProps} from '../../navigation/CoinsStack';
 import Layout from '../../utils/layout';
+import {check2} from '../../assets/images';
+import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
+import SingleRecipientInfo from '../../components/coin-send/single-recipient-info';
+import MoreRecipientInfo from '../../components/coin-send/more-recipient-info';
+import ScrollableScreen from '../../components/scrollable-screen';
+import makeRoundedBalance from '../../utils/make-rounded-balance';
 
 const SuccessfullySendingScreen = () => {
   const {t} = useTranslation();
   const navigation = useNavigation();
-  const route = useRoute<CoinSuccessfullySendingRouteProps>();
+  const {params: {recipients, coin}} = useRoute<CoinSuccessfullySendingRouteProps>();
+
+  const details = useCoinDetails(coin);
 
   const homeOnPress = useCallback(
     () =>
@@ -28,91 +35,81 @@ const SuccessfullySendingScreen = () => {
     [navigation],
   );
 
+  if(!details) {
+    throw new Error('Unknown coin');
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>{t('Success')}</Text>
-      </View>
+    <ScrollableScreen
+      title={t('Send coins')}
+      disableBackButton={true}
+      contentStyle={recipients.length > 1 ? styles.multipleContainer : styles.singleContainer}
+    >
       <View style={styles.content}>
-        <CustomIcon name={'check'} size={Layout.isSmallDevice ? 64 : 64} color={theme.colors.gold2} />
+        <Image source={check2} style={styles.image} />
         <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>{t('Successfully sent')}</Text>
+          <Text style={styles.descriptionHeader}>{t('Success')}</Text>
           <Text style={styles.description}>
-            {Object.keys(route.params.recipients).length > 1
-              ? t('To addresses')
-              : t('To address')}
+            {recipients.length > 1
+              ? t('successToAddresses')
+              : t('successToAddress')}
           </Text>
-          {route.params.recipients.map(({address, amount}, index) => (
-            <Text
-              style={{...styles.description, ...styles.boldText, ...styles.centredText}}
-              key={`recipient_${index}`}>
-              {`${address}: ${amount} ${route.params.ticker}`}
-            </Text>
-          ))}
         </View>
+        <SingleRecipientInfo
+          amount={makeRoundedBalance(4, recipients[0].amount)}
+          address={recipients[0].address}
+          logo={details?.logo}
+          ticker={details?.ticker}
+        />
+        {recipients.length > 1 && <MoreRecipientInfo recipients={recipients} ticker={details.ticker} logo={details.logo} />}
       </View>
       <View style={styles.controls}>
         <SolidButton title={t('Home')} onPress={homeOnPress} />
       </View>
-    </SafeAreaView>
+    </ScrollableScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.screenBackground,
+  singleContainer: {
+    justifyContent: 'flex-start',
   },
-  headerContainer: {
-    alignItems: 'center',
-    flex: 1,
-    ...Platform.select({
-      android: {
-        paddingTop: 36,
-      }
-    })
-  },
-  header: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: 48,
-    lineHeight: 56,
-    color: theme.colors.gold2,
+  multipleContainer: {
+    justifyContent: 'space-between',
   },
   content: {
     alignItems: 'center',
-    flex: Layout.isSmallDevice ? 2 : 5,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
   },
   description: {
-    fontFamily: theme.fonts.default,
+    fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: 14,
-    lineHeight: 16,
-    color: theme.colors.lightGray,
-    textTransform: 'uppercase',
+    fontWeight: '400',
+    fontSize: Layout.isSmallDevice ? 13 : 14,
+    lineHeight: Layout.isSmallDevice ? 18 : 20,
+    color: theme.colors.textLightGray,
   },
   controls: {
-    flex: 1,
-    paddingRight: 64,
-    paddingLeft: 64,
+    marginTop: Layout.isSmallDevice ? 24 : 32,
+    marginBottom: Layout.isSmallDevice ? 24 : 32,
   },
   descriptionContainer: {
+    marginTop: Layout.isSmallDevice ? 20 : 32,
     alignItems: 'center',
   },
-  boldText: {
-    fontWeight: 'bold',
+  image: {
+    width: 64,
+    height: 64,
+    marginTop: Layout.isSmallDevice ? 40 : 56,
   },
-  gradient: {
-    flex: 1,
-    paddingTop: 64,
-    paddingBottom: 64,
+  descriptionHeader: {
+    fontFamily: theme.fonts.gilroy,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    fontSize: Layout.isSmallDevice ? 18 :22,
+    lineHeight: Layout.isSmallDevice ? 25 : 31,
+    color: theme.colors.white,
   },
-  centredText: {
-    textAlign: 'center',
-  }
 });
 
 export default SuccessfullySendingScreen;

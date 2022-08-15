@@ -126,8 +126,8 @@ const translations = {
   "Transaction fee":"Transaction fee",
   "Success":"Success",
   "Successfully sent":"Successfully sent",
-  "To addresses":"To addresses",
-  "To address":"To address",
+  "successToAddresses":"Successfully sent to addresses",
+  "successToAddress":"Successfully sent to address",
   "To account": "To account",
   "Home":"Home",
   "Default":"Default",
@@ -382,6 +382,8 @@ const translations = {
   tab_Operations: 'Operations',
   tab_Exchange: 'Exchange',
   tab_Settings: 'Settings',
+  sent: 'Sent',
+  moreRecipients: 'More recipients'
 };
 
 export default translations;

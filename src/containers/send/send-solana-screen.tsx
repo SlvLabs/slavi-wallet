@@ -259,7 +259,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
 
     navigation.navigate(ROUTES.COINS.SUCCESSFULLY_SENDING, {
       recipients: [recipient],
-      ticker: coinDetails.ticker,
+      coin: coinDetails.id,
     });
   };
 

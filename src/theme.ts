@@ -54,6 +54,7 @@ export default {
     tabInactiveTitle: '#62607A',
     tatActiveTitle: '#372E51',
     placeholderText: '#7A7A7E',
+    buttonBorder: 'rgba(128, 144, 173, 0.3)',
   },
   /** @deprecated */
   colorsOld: {

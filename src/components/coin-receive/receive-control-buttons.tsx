@@ -66,28 +66,28 @@ const ReceiveControlButtons = (props: ReceiveControlButtonsProps) => {
     <View style={{...styles.container, ...props.containerStyle}}>
       <TouchableOpacity onPress={onPressCopy} style={styles.icon}>
         <CustomIcon
-          name={'copy'}
+          name={'copy2'}
           size={props.iconsSize || defaultIconSize}
           color={props.iconsColor || defaultIconColor}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={onPressShare} style={styles.icon}>
         <CustomIcon
-          name={'share'}
+          name={'share2'}
           size={props.iconsSize || defaultIconSize}
           color={props.iconsColor || defaultIconColor}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={showEditModal} style={styles.icon}>
         <CustomIcon
-          name={'edit'}
+          name={'edit2'}
           size={props.iconsSize || defaultIconSize}
           color={props.iconsColor || defaultIconColor}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={showAmountModal} style={styles.icon}>
         <CustomIcon
-          name={'tag'}
+          name={'tag2'}
           size={props.iconsSize || defaultIconSize}
           color={props.iconsColor || defaultIconColor}
         />

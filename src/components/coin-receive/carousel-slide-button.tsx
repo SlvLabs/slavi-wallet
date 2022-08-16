@@ -24,8 +24,8 @@ const CarouselSlideButton = ({direction, onPress, containerStyle, disabled}: Car
       onPress={_onPress}>
       <CustomIcon
         color={theme.colors.textLightGray3}
-        name={'arrow-right1'}
-        size={24}
+        name={'carousel-arrow'}
+        size={40}
         style={{
           ...(direction === 'prev' ? styles.prevIcon : styles.nextIcon),
           ...(disabled ? styles.disabledIcon : {})
@@ -38,8 +38,6 @@ const CarouselSlideButton = ({direction, onPress, containerStyle, disabled}: Car
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
-    padding: 8,
-    borderRadius: 50,
     alignItems: 'center',
   },
   prevIcon: {

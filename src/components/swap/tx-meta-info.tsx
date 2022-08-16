@@ -32,7 +32,7 @@ export default function TxMetaInfo(props: TxMetaInfoProps) {
         <Text style={styles.label}>{contractLabel}</Text>
         <TouchableOpacity style={styles.addressBlock} onPress={copy}>
           <Text style={styles.addressText}>{address}</Text>
-          <CustomIcon name={'copy'} size={12} color={theme.colors.white} />
+          <CustomIcon name={'copy'} size={13} color={theme.colors.white} />
         </TouchableOpacity>
       </View>
       <View style={styles.feeRow}>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: theme.colors.borderGreen,
     alignSelf: 'center',
-    marginRight: 10,
+    marginRight: 4,
   },
   feeRow: {
     flexDirection: 'row',

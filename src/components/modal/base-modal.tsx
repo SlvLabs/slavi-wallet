@@ -85,9 +85,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   closeButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '100%',
+    position: 'absolute',
+    right: 14,
+    top: 14,
+    // flexDirection: 'row',
+    // justifyContent: 'flex-end',
+    // width: '100%',
   },
 });
 

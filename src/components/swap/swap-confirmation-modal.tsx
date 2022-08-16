@@ -6,6 +6,8 @@ import SolidButton from '../buttons/solid-button';
 import React from 'react';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
+import OutlineButton from '../buttons/outline-button';
+import Layout from '../../utils/layout';
 
 export interface SwapConfirmationModalProps extends ModalProps, TxInfoProps {
   onAccept: () => void;
@@ -38,8 +40,8 @@ export default function SwapConfirmationModal(props: SwapConfirmationModalProps)
     <BaseModal
       visible={visible}
       onCancel={onCancel}
-      showCloseIcon={false}
-      modalStyle={styles.modal}
+      showCloseIcon={true}
+      contentStyle={styles.modal}
     >
       <Text style={styles.header}>{t('swapConf')}</Text>
       <TxInfo
@@ -58,13 +60,19 @@ export default function SwapConfirmationModal(props: SwapConfirmationModalProps)
         feeTicker={feeTicker}
       />
       <SolidButton title={t('Ok')} onPress={onAccept} containerStyle={styles.okButton} loading={loading} />
-      <SolidButton title={t('Cancel')} onPress={onCancel} />
+      <OutlineButton title={t('Cancel')} onPress={onCancel} />
     </BaseModal>
   );
 }
 
 const styles = StyleSheet.create({
-  modal: {},
+  modal: {
+    padding: undefined,
+    paddingTop: 32,
+    paddingBottom: 32,
+    paddingLeft: Layout.isSmallDevice ? 20 : 32,
+    paddingRight: Layout.isSmallDevice ? 20 : 32,
+  },
   header: {
     fontFamily: theme.fonts.gilroy,
     fontStyle: 'normal',

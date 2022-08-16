@@ -5,6 +5,7 @@ import getImageSource from '../../utils/get-image-source';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
+import CustomIcon from '../custom-icon/custom-icon';
 
 export interface TxInfoProps {
   srcCoin: string;
@@ -34,7 +35,7 @@ function CoinRow(props: CoinRowProps) {
         <Text style={styles.amountText}>{amount}</Text>
       </View>
     </View>
-  )
+  );
 }
 
 export default function TxInfo(props: TxInfoProps) {
@@ -46,9 +47,11 @@ export default function TxInfo(props: TxInfoProps) {
     <View style={styles.container}>
       <CoinRow coin={srcCoin} amount={srcAmount} logo={srcLogo} />
       <View style={styles.delimiterView}>
-        <View style={styles.delimiter}/>
-        <Text style={styles.delimiterText}>{t('for')}</Text>
-        <View style={styles.delimiter}/>
+        <View style={styles.delimiterLeft} />
+        <View style={styles.delimiterIcon}>
+          <CustomIcon name={'exchange1'} color={theme.colors.green} size={12} />
+        </View>
+        <View style={styles.delimiterRight} />
       </View>
       <CoinRow coin={dstCoin} amount={dstAmount} logo={dstLogo} />
     </View>
@@ -58,6 +61,8 @@ export default function TxInfo(props: TxInfoProps) {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 18,
+    backgroundColor: theme.colors.cardBackground2,
+    padding: 12,
   },
   row: {
     flexDirection: 'row',
@@ -101,24 +106,29 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   delimiterView: {
+    display: 'flex',
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
   },
-  delimiter: {
-    width: Layout.window.width/2 - 80,
+  delimiterLeft: {
+    marginRight: 10,
+    flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.borderGray,
-    marginRight: 10,
-    marginLeft: 10,
   },
-  delimiterText: {
-    fontFamily: theme.fonts.gilroy,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 13,
-    lineHeight: 16,
-    color: theme.colors.lighter,
-    alignSelf: 'center',
+  delimiterRight: {
+    marginLeft: 10,
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.borderGray,
+  },
+  delimiterIcon: {
+    borderWidth: 1.5,
+    borderColor: theme.colors.borderGreen,
+    borderRadius: 6,
+    padding: 3,
+    flex: 0,
   },
 });

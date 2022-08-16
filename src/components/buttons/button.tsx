@@ -1,9 +1,6 @@
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import React from 'react';
-import {
-  Button as ButtonElement,
-  ButtonProps as ButtonElementProps,
-} from 'react-native-elements';
+import {Button as ButtonElement, ButtonProps as ButtonElementProps} from 'react-native-elements';
 import theme from '../../theme';
 
 export interface ButtonProps extends ButtonElementProps {
@@ -29,7 +26,7 @@ const Button = (props: ButtonProps) => {
         }}
         disabledStyle={{
           ...styles.defaultDisabledStyle,
-          ...(props.disabledStyle as ViewStyle)
+          ...(props.disabledStyle as ViewStyle),
         }}
       />
     </View>
@@ -54,12 +51,12 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     fontSize: 13,
     fontStyle: 'normal',
-    fontWeight: '600',
+    fontWeight: '700',
     lineHeight: 16,
   },
   defaultDisabledStyle: {
     backgroundColor: theme.colors.grayDark,
-  }
+  },
 });
 
 export default Button;

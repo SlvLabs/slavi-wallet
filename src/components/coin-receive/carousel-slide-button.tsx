@@ -1,33 +1,38 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {ViewStyle} from 'react-native';
-import {Icon, IconProps} from 'react-native-elements';
 import theme from '../../theme';
+import CustomIcon from '../custom-icon/custom-icon';
 
 export interface CarouselSlideButtonProps {
-  icon: IconProps;
+  direction: 'next'|'prev';
   onPress?: () => void;
   containerStyle?: ViewStyle;
+  disabled?: boolean;
 }
 
-const CarouselSlideButton = (props: CarouselSlideButtonProps) => {
+const CarouselSlideButton = ({direction, onPress, containerStyle, disabled}: CarouselSlideButtonProps) => {
+  const _onPress = useCallback(() => {
+    if(!disabled && onPress) {
+      onPress();
+    }
+  }, [onPress, disabled]);
+
   return (
     <TouchableOpacity
-      style={{...styles.container, ...props.containerStyle}}
-      onPress={props.onPress}>
-      <Icon color={theme.colors.white} {...props.icon} />
+      style={{...styles.container, ...containerStyle}}
+      onPress={_onPress}>
+      <CustomIcon
+        color={theme.colors.textLightGray3}
+        name={'arrow-right1'}
+        size={24}
+        style={{
+          ...(direction === 'prev' ? styles.prevIcon : styles.nextIcon),
+          ...(disabled ? styles.disabledIcon : {})
+        }}
+      />
     </TouchableOpacity>
   );
-};
-
-export const leftChevron = {
-  name: 'left',
-  type: 'antdesign',
-};
-
-export const rightChevron = {
-  name: 'right',
-  type: 'antdesign',
 };
 
 const styles = StyleSheet.create({
@@ -37,6 +42,17 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
   },
+  prevIcon: {
+    transform: [
+      {
+        rotate: '180deg',
+      },
+    ],
+  },
+  nextIcon: {},
+  disabledIcon: {
+    opacity: 0.4,
+  }
 });
 
 export default CarouselSlideButton;

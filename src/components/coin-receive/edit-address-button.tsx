@@ -1,16 +1,14 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {Button, IconNode} from 'react-native-elements';
-import theme from '../../theme';
+import {StyleSheet, View, ViewStyle} from 'react-native';
+import {IconNode} from 'react-native-elements';
 import SimpleInputModal from '../modal/simple-input-modal';
+import SolidButton from '../buttons/solid-button';
 
 export interface EditAddressButtonProps {
   title: string;
   onSubmit: (name?: string) => void;
   icon?: IconNode;
   containerStyle?: ViewStyle;
-  buttonStyle?: ViewStyle;
-  buttonTitleStyle?: TextStyle;
   nameInputLabel?: string;
   nameValue?: string;
 }
@@ -30,13 +28,10 @@ const EditAddressButton = (props: EditAddressButtonProps) => {
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Button
+      <SolidButton
         onPress={() => setModalVisible(true)}
         title={props.title}
-        type="clear"
         icon={props.icon}
-        buttonStyle={{...styles.button, ...props.buttonStyle}}
-        titleStyle={{...styles.buttonTitle, ...props.buttonTitleStyle}}
       />
       <SimpleInputModal
         visible={modalVisible}
@@ -51,10 +46,6 @@ const EditAddressButton = (props: EditAddressButtonProps) => {
 
 const styles = StyleSheet.create({
   container: {},
-  button: {},
-  buttonTitle: {
-    color: theme.colors.darkGreen1,
-  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',

@@ -267,6 +267,7 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
           fiatBalance={coinDetails.spendableFiatBalance}
           fiatTicker={coinDetails.fiat}
           logo={coinDetails.logo}
+          ticker={coinDetails.ticker}
         />
         <AddressSelector
           label={t('From account')}

@@ -294,6 +294,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
           fiatTicker={coinDetails.fiat}
           logo={coinDetails.logo}
           type={coinDetails.type}
+          ticker={coinDetails.ticker}
         />
         <AddressSelector
           label={t('From account')}

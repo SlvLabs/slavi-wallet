@@ -7,6 +7,7 @@ import shareAsImage from '../../utils/share-as-image';
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
 import SimpleInputModal from '../modal/simple-input-modal';
+import Layout from '../../utils/layout';
 
 export interface ReceiveControlButtonsProps {
   address: string;
@@ -19,8 +20,8 @@ export interface ReceiveControlButtonsProps {
   addressName?: string;
 }
 
-const defaultIconSize = 32;
-const defaultIconColor = theme.colors.gold2;
+const defaultIconSize = 24;
+const defaultIconColor = theme.colors.textLightGray3;
 
 const ReceiveControlButtons = (props: ReceiveControlButtonsProps) => {
   const {t} = useTranslation();
@@ -112,11 +113,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 16,
   },
   icon: {
     marginRight: 8,
     marginLeft: 8,
+    backgroundColor: theme.colors.simpleCoinBackground,
+    padding: 16,
+    borderRadius: 8,
+    width: Layout.isSmallDevice ? 66 : 76,
+    height: Layout.isSmallDevice ? 40 : 56,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

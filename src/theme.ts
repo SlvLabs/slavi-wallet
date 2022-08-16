@@ -55,6 +55,7 @@ export default {
     tatActiveTitle: '#372E51',
     placeholderText: '#7A7A7E',
     buttonBorder: 'rgba(128, 144, 173, 0.3)',
+    lightScroll: '#636771',
   },
   /** @deprecated */
   colorsOld: {

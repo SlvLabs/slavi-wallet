@@ -10,10 +10,7 @@ import React, {
 import Carousel from 'react-native-snap-carousel';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import QrView from './qr-view';
-import CarouselSlideButton, {
-  leftChevron,
-  rightChevron,
-} from './carousel-slide-button';
+import CarouselSlideButton from './carousel-slide-button';
 
 export interface AddressData {
   address: string;
@@ -128,7 +125,7 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
   return (
     <View style={styles.carouselContainer}>
       <View style={styles.leftButton}>
-        {currentIndex > 0 && <CarouselSlideButton icon={leftChevron} onPress={snapToPrev} />}
+        <CarouselSlideButton direction={'prev'} onPress={snapToPrev} disabled={currentIndex === 0}/>
       </View>
       <View style={styles.carouselMargin}>
         <Carousel
@@ -152,7 +149,11 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
         />
       </View>
       <View style={styles.rightButton}>
-        {currentIndex < (props.addresses.length - 1) && <CarouselSlideButton icon={rightChevron} onPress={snapToNext} />}
+        <CarouselSlideButton
+          direction={'next'}
+          onPress={snapToNext}
+          disabled={currentIndex === props.addresses.length - 1}
+        />
       </View>
     </View>
   );

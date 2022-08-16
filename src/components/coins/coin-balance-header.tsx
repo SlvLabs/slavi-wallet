@@ -17,6 +17,7 @@ export interface CoinBalanceHeaderProps {
   logoStyle?: ImageStyle;
   extraContent?: React.ReactNode;
   type?: string;
+  ticker: string;
 }
 
 const CoinBalanceHeader = (props: CoinBalanceHeaderProps) => {
@@ -29,7 +30,7 @@ const CoinBalanceHeader = (props: CoinBalanceHeaderProps) => {
         <View style={styles.dataColumn}>
           <View style={styles.nameRow}>
             <Text style={styles.name}>{props.name}</Text>
-            {!!props.type && <Text style={styles.type}>{props.type}</Text>}
+            <Text style={styles.type}>{props.type || props.ticker}</Text>
           </View>
           <ConvertedBalanceElement
             balance={props.balance}

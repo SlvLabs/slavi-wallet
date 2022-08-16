@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import {useRoute} from '@react-navigation/core';
 import {CoinReceiveRouteProps} from '../../navigation/CoinsStack';
@@ -12,7 +12,7 @@ import {useCoinSpecsService, useInnerAddressBookService} from '@slavi/wallet-cor
 import AddressView from '../../components/coin-receive/address-view';
 import Layout from '../../utils/layout';
 import useTranslation from '../../utils/use-translation';
-import Screen from '../../components/screen';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 const ReceiveScreen = () => {
   const route = useRoute<CoinReceiveRouteProps>();
@@ -83,8 +83,7 @@ const ReceiveScreen = () => {
   );
 
   return (
-    <Screen title={t('Receive coins')}>
-      <ScrollView keyboardShouldPersistTaps="handled">
+    <ScrollableScreen title={t('Receive coins')} contentStyle={styles.container}>
         <CoinBalanceHeader
           logo={data.logo}
           balance={data.balance}
@@ -94,6 +93,7 @@ const ReceiveScreen = () => {
           fiatBalance={data.fiatBalance}
           fiatTicker={data.fiat}
           type={data.type}
+          ticker={data.ticker}
         />
         <AddressesCarousel
           addresses={addresses.map(element => ({
@@ -101,7 +101,7 @@ const ReceiveScreen = () => {
             name: element.name,
             id: element.id,
           }))}
-          qrSize={160}
+          qrSize={Layout.isSmallDevice ? 150 : 170}
           onDataChange={onQrChange}
           amount={amount}
           coin={specService.getSpec(coin)?.bip21Name || ''}
@@ -109,9 +109,7 @@ const ReceiveScreen = () => {
           onEdit={editRecvAddr}
           ref={ref}
         />
-        <View style={styles.address}>
-          <AddressView address={address || ''} name={addressName} />
-        </View>
+        <AddressView address={address || ''} name={addressName} containerStyle={styles.address}/>
         <ReceiveControlButtons
           address={address || ''}
           dataToShare={qr}
@@ -125,21 +123,21 @@ const ReceiveScreen = () => {
           nameInputLabel={'Address name'}
           onSubmit={getNewRecvAddr}
         />
-      </ScrollView>
-    </Screen>
+    </ScrollableScreen>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'flex-start',
+    paddingBottom: Layout.isSmallDevice ? 24 : 32,
+  },
   receiveControlButtons: {
-    marginTop: 24,
+    marginTop: Layout.isSmallDevice ? 12 : 24,
+    marginBottom: Layout.isSmallDevice ? 12 : 16,
   },
   address: {
-    marginTop: 16,
-    marginBottom: Layout.isSmallDevice ? 8 : 24,
-    paddingLeft: 16,
-    paddingRight: 16,
-    minHeight: 100,
+    marginTop: Layout.isSmallDevice ? 24 : 32,
   }
 });
 

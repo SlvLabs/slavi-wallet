@@ -13,26 +13,23 @@ export interface AddressViewProps {
 
 const AddressView = (props: AddressViewProps) => {
   return (
-    <View style={styles.container}>
-      <View>
-        <View style={styles.centredElement}>
-          <Text style={{...styles.name, ...props.nameStyle}}>
-            {props.name || ''}
-          </Text>
-        </View>
-        <View style={styles.centredElement}>
-          <Text style={{...styles.address, ...props.addressStyle}}>
-            {props.address}
-          </Text>
-        </View>
-      </View>
+    <View style={{...styles.container, ...props.containerStyle}}>
+      <Text style={{...styles.name, ...props.nameStyle}}>
+        {props.name || ''}
+      </Text>
+      <Text style={{...styles.address, ...props.addressStyle}}>
+        {props.address}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: theme.colors.grayDark,
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'flex-start',
   },
   centredElement: {
     flexDirection: 'row',
@@ -40,17 +37,21 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: theme.fonts.default,
-    fontSize: 18,
-    textAlign: 'center',
-    marginTop: 10,
-    fontWeight: 'bold',
-    color: theme.colors.white,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 14,
+    fontSize: 12,
+    textAlign: 'left',
+    color: theme.colors.lightScroll,
   },
   address: {
     fontFamily: theme.fonts.default,
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 10,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 22,
+    fontSize: 18,
+    textAlign: 'left',
+    marginTop: 7,
     color: theme.colors.white,
   },
 });

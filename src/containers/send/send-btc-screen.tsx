@@ -267,6 +267,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         fiatTicker={coinDetails.fiat}
         logo={coinDetails.logo}
         type={coinDetails.type}
+        ticker={coinDetails.ticker}
       />
       <SendManyView
         readQr={readQr}

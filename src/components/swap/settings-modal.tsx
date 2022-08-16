@@ -6,8 +6,6 @@ import useTranslation from '../../utils/use-translation';
 import SimpleRadio from '../controls/simple-radio';
 import theme from '../../theme';
 import SlippageToleranceInput from './slippage-tolerance-input';
-import SolidButton from '../buttons/solid-button';
-import OutlineButton from '../buttons/outline-button';
 import OutlineSuccessButton from '../buttons/outline-success-button';
 
 export interface SettingsModalProps extends ModalProps {
@@ -33,9 +31,18 @@ export default function SettingsModal(props: SettingsModalProps) {
   ]), [t]);
 
   const submit = useCallback(() => {
-    if (internalTxPriority && internalSlippageTolerance) {
+    if (
+      (internalTxPriority === TransactionPriority.average ||
+        internalTxPriority === TransactionPriority.slow ||
+        internalTxPriority === TransactionPriority.fast) &&
+      internalSlippageTolerance > 0
+    ) {
       onAccept(internalTxPriority, internalSlippageTolerance);
     } else {
+      console.log({
+        internalTxPriority,
+        internalSlippageTolerance,
+      });
       setError(t('paramsRequired'));
     }
   }, [internalSlippageTolerance, onAccept, internalTxPriority, t]);

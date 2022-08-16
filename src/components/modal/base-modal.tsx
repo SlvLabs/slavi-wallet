@@ -32,7 +32,7 @@ const BaseModal = (props: BaseModalProps) => {
           {!!props.showCloseIcon && (
             <View style={styles.closeButtonRow}>
               {props.header}
-              <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3} onPress={props.onCancel}/>
+              <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3} onPress={props.onCancel} style={styles.closeIcon}/>
             </View>
           )}
           {props.children}
@@ -91,6 +91,9 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
     // justifyContent: 'flex-end',
     // width: '100%',
+  },
+  closeIcon: {
+    zIndex: 101,
   },
 });
 

@@ -33,7 +33,7 @@ const AccountReadyScreen = () => {
       <View style={styles.buttonsBlock}>
         <SolidButton title={t('Get to work')} onPress={getToWork} />
         <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={6} activeStep={5}/>
+          <PointerProgressBar stepsCount={6} activeStep={5} />
         </View>
       </View>
     </InitializationBackground>

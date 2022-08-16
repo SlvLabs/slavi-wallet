@@ -10,16 +10,14 @@ export interface SimpleRadioProps<V> {
   onChange: (value: V) => void;
   elementStyle?: ViewStyle;
 }
-function addDelimiters<V>(
-  options: {value: V; label: string}[],
-  selected: V,
-): ('delimiter' | {value: V; label: string})[] {
-  const result: ('delimiter' | {value: V; label: string})[] = [];
+function addDelimiters<V>(options: {value: V; label: string}[], selected: V): (string | {value: V; label: string})[] {
+  const result: (string | {value: V; label: string})[] = [];
+  let delimiterCounter = 0;
   for (let i = 0; i < options.length; ++i) {
     if (i === 0 || selected === options[i].value || selected === options[i - 1].value) {
       result.push(options[i]);
     } else {
-      result.push('delimiter');
+      result.push('delimiter' + delimiterCounter++);
       result.push(options[i]);
     }
   }
@@ -32,8 +30,8 @@ export default function SimpleRadio<V>(props: SimpleRadioProps<V>) {
   return (
     <View style={styles.container}>
       {optionsWithDelimiters.map(o => {
-        if (o === 'delimiter') {
-          return <View style={styles.delimiter} />;
+        if (typeof o === 'string') {
+          return <View style={styles.delimiter} key={o} />;
         }
         const {value, label} = o;
         return (

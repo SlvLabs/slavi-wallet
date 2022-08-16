@@ -374,7 +374,7 @@ const SwapScreen = () => {
     });
   }, [network, inCoin, dstCoin, inAmount, slippageTolerance, address, networkPattern, gasPrice]);
 
-  const onTxPriorityChange = useCallback((value) => setTxPriority(+value), []);
+  const onTxPriorityChange = useCallback((value) => setTxPriority(value), []);
 
   const onAddressSelect = useCallback((index: number) => {
     if(balancesState.balances[index]) {
@@ -664,9 +664,9 @@ const SwapScreen = () => {
   const hideSettings = useCallback(() => setSettingsIsShown(false), []);
 
   const onSettingsChange = useCallback((speed: TransactionPriority, value: number) => {
-    setSlippageTolerance(value);
-    onTxPriorityChange(speed);
-    hideSettings();
+      setSlippageTolerance(value);
+      onTxPriorityChange(speed);
+      hideSettings();
   }, [onTxPriorityChange, hideSettings]);
 
   return (
@@ -785,13 +785,15 @@ const SwapScreen = () => {
           onAccept={onFinish}
         />
       </KeyboardAwareScrollView>
-      <SettingsModal
-        speed={txPriority}
-        slippageTolerance={slippageTolerance}
-        visible={settingsIsShown}
-        onCancel={hideSettings}
-        onAccept={onSettingsChange}
-      />
+      {settingsIsShown && (
+        <SettingsModal
+          speed={txPriority}
+          slippageTolerance={slippageTolerance}
+          visible={settingsIsShown}
+          onCancel={hideSettings}
+          onAccept={onSettingsChange}
+        />
+      )}
     </Screen>
   );
 }

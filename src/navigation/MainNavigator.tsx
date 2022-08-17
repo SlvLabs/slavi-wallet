@@ -15,8 +15,8 @@ interface MainNavigatorProps {
 }
 
 const MainNavigator = (props: MainNavigatorProps) => {
-  if(props.isUpdateRequired) {
-    return <UpdateRequiredScreen />
+  if (props.isUpdateRequired) {
+    return <UpdateRequiredScreen />;
   }
 
   if (props.isLoading) {

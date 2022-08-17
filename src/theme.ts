@@ -142,6 +142,16 @@ export default {
       center: [100,100],
       radius: 250
     },
+    radialWavesGradient: {
+      colors: ['rgba(107, 40, 160, 0.5)', 'rgba(46, 19, 55, 0)'],
+      center: [85.5, 72.5],
+      radius: 150,
+    },
+    radialWavesGradient2: {
+      colors: ['rgba(107, 40, 160, 0.5)', 'rgba(46, 19, 55, 0)'],
+      center: [365, 404],
+      radius: 150,
+    },
     button: {
       colors: ['#00CB7C', '#00785B',],
       locations: [0.5, 1],

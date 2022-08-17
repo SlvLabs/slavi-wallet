@@ -14,18 +14,16 @@ import Screen from '../../components/screen';
 import Layout from '../../utils/layout';
 
 export default function SecurityScreen() {
+  const authService = useAuthService();
+  const options = useAutoBlockOptions();
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
   const [disableConfShown, setDisableConfShown] = useState<boolean>(false);
-  const [pinEnabled, setPinEnabled] = useState<boolean>(false);
-  const [biometricEnabled, setBiometricEnabled] = useState<boolean>(false);
+  const [pinEnabled, setPinEnabled] = useState<boolean>(authService.isAuthEnable);
+  const [biometricEnabled, setBiometricEnabled] = useState<boolean>(authService.isBiometricEnable);
   const [biometricIsSupported, setBiometricIsSupported] = useState<boolean>(false);
-  const [autoBlockTimeout, setAutoBlockTimeout] = useState<string>();
-
-  const authService = useAuthService();
+  const [autoBlockTimeout, setAutoBlockTimeout] = useState<string>(options[authService.getAutoBlockTimeout()]);
   const {t} = useTranslation();
   const navigation = useNavigation();
-
-  const options = useAutoBlockOptions();
 
   const showModal = useCallback(() => setModalIsShown(true), []);
   const hideModal = useCallback(() => setModalIsShown(false), []);
@@ -69,20 +67,14 @@ export default function SecurityScreen() {
   const onAutoBlocking = useCallback(() => navigation.navigate(ROUTES.SETTINGS.AUTO_BLOCKING), [navigation]);
 
   useEffect(() => {
-    if (authService) {
-      setPinEnabled(authService.isAuthEnable());
-      setBiometricEnabled(authService.isBiometricEnable());
-    }
-  }, [authService]);
-
-  useEffect(() => {
     hasHardwareAsync().then(result => setBiometricIsSupported(result));
   }, []);
 
-  useEffect(
-    () => navigation.addListener('focus', () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()])),
-    [authService, options],
-  );
+  useEffect(() => {
+    const listener = () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()]);
+    navigation.addListener('focus', listener);
+    return () => navigation.removeListener('focus', listener);
+  }, [navigation, authService, options]);
   return (
     <Screen title={'Security'}>
       <View style={styles.container}>

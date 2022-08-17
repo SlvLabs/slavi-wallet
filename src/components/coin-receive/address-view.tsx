@@ -14,9 +14,11 @@ export interface AddressViewProps {
 const AddressView = (props: AddressViewProps) => {
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Text style={{...styles.name, ...props.nameStyle}}>
-        {props.name || ''}
-      </Text>
+      {!!props.name && (
+        <Text style={{...styles.name, ...props.nameStyle}}>
+          {props.name}
+        </Text>
+      )}
       <Text style={{...styles.address, ...props.addressStyle}}>
         {props.address}
       </Text>

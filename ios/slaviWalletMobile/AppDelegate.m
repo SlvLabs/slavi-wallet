@@ -77,5 +77,4 @@ static void InitializeFlipper(UIApplication *application) {
                   continueUserActivity:userActivity
                     restorationHandler:restorationHandler];
 }
-
 @end

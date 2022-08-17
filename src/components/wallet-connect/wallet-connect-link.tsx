@@ -34,6 +34,7 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
 
       setLastEvent(null);
       if(url) {
+        console.log(url)
         walletConnectService.connect(url);
       } else {
         throw new Error('Invalid url format');

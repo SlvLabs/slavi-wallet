@@ -175,7 +175,7 @@ const translations = {
   "Insufficient funds":"Insufficient funds",
   "Update required":"Update required",
   "Your version of the app is out of date. You need to install a more recent.":"Your version of the app is out of date. You need to install a more recent.",
-  "Get it":"Get it",
+  "Get it":"Upload here",
   "A new version of the application is available. We recommend updating.":"A new version of the application is available. We recommend updating.",
   "agreement_policy":"agreement_policy",
   "not an email":"not an email",

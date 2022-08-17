@@ -1,16 +1,28 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Linking, Platform, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback} from 'react';
 import {walletLogo} from '../assets/images';
 import SolidButton from '../components/buttons/solid-button';
 import theme from '../theme';
 import useTranslation from '../utils/use-translation';
 import WavesBackground from '../components/background/waves-background';
-
+const androidLink = 'https://play.google.com/store/apps/details?id=com.defiwalletmobile';
+const iosLink = 'itms-apps://apps.apple.com/en/app/slavi-wallet/id1610125496?l=en';
 const UpdateRequiredScreen = () => {
   const {t} = useTranslation();
 
-  const getIt = useCallback(() => {
-
+  const getIt = useCallback(async () => {
+    let link;
+    switch (Platform.OS) {
+      case 'android':
+        link = androidLink;
+        break;
+      case 'ios':
+        link = iosLink;
+        break;
+    }
+    if (link && (await Linking.canOpenURL(link))) {
+      Linking.openURL(androidLink);
+    }
   }, []);
 
   return (
@@ -25,7 +37,7 @@ const UpdateRequiredScreen = () => {
         </Text>
       </View>
       <View style={styles.buttonsBlock}>
-        <SolidButton title={t('Get it')} onPress={getIt} />
+        <SolidButton title={t('Get it')} onPress={getIt} gradient={theme.gradients.violetButton} />
       </View>
     </WavesBackground>
   );

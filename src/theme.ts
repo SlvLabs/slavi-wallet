@@ -159,6 +159,13 @@ export default {
       angle: 62,
       angleCenter: { x: 0.5, y: 0.5 },
     },
+    violetButton: {
+      colors: ['#A428DE', '#5D1298',],
+      locations: [0.5, 1],
+      useAngle: true,
+      angle: 62,
+      angleCenter: { x: 0.5, y: 0.5 },
+    },
 
     disabledButton: {
       colors: ['#2C2E33', '#26282D',],

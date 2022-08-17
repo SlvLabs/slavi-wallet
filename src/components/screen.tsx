@@ -2,7 +2,7 @@ import theme from '../theme';
 import ScreenHeader, {ScreenHeaderProps} from './screen-header';
 import {StyleSheet, ViewStyle} from 'react-native';
 import React, {ReactNode} from 'react';
-import { View } from 'react-native';
+import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../utils/layout';
 
@@ -18,9 +18,7 @@ export default function Screen(props: ScreenProps) {
     <View style={{...styles.container, ...containerStyle}}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
         <ScreenHeader {...headerProps} />
-        <View style={styles.content}>
-          {children}
-        </View>
+        <View style={styles.content}>{children}</View>
       </LinearGradient>
     </View>
   );

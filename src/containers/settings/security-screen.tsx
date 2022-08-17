@@ -2,15 +2,16 @@ import {StyleSheet, Switch, Text, View} from 'react-native';
 import theme from '../../theme';
 import React, {useCallback, useEffect, useState} from 'react';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
-import useTranslation  from '../../utils/use-translation';
+import useTranslation from '../../utils/use-translation';
 import PinCodeModal from '../../components/modal/pin-code-modal';
-import { hasHardwareAsync } from 'expo-local-authentication';
+import {hasHardwareAsync} from 'expo-local-authentication';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {ListItem} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useAutoBlockOptions from '../../utils/use-auto-block-options';
 import Screen from '../../components/screen';
+import Layout from '../../utils/layout';
 
 export default function SecurityScreen() {
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
@@ -31,13 +32,13 @@ export default function SecurityScreen() {
   const showDisableConf = useCallback(() => setDisableConfShown(true), []);
   const hideDisableConf = useCallback(() => setDisableConfShown(false), []);
 
-  const onEnabledChange =  useCallback(async () => {
-    if(authService.isAuthEnable()) {
+  const onEnabledChange = useCallback(async () => {
+    if (authService.isAuthEnable()) {
       showDisableConf();
     } else {
       showModal();
     }
-  },  [authService, showModal, showDisableConf]);
+  }, [authService, showModal, showDisableConf]);
 
   const disablePin = useCallback(async () => {
     await authService.disablePin();
@@ -46,14 +47,17 @@ export default function SecurityScreen() {
     hideDisableConf();
   }, [authService, hideDisableConf]);
 
-  const savePin = useCallback(async (pin: string) => {
-    await authService.enablePin(pin);
-    setPinEnabled(true);
-    hideModal();
-  }, [hideModal, authService]);
+  const savePin = useCallback(
+    async (pin: string) => {
+      await authService.enablePin(pin);
+      setPinEnabled(true);
+      hideModal();
+    },
+    [hideModal, authService],
+  );
 
   const onBiometricChange = async () => {
-    if(biometricEnabled) {
+    if (biometricEnabled) {
       await authService.disableBiometric();
       setBiometricEnabled(false);
     } else {
@@ -62,39 +66,38 @@ export default function SecurityScreen() {
     }
   };
 
-  const onAutoBlocking = useCallback(
-    () => navigation.navigate(ROUTES.SETTINGS.AUTO_BLOCKING),
-    [navigation]
-  );
+  const onAutoBlocking = useCallback(() => navigation.navigate(ROUTES.SETTINGS.AUTO_BLOCKING), [navigation]);
 
   useEffect(() => {
-    if(authService) {
+    if (authService) {
       setPinEnabled(authService.isAuthEnable());
       setBiometricEnabled(authService.isBiometricEnable());
     }
   }, [authService]);
 
   useEffect(() => {
-    hasHardwareAsync().then((result) => setBiometricIsSupported(result));
+    hasHardwareAsync().then(result => setBiometricIsSupported(result));
   }, []);
 
-  useEffect(() => navigation.addListener(
-      'focus',
-      () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()])
-    ), [authService, options]);
+  useEffect(
+    () => navigation.addListener('focus', () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()])),
+    [authService, options],
+  );
   return (
     <Screen title={'Security'}>
+      <View style={styles.container}>
         <View style={styles.row}>
+          <Text style={styles.label}>{t('pinEnabled')}</Text>
           <Switch
             value={pinEnabled}
             onValueChange={onEnabledChange}
             thumbColor={theme.colors.white}
             trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
           />
-          <Text style={styles.label}>{t('pinEnabled')}</Text>
         </View>
         {biometricIsSupported && (
           <View style={styles.row}>
+            <Text style={pinEnabled ? styles.label : styles.disabledLabel}>{t('biometricEnabled')}</Text>
             <Switch
               value={biometricEnabled}
               onValueChange={onBiometricChange}
@@ -102,30 +105,38 @@ export default function SecurityScreen() {
               thumbColor={pinEnabled ? theme.colors.white : theme.colors.textLightGray}
               trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
             />
-            <Text style={pinEnabled ? styles.label : styles.disabledLabel}>
-              {t('biometricEnabled')}
-            </Text>
           </View>
         )}
-        <ListItem key={3} bottomDivider containerStyle={styles.listItem} onPress={onAutoBlocking} disabled={!pinEnabled}>
+        <ListItem
+          key={3}
+          bottomDivider
+          containerStyle={styles.listItem}
+          onPress={onAutoBlocking}
+          disabled={!pinEnabled}>
           <ListItem.Content style={styles.listContent}>
-            <ListItem.Title style={pinEnabled ? styles.label : styles.disabledLabel}>{t('autoBlocking')}</ListItem.Title>
+            <ListItem.Title style={pinEnabled ? styles.label : styles.disabledLabel}>
+              {t('autoBlocking')}
+            </ListItem.Title>
           </ListItem.Content>
           {pinEnabled && <Text style={styles.subText}>{autoBlockTimeout}</Text>}
-          <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>
+          <ListItem.Chevron color={theme.colors.textLightGray} size={22} />
         </ListItem>
-      <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin}/>
-      <ConfirmationModal visible={disableConfShown} onPositive={disablePin} title={t('disablePinConf')} />
+        <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin} />
+        <ConfirmationModal visible={disableConfShown} onPositive={disablePin} title={t('disablePinConf')} />
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingLeft: Layout.isSmallDevice ? 8 : 0,
+    paddingRight: Layout.isSmallDevice ? 8 : 0,
+  },
   row: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingLeft: 20,
-    paddingRight: 20,
+    justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.maxTransparent,
     paddingTop: 10,
@@ -139,7 +150,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: theme.colors.white,
     textAlign: 'left',
-    marginLeft: 20,
   },
   disabledLabel: {
     fontFamily: theme.fonts.default,
@@ -149,7 +159,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: theme.colors.textLightGray1,
     textAlign: 'left',
-    marginLeft: 20,
   },
   listItem: {
     backgroundColor: 'transparent',
@@ -170,5 +179,5 @@ const styles = StyleSheet.create({
   listContent: {
     paddingTop: 4,
     paddingBottom: 4,
-  }
+  },
 });

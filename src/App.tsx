@@ -40,7 +40,6 @@ import WalletConnectTxRequestModal from './components/wallet-connect/tx-request-
 import useAutoBlock from './utils/use-auto-block';
 import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
-import * as Linking from 'expo-linking';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 

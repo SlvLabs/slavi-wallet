@@ -10,6 +10,7 @@ import SettingsStack from './SettingsStack';
 import DefiStack from './DefiStack';
 import SwapStack from './SwapStack';
 import useTranslation from '../utils/use-translation';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const icons = {
   [ROUTES.TABS.COINS]: 'wallet2',
@@ -25,6 +26,7 @@ type GetScreenOptions = (a: {route: {name: string}}) => any;
 
 export default function ApplicationTabs() {
   const {t} = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const labels = useMemo(
     () => ({
@@ -45,10 +47,10 @@ export default function ApplicationTabs() {
           <View style={styles.tabElement}>
             <View
               style={{
-                height: 1,
+                height: 10,
                 width: 50,
-                backgroundColor: focused ? theme.colors.borderGreen : 'transparent',
-                marginBottom: 10,
+                borderTopColor: focused ? theme.colors.borderGreen : 'transparent',
+                borderTopWidth: 1,
               }}
             />
             <CustomIcon name={name} size={size} color={focused ? theme.colors.borderGreen : theme.colors.gold2} />
@@ -68,7 +70,11 @@ export default function ApplicationTabs() {
         screenOptions={getScreenOptions}
         tabBarOptions={{
           activeTintColor: theme.colors.white,
-          style: styles.tabBar,
+          style: {
+            height: 60 + insets.bottom,
+            backgroundColor: theme.colors.black,
+            paddingTop: 0,
+          },
           tabStyle: styles.tab,
         }}
         lazy={true}>
@@ -92,13 +98,9 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     color: theme.colors.whiteOpacity,
   },
-  tabBar: {
-    backgroundColor: theme.colors.black,
-    paddingTop: 0,
-    padding: 18,
+  tab: {
     height: 60,
   },
-  tab: {},
   tabElement: {
     flex: 1,
     alignItems: 'center',

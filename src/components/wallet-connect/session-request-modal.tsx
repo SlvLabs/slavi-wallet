@@ -11,9 +11,10 @@ import SolidButton from '../buttons/solid-button';
 import theme from '../../theme';
 import OutlineButton from '../buttons/outline-button';
 import AddressSelector from '../buttons/address-selector';
-import SimpleSelect from '../controls/simple-select';
 import {CoinForWalletConnect} from '@slavi/wallet-core/src/store/modules/wallet-connect/index';
 import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
+import getImageSource from '../../utils/get-image-source';
+import NetworkSelector, {NetworkData, NetworksOptions} from '../swap/network-selector';
 
 export default function WalletConnectSessionRequestModal() {
   const [coin, setCoin] = useState<CoinForWalletConnect>();
@@ -47,8 +48,12 @@ export default function WalletConnectSessionRequestModal() {
     }
   }, [walletConnectService, sessionRequest]);
 
-  const chainSelectOptions = useMemo(() => coins.reduce<Record<string, string>>((acc, coin) => {
-    acc[coin.id] = coin.name;
+  const chainSelectOptions: NetworksOptions = useMemo(() => coins.reduce<Record<string, NetworkData>>((acc, coin) => {
+    acc[coin.id] = {
+      name: coin.name,
+      logo: coin.logo,
+      id: coin.id,
+    };
     return acc;
   }, {}), [coins]);
 
@@ -83,17 +88,24 @@ export default function WalletConnectSessionRequestModal() {
       <Text style={styles.name}>{sessionRequest.peerName}</Text>
       <Text style={styles.uri}>{sessionRequest.peerUrl}</Text>
       {!sessionRequest.chainId ? (
-        <SimpleSelect
+        <NetworkSelector
           onSelect={(id: string) => setCoin(coins.find(coin => coin.id === id))}
-          options={chainSelectOptions}
+          networks={chainSelectOptions}
           value={coin?.id}
           label={t('walletNetwork')}
+          containerStyle={styles.select}
         />
       ) : (
         !!coin && (
           <View style={styles.fixedNetworkContainer}>
-            <Text style={styles.networkLabel}>{t('walletNetwork')}</Text>
-            <Text style={styles.networkName}>{coin?.name}</Text>
+            <Image
+              source={getImageSource(coin?.logo)}
+              style={styles.coinLogo}
+            />
+            <View>
+              <Text style={styles.networkLabel}>{t('walletNetwork')}</Text>
+              <Text style={styles.networkName}>{coin?.name}</Text>
+            </View>
           </View>
         )
       )}
@@ -165,9 +177,22 @@ const styles = StyleSheet.create({
   },
   addressSelector: {
     marginBottom: 20,
+    marginTop: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   fixedNetworkContainer: {
     paddingLeft: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   networkLabel: {
     fontFamily: theme.fonts.default,
@@ -197,5 +222,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 16,
     color: theme.colors.errorRed,
-  }
+  },
+  select: {
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+  },
+  coinLogo: {
+    width: 24,
+    height: 24,
+    marginRight: 12,
+  },
 });

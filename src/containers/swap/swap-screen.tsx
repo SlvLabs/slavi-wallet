@@ -686,6 +686,7 @@ const SwapScreen = () => {
             networks={networkOptions}
             onSelect={onNetworkSelect}
             containerStyle={styles.network}
+            label={t('blockchain')}
           />
           <SourceCoinElement
             balance={balance || '0'}

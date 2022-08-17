@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
 import theme from '../../theme';
 import AddressSelectorModal, {
   AddressEntry,
 } from '../modal/address-selector-modal';
 import useTranslation from '../../utils/use-translation';
+import CustomIcon from '../custom-icon/custom-icon';
 
 export interface AddressSelectorProps {
   addresses: AddressEntry[];
@@ -23,15 +23,9 @@ export interface AddressSelectorProps {
   selectedAddress?: number;
   containerStyle?: ViewStyle;
   placeholderStyle?: TextStyle;
-  iconSize?: number;
-  iconColor?: string;
   textStyle?: TextStyle;
   disabled?: boolean;
 }
-
-const defaultIconSize = 16;
-const defaultIconColor = theme.colors.lightGray;
-const defaultDisableIconColor = theme.colors.textDarkGray;
 
 const AddressSelector = (props: AddressSelectorProps) => {
   const {t} = useTranslation();
@@ -67,7 +61,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
         onPress={showModal}
         disabled={props.disabled}
       >
-        <View>
+        <View style={styles.textContainer}>
           {props.label && (
             <View>
               <Text style={styles.label}>{props.label}</Text>
@@ -75,12 +69,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
           )}
           <Text style={textStyle}>{text}</Text>
         </View>
-        <Icon
-          name={'down'}
-          type={'antdesign'}
-          size={props.iconSize || defaultIconSize}
-          color={props.disabled ? defaultDisableIconColor : (props.iconColor || defaultIconColor)}
-        />
+        <CustomIcon name={'arrow'} size={18} color={theme.colors.textLightGray1} style={styles.icon} />
       </TouchableOpacity>
       <AddressSelectorModal
         addresses={props.addresses}
@@ -100,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.grayDark,
     borderRadius: 8,
     paddingLeft: 16,
-    paddingRight: 16,
+    paddingRight: 24,
     paddingTop: 22,
     paddingBottom: 22,
     flexDirection: 'row',
@@ -136,11 +125,19 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0.02,
     color: theme.colors.textLightGray1,
-    marginBottom: 8,
   },
   disabledContainer: {
     backgroundColor: theme.colors.lightBackground,
-  }
+  },
+  textContainer: {
+    paddingRight: 20,
+  },
+  icon: {
+    transform: [{
+      rotate: '90deg',
+    }],
+    marginRight: 8,
+  },
 });
 
 export default AddressSelector;

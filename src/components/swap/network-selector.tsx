@@ -4,9 +4,8 @@ import getImageSource from '../../utils/get-image-source';
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
 import NetworkSelectModal from './network-select-modal';
-import useTranslation from '../../utils/use-translation';
 
-interface NetworkData {
+export interface NetworkData {
   id: string;
   name: string;
   logo?: string;
@@ -19,12 +18,11 @@ export interface NetworkSelectorProps {
   onSelect: (network: string) => void;
   value?: string;
   containerStyle?: ViewStyle;
+  label: string;
 }
 
 export default function NetworkSelector(props: NetworkSelectorProps) {
-  const {networks, value, onSelect, containerStyle} = props;
-
-  const {t} = useTranslation();
+  const {networks, value, onSelect, containerStyle, label} = props;
 
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
 
@@ -46,7 +44,7 @@ export default function NetworkSelector(props: NetworkSelectorProps) {
       <View style={styles.content}>
         <Image source={getImageSource(selected?.logo)} style={styles.image} />
         <View style={styles.textBlock}>
-          <Text style={styles.label}>{t('blockchain')}</Text>
+          <Text style={styles.label}>{label}</Text>
           <Text style={styles.value}>{selected?.name}</Text>
         </View>
       </View>

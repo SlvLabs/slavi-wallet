@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import {useSelectWalletConnectSessions} from '@slavi/wallet-core/src/store/modules/wallet-connect/selectors';
@@ -8,9 +8,9 @@ import useTranslation from '../../utils/use-translation';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import Session from '../../components/wallet-connect/session';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
-import {Icon} from 'react-native-elements';
 import Toast from 'react-native-simple-toast';
-import Screen from '../../components/screen';
+import ScrollableScreen from '../../components/scrollable-screen';
+import CustomIcon from '../../components/custom-icon/custom-icon';
 
 export default function MainWalletConnectScreen() {
   const [scannerIsShown, setScannerIsShown] = useState<boolean>(false);
@@ -52,48 +52,46 @@ export default function MainWalletConnectScreen() {
   }, [hideScanner, t]);
 
   return (
-    <Screen title={t('walletConnect')}>
-      <ScrollView>
-        <View style={styles.header}>
-          <Text style={styles.title}>{t('walletConnectTitle')}</Text>
-          <Text style={styles.description}>{t('walletConnectDescription')}</Text>
-        </View>
-        <SolidButton title={t('newConnect')} onPress={showScanner} />
+    <ScrollableScreen title={t('walletConnect')}>
+      <View style={styles.header}>
+        <Text style={styles.title}>{t('walletConnectTitle')}</Text>
+        <Text style={styles.description}>{t('walletConnectDescription')}</Text>
+      </View>
+      {sessions.length > 0 && (
         <View style={styles.sessionsContainer}>
           <Text style={styles.sessionsTitle}>{t('activeSessions')}</Text>
-          {sessions.length > 0 ? (
-            sessions.map((session, index) => <Session
-              peerName={session.peerName || 'unknown'}
-              peerUrl={session.peerUrl}
-              icon={session.icon}
-              onPress={() => showKilling(session.peerId)}
-              key={`session_${index}`}
-            />)
-          ) : (
-            <View style={{...styles.placeholder}}>
-              <View style={styles.iconContainer}>
-                <Icon
-                  type={'feather'}
-                  name={'grid'}
-                  size={64}
-                  color={theme.colors.textLightGray1}
-                />
-              </View>
-              <Text style={styles.placeholderText}>
-                {t('noActiveSessions')}
-              </Text>
-            </View>
-          )}
+          {sessions.map((session, index) => <Session
+            peerName={session.peerName || 'unknown'}
+            peerUrl={session.peerUrl}
+            icon={session.icon}
+            onPress={() => showKilling(session.peerId)}
+            key={`session_${index}`}
+          />)}
         </View>
-        <QrReaderModal visible={scannerIsShown} onQRRead={onQRRead} onClose={hideScanner}/>
-        <ConfirmationModal
-          visible={!!killingCandidate}
-          onPositive={killSession}
-          title={t('killSession')}
-          onCancel={hideKilling}
-        />
-      </ScrollView>
-    </Screen>
+      )}
+      <SolidButton title={t('newConnect')} onPress={showScanner} containerStyle={styles.connectionButton}/>
+      {sessions.length === 0 && (
+        <View style={{...styles.placeholder}}>
+          <View style={styles.iconContainer}>
+            <CustomIcon
+              name={'Category'}
+              size={64}
+              color={theme.colors.textLightGray3}
+              style={styles.icon}
+            />
+          </View>
+          <Text style={styles.placeholderText}>
+            {t('noActiveSessions')}
+          </Text>
+        </View>)}
+      <QrReaderModal visible={scannerIsShown} onQRRead={onQRRead} onClose={hideScanner}/>
+      <ConfirmationModal
+        visible={!!killingCandidate}
+        onPositive={killSession}
+        title={t('killSession')}
+        onCancel={hideKilling}
+      />
+    </ScrollableScreen>
   );
 }
 
@@ -101,12 +99,15 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: theme.fonts.default,
     alignSelf: 'center',
-    fontSize: 24,
+    fontSize: 26,
     fontStyle: 'normal',
-    fontWeight: 'bold',
-    lineHeight: 28,
+    fontWeight: '700',
+    lineHeight: 29,
     color: theme.colors.white,
-    marginBottom: 20,
+    textAlign: 'center',
+    marginBottom: 24,
+    paddingLeft: 32,
+    paddingRight: 32,
   },
   description: {
     fontFamily: theme.fonts.default,
@@ -114,16 +115,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: 'normal',
-    lineHeight: 18,
+    lineHeight: 20,
     color: theme.colors.lightGray,
     textAlign: 'center',
   },
   header: {
-    marginTop: 20,
-    marginBottom: 30,
+    marginTop: 8,
   },
   sessionsContainer: {
-    marginTop: 40,
+    marginTop: 24,
   },
   sessionsTitle: {
     fontFamily: theme.fonts.default,
@@ -138,12 +138,14 @@ const styles = StyleSheet.create({
   placeholder: {
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: 40,
+    marginTop: 100,
   },
   placeholderText: {
     color: theme.colors.textLightGray1,
-    fontSize: 20,
-    lineHeight: 28,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 14,
+    lineHeight: 20,
     marginTop: 24,
     textAlign: 'center',
   },
@@ -152,5 +154,11 @@ const styles = StyleSheet.create({
     padding: 30,
     alignSelf: 'center',
     borderRadius: 16,
+  },
+  icon: {
+    opacity: 0.2,
+  },
+  connectionButton: {
+    marginTop: 24,
   }
 });

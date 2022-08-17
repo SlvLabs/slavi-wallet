@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginLeft: 8,
     backgroundColor: theme.colors.simpleCoinBackground,
-    padding: 16,
+    padding: Layout.isSmallDevice ? 8 : 16,
     borderRadius: 8,
     width: Layout.isSmallDevice ? 66 : 76,
     height: Layout.isSmallDevice ? 40 : 56,

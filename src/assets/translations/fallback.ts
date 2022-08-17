@@ -135,7 +135,7 @@ const translations = {
   "By btc value":"By btc value",
   "Slavi DeFi is coming...":"Slavi DeFi is coming...",
   "Congratulations!":"Congratulations!",
-  "Your wallet is ready to work.":"Your wallet is ready to work.",
+  "Your wallet is ready to work.":"Your wallet is ready for operation",
   "Get to work":"Get to work",
   "Coming soon":"Coming soon",
   "Sign in to account":"Sign in to account",

@@ -30,20 +30,35 @@ interface RenderSceneParams {
   route: {key: string};
   jumpTo(key: string): void;
 }
-const RenderScene = ({route: {key}, jumpTo}: RenderSceneParams) => (
-  <HelpPageScreen page={+key as Pages} jumpTo={jumpTo} />
-);
+const RenderScene = ({route: {key}, jumpTo}: RenderSceneParams) => {
+  if (key === 'end') {
+    return <></>;
+  }
+  return <HelpPageScreen page={+key as Pages} jumpTo={jumpTo} />;
+};
 
 const routes = allPages.map(p => ({key: p.toString()}));
+routes.push({key: 'end'});
 
 export default function HelpPageTabs() {
   const [index, setIndex] = React.useState(0);
+  const dispatch = useDispatch();
+  const onIndexChange = useCallback(
+    _index => {
+      if (_index >= allPages.length) {
+        dispatch(skipHelp());
+      } else {
+        setIndex(_index);
+      }
+    },
+    [dispatch],
+  );
   return (
     <TabView
       renderTabBar={() => null}
       navigationState={{index, routes}}
       renderScene={RenderScene}
-      onIndexChange={setIndex}
+      onIndexChange={onIndexChange}
       initialLayout={{width: Layout.window.width}}
     />
   );
@@ -81,7 +96,7 @@ export interface HelpPageScreenProps {
   jumpTo(page: string): void;
 }
 
-export function HelpPageScreen({page, jumpTo}: HelpPageScreenProps) {
+function _HelpPageScreen({page, jumpTo}: HelpPageScreenProps) {
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const headers = useMemo(() => allPages.map(p => t(`help_header_${p}` as PagesHeaders)), [t]);
@@ -121,12 +136,14 @@ export function HelpPageScreen({page, jumpTo}: HelpPageScreenProps) {
         <View style={styles.loaderView}>
           <JumpButton onPress={goLeft} direction={'prev'} enabled={page > 0} />
           <PointerProgressBar stepsCount={allPages.length} activeStep={page} activeColor={theme.colors.violet} />
-          <JumpButton onPress={goRight} direction={'next'} enabled={page < allPages.length - 1} />
+          <JumpButton onPress={goRight} direction={'next'} enabled={true} />
         </View>
       </View>
     </HelpWavesBackground>
   );
 }
+const HelpPageScreen = React.memo(_HelpPageScreen);
+
 type LogoViewWithPage = `logoView${Pages}`;
 type LogoWithPage = `logo${Pages}`;
 const styles = StyleSheet.create({

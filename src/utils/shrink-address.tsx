@@ -1,6 +1,8 @@
+import Layout from './layout';
+
 const DEFAULT_BEGIN_LETTERS_COUNT = 10;
 const DEFAULT_END_LETTERS_COUNT = 10;
-const DEFAULT_MAX_LENGTH = 35;
+const DEFAULT_MAX_LENGTH = Layout.isSmallDevice ? 25 : 35;
 
 export default function shrinkAddress (
   address: string,

@@ -42,6 +42,7 @@ import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import { BlurView } from "@react-native-community/blur";
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -218,7 +219,7 @@ const App: () => ReactNode = () => {
       />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
-          {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading}/>}
+          {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading} />}
           <SafeAreaProvider>
             <NavigationContainer theme={DarkTheme} >
               <MainNavigator
@@ -236,6 +237,14 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectTxRequestModal />}
               {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
               {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized}/>}
+              {authLoading && (
+                <BlurView
+                  style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
+                  blurType="light"
+                  blurAmount={10}
+                  reducedTransparencyFallbackColor="white"
+                />
+              )}
             </NavigationContainer>
             {devMode && <Text style={{
                 backgroundColor: theme.colors.black,

@@ -386,6 +386,19 @@ const translations = {
   'Please set right time': 'Please set right time',
   'The time on your device is not set correct. Change the time to the current one and refresh the application': 'The time on your device is not set correct. Change the time to the current one and refresh the application',
   'Refresh wallet': 'Refresh wallet',
+  help_header_0: 'Deposit & Hold',
+  help_header_1: 'Trade',
+  help_header_2: 'Buy with Card',
+  help_header_3: 'Stake & Earn',
+  help_header_4: 'NFT Viewer',
+  help_description_0: 'Use the reliable crypto wallet to store your funds',
+  help_description_1: 'Get a sustainable asset exchange with significant liquidity and price resistance',
+  help_description_2: 'Fund your crypto account simply and easily in one click',
+  help_description_3: 'Use your liquidity inside the new financial system to increase your deposit',
+  help_description_4: 'Safely send, receive, and view NFTs in your wallet and enjoy it',
+  helpFinish: 'Finish',
+  helpSkip: 'Skip',
+
 };
 
 export default translations;

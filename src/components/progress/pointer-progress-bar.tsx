@@ -5,30 +5,30 @@ import theme from '../../theme';
 export interface PointerProgressBarProps {
   stepsCount: number;
   activeStep: number;
+  activeColor?: string;
 }
 
 export default function PointerProgressBar(props: PointerProgressBarProps) {
-  const {stepsCount, activeStep} = props;
+  const {stepsCount, activeStep, activeColor} = props;
 
   const renderPoints = useMemo(() => {
     const res: ReactNode[] = [];
-    for(let i = 0; i < stepsCount; i++){
+    for (let i = 0; i < stepsCount; i++) {
       let style = styles.point;
-      if(i === activeStep) {
-        style = styles.activePoint
+      if (i === activeStep) {
+        style = styles.activePoint;
+        if (activeColor) {
+          style = {...style, backgroundColor: activeColor};
+        }
       }
 
       res.push(<View style={style} key={`point_${i}`} />);
     }
 
     return res;
-  }, [stepsCount, activeStep]);
+  }, [activeColor, stepsCount, activeStep]);
 
-  return (
-    <View style={styles.container}>
-      {renderPoints}
-    </View>
-  );
+  return <View style={styles.container}>{renderPoints}</View>;
 }
 
 const styles = StyleSheet.create({

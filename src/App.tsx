@@ -52,6 +52,7 @@ const App: () => ReactNode = () => {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
   const [isUpdateRequired, setIsUpdateRequired] = useState<boolean>(false);
   const [isTimeFixRequired, setIsTimeFixRequired] = useState<boolean>(false);
+  const [helpShow, setHelpShow] = useState<boolean>(false);
 
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = useState<boolean>(false);
@@ -98,6 +99,10 @@ const App: () => ReactNode = () => {
 
   store.subscribe(() => {
     setIsTimeFixRequired(store.getState().initialization.timeFixRequired);
+  });
+
+  store.subscribe(() => {
+    setHelpShow(store.getState().initialization.helpShow);
   });
 
   store.subscribe(() => {
@@ -224,6 +229,7 @@ const App: () => ReactNode = () => {
                 }
                 isInitializationFinished={isInitFinishShow}
                 isUpdateRequired={isUpdateRequired}
+                helpShow={helpShow}
               />
               {!isBootstrapped && <WalletConnectSessionRequestModal />}
               {!isBootstrapped && <WalletConnectSignRequestModal />}

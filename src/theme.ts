@@ -2,6 +2,7 @@ export default {
   colors: {
     dark: '#171717',
     white: '#fff',
+    violet: '#BF8FDD',
     whiteOpacity: 'rgba(255,255,255,0.8)',
     lightTransparent: 'rgba(255,255,255,0.08)',
     mediumTransparent: 'rgba(255,255,255,0.3)',
@@ -150,6 +151,11 @@ export default {
     radialWavesGradient2: {
       colors: ['rgba(107, 40, 160, 0.5)', 'rgba(46, 19, 55, 0)'],
       center: [365, 404],
+      radius: 150,
+    },
+    radialWavesGradientHelp: {
+      colors: ['rgba(107, 40, 160, 0.55)', 'rgba(46, 19, 55, 0)'],
+      center: [230, 460],
       radius: 150,
     },
     button: {

@@ -1,18 +1,18 @@
 import React, {ReactNode} from 'react';
-import {congratulationsBackground, loadingBackground} from '../../assets/images';
+import {helpBackground, loadingBackground} from '../../assets/images';
 import {ImageBackground, SafeAreaView, StyleSheet} from 'react-native';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
 
-export default function WavesBackground({children}: {children: ReactNode}) {
+export default function HelpWavesBackground({children}: {children: ReactNode}) {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={loadingBackground} style={styles.background}>
-        <ImageBackground source={congratulationsBackground} style={styles.background}>
+        <ImageBackground source={helpBackground} style={styles.background}>
           <RadialGradient style={styles.flex} {...theme.gradients.radialWavesGradient}>
-            <RadialGradient style={styles.content} {...theme.gradients.radialWavesGradient2}>
+            <RadialGradient style={styles.content} {...theme.gradients.radialWavesGradientHelp}>
               {children}
             </RadialGradient>
           </RadialGradient>

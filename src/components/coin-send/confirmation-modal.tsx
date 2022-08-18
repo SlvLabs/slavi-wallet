@@ -30,7 +30,7 @@ export interface ConfirmationModalProps {
 
 const renderVout = (vout: Recipient, index: number, ticker: string) => (
   <View style={styles.vout} key={'conf_vouts_' + index}>
-    <Text style={styles.voutAddress}>{shrinkAddress(vout.address, 9, 6)}</Text>
+    <Text style={styles.voutAddress}>{shrinkAddress(vout.address, 9, 6, 20)}</Text>
     <Text style={styles.voutAmount}>{`${vout.amount} ${ticker}`}</Text>
   </View>
 );

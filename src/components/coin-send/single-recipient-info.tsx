@@ -6,6 +6,7 @@ import shrinkAddress from '../../utils/shrink-address';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
+import CryptoAmountText from '../text/crypto-amount-text';
 
 export interface SingleRecipientInfoProps {
   amount: string;
@@ -25,7 +26,7 @@ export default function SingleRecipientInfo({amount, address, ticker, logo}: Sin
         </View>
         <View style={styles.amountCol}>
           <Text style={styles.sentLabel}>{t('sent')}</Text>
-          <Text style={styles.amountText}>{`${amount} ${ticker}`}</Text>
+          <CryptoAmountText value={amount} style={styles.amountText} ticker={ticker} />
         </View>
       </View>
       <View style={styles.delimiterRow}>

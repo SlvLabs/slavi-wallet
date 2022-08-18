@@ -9,6 +9,7 @@ import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-w
 import theme from '../../theme';
 import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
+import NumberText from '../text/number-text';
 
 export default function WalletConnectTxRequestModal() {
   const [error, setError] = useState<string>();
@@ -80,7 +81,7 @@ export default function WalletConnectTxRequestModal() {
       </View>
       <View style={styles.feeContainer}>
         <Text style={styles.label}>{t('fee')}</Text>
-        <Text style={styles.fee}>{request.fee}</Text>
+        <NumberText value={request.fee || ''} style={styles.fee} />
       </View>
       <View style={styles.errorContainer}>
         <Text style={styles.error}>{error}</Text>

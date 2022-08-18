@@ -5,6 +5,7 @@ import React, {useCallback, useMemo} from 'react';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import Toast from 'react-native-simple-toast';
 import useTranslation from '../../utils/use-translation';
+import CryptoAmountText from '../text/crypto-amount-text';
 
 export interface TxMetaInfoProps {
   contract: string;
@@ -37,7 +38,7 @@ export default function TxMetaInfo(props: TxMetaInfoProps) {
       </View>
       <View style={styles.feeRow}>
         <Text style={styles.label}>{feeLabel}</Text>
-        <Text style={styles.feeText}>{`${fee} ${feeTicker}`}</Text>
+        <CryptoAmountText ticker={feeTicker} value={fee} style={styles.feeText} />
       </View>
     </View>
   );

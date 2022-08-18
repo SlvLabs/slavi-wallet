@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, ViewStyle, Text, TextStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle, TextStyle} from 'react-native';
 import theme from '../../theme';
+import CryptoAmountText from '../text/crypto-amount-text';
 
 export enum Type {
   positive,
@@ -18,9 +19,7 @@ export interface OperationAmountProps {
 const OperationAmount = (props: OperationAmountProps) => {
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Text style={{...styles.amount, ...props.textStyle}}>
-        {props.amount} {props.ticker}
-      </Text>
+      <CryptoAmountText ticker={props.ticker || ''} value={props.amount} style={{...styles.amount, ...props.textStyle}} />
     </View>
   );
 };

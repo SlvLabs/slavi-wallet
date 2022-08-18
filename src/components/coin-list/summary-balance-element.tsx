@@ -3,6 +3,7 @@ import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
+import NumberText from '../text/number-text';
 
 export interface BalanceElementProps {
   balance: string;
@@ -22,7 +23,7 @@ const SummaryBalanceElement = (props: BalanceElementProps) => {
           {props.ticker}
         </Text>
       )}
-      <Text style={{...styles.balance, ...props.balanceStyle}}>{balance}</Text>
+      <NumberText value={balance}  style={{...styles.balance, ...props.balanceStyle}}/>
     </View>
   );
 };

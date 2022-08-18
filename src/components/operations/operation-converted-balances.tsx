@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, ViewStyle, Text, TextStyle} from 'react-native';
 import theme from '../../theme';
+import NumberText from '../text/number-text';
+import CryptoAmountText from '../text/crypto-amount-text';
 
 export interface OperationConvertedBalancesProps {
   cryptoBalance: string;
@@ -14,17 +16,14 @@ export interface OperationConvertedBalancesProps {
 const OperationConvertedBalances = (props: OperationConvertedBalancesProps) => {
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Text style={{...styles.cryptoBalance, ...props.textStyle}}>
-        {`${props.cryptoBalance} ${props.cryptoTicker}`}
-      </Text>
+      <CryptoAmountText ticker={props.cryptoTicker} value={props.cryptoBalance} style={{...styles.cryptoBalance, ...props.textStyle}} />
       <View style={styles.delimiter}>
         <Text style={{...styles.fiatBalance, ...props.textStyle}}>
           |
         </Text>
       </View>
-      <Text style={{...styles.fiatBalance, ...props.textStyle}}>
-        {`${props.fiatBalance} ${props.fiatTicker}`}
-      </Text>
+      <CryptoAmountText ticker={props.fiatTicker} value={props.fiatBalance} style={{...styles.fiatBalance, ...props.textStyle}} />
+      <NumberText value={props.fiatBalance} style={{...styles.fiatBalance, ...props.textStyle}} />
     </View>
   );
 };

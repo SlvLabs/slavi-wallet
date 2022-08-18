@@ -2,10 +2,9 @@ import React from 'react';
 import { Text } from 'react-native';
 import {Image, StyleSheet, View} from 'react-native';
 import getImageSource from '../../utils/get-image-source';
-import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
-import Layout from '../../utils/layout';
 import CustomIcon from '../custom-icon/custom-icon';
+import NumberText from '../text/number-text';
 
 export interface TxInfoProps {
   srcCoin: string;
@@ -32,7 +31,7 @@ function CoinRow(props: CoinRowProps) {
         <Text style={styles.coinText}>{coin}</Text>
       </View>
       <View style={styles.rightColumn}>
-        <Text style={styles.amountText}>{amount}</Text>
+        <NumberText value={amount} style={styles.amountText} />
       </View>
     </View>
   );
@@ -40,8 +39,6 @@ function CoinRow(props: CoinRowProps) {
 
 export default function TxInfo(props: TxInfoProps) {
   const {srcLogo, srcCoin, srcAmount, dstCoin, dstAmount, dstLogo} = props;
-
-  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>

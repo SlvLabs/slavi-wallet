@@ -13,6 +13,7 @@ import CoinType from '@slavi/wallet-core/src/utils/coin-types';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
 import PriceWithChange from './price-with-change';
 import Layout from '../../utils/layout';
+import NumberText from '../text/number-text';
 
 export interface CoinDisplayData {
   name: string;
@@ -95,16 +96,18 @@ const CoinsListElement = (props: CoinListElementProps) => {
       </View>
       <View style={styles.col2}>
         <View style={styles.coinBalanceRow}>
-          <Text style={{...styles.coinBalanceText, ...styles.coinBalance}}>
-            {makeRoundedBalance(cryptoPercision, total)}
-          </Text>
+          <NumberText
+            value={makeRoundedBalance(cryptoPercision, total)}
+            style={{...styles.coinBalanceText, ...styles.coinBalance}}
+          />
           <Text style={styles.coinBalanceText}>{ticker}</Text>
         </View>
         {fiatTotal !== '0' && (
           <View style={styles.fiatBalanceRow}>
-            <Text style={{...styles.fiatBalanceText, ...styles.fiatBalance}}>
-              {makeRoundedBalance(fiatPercision, fiatTotal)}
-            </Text>
+            <NumberText
+              value={makeRoundedBalance(fiatPercision, fiatTotal)}
+              style={{...styles.fiatBalanceText, ...styles.fiatBalance}}
+            />
             <Text style={styles.fiatBalanceText}>{props.fiat}</Text>
           </View>
         )}

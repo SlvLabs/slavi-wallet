@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import theme from '../../theme';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
+import NumberText from '../text/number-text';
 
 export interface ConvertedBalanceElementProps {
   balance: string;
@@ -17,25 +18,19 @@ const ConvertedBalanceElement = (props: ConvertedBalanceElementProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.balanceContainer}>
-        <Text style={styles.balance}>
-          {makeRoundedBalance(4, props.balance)}
-        </Text>
+        <NumberText value={makeRoundedBalance(4, props.balance)} style={styles.balance} />
         {!!props.ticker && <Text style={styles.ticker}>{props.ticker}</Text>}
       </View>
       <View style={styles.convertedBalances}>
         {props.fiatBalance && (
           <View style={styles.fiatBalance}>
-            <Text style={styles.convertedValue}>
-              {makeRoundedBalance(2, props.fiatBalance)}
-            </Text>
+            <NumberText value={makeRoundedBalance(2, props.fiatBalance)} style={styles.convertedValue} />
             <Text style={styles.convertedTicker}>{props.fiatTicker}</Text>
           </View>
         )}
         {props.cryptoBalance && (
           <View style={styles.cryptoBalance}>
-            <Text style={styles.convertedCryptoValue}>
-              {makeRoundedBalance(4, props.cryptoBalance)}
-            </Text>
+            <NumberText value={makeRoundedBalance(4, props.cryptoBalance)} style={styles.convertedCryptoValue} />
             <Text style={styles.convertedCryptoTicker}>{props.cryptoTicker}</Text>
           </View>
         )}

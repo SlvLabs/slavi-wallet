@@ -7,6 +7,7 @@ import BaseModal from '../modal/base-modal';
 import theme from '../../theme';
 import shrinkAddress from '../../utils/shrink-address';
 import OutlineButton from '../buttons/outline-button';
+import CryptoAmountText from '../text/crypto-amount-text';
 
 export interface ConfirmationModalProps {
   visible: boolean;
@@ -31,7 +32,7 @@ export interface ConfirmationModalProps {
 const renderVout = (vout: Recipient, index: number, ticker: string) => (
   <View style={styles.vout} key={'conf_vouts_' + index}>
     <Text style={styles.voutAddress}>{shrinkAddress(vout.address, 9, 6, 20)}</Text>
-    <Text style={styles.voutAmount}>{`${vout.amount} ${ticker}`}</Text>
+    <CryptoAmountText value={vout.amount} ticker={ticker} style={styles.voutAmount} />
   </View>
 );
 
@@ -71,7 +72,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
             <Text style={{...styles.fee, ...props.feeStyle}}>
               {`${t('Fee will be')}`}
             </Text>
-            <Text style={styles.feeValue}>{`${props.fee} ${feeTicker}`}</Text>
+            <CryptoAmountText value={props.fee} ticker={feeTicker} style={styles.feeValue} />
           </View>
         )}
         <View

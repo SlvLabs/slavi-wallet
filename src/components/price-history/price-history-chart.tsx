@@ -13,6 +13,7 @@ import { PriceHistoryElement } from '@slavi/wallet-core/src/providers/ws/message
 import theme from '../../theme';
 import moment from 'moment';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
+import CryptoAmountText from '../text/crypto-amount-text';
 
 export interface PriceHistoryChartData {
   elements: PriceHistoryElement[];
@@ -85,7 +86,7 @@ const PriceHistoryChart = (props: PriceHistoryChartData) => {
     <View style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.contentContainer}>
         <View style={styles.valueContainer}>
-          <Text style={styles.rate}>{selectedRate ? `${makeRoundedBalance(precision, selectedRate)} ${coinConvert}`: ''}</Text>
+          <CryptoAmountText ticker={coinConvert || ''} value={makeRoundedBalance(precision, selectedRate)} style={styles.rate} />
           <Text style={styles.date}>{selectedDate ? moment(selectedDate).format(DATE_FORMAT) : ''}</Text>
         </View>
         <LineChart

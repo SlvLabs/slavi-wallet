@@ -4,6 +4,7 @@ import {Text} from 'react-native-elements';
 import theme from '../../theme';
 import ElementWithChevron, {ChevronType} from './element-with-chevron';
 import Layout from '../../utils/layout';
+import NumberText from '../text/number-text';
 
 export interface PriceWithChangeProps {
   price: number;
@@ -34,9 +35,7 @@ const PriceWithChange = (props: PriceWithChangeProps) => {
     <View style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.priceBlock}>
         <Text style={{...styles.price, ...props.priceStyle}}>{props.currency}</Text>
-        <Text style={{...styles.price, ...props.priceStyle}}>
-          {props.price.toFixed(precision)}
-        </Text>
+        <NumberText value={props.price.toFixed(precision)} style={{...styles.price, ...props.priceStyle}} />
       </View>
       {!!props.change && (
         <ElementWithChevron

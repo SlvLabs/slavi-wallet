@@ -8,6 +8,7 @@ import theme from '../../theme';
 import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Screen from '../../components/screen';
+import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>;
 
@@ -15,12 +16,16 @@ const SettingsScreen = () => {
   const {t, i18n} = useTranslation();
   const navigation = useNavigation();
   const currentCurrency = useFiatSelector();
+  const authService = useAuthService();
 
   const goToMnemonicExport = useCallback(
     () => InteractionManager.runAfterInteractions(
-      () => navigation.navigate(ROUTES.SETTINGS.EXPORT_MNEMONIC)
+      () => {
+        authService.forbid();
+        navigation.navigate(ROUTES.SETTINGS.EXPORT_MNEMONIC);
+      }
     ),
-    [navigation],
+    [navigation, authService],
   );
   const goToMnemonicImport = useCallback(
     () => navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC),
@@ -46,8 +51,11 @@ const SettingsScreen = () => {
   );
 
   const goToSecurity = useCallback(
-    () => navigation.navigate(ROUTES.SETTINGS.SECURITY),
-    [navigation]
+    () => {
+      authService.forbid();
+      navigation.navigate(ROUTES.SETTINGS.SECURITY);
+    },
+    [navigation, authService]
   );
 
   return (

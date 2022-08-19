@@ -6,14 +6,14 @@ import MnemonicArea from '../../components/mnemonic/mnemonic-area';
 import ControlButtons from '../../components/mnemonic/control-buttons';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
-import Screen from '../../components/screen';
+import ScrollableScreen from '../../components/scrollable-screen';
 
 const MnemonicExportScreen = () => {
   const mnemonic = useSelector((state: State) => state.account.mnemonic);
   const words = mnemonic.split(' ');
   const {t} = useTranslation();
   return (
-    <Screen title={t('Export mnemonic phrase')}>
+    <ScrollableScreen title={t('Export mnemonic phrase')}>
       <View style={styles.textBlock}>
         <Text style={styles.description}>
           {t(
@@ -31,7 +31,7 @@ const MnemonicExportScreen = () => {
         mnemonic={mnemonic}
         containerStyle={styles.controlButtonContainer}
       />
-    </Screen>
+    </ScrollableScreen>
   );
 };
 

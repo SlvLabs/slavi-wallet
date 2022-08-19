@@ -155,6 +155,7 @@ const App: () => ReactNode = () => {
     store.dispatch(setGlobalLoading());
     coreBootstraper.loadInitial().then(() => {
       setInitialLoaded(true);
+      services.current.authService?.onAuthChange.add(onAuthChange);
       store.dispatch(unsetGlobalLoading());
     });
   }, [store, coreBootstraper]);
@@ -172,7 +173,6 @@ const App: () => ReactNode = () => {
           console.log('bootstraped');
           trace.stop();
 
-          services.current.authService?.onAuthChange.add(onAuthChange);
 
           store.dispatch<any>(initializationLoad()).then(() => {
             store.dispatch(unsetGlobalLoading());

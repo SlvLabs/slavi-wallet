@@ -106,9 +106,8 @@ const App: () => ReactNode = () => {
     setHelpShow(store.getState().initialization.helpShow);
   });
 
-  store.subscribe(() => {
+  const onAuthChange = useCallback((authorized: boolean) => {
     if(!services.current.authService) {
-      // setIsAuthorized(true);
       return;
     }
 
@@ -116,12 +115,12 @@ const App: () => ReactNode = () => {
 
     if(!state.globalLoading.loading) {
       if (services.current.authService.isAuthEnable()) {
-        setIsAuthorized(state.auth.authorized)
+        setIsAuthorized(authorized)
       } else {
         setIsAuthorized(true);
       }
     }
-  });
+  }, []);
 
   store.subscribe(() =>
     setIsMnemonicConfirmed(store.getState().account.confirmed),
@@ -177,6 +176,8 @@ const App: () => ReactNode = () => {
           store.dispatch<any>(initializationLoad()).then(() => {
             store.dispatch(unsetGlobalLoading());
           });
+
+          services.current.authService?.onAuthChange.add(onAuthChange)
         })
         .catch(e => {
           crashlytics().recordError(e);

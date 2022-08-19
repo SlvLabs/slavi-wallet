@@ -10,22 +10,22 @@ export default function useAutoBlock(authService?: AuthServiceInterface): boolea
 
   useEffect(() => {
     AppState.addEventListener('change', nextAppState => {
-      console.log(appState.current, nextAppState);
       if (!authService) {
         return;
       }
 
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        setLoading(false);
         const now = new Date().getTime();
         if (blockTime.current && blockTime.current >= now - authService.getAutoBlockTimeout()) {
-          authService.authorize();
+          authService.unblockByTime();
         }
         setLoading(false);
         blockTime.current = null;
       } else if (appState.current === 'active' && nextAppState.match(/inactive|background/)) {
-        blockTime.current = new Date().getTime();
         setLoading(true);
-        authService.forbid();
+        blockTime.current = new Date().getTime();
+        authService.blockByTime();
       }
       appState.current = nextAppState;
     });

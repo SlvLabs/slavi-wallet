@@ -42,7 +42,6 @@ import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
-import {BlurView} from '@react-native-community/blur';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -115,7 +114,7 @@ const App: () => ReactNode = () => {
 
     if(!state.globalLoading.loading) {
       if (services.current.authService.isAuthEnable()) {
-        setIsAuthorized(authorized)
+        setIsAuthorized(authorized);
       } else {
         setIsAuthorized(true);
       }
@@ -173,11 +172,11 @@ const App: () => ReactNode = () => {
           console.log('bootstraped');
           trace.stop();
 
+          services.current.authService?.onAuthChange.add(onAuthChange);
+
           store.dispatch<any>(initializationLoad()).then(() => {
             store.dispatch(unsetGlobalLoading());
           });
-
-          services.current.authService?.onAuthChange.add(onAuthChange)
         })
         .catch(e => {
           crashlytics().recordError(e);
@@ -213,30 +212,16 @@ const App: () => ReactNode = () => {
 
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
-      <StatusBar
-        backgroundColor="transparent"
-        translucent={true}
-        barStyle={'light-content'}
-      />
-      {authLoading && Platform.OS === 'ios' && (
-        <BlurView
-          style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
-          blurType="light"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="white"
-        />
-      )}
+      <StatusBar backgroundColor="transparent" translucent={true} barStyle={'light-content'} />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
           {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading} />}
           <SafeAreaProvider>
-            <NavigationContainer theme={DarkTheme} >
+            <NavigationContainer theme={DarkTheme}>
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}
-                isLoading={
-                  isBootstrapped || store.getState().globalLoading.loading !== 0
-                }
+                isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
                 isInitializationFinished={isInitFinishShow}
                 isUpdateRequired={isUpdateRequired}
                 helpShow={helpShow}
@@ -245,15 +230,20 @@ const App: () => ReactNode = () => {
               {!isBootstrapped && <WalletConnectSignRequestModal />}
               {!isBootstrapped && <WalletConnectTxRequestModal />}
               {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
-              {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized}/>}
+              {!isBootstrapped && isAccountInitialized && isInitialized && (
+                <WalletConnectLink loading={!isAuthorized} />
+              )}
             </NavigationContainer>
-            {devMode && <Text style={{
-                backgroundColor: theme.colors.black,
-                color: theme.colors.white,
-                textAlign: 'center',
-              }}>
+            {devMode && (
+              <Text
+                style={{
+                  backgroundColor: theme.colors.black,
+                  color: theme.colors.white,
+                  textAlign: 'center',
+                }}>
                 This is development version!
-            </Text>}
+              </Text>
+            )}
           </SafeAreaProvider>
         </servicesContext.Provider>
       </Provider>

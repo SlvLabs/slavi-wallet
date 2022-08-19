@@ -13,6 +13,7 @@ ENVFILE=.env.production react-native run-ios
 
 ### Build android
 ```shell
+#./gradlew clean
 # dev-environment
 cd android && ENVFILE=.env.development ./gradlew assembleRelease
 

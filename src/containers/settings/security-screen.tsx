@@ -114,7 +114,12 @@ export default function SecurityScreen() {
           <ListItem.Chevron color={theme.colors.textLightGray} size={22} />
         </ListItem>
         <PinCodeModal visible={modalIsShown} onCancel={hideModal} onSuccess={savePin} />
-        <ConfirmationModal visible={disableConfShown} onPositive={disablePin} title={t('disablePinConf')} />
+        <ConfirmationModal
+          visible={disableConfShown}
+          onPositive={disablePin}
+          title={t('disablePinConf')}
+          onCancel={hideDisableConf}
+        />
       </View>
     </Screen>
   );

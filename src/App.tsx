@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Platform, StatusBar, Text} from 'react-native';
+import {AppState, Platform, StatusBar, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {initStore} from './store';
@@ -42,6 +42,7 @@ import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import {BlurView} from '@react-native-community/blur';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -208,6 +209,24 @@ const App: () => ReactNode = () => {
     }
   }, [isUpdateAvailable]);
 
+  const [isFocused, setIsFocused] = useState<boolean>(true);
+  useEffect(() => {
+    const onFocus = () => {
+      setIsFocused(true);
+    };
+
+    const onBlur = () => {
+      setIsFocused(false);
+    };
+
+    AppState.addEventListener('focus', onFocus);
+    AppState.addEventListener('blur', onBlur);
+    return () => {
+      AppState.removeEventListener('focus', onFocus);
+      AppState.removeEventListener('blur', onBlur);
+    }
+  }, []);
+
   const authLoading = useAutoBlock(services.current.authService);
 
   return (
@@ -243,6 +262,14 @@ const App: () => ReactNode = () => {
                 }}>
                 This is development version!
               </Text>
+            )}
+            {!isFocused && Platform.OS === 'ios' && (
+              <BlurView
+                style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
+                blurType="light"
+                blurAmount={10}
+                reducedTransparencyFallbackColor="white"
+              />
             )}
           </SafeAreaProvider>
         </servicesContext.Provider>

@@ -211,19 +211,17 @@ const App: () => ReactNode = () => {
 
   const [isFocused, setIsFocused] = useState<boolean>(true);
   useEffect(() => {
-    const onFocus = () => {
-      setIsFocused(true);
+    const onChange = (newState: 'active' | 'background' | 'inactive' | 'unknown' | 'extension') => {
+      if (newState === 'active') {
+        setIsFocused(true);
+      } else if (newState === 'background' || newState === 'inactive') {
+        setIsFocused(false);
+      }
     };
 
-    const onBlur = () => {
-      setIsFocused(false);
-    };
-
-    AppState.addEventListener('focus', onFocus);
-    AppState.addEventListener('blur', onBlur);
+    AppState.addEventListener('change', onChange);
     return () => {
-      AppState.removeEventListener('focus', onFocus);
-      AppState.removeEventListener('blur', onBlur);
+      AppState.removeEventListener('change', onChange);
     }
   }, []);
 

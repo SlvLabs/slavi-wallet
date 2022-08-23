@@ -1,3 +1,5 @@
+import Layout from './utils/layout';
+
 export default {
   colors: {
     dark: '#171717',
@@ -137,6 +139,16 @@ export default {
       colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],
       center: [100,250],
       radius: 400
+    },
+    radialLoadingGradientAlt: {
+      colors: ['rgba(107, 40, 160, 0.25)', 'rgba(46, 19, 55, 0)'],
+      center: [100,250],
+      radius: 400
+    },
+    radialLoadingGradientBottom: {
+      colors: ['rgba(107, 40, 160, 0.25)', 'rgba(46, 19, 55, 0)'],
+      center: [Layout.window.width / 2, Layout.window.height],
+      radius: Layout.window.width / 2,
     },
     radialBackgroundGradient: {
       colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],

@@ -1,12 +1,14 @@
 import React, {useRef} from 'react';
-import {Image, ImageBackground, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {State} from '../store';
-import {loadingBackground, downLogo} from '../assets/images';
+import {loadingBackground} from '../assets/images';
 import theme from '../theme';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
 import { Animated } from 'react-native';
+import Lottie from 'lottie-react-native';
+import {loading} from '../assets/annimation';
 
 const POINT_COUNT = 4;
 
@@ -35,36 +37,38 @@ const LoadingScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={loadingBackground} style={styles.background}>
-        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
-          <View style={styles.logoView}>
-            <Image source={downLogo} style={styles.logo} />
-          </View>
-          <View style={styles.bottomText}>
-            <View style={styles.welcomeView}>
-              <Text style={styles.welcomeText}>Welcome to</Text>
+        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientAlt}>
+          <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientBottom}>
+            <View style={styles.logoView}>
+              <Lottie source={loading} autoPlay={true} loop={false} style={styles.logo}/>
             </View>
-            <Text style={styles.nameText}>Slavi Multi-Chain</Text>
-            <Text style={styles.nameText}>DApp</Text>
-            {connectionError && (
-              <Text>Problem connecting to the server try again later</Text>
-            )}
-          </View>
+            <View style={styles.bottomText}>
+              <View style={styles.welcomeView}>
+                <Text style={styles.welcomeText}>Welcome to</Text>
+              </View>
+              <Text style={styles.nameText}>Slavi Multi-Chain</Text>
+              <Text style={styles.nameText}>DApp</Text>
+              {connectionError && (
+                <Text>Problem connecting to the server try again later</Text>
+              )}
+            </View>
 
-          <Animated.View style={styles.indicator}>
-            {animations.map((animation, index) =>
-              <Animated.View
-                style={[styles.loadingPoint, {
-                    backgroundColor: animation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [theme.colors.grayDark, theme.colors.green],
-                    })
-                  }]
-                }
-                key={`loading_point_${index}`}
-              />
-            )}
+            <Animated.View style={styles.indicator}>
+              {animations.map((animation, index) =>
+                <Animated.View
+                  style={[styles.loadingPoint, {
+                      backgroundColor: animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [theme.colors.grayDark, theme.colors.violet],
+                      })
+                    }]
+                  }
+                  key={`loading_point_${index}`}
+                />
+              )}
 
-          </Animated.View>
+            </Animated.View>
+          </RadialGradient>
         </RadialGradient>
       </ImageBackground>
     </SafeAreaView>
@@ -123,12 +127,13 @@ const styles = StyleSheet.create({
   logoView: {
     flex: 5,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    paddingTop: 100,
   },
   logo: {
-    width: 212,
-    height: 212,
-    marginBottom: 15,
+    width: 600,
+    height: 600,
   },
   background: {
     flex: 1,
@@ -149,7 +154,8 @@ const styles = StyleSheet.create({
   indicator: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   }
 });
 

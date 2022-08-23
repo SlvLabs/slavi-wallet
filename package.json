@@ -44,6 +44,7 @@
     "expo-linking": "~3.0.0",
     "expo-local-authentication": "~12.1.0",
     "i18next-react-native-language-detector": "^1.0.2",
+    "lottie-react-native": "^5.1.4",
     "moment": "^2.29.1",
     "process": "^0.11.10",
     "react": "17.0.1",

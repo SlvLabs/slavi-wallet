@@ -13,6 +13,7 @@ import NftList from '../../components/nft/nft-list';
 import useTranslation from '../../utils/use-translation';
 import LinearGradient from 'react-native-linear-gradient';
 import {SceneRendererProps} from 'react-native-tab-view/lib/typescript/src/types';
+import BannerCarousel from '../../components/coin-list/banner-carousel';
 
 type Route = {
   key: string;
@@ -95,6 +96,7 @@ const CoinsListScreen = () => {
           onSendClick={navigateToSend}
           onBuyClick={navigateToBuy}
         />
+        <BannerCarousel />
         <View style={styles.content}>
           <TabView
             navigationState={{ index: tabIndex, routes }}

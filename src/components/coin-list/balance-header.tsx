@@ -32,7 +32,7 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={balanceHeader} style={styles.image}>
+      <ImageBackground source={balanceHeader} style={styles.image} resizeMode={'stretch'}>
         <View style={styles.balances}>
           <SummaryBalanceElement
             balance={fiatBalance}
@@ -72,17 +72,22 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    // flex: 1,
     backgroundColor: theme.colors.balanceHeaderBackground,
   },
   image: {
     paddingTop: Layout.isSmallDevice ? 50 : 100,
     height: Layout.isSmallDevice ? 163 : 243,
-    justifyContent: 'center'
+    justifyContent: 'flex-start',
+    flexShrink: 1,
+    flexGrow: 0,
+    // flexBasis: '100%',
   },
   linerGradient: {},
   leftGradient: {},
   rightGradient: {},
   balances: {
+    marginTop: -10,
     paddingLeft: 16,
     paddingRight: 16,
     justifyContent: 'center',

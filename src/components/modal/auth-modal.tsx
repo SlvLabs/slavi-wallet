@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Modal, SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Modal, StatusBar, StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import PinInput from '../controls/pin-input';
 // @ts-ignore
@@ -13,6 +13,7 @@ import OutlineButton from '../buttons/outline-button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 import Spinner from '../spinner';
+import SafeAreaView from 'react-native-safe-area-view';
 
 export interface AuthModalProps {
   visible: boolean;
@@ -171,7 +172,7 @@ export default function AuthModal(props: AuthModalProps) {
     <Modal
       animationType={'none'}
       visible={visible && authService.isAuthEnable()}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} forceInset={{top: 'always'}}>
         {visible && <StatusBar
           backgroundColor={theme.colors.black}
           barStyle={'light-content'}

@@ -1,9 +1,10 @@
-import {SafeAreaView, Text} from 'react-native';
+import {Text} from 'react-native';
 import React from 'react';
+import SafeAreaView from 'react-native-safe-area-view';
 
 const NotificationListScreen = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView forceInset={{top: 'always'}}>
       <Text>Notification screen: coming soon...</Text>
     </SafeAreaView>
   );

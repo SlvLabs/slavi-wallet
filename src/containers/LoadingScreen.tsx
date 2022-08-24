@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {ImageBackground, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {State} from '../store';
 import {loadingBackground} from '../assets/images';
@@ -10,6 +10,7 @@ import { Animated } from 'react-native';
 import Lottie from 'lottie-react-native';
 import {loadingAnimation} from '../assets/annimation';
 import Layout from '../utils/layout';
+import SafeAreaView from 'react-native-safe-area-view';
 
 const POINT_COUNT = 4;
 
@@ -36,7 +37,7 @@ const LoadingScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} forceInset={{top: 'always'}}>
       <ImageBackground source={loadingBackground} style={styles.background}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientAlt}>
           <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientBottom}>

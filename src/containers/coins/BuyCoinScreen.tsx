@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import theme from '../../theme';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
@@ -20,6 +20,7 @@ import ROUTES from '../../navigation/config/routes';
 import NoticeRow from '../../components/error/notice-row';
 import Spinner from '../../components/spinner';
 import Screen from '../../components/screen';
+import SafeAreaView from 'react-native-safe-area-view';
 
 const BuyCoinScreen = () => {
   const route = useRoute<CoinBuyRouteProps>();
@@ -125,7 +126,7 @@ const BuyCoinScreen = () => {
   return (
   <Screen title={t('Buy') + (coinDetails.ticker ? ' ' + coinDetails.ticker : '')}>
     {initError ? (
-      <SafeAreaView style={styles.screen}>
+      <SafeAreaView style={styles.screen} forceInset={{top: 'always'}}>
         <CannotProceedModal
           visible={cannotProceedModalVisible}
           onSubmit={onCannotProceedOK}
@@ -134,7 +135,7 @@ const BuyCoinScreen = () => {
         />
       </SafeAreaView>
     ) : notAvailable ? (
-      <SafeAreaView style={styles.screen}>
+      <SafeAreaView style={styles.screen} forceInset={{top: 'always'}}>
         <CannotProceedModal
           visible={cannotProceedModalVisible}
           onSubmit={onCannotProceedOK}
@@ -143,7 +144,7 @@ const BuyCoinScreen = () => {
         />
       </SafeAreaView>
     ) : (
-      <SafeAreaView style={styles.screen}>
+      <SafeAreaView style={styles.screen} forceInset={{top: 'always'}}>
         <AddressSelector
           label={t('To account')}
           containerStyle={styles.addressSelector}

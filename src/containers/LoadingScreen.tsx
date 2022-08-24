@@ -9,6 +9,7 @@ import RadialGradient from 'react-native-radial-gradient';
 import { Animated } from 'react-native';
 import Lottie from 'lottie-react-native';
 import {loadingAnimation} from '../assets/annimation';
+import Layout from '../utils/layout';
 
 const POINT_COUNT = 4;
 
@@ -132,8 +133,7 @@ const styles = StyleSheet.create({
     paddingTop: 100,
   },
   logo: {
-    width: 600,
-    height: 600,
+    height: Layout.window.height * 600 / 724,
   },
   background: {
     flex: 1,

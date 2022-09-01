@@ -38,10 +38,5 @@ export const hide = require('./hide.png');
 export const show = require('./show.png');
 export const filter = require('./filter.png');
 export const check2 = require('./check-2.png');
-export const banner1 = require('./banner_1.png');
-export const banner2 = require('./banner_2.png');
-export const banner3 = require('./banner_3.png');
-export const banner4 = require('./banner_4.png');
-export const banner5 = require('./banner_5.png');
 
 export * from './earn-stubs';

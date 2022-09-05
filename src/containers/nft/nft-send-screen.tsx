@@ -265,8 +265,6 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     marginTop: 16,
     marginBottom: 20,
-    borderColor: '#fff',
-    borderWidth: 1,
     textAlign: "center",
   },
   button: {

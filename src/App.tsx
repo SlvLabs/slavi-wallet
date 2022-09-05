@@ -233,7 +233,7 @@ const App: () => ReactNode = () => {
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
           <SafeAreaProvider>
-            {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading} />}
+            {!isBootstrapped && isAccountInitialized && <AuthModal visible={!isAuthorized} loading={authLoading} />}
             <NavigationContainer theme={DarkTheme}>
               <MainNavigator
                 isInitialized={isInitialized}

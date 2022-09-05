@@ -9,7 +9,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 
 export default function HelpWavesBackground({children}: {children: ReactNode}) {
   return (
-    <SafeAreaView style={styles.container} forceInset={{top: 'always'}}>
+    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'always'}}>
       <ImageBackground source={loadingBackground} style={styles.background}>
         <ImageBackground source={helpBackground} style={styles.background}>
           <RadialGradient style={styles.flex} {...theme.gradients.radialWavesGradient}>

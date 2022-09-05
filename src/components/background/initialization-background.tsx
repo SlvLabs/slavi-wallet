@@ -12,7 +12,7 @@ export interface InitializationBackgroundProps {
 export default function InitializationBackground(props: InitializationBackgroundProps) {
   const {children} = props;
   return (
-    <SafeAreaView style={styles.container} forceInset={{top: 'always'}}>
+    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'always'}}>
       <RadialGradient style={styles.gradient} {...theme.gradients.radialBackgroundGradient} >
         {children}
       </RadialGradient>

@@ -126,7 +126,7 @@ const BuyCoinScreen = () => {
   return (
   <Screen title={t('Buy') + (coinDetails.ticker ? ' ' + coinDetails.ticker : '')}>
     {initError ? (
-      <SafeAreaView style={styles.screen} forceInset={{top: 'always'}}>
+      <SafeAreaView style={styles.screen} forceInset={{top: 'always', bottom: 'always'}}>
         <CannotProceedModal
           visible={cannotProceedModalVisible}
           onSubmit={onCannotProceedOK}
@@ -135,7 +135,7 @@ const BuyCoinScreen = () => {
         />
       </SafeAreaView>
     ) : notAvailable ? (
-      <SafeAreaView style={styles.screen} forceInset={{top: 'always'}}>
+      <SafeAreaView style={styles.screen} forceInset={{top: 'always', bottom: 'always'}}>
         <CannotProceedModal
           visible={cannotProceedModalVisible}
           onSubmit={onCannotProceedOK}
@@ -144,7 +144,7 @@ const BuyCoinScreen = () => {
         />
       </SafeAreaView>
     ) : (
-      <SafeAreaView style={styles.screen} forceInset={{top: 'always'}}>
+      <SafeAreaView style={styles.screen} forceInset={{top: 'always', bottom: 'always'}}>
         <AddressSelector
           label={t('To account')}
           containerStyle={styles.addressSelector}

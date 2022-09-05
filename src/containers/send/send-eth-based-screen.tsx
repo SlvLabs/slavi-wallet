@@ -3,10 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
-import SendView, {
-  Recipient,
-  RecipientUpdatingData,
-} from '../../components/coin-send/send-view';
+import SendView, {Recipient, RecipientUpdatingData} from '../../components/coin-send/send-view';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
@@ -67,20 +64,21 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   const [isValid, setIsValid] = useState<boolean>(false);
   const [activeQR, setActiveQR] = useState<boolean>(false);
   const [senderIndex, setSenderIndex] = useState<number>();
-  const [txPriority, setTxPriority] = useState<TransactionPriority>(
-    TransactionPriority.average,
-  );
-  const [advancedModalIsShown, setAdvancedModalIsShown] =
-    useState<boolean>(false);
 
+  const [advancedModalIsShown, setAdvancedModalIsShown] = useState<boolean>(false);
   const [advancedGasPrice, setAdvancedGasPrice] = useState<string>();
   const [advancedGasLimit, setAdvancedGasLimit] = useState<string>();
 
+  const [txPriority, _setTxPriority] = useState<TransactionPriority>(TransactionPriority.average);
+
+  const setTxPriority = useCallback((newValue: TransactionPriority) => {
+    setAdvancedGasLimit(undefined);
+    setAdvancedGasPrice(undefined);
+    _setTxPriority(newValue);
+  }, []);
+
   const balancesState = useAddressesBalance(props.coin);
-  const fromAddress =
-    typeof senderIndex !== 'undefined'
-      ? balancesState.balances[senderIndex]?.address
-      : undefined;
+  const fromAddress = typeof senderIndex !== 'undefined' ? balancesState.balances[senderIndex]?.address : undefined;
   const accountBalance =
     typeof senderIndex !== 'undefined' &&
     typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
@@ -88,10 +86,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       : '0';
   const validator = useVoutValidator(props.coin, accountBalance);
 
-  const onQrReadFailed = useCallback(
-    () => SimpleToast.show(t('Can not read qr')),
-    [t],
-  );
+  const onQrReadFailed = useCallback(() => SimpleToast.show(t('Can not read qr')), [t]);
 
   const onQRRead = useCallback(
     (data: any) => {
@@ -122,29 +117,23 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
         amount: parsed.amount || '',
       });
     },
-    [
-      coinDetails.parent,
-      coinSpec.bip21Name,
-      coinSpecService,
-      onQrReadFailed,
-      recipient,
-    ],
+    [coinDetails.parent, coinSpec.bip21Name, coinSpecService, onQrReadFailed, recipient],
   );
 
   const validate = useCallback((strict?: boolean): boolean => {
-    const result = validator(recipient.address, recipient.amount, strict);
+      const result = validator(recipient.address, recipient.amount, strict);
 
-    setIsValid(result.isValid);
-    const tmp: VoutError = {address: [], amount: []};
-    if (result.address) {
-      tmp.address.push(result.address);
-    }
-    if (result.amount) {
-      tmp.amount.push(result.amount);
-    }
-    setVoutError(tmp);
+      setIsValid(result.isValid);
+      const tmp: VoutError = {address: [], amount: []};
+      if (result.address) {
+        tmp.address.push(result.address);
+      }
+      if (result.amount) {
+        tmp.amount.push(result.amount);
+      }
+      setVoutError(tmp);
 
-    return result.isValid;
+      return result.isValid;
   }, [recipient, validator]);
 
   const onRecipientChange = (data: RecipientUpdatingData) => {
@@ -370,8 +359,8 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between'
-  }
+    justifyContent: 'space-between',
+  },
 });
 
 export default SendEthBasedScreen;

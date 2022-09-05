@@ -232,8 +232,8 @@ const App: () => ReactNode = () => {
       <StatusBar backgroundColor="transparent" translucent={true} barStyle={'light-content'} />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>
-          {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading} />}
           <SafeAreaProvider>
+            {!isBootstrapped && <AuthModal visible={!isAuthorized} loading={authLoading} />}
             <NavigationContainer theme={DarkTheme}>
               <MainNavigator
                 isInitialized={isInitialized}

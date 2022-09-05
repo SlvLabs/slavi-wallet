@@ -398,7 +398,7 @@ const translations = {
   help_description_4: 'Safely send, receive, and view NFTs in your wallet and enjoy it',
   helpFinish: 'Finish',
   helpSkip: 'Skip',
-
+  invalidGas: 'Incorrect gas price. Try raising it',
 };
 
 export default translations;

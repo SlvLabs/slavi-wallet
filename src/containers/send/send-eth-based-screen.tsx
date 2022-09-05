@@ -31,6 +31,7 @@ import {useNavigation} from '@react-navigation/native';
 import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 import ScrollableScreen from '../../components/scrollable-screen';
+import InvalidGasPrice from '@slavi/wallet-core/src/services/errors/invalid-gas-price';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -192,13 +193,18 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           addError(text);
         } else {
           setLocked(false);
-          const err1 = except<CreateTransactionError>(CreateTransactionError, e);
-          if (err1) {
-            addError(t('Can not create transaction. Try latter or contact support.'));
+          const err2 = except<InvalidGasPrice>(InvalidGasPrice, e);
+          if(err2) {
+            addError(e.message || t('invalidGas'));
           } else {
-            const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
-            if (err2) {
-              addError(t('Can not create transaction. absurdly high fee.'));
+            const err1 = except<CreateTransactionError>(CreateTransactionError, e);
+            if (err1) {
+              addError(t('Can not create transaction. Try latter or contact support.'));
+            } else {
+              const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
+              if (err2) {
+                addError(t('Can not create transaction. absurdly high fee.'));
+              }
             }
           }
           throw e;

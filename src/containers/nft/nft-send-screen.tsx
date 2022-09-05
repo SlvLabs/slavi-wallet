@@ -23,6 +23,7 @@ import {Decimal80} from '@slavi/wallet-core/src/utils/prepared-decimal';
 import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import ScrollableScreen from '../../components/scrollable-screen';
+import InvalidGasPrice from '@slavi/wallet-core/src/services/errors/invalid-gas-price';
 
 export default function NftSendScreen() {
   const route = useRoute<NftInfoRouteProps>();
@@ -118,7 +119,12 @@ export default function NftSendScreen() {
         if (err) {
           setGeneralError(t('nftNotEnoughNetwork'));
         } else {
-          setGeneralError(t('internal error'));
+          const gasErr = except<InvalidGasPrice>(InvalidGasPrice, e);
+          if(gasErr) {
+            setGeneralError(t('invalidGas'));
+          } else {
+            setGeneralError(t('internal error'));
+          }
         }
       } finally {
         setLoading(false);

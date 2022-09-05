@@ -154,11 +154,14 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     });
     setRecipientPayFee(false);
   };
-
-  const addError = (error: string) => {
+  const setError = useCallback((error: string) => {
     setIsValid(false);
-    setErrors([...errors, error]);
-  };
+    setErrors([error]);
+  }, []);
+
+  const setWarn = useCallback((error: string) => {
+    setErrors([error]);
+  }, []);
 
   const onSubmit = async () => {
     setLocked(true);
@@ -168,14 +171,14 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       }
 
       if (!fromAddress) {
-        addError(t('Source address not specified'));
+        setError(t('Source address not specified'));
         return;
       }
 
       let result;
       try {
         result = await props.pattern.createTransaction(recipient, fromAddress, {
-          transactionPriority: TransactionPriority.average,
+          transactionPriority: txPriority,
           receiverPaysFee: recipientPayFee,
           gasLimit: advancedGasLimit,
           gasPrice: advancedGasPrice,
@@ -190,24 +193,24 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           if (coinDetails.parent && err.coin === coinDetails.parent) {
             text += ` (${coinDetails.parentName})`;
           }
-          addError(text);
+          setError(text);
         } else {
           setLocked(false);
           const err2 = except<InvalidGasPrice>(InvalidGasPrice, e);
-          if(err2) {
-            addError(e.message || t('invalidGas'));
+          if (err2) {
+            setWarn(t('invalidGas'));
           } else {
             const err1 = except<CreateTransactionError>(CreateTransactionError, e);
             if (err1) {
-              addError(t('Can not create transaction. Try latter or contact support.'));
+              setWarn(t('Can not create transaction. Try latter or contact support.'));
             } else {
               const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
               if (err2) {
-                addError(t('Can not create transaction. absurdly high fee.'));
+                setError(t('Can not create transaction. absurdly high fee.'));
               }
             }
           }
-          throw e;
+          //throw e;
         }
       }
 
@@ -215,7 +218,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
         setLocked(false);
         return;
       }
-
+      setErrors([]);
       setConfIsShown(true);
       setTxResult(result);
     } else {
@@ -239,7 +242,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     try {
       await props.pattern.sendTransactions(txResult.transactions);
     } catch (e) {
-      addError(t('Error of broadcast tx. Try again latter or contact support'));
+      setWarn(t('Error of broadcast tx. Try again latter or contact support'));
       return;
     } finally {
       setSendingLocked(false);
@@ -262,12 +265,6 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   };
 
   useDidUpdateEffect(() => validate(), [recipient, validate]);
-
-  useEffect(() => {
-    if (isValid) {
-      setErrors([]);
-    }
-  }, [isValid]);
 
   useEffect(() => {
     if (balancesState.balances.length === 1) {
@@ -318,7 +315,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           advancedIsAllowed={true}
           onAdvancedPress={() => setAdvancedModalIsShown(true)}
         />
-        {!isValid && errors.length > 0 && (
+        {errors.length > 0 && (
           <View style={styles.errors}>
             {errors.map((error, index) => (
               <AlertRow text={error} key={'general_error_' + index} />

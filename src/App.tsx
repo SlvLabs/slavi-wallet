@@ -156,7 +156,12 @@ const App: () => ReactNode = () => {
     store.dispatch(setGlobalLoading());
     coreBootstraper.loadInitial().then(() => {
       setInitialLoaded(true);
-      services.current.authService?.onAuthChange.add(onAuthChange);
+      const authService = services.current.authService;
+      if (authService) {
+
+        setIsAuthorized(authService.getAuthState());
+        authService?.onAuthChange.add(onAuthChange);
+      }
       store.dispatch(unsetGlobalLoading());
     });
   }, [store, coreBootstraper]);

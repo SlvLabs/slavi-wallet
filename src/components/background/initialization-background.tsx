@@ -22,7 +22,7 @@ export default function InitializationBackground(props: InitializationBackground
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.black
+    backgroundColor: theme.colors.black,
   },
   gradient: {
     padding: 32,

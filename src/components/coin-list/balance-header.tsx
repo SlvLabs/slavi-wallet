@@ -46,14 +46,14 @@ const BalanceHeader = (props: BalanceHeaderProps) => {
             title={t('Send')}
             onPress={onSendClick}
             leftIcon={iconsIsShown && <Image source={upButton} style={styles.buttonImage} />}
-            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0}}
+            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0, marginRight: 8}}
             textStyle={styles.buttonText}
           />
           <SimpleButton
             title={t('Receive')}
             onPress={onReceiveClick}
             leftIcon={iconsIsShown && <Image source={downButton} style={styles.buttonImage} />}
-            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0}}
+            containerStyle={{...styles.button, paddingRight: iconsIsShown ? 11 : 0, marginRight: 8}}
             textStyle={styles.buttonText}
           />
           <SimpleButton

@@ -9,6 +9,7 @@ import SolidButton from '../../components/buttons/solid-button';
 import ScrollableArea from '../../components/controls/scrollable-area';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
+import Layout from '../../utils/layout';
 
 const LicenseAgreementScreen = () => {
   const [accepted, setAccepted] = useState<boolean>(false);
@@ -49,9 +50,11 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     textAlign: 'center',
     marginBottom: 20,
+    marginTop: 10,
   },
   license: {
     marginBottom: 20,
+    maxHeight: Layout.window.height - 100,
   },
   agreementView: {
     marginBottom: 24,

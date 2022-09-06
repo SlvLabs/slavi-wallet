@@ -8,12 +8,12 @@ import PointerProgressBar from '../../../components/progress/pointer-progress-ba
 import ConfirmationModal from '../../../components/modal/confirmation-modal';
 import {showFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {useDispatch, useSelector} from 'react-redux';
-import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
 import {store} from '@slavi/wallet-core';
 import InsertableTextArea from '../../../components/controls/insertable-text-area';
 import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
+import Layout from '../../../utils/layout';
 
 const ImportAccountScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -37,7 +37,7 @@ const ImportAccountScreen = () => {
 
   return (
     <InitializationBackground>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView contentContainerStyle={styles.content}>
         <View style={styles.textBlock}>
           <Text style={styles.header}>{t('Import exists account')}</Text>
           <Text style={styles.description}>
@@ -118,6 +118,10 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: theme.colors.red,
     textAlign: 'center',
+  },
+  content: {
+    minHeight: Layout.window.height - 50,
+    paddingTop: 20,
   }
 });
 

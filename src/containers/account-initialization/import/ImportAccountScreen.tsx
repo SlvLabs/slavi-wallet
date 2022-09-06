@@ -13,7 +13,6 @@ import InsertableTextArea from '../../../components/controls/insertable-text-are
 import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
-import Layout from '../../../utils/layout';
 
 const ImportAccountScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -49,12 +48,6 @@ const ImportAccountScreen = () => {
 
         <InsertableTextArea onChange={(value: string) => setMnemonic(value.toLowerCase())} />
         <Text style={styles.error}>{mnemonicError}</Text>
-        <View style={styles.buttonsBlock}>
-          <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
-          <View style={styles.loaderView}>
-            <PointerProgressBar stepsCount={6} activeStep={4}/>
-          </View>
-        </View>
 
         <ConfirmationModal
           onPositive={updateMnemonic}
@@ -66,6 +59,12 @@ const ImportAccountScreen = () => {
           )}
         />
       </KeyboardAwareScrollView>
+      <View style={styles.buttonsBlock}>
+        <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
+        <View style={styles.loaderView}>
+          <PointerProgressBar stepsCount={6} activeStep={4}/>
+        </View>
+      </View>
     </InitializationBackground>
   );
 };
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
   buttonsBlock: {
     flex: 1,
     marginTop: 24,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   loaderView: {
     paddingTop: 17,
@@ -120,7 +119,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   content: {
-    minHeight: Layout.window.height - 50,
     paddingTop: 20,
   }
 });

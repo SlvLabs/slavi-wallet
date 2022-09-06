@@ -8,7 +8,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 export const BuyCoinWebViewScreen = () => {
   const route = useRoute<CoinBuyWebViewProps>();
   return (
-    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'always'}}>
+    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'never'}}>
       <WebView source={{uri: route.params.url}} />
     </SafeAreaView>
   );

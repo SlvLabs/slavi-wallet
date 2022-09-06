@@ -172,7 +172,7 @@ export default function AuthModal(props: AuthModalProps) {
     <Modal
       animationType={'none'}
       visible={visible && authService.isAuthEnable()}>
-      <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'always'}}>
+      <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'never'}}>
         {visible && <StatusBar
           backgroundColor={theme.colors.black}
           barStyle={'light-content'}

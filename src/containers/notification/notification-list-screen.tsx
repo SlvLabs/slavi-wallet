@@ -4,7 +4,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 
 const NotificationListScreen = () => {
   return (
-    <SafeAreaView forceInset={{top: 'always', bottom: 'always'}}>
+    <SafeAreaView forceInset={{top: 'always', bottom: 'never'}}>
       <Text>Notification screen: coming soon...</Text>
     </SafeAreaView>
   );

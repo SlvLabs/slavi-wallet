@@ -34,7 +34,7 @@ class DefaultBoundary extends React.Component<
 
     if (this.state.hasError) {
       return (
-        <SafeAreaView forceInset={{top: 'always', bottom: 'always'}}>
+        <SafeAreaView forceInset={{top: 'always', bottom: 'never'}}>
           <FallbackComponent />
         </SafeAreaView>
       );

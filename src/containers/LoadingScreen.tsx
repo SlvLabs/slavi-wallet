@@ -37,7 +37,7 @@ const LoadingScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'always'}}>
+    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'never'}}>
       <ImageBackground source={loadingBackground} style={styles.background}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientAlt}>
           <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientBottom}>

@@ -1,9 +1,8 @@
 import theme from '../../theme';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {ReactNode} from 'react';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
-import SafeAreaView from 'react-native-safe-area-view';
 
 export interface InitializationBackgroundProps {
   children: ReactNode;
@@ -12,11 +11,11 @@ export interface InitializationBackgroundProps {
 export default function InitializationBackground(props: InitializationBackgroundProps) {
   const {children} = props;
   return (
-    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'never'}}>
+    <View style={styles.container}>
       <RadialGradient style={styles.gradient} {...theme.gradients.radialBackgroundGradient} >
         {children}
       </RadialGradient>
-    </SafeAreaView>
+    </View>
   )
 }
 

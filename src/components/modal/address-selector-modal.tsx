@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View, Text, TextStyle, ScrollView, TouchableOpacity, Platform} from 'react-native';
+import {StyleSheet, View, Text, TextStyle, ScrollView, TouchableOpacity} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import useTranslation from '../../utils/use-translation';
 import {ModalProps} from './base-modal';
@@ -113,11 +113,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingRight: 16,
     paddingLeft: 16,
-    ...Platform.select({
-      android: {
-        marginTop: 12,
-      },
-    }),
   },
   header: {
     flex: 8,

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Modal, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Modal, StyleSheet, Text, View} from 'react-native';
 import theme from '../../theme';
 import PinInput from '../controls/pin-input';
 // @ts-ignore
@@ -13,7 +13,6 @@ import OutlineButton from '../buttons/outline-button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 import Spinner from '../spinner';
-import SafeAreaView from 'react-native-safe-area-view';
 
 export interface AuthModalProps {
   visible: boolean;
@@ -171,12 +170,9 @@ export default function AuthModal(props: AuthModalProps) {
   return (
     <Modal
       animationType={'none'}
-      visible={visible && authService.isAuthEnable()}>
-      <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'never'}}>
-        {visible && <StatusBar
-          backgroundColor={theme.colors.black}
-          barStyle={'light-content'}
-        />}
+      visible={visible && authService.isAuthEnable()}
+      statusBarTranslucent={true}>
+      <View style={styles.container}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
           {loading ? (
             <Spinner />
@@ -212,7 +208,7 @@ export default function AuthModal(props: AuthModalProps) {
             )
           )}
         </RadialGradient>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 }

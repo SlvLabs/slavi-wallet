@@ -1,15 +1,14 @@
 import React, {ReactNode} from 'react';
 import {helpBackground, loadingBackground} from '../../assets/images';
-import {ImageBackground, StyleSheet} from 'react-native';
+import {ImageBackground, StyleSheet, View} from 'react-native';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
-import SafeAreaView from 'react-native-safe-area-view';
 
 export default function HelpWavesBackground({children}: {children: ReactNode}) {
   return (
-    <SafeAreaView style={styles.container} forceInset={{top: 'always', bottom: 'never'}}>
+    <View style={styles.container}>
       <ImageBackground source={loadingBackground} style={styles.background}>
         <ImageBackground source={helpBackground} style={styles.background}>
           <RadialGradient style={styles.flex} {...theme.gradients.radialWavesGradient}>
@@ -19,7 +18,7 @@ export default function HelpWavesBackground({children}: {children: ReactNode}) {
           </RadialGradient>
        </ImageBackground>
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -29,7 +29,8 @@ const FullScreenModal = (props: FullScreenModalProps) => {
   return (
     <Modal
       animationType={props.animationType || defaultAnimation}
-      visible={props.visible}>
+      visible={props.visible}
+      statusBarTranslucent={true}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.container}>
         <View style={styles.paddingContainer}>
           <View style={styles.header}>
@@ -75,6 +76,11 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     backgroundColor: 'transparent',
+    ...Platform.select({
+      android: {
+        marginTop: 50,
+      },
+    }),
   },
   closeIcon: {
     padding: 16,

@@ -11,6 +11,7 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
   const [lastEvent, setLastEvent] = useState<EventType|null>(null);
 
   const eventHandler = useCallback((ev: EventType) => {
+    console.log(ev);
     setLastEvent(ev);
   }, []);
 
@@ -19,6 +20,7 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
     if(loading || !ev) {
       return;
     }
+    console.log(ev);
     if(ev.url && walletConnectService) {
       const parsedUrl = parse(ev.url, true);
       switch (parsedUrl.protocol) {
@@ -36,8 +38,6 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
       if(url) {
         console.log(url)
         walletConnectService.connect(url);
-      } else {
-        throw new Error('Invalid url format');
       }
     }
   }, [walletConnectService, loading]);

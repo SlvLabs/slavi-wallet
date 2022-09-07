@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   license: {
-    marginBottom: 20,
+    marginBottom: Layout.isSmallDevice ? 4 : 20,
     maxHeight: Layout.window.height - 100,
   },
   agreementView: {

@@ -40,9 +40,9 @@ const BaseModal = (props: BaseModalProps) => {
       </TouchableWithoutFeedback>
     </View>
   );
-  // TODO: make so beautiful
+
   return (
-    <Modal animationType="fade" transparent={true} visible={props.visible}>
+    <Modal animationType="fade" transparent={true} visible={props.visible} statusBarTranslucent={true}>
       {props.onCancel ? (
         <TouchableOpacity style={styles.centeredView} onPress={props.onCancel}>
           {content}

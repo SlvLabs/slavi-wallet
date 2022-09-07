@@ -89,7 +89,7 @@ const FullFilterDate = (props: FullFilterDateProps) => {
   );
 
   return (
-    <Modal visible={!!props.visible} transparent={true}>
+    <Modal visible={!!props.visible} transparent={true} statusBarTranslucent={true}>
       <DateRangePicker
         open={props.visible}
         endDate={finishDate}

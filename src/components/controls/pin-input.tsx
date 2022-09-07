@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
 import CustomIcon from '../custom-icon/custom-icon';
+import Layout from '../../utils/layout';
 
 export interface PinInputProps {
   length: number;
@@ -151,7 +152,7 @@ export default function PinInput(props: PinInputProps) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
+    paddingTop: Layout.isSmallDevice ? 10 : 30,
   },
   label: {
     fontFamily: theme.fonts.default,
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
   keyboardContainer: {
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 64,
+    marginTop: Layout.isSmallDevice ? 20 : 64,
   },
   line: {
     flexDirection: 'row',

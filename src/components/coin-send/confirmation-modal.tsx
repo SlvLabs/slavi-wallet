@@ -8,6 +8,7 @@ import theme from '../../theme';
 import shrinkAddress from '../../utils/shrink-address';
 import OutlineButton from '../buttons/outline-button';
 import CryptoAmountText from '../text/crypto-amount-text';
+import makeRoundedBalance from '../../utils/make-rounded-balance';
 
 export interface ConfirmationModalProps {
   visible: boolean;
@@ -32,7 +33,7 @@ export interface ConfirmationModalProps {
 const renderVout = (vout: Recipient, index: number, ticker: string) => (
   <View style={styles.vout} key={'conf_vouts_' + index}>
     <Text style={styles.voutAddress}>{shrinkAddress(vout.address, 9, 6, 20)}</Text>
-    <CryptoAmountText value={vout.amount} ticker={ticker} style={styles.voutAmount} />
+    <CryptoAmountText value={makeRoundedBalance(8, vout.amount)} ticker={ticker} style={styles.voutAmount} />
   </View>
 );
 

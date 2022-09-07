@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     width: '100%',
     ...Platform.select({
       ios: {
-        paddingTop: 50,
+        paddingTop: Layout.isSmallDevice ? 20 : 50,
       },
       android: {
         paddingTop: 36,

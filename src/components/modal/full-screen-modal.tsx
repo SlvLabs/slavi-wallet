@@ -9,6 +9,7 @@ import {
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 import LinearGradient from 'react-native-linear-gradient';
+import Layout from '../../utils/layout';
 
 export interface FullScreenModalProps {
   visible: boolean;
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
     ...Platform.select({
       ios: {
-        paddingTop: 50,
+        paddingTop: Layout.isSmallDevice ? 20: 50,
       },
     })
   },

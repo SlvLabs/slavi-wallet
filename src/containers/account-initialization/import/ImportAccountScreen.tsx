@@ -13,6 +13,7 @@ import InsertableTextArea from '../../../components/controls/insertable-text-are
 import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
+import Layout from '../../../utils/layout';
 
 const ImportAccountScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -72,7 +73,7 @@ const ImportAccountScreen = () => {
 const styles = StyleSheet.create({
   headerContainer: {
     marginBottom: 15,
-    marginTop: 10,
+    marginTop: Layout.isSmallDevice ? 0 : 10,
   },
   descriptionContainer: {
     margin: 20,

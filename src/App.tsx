@@ -188,6 +188,7 @@ const App: () => ReactNode = () => {
         .loadWalletServices()
         .then(() => {
           console.log('bootstraped');
+
           trace.stop();
 
           store.dispatch<any>(initializationLoad()).then(() => {

@@ -43,7 +43,6 @@ export const createCoreBootstrap = (
   appVersion?: string,
 ) => {
   const firebaseService = new FirebaseService(navigation);
-  firebaseService.init();
 
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
@@ -68,7 +67,10 @@ export const createCoreBootstrap = (
   });
   return {
     loadInitial: () => coreBootstrap.loadInitial(translations),
-    loadWalletServices: () => coreBootstrap.loadWalletServices(),
+    loadWalletServices: async () => {
+      await firebaseService.init();
+      return coreBootstrap.loadWalletServices();
+    },
   };
 };
 const bootstrap = async (
@@ -89,6 +91,7 @@ const bootstrap = async (
     devMode,
     appVersion,
   );
+
   return coreBootstrap.loadInitial();
 };
 

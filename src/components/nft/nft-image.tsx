@@ -22,18 +22,22 @@ export default function NftImage(props: NftImageProps) {
 
   if (!image) {
     return (
-      <View style={{...styles.placeHolderContainer, ...placeHolderContainerStyle}}>
-        <Image source={nftPlaceholder1} style={styles.placeHolderImage} />
-        <Text style={styles.placeHolderText}>{t('nftNoMediaDisplay')}</Text>
+      <View style={{...styles.container, ...containerStyle}}>
+        <View style={{...styles.placeHolderContainer, ...placeHolderContainerStyle}}>
+          <Image source={nftPlaceholder1} style={styles.placeHolderImage} />
+          <Text style={styles.placeHolderText}>{t('nftNoMediaDisplay')}</Text>
+        </View>
       </View>
     );
   }
 
   if (image === IMAGE_UNSUPPORTED) {
     return (
-      <View style={{...styles.placeHolderContainer, ...placeHolderContainerStyle}}>
-        <Image source={nftPlaceholder2} style={styles.placeHolderImage} />
-        <Text style={styles.placeHolderText}>{t('nftContentNotSupported')}</Text>
+      <View style={{...styles.container, ...containerStyle}}>
+        <View style={{...styles.placeHolderContainer, ...placeHolderContainerStyle}}>
+          <Image source={nftPlaceholder2} style={styles.placeHolderImage} />
+          <Text style={styles.placeHolderText}>{t('nftContentNotSupported')}</Text>
+        </View>
       </View>
     );
   }
@@ -46,7 +50,10 @@ export default function NftImage(props: NftImageProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image: {
     width: Layout.isSmallDevice ? 240 : 327,
     height: Layout.isSmallDevice ? 240 : 327,

@@ -27,8 +27,8 @@ export default function ScreenHeader(props: ScreenHeaderProps) {
   const onBackPress = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack();
-      Keyboard.dismiss();
     }
+    Keyboard.dismiss();
   }, [navigation]);
 
   return (

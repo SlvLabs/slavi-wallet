@@ -7,7 +7,7 @@ import PinCodeModal from '../../components/modal/pin-code-modal';
 import {hasHardwareAsync} from 'expo-local-authentication';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {ListItem} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useAutoBlockOptions from '../../utils/use-auto-block-options';
 import Screen from '../../components/screen';
@@ -21,7 +21,7 @@ export default function SecurityScreen() {
   const [pinEnabled, setPinEnabled] = useState<boolean>(authService.isAuthEnable);
   const [biometricEnabled, setBiometricEnabled] = useState<boolean>(authService.isBiometricEnable);
   const [biometricIsSupported, setBiometricIsSupported] = useState<boolean>(false);
-  const [autoBlockTimeout, setAutoBlockTimeout] = useState<string>(options[authService.getAutoBlockTimeout()]);
+  const [autoBlockTimeout] = useState<string>(options[authService.getAutoBlockTimeout()]);
   const {t} = useTranslation();
   const navigation = useNavigation();
 
@@ -70,11 +70,10 @@ export default function SecurityScreen() {
     hasHardwareAsync().then(result => setBiometricIsSupported(result));
   }, []);
 
-  useEffect(() => {
-    const listener = () => setAutoBlockTimeout(options[authService.getAutoBlockTimeout()]);
-    navigation.addListener('focus', listener);
-    return () => navigation.removeListener('focus', listener);
-  }, [navigation, authService, options]);
+  useFocusEffect(() => {
+    authService.forbid();
+  });
+
   return (
     <Screen title={'Security'}>
       <View style={styles.container}>

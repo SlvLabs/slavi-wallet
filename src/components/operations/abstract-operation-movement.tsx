@@ -1,75 +1,48 @@
-import {OperationElementProps} from './operation-element';
+import {OperationProps} from './operation-element';
 import React from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {ImageSourcePropType, StyleSheet, TouchableOpacity, View} from 'react-native';
 import OperationParticipants from './operation-participants';
 import OperationStatus from './operation-status';
-import OperationConvertedBalances from './operation-converted-balances';
 import OperationAmount, {Type} from './operation-amount';
 import OperationCoinType from './operation-coin-type';
-import {ProcessedOperation} from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
+import {ListOperation} from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
-import {Image} from 'react-native-elements';
-import getImageSource from '../../utils/get-image-source';
 import theme from '../../theme';
+import {OperationsLogo} from './operations-logo';
 
-export interface AbstractOperationMovementProps extends OperationElementProps {
-  operation: ProcessedOperation;
-  fiatTicker: string;
-  cryptoTicker: string;
+export interface AbstractOperationMovementProps extends OperationProps {
+  operation: ListOperation;
   balanceType: Type;
-  addresses?: string[];
-  type?: string;
-  logo?: string;
+  title?: string;
+  logo: ImageSourcePropType;
+  extraLogo?: ImageSourcePropType;
 }
 
-const cryptoPercision = 8;
-const fiatPercision = 2;
+const cryptoPrecision = 8;
 const cryptoLimit = 0.00000001
-const fiatLimit = 0.001
 
 const AbstractOperationMovement = (props: AbstractOperationMovementProps) => {
   const coin = useCoinDetails(props.operation.coin);
+
   return (
-    <View style={{...styles.container, ...props.containerStyle}}>
-      <View style={styles.logoContainer}>
-        <Image
-          source={getImageSource(coin?.logo)}
-          style={styles.logo}
-          PlaceholderContent={<ActivityIndicator />}
-        />
-      </View>
-      <View style={{flex: 10}}>
-        <View style={styles.topRow}>
-          <OperationParticipants participants={props.addresses} />
-          <View style={styles.topRight}>
-            <OperationAmount
-              amount={makeRoundedBalance(cryptoPercision, props.operation.amount, cryptoLimit)}
-              type={props.balanceType}
-              ticker={coin?.ticker}
-            />
-            {props.type && <OperationCoinType type={props.type} />}
-          </View>
-        </View>
-        <View style={styles.bottomRow}>
+    <TouchableOpacity style={{...styles.container, ...props.containerStyle}} onPress={props.onPress}>
+      <OperationsLogo logo={props.logo} extraLogo={props.extraLogo} containerStyle={styles.logoContainer} />
+      <View style={styles.dataColumn}>
+        <View style={styles.leftColumn}>
+          <OperationParticipants participant={props.title} />
           <OperationStatus status={props.operation.status} />
-          <OperationConvertedBalances
-            cryptoBalance={makeRoundedBalance(
-              cryptoPercision,
-              props.operation.cryptoAmount,
-              cryptoLimit,
-            )}
-            fiatBalance={makeRoundedBalance(
-              fiatPercision,
-              props.operation.fiatAmount,
-              fiatLimit,
-            )}
-            cryptoTicker={props.cryptoTicker}
-            fiatTicker={props.fiatTicker}
+        </View>
+        <View style={styles.rightColumn}>
+          <OperationAmount
+            amount={makeRoundedBalance(cryptoPrecision, props.operation.amount, cryptoLimit)}
+            type={props.balanceType}
+            ticker={coin?.ticker}
           />
+          {coin?.type && <OperationCoinType type={coin.type} />}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -82,42 +55,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.maxTransparent,
   },
-  topRow: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignItems: 'center',
-  },
-  bottomRow: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignItems: 'center',
-  },
-  amountContainer: {},
-  amount: {},
-  typeTagContainer: {},
-  typeTag: {},
-  statusContainer: {},
-  status: {},
-  convertedBalanceContainer: {},
-  convertedBalance: {},
-  topRight: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
   logoContainer: {
-    justifyContent: 'center',
     paddingRight: 8,
     flex: 2,
   },
-  logo: {
-    width: 36,
-    height: 36,
+  dataColumn: {
+    flex: 10,
+    flexDirection: 'row',
+  },
+  leftColumn: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flex: 1,
+  },
+  rightColumn: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flex: 1,
   },
 });
 

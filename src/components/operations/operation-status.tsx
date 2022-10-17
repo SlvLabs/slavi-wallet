@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     fontSize: 12,
     lineHeight: 16,
+    textTransform: 'capitalize',
   },
 });
 

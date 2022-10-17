@@ -154,7 +154,7 @@ export default function NftSendScreen() {
   const hideConfModal = useCallback(() => setConfModalIsVisible(false), []);
 
   const sendTx = useCallback(async () => {
-    if(!tx || !data) {
+    if(!tx || !data || !address) {
       return;
     }
 
@@ -165,6 +165,7 @@ export default function NftSendScreen() {
           id: data.id,
           contract: data?.contract,
           coin: data?.network.id,
+          address: address,
         },
       );
 

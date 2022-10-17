@@ -4,7 +4,7 @@ import notifee, {AndroidImportance, AuthorizationStatus} from '@notifee/react-na
 import {Event} from '@notifee/react-native/src/types/Notification';
 import NotificationSounds, {Sound} from 'react-native-notification-sounds';
 
-export type NavigationFunction = (route: string) => void;
+export type NavigationFunction = (route: string, params?: any) => void;
 
 export class FirebaseService {
   private readonly navigation: NavigationFunction;
@@ -63,7 +63,6 @@ export class FirebaseService {
   }
 
   async getToken() {
-    console.log('token: ', await messaging().getToken())
     return messaging().getToken();
   }
 
@@ -72,12 +71,10 @@ export class FirebaseService {
   }
 
   private onOpen(message: FirebaseMessagingTypes.RemoteMessage): void {
-    console.log('initial message', message);
-    this.navigate(message?.data?.type);
+    this.navigate(message?.data?.type, message.data);
   }
 
   private async onMessage(message: FirebaseMessagingTypes.RemoteMessage): Promise<void> {
-    console.log(message)
     if(!message.notification?.body) {
       return;
     }
@@ -106,16 +103,13 @@ export class FirebaseService {
       data: message.data,
     });
 
-    console.log('new message',message);
   }
 
   private async onLocalNotification(notification: Event) {
-    console.log('NOTIFICATION', notification);
-    this.navigate(notification.detail.pressAction?.launchActivity);
+    this.navigate(notification.detail.pressAction?.launchActivity, notification.detail.notification?.data);
   }
 
-  private navigate(notificationType?: string) {
-    console.log('NAVIGATE:', notificationType);
+  private navigate(notificationType?: string, data?: { [key: string]: string }) {
     if(!this.navigation) {
       return;
     }
@@ -123,6 +117,14 @@ export class FirebaseService {
     switch (notificationType) {
       case 'operations':
         this.navigation(ROUTES.TABS.OPERATIONS);
+        if(data?.operationId) {
+          this.navigation(ROUTES.TABS.OPERATIONS, {
+            screen: ROUTES.OPERATIONS.DETAILS,
+            params: {
+              id: +data.operationId,
+            }
+          });
+        }
         break;
       case 'swap':
         this.navigation(ROUTES.TABS.SWAP);

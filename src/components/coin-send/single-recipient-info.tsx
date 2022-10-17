@@ -26,7 +26,12 @@ export default function SingleRecipientInfo({amount, address, ticker, logo}: Sin
         </View>
         <View style={styles.amountCol}>
           <Text style={styles.sentLabel}>{t('sent')}</Text>
-          <CryptoAmountText value={amount} style={styles.amountText} ticker={ticker} />
+          <CryptoAmountText
+            value={amount}
+            style={styles.amountText}
+            ticker={ticker}
+            tickerStyle={styles.amountText}
+          />
         </View>
       </View>
       <View style={styles.delimiterRow}>

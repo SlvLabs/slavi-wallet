@@ -38,5 +38,13 @@ export const hide = require('./hide.png');
 export const show = require('./show.png');
 export const filter = require('./filter.png');
 export const check2 = require('./check-2.png');
+export const nftWithdraw = require('./nft-withdrawal.png');
+export const nftDeposit = require('./nft-deposit.png');
+export const operationCall = require('./opearion-call.png');
+export const operationApproveCall = require('./opearion-call.png');
+export const operationBurn = require('./operation-burn.png');
+export const operationSwap = require('./operation-swap.png');
+export const operationNftTransfer = require('./operation-nft-transfer.png');
+export const swapIcon = require('./swap-icon.png');
 
 export * from './earn-stubs';

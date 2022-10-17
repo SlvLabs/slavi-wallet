@@ -4,7 +4,7 @@ import React, {useMemo} from 'react';
 import OperationHeader from './operation-header';
 import OperationElement from './operation-element';
 import {
-  Operation,
+  ListOperation,
   OperationListParams,
 } from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
 import {Icon} from 'react-native-elements';
@@ -14,8 +14,6 @@ import OperationListFilter from './filter/operation-list-filter';
 
 export interface OperationsListProps {
   sections: OperationSections;
-  fiatTicker: string;
-  cryptoTicker: string;
   onEndReached: () => void;
   filter: (params: OperationListParams) => void;
   containerStyle?: ViewStyle;
@@ -25,7 +23,7 @@ export interface OperationsListProps {
 
 interface Section {
   title: Date;
-  data: Operation[];
+  data: ListOperation[];
 }
 
 const OperationsList = (props: OperationsListProps) => {
@@ -61,8 +59,6 @@ const OperationsList = (props: OperationsListProps) => {
             renderItem={item => (
               <OperationElement
                 operation={item.item}
-                fiatTicker={props.fiatTicker}
-                cryptoTicker={props.cryptoTicker}
               />
             )}
             onEndReached={props.onEndReached}

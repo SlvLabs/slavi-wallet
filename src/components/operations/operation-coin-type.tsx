@@ -18,9 +18,6 @@ const OperationCoinType = (props: OperationCoinTypeProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 4,
-    borderRadius: 4,
-    backgroundColor: theme.colors.lightGray,
     justifyContent: 'center',
     textAlignVertical: 'center',
     alignItems: 'center',

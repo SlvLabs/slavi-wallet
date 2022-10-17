@@ -13,13 +13,19 @@ export interface OperationAmountProps {
   type: Type;
   containerStyle?: ViewStyle;
   textStyle?: TextStyle;
+  tickerStyle?: TextStyle;
   ticker?: string;
 }
 
 const OperationAmount = (props: OperationAmountProps) => {
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <CryptoAmountText ticker={props.ticker || ''} value={props.amount} style={{...styles.amount, ...props.textStyle}} />
+      <CryptoAmountText
+        ticker={props.ticker || ''}
+        value={props.amount}
+        style={{...styles.amount, ...props.textStyle}}
+        tickerStyle={{...styles.amount, ...props.tickerStyle}}
+      />
     </View>
   );
 };

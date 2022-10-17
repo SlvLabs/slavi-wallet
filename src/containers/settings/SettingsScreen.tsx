@@ -28,8 +28,10 @@ const SettingsScreen = () => {
     [navigation, authService],
   );
   const goToMnemonicImport = useCallback(
-    () => navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC),
-    [navigation],
+    () => {
+      authService.forbid();
+      navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC);
+    }, [navigation]
   );
   const goToLanguage = useCallback(
     () => InteractionManager.runAfterInteractions(

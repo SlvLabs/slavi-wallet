@@ -7,11 +7,19 @@ import ControlButtons from '../../components/mnemonic/control-buttons';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
 import ScrollableScreen from '../../components/scrollable-screen';
+import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
+import {useFocusEffect} from '@react-navigation/native';
 
 const MnemonicExportScreen = () => {
   const mnemonic = useSelector((state: State) => state.account.mnemonic);
   const words = mnemonic.split(' ');
+  const authService = useAuthService();
   const {t} = useTranslation();
+
+  useFocusEffect(() => {
+    authService.forbid();
+  });
+  
   return (
     <ScrollableScreen title={t('Export mnemonic phrase')}>
       <View style={styles.textBlock}>

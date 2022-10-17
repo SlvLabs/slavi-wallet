@@ -141,9 +141,9 @@ const App: () => ReactNode = () => {
     return performanceMonitorInterface;
   }, []);
 
-  const navigate = useCallback((route: string) => {
+  const navigate = useCallback((route: string, params?: any) => {
     if(navigationRef.current) {
-      navigationRef.current.navigate(route);
+      navigationRef.current.navigate(route, params);
     }
   }, []);
 
@@ -243,7 +243,6 @@ const App: () => ReactNode = () => {
 
   const authLoading = useAutoBlock(services.current.authService);
 
-  // messaging().getToken().then((t) => console.log(t));
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
       <StatusBar backgroundColor="transparent" translucent={true} barStyle={'light-content'} />

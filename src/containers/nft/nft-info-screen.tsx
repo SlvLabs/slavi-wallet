@@ -56,16 +56,19 @@ export default function NftInfoScreen() {
           <NftInfoElement
             label={t('nftParamAddress')}
             value={shrinkAddress(data.contract)}
-            isLast={data.type !== 'ERC-1155'}
           />
           {data.type === 'ERC-1155' && (
             <NftInfoElement
               label={t('nftParamAmount')}
               value={`${data.amount || '0'} ${data.ticker || ''}`}
-              isLast={true}
               valueStyle={styles.amount}
             />
           )}
+          <NftInfoElement
+            label={t('nftParamStorageAddress')}
+            value={shrinkAddress(data.owner)}
+            isLast={true}
+          />
         </View>
         {!!data.description && (
           <View style={styles.descriptionContainer}>
@@ -74,7 +77,7 @@ export default function NftInfoScreen() {
             </Collapse>
           </View>
         )}
-        {!!data.properties && (
+        {!!data.properties && data.properties.length > 0 && (
           <View style={styles.propertiesContainer}>
             <Collapse title={t('nftProperties')} collapsed={true}>
               <View style={styles.properties}>

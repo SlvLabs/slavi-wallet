@@ -33,7 +33,12 @@ export interface ConfirmationModalProps {
 const renderVout = (vout: Recipient, index: number, ticker: string) => (
   <View style={styles.vout} key={'conf_vouts_' + index}>
     <Text style={styles.voutAddress}>{shrinkAddress(vout.address, 9, 6, 20)}</Text>
-    <CryptoAmountText value={makeRoundedBalance(8, vout.amount)} ticker={ticker} style={styles.voutAmount} />
+    <CryptoAmountText
+      value={makeRoundedBalance(8, vout.amount)}
+      ticker={ticker}
+      style={styles.voutAmount}
+      tickerStyle={styles.voutAmount}
+    />
   </View>
 );
 
@@ -73,7 +78,12 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
             <Text style={{...styles.fee, ...props.feeStyle}}>
               {`${t('Fee will be')}`}
             </Text>
-            <CryptoAmountText value={props.fee} ticker={feeTicker} style={styles.feeValue} />
+            <CryptoAmountText
+              value={props.fee}
+              ticker={feeTicker}
+              style={styles.feeValue}
+              tickerStyle={styles.feeValue}
+            />
           </View>
         )}
         <View

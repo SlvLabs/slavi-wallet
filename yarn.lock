@@ -3216,7 +3216,7 @@
 
 "@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#master":
   version "1.0.0"
-  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#0bc16b0ef16799d4fcce5f5d397a7400f0a7db33"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#212439fa289204362ffa29bc1cdd046a4fff2b19"
   dependencies:
     "@reduxjs/toolkit" "^1.3.6"
     "@slavi/crypto-core" "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master"

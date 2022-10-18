@@ -4,7 +4,7 @@ import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 
 export interface OperationParticipantsProps {
-  participants?: string[];
+  participant?: string;
   containerStyle?: ViewStyle;
   participantStyle?: TextStyle;
   additionalStyle?: TextStyle;
@@ -12,13 +12,7 @@ export interface OperationParticipantsProps {
 
 const OperationParticipants = (props: OperationParticipantsProps) => {
   const {t} = useTranslation();
-  let firstParticipant = t('Unknown participants');
-  let additionalParticipants = 0;
-
-  if (Array.isArray(props.participants) && props.participants.length > 0) {
-    firstParticipant = props.participants[0];
-    additionalParticipants = props.participants.length - 1;
-  }
+  let firstParticipant = props.participant || t('Unknown participants');
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
@@ -30,12 +24,6 @@ const OperationParticipants = (props: OperationParticipantsProps) => {
           {firstParticipant}
         </Text>
       </View>
-      {additionalParticipants > 0 && (
-        <Text
-          style={{...styles.additionalParticipants, ...props.additionalStyle}}>
-          {`(+${additionalParticipants}...)`}
-        </Text>
-      )}
     </View>
   );
 };
@@ -53,15 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: theme.colors.white,
-    width: 150,
-  },
-  additionalParticipants: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 16,
-    lineHeight: 22,
-    color: theme.colors.white,
+    width: 160,
   },
 });
 

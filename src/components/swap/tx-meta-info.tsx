@@ -38,7 +38,12 @@ export default function TxMetaInfo(props: TxMetaInfoProps) {
       </View>
       <View style={styles.feeRow}>
         <Text style={styles.label}>{feeLabel}</Text>
-        <CryptoAmountText ticker={feeTicker} value={fee} style={styles.feeText} />
+        <CryptoAmountText
+          ticker={feeTicker}
+          value={fee}
+          style={styles.feeText}
+          tickerStyle={styles.feeText}
+        />
       </View>
     </View>
   );

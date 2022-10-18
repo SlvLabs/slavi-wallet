@@ -2,9 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import FullScreenModal from '../../modal/full-screen-modal';
 import useTranslation from '../../../utils/use-translation';
-import FullFilterChipList, {ChipData} from './full-filter-chip-list';
+import FullFilterChipList from './full-filter-chip-list';
 import OperationType from '@slavi/wallet-core/src/utils/operation-list/operation-type';
 import theme from '../../../theme';
+import {availableType} from './available-filter-type';
 
 export interface TypeFilterModalProps {
   visible: boolean;
@@ -12,10 +13,6 @@ export interface TypeFilterModalProps {
   onSubmit: (statuses: OperationType[]) => void;
   selectedTypes: OperationType[];
 }
-
-const types = Object.entries(OperationType).map(
-  ([key, value]): ChipData => ({id: key, text: value}),
-);
 
 const TypeFilterModal = (props: TypeFilterModalProps) => {
   const {onSubmit, selectedTypes: initialSelectedTypes} = props;
@@ -61,7 +58,7 @@ const TypeFilterModal = (props: TypeFilterModalProps) => {
       rightIconColor={theme.colors.green}>
       <ScrollView>
         <FullFilterChipList
-          chips={types}
+          chips={availableType}
           onSelect={onTypePress}
           selectedChips={selectedTypes}
         />

@@ -43,6 +43,7 @@ import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
+import {NavigationContainerRef} from '@react-navigation/core';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] =
@@ -122,6 +123,8 @@ const App: () => ReactNode = () => {
     }
   }, []);
 
+  const navigationRef = useRef<NavigationContainerRef>(null);
+
   store.subscribe(() =>
     setIsMnemonicConfirmed(store.getState().account.confirmed),
   );
@@ -138,6 +141,12 @@ const App: () => ReactNode = () => {
     return performanceMonitorInterface;
   }, []);
 
+  const navigate = useCallback((route: string, params?: any) => {
+    if(navigationRef.current) {
+      navigationRef.current.navigate(route, params);
+    }
+  }, []);
+
   const coreBootstraper = useMemo(
     () =>
       createCoreBootstrap(
@@ -145,8 +154,10 @@ const App: () => ReactNode = () => {
         asyncStorageProvider,
         performanceMonitor,
         services.current,
+        navigate,
         devMode,
         Config.APP_VERSION,
+
       ),
     [store, devMode, performanceMonitor],
   );
@@ -177,8 +188,8 @@ const App: () => ReactNode = () => {
         .loadWalletServices()
         .then(() => {
           console.log('bootstraped');
-          trace.stop();
 
+          trace.stop();
 
           store.dispatch<any>(initializationLoad()).then(() => {
             store.dispatch(unsetGlobalLoading());
@@ -239,7 +250,7 @@ const App: () => ReactNode = () => {
         <servicesContext.Provider value={services.current}>
           <SafeAreaProvider>
             {!isBootstrapped && isAccountInitialized && <AuthModal visible={!isAuthorized} loading={authLoading} />}
-            <NavigationContainer theme={DarkTheme}>
+            <NavigationContainer theme={DarkTheme} ref={navigationRef}>
               <MainNavigator
                 isInitialized={isInitialized}
                 isAccountInitialized={isAccountInitialized}

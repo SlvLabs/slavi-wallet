@@ -10,6 +10,7 @@ import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import translations from '../assets/translations/fallback';
+import {FirebaseService, NavigationFunction} from './firebase-service';
 
 const wsConfig = {
   url: Config.WS_URL,
@@ -37,9 +38,12 @@ export const createCoreBootstrap = (
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
   serviceLocator: ServiceLocatorCoreInterface,
+  navigation: NavigationFunction,
   devMode?: boolean,
   appVersion?: string,
 ) => {
+  const firebaseService = new FirebaseService(navigation);
+
   const coreBootstrap = new CoreBootstrap({
     wsConfig: wsConfig,
     systemLanguage: 'en',
@@ -59,10 +63,14 @@ export const createCoreBootstrap = (
     appVersion: appVersion || '',
     serviceLocator: serviceLocator,
     walletConnectClientMeta: walletConnectClientMeta,
+    NotificationClientInterface: firebaseService,
   });
   return {
     loadInitial: () => coreBootstrap.loadInitial(translations),
-    loadWalletServices: () => coreBootstrap.loadWalletServices(),
+    loadWalletServices: async () => {
+      await firebaseService.init();
+      return coreBootstrap.loadWalletServices();
+    },
   };
 };
 const bootstrap = async (
@@ -70,6 +78,7 @@ const bootstrap = async (
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
   serviceLocator: ServiceLocatorCoreInterface,
+  navigation: NavigationFunction,
   devMode?: boolean,
   appVersion?: string,
 ): Promise<void> => {
@@ -78,9 +87,11 @@ const bootstrap = async (
     dataStorageProvider,
     performanceMonitor,
     serviceLocator,
+    navigation,
     devMode,
     appVersion,
   );
+
   return coreBootstrap.loadInitial();
 };
 

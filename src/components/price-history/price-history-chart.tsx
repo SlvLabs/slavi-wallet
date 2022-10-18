@@ -86,7 +86,12 @@ const PriceHistoryChart = (props: PriceHistoryChartData) => {
     <View style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.contentContainer}>
         <View style={styles.valueContainer}>
-          <CryptoAmountText ticker={coinConvert || ''} value={makeRoundedBalance(precision, selectedRate)} style={styles.rate} />
+          <CryptoAmountText
+            ticker={coinConvert || ''}
+            value={makeRoundedBalance(precision, selectedRate)}
+            style={styles.rate}
+            tickerStyle={styles.rate}
+          />
           <Text style={styles.date}>{selectedDate ? moment(selectedDate).format(DATE_FORMAT) : ''}</Text>
         </View>
         <LineChart

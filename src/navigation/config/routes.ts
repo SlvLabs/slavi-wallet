@@ -34,6 +34,7 @@ const ROUTES = {
   },
   OPERATIONS: {
     LIST: 'Operations/List',
+    DETAILS: 'Operations/Details',
   },
   SETTINGS: {
     MAIN: 'Settings/Main',

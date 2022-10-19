@@ -21,11 +21,11 @@
     "@react-native-community/clipboard": "^1.2.2",
     "@react-native-community/datetimepicker": "^3.0.4",
     "@react-native-community/picker": "^1.8.1",
-    "@react-native-firebase/analytics": "12.0.0",
-    "@react-native-firebase/app": "^13.0.1",
-    "@react-native-firebase/crashlytics": "12.0.0",
-    "@react-native-firebase/messaging": "^15.4.0",
-    "@react-native-firebase/perf": "^12.0.0",
+    "@react-native-firebase/analytics": "^15.7.0",
+    "@react-native-firebase/app": "^15.7.0",
+    "@react-native-firebase/crashlytics": "^15.7.0",
+    "@react-native-firebase/messaging": "^15.7.0",
+    "@react-native-firebase/perf": "^15.7.0",
     "@react-native-masked-view/masked-view": "^0.2.6",
     "@react-navigation/bottom-tabs": "^5.4.5",
     "@react-navigation/drawer": "^5.7.5",
@@ -86,8 +86,7 @@
     "redux": "^4.0.5",
     "text-encoding": "^0.7.0",
     "url-parse": "^1.5.10",
-    "vm-browserify": "^1.1.2",
-    "yarn": "^1.22.19"
+    "vm-browserify": "^1.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

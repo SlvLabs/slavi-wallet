@@ -14,7 +14,7 @@ export function OperationElementCall(props: OperationProps) {
   return (
     <AbstractOperationMovement
       {...props}
-      balanceType={Type.positive}
+      balanceType={Type.negative}
       title={t('operationCall')}
       logo={operationCall}
       extraLogo={getImageSource(coinData?.logo)}

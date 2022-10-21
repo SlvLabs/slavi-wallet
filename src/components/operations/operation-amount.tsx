@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, ViewStyle, TextStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle, TextStyle, Text} from 'react-native';
 import theme from '../../theme';
 import CryptoAmountText from '../text/crypto-amount-text';
 
@@ -20,6 +20,7 @@ export interface OperationAmountProps {
 const OperationAmount = (props: OperationAmountProps) => {
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
+      {props.type === Type.positive && <Text style={{...styles.amount, ...props.textStyle}}>+</Text>}
       <CryptoAmountText
         ticker={props.ticker || ''}
         value={props.amount}

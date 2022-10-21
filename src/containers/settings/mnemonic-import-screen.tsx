@@ -11,14 +11,11 @@ import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
 import Screen from '../../components/screen';
-import {useFocusEffect} from '@react-navigation/native';
-import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
   const mnemonicError = useSelector(selectMnemonicError);
-  const authService = useAuthService();
 
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -38,10 +35,6 @@ const MnemonicImportScreen = () => {
   useEffect(() => {
     dispatch(setMnemonicError(''))
   }, [dispatch, mnemonic]);
-
-  useFocusEffect(() => {
-    authService.forbid();
-  });
 
   return (
     <Screen title={t('Import new mnemonic phrase')}>

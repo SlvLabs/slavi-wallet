@@ -9,7 +9,6 @@ import {Type} from '../operations/operation-amount';
 import {DateOperation} from './date-operation';
 import OperationStatus from '../operations/operation-status';
 import {AddressOperation} from './address-operation';
-import {NetworkOperation} from './network-operation';
 
 export interface OperationBurnProps {
   operation: OperationDetails;
@@ -22,21 +21,20 @@ export function OperationBurn({operation}: OperationBurnProps) {
 
   return (
     <ContainerOperation explorerLink={operation.explorerLink}>
-      {operation.amount && (
+      {operation.commission && (
         <RowOperation
           label={t('detailsAmount')}
           content={(
             <AmountOperation
-              amount={operation.amount}
+              amount={operation.commission}
               ticker={coin?.ticker}
-              type={Type.positive}
+              type={Type.negative}
             />
           )}
         />)}
       <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created}/>}/>
       <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
       {!!operation.fromAddress && <RowOperation label={t('detailsAddress')} content={<AddressOperation address={operation.fromAddress}/>}/>}
-      {!!coin?.id && <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />}
     </ContainerOperation>
   );
 }

@@ -57,10 +57,10 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     paddingRight: 8,
-    flex: 2,
+    flex: 1,
   },
   dataColumn: {
-    flex: 10,
+    flex: 8,
     flexDirection: 'row',
   },
   leftColumn: {

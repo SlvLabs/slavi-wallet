@@ -65,6 +65,7 @@ export function OperationDetailsScreen() {
       case OperationType.swap: {
         return <OperationSwap operation={operation} />
       }
+      case OperationType.commission:
       case OperationType.burn: {
         return <OperationBurn operation={operation} />
       }

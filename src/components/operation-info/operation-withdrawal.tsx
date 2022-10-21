@@ -16,13 +16,13 @@ export interface OperationWithdrawalProps {
   explorerLink?: string;
 }
 
-export function OperationWithdrawal({operation, explorerLink}: OperationWithdrawalProps) {
+export function OperationWithdrawal({operation}: OperationWithdrawalProps) {
   const {t} = useTranslation();
 
   const coin = useCoinDetails(operation.coin);
 
   return (
-    <ContainerOperation explorerLink={explorerLink}>
+    <ContainerOperation explorerLink={operation.explorerLink}>
       {operation.amount && (
         <RowOperation
           label={t('detailsAmount')}

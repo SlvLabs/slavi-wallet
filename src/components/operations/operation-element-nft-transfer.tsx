@@ -40,7 +40,7 @@ export function OperationElementNftTransfer({onPress, operation}: OperationProps
           />
           <OperationAmount
             amount={makeRoundedBalance(cryptoPrecision, operation.nft?.fromAmount, cryptoLimit)}
-            type={Type.positive}
+            type={Type.negative}
             ticker={'NFTs'}
             tickerStyle={styles.ticker}
           />

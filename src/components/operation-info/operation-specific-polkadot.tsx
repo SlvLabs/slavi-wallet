@@ -8,7 +8,6 @@ import {Type} from '../operations/operation-amount';
 import {DateOperation} from './date-operation';
 import OperationStatus from '../operations/operation-status';
 import {AddressOperation} from './address-operation';
-import {NetworkOperation} from './network-operation';
 import React from 'react';
 
 export interface OperationSpecificPolkadotProps {
@@ -37,7 +36,6 @@ export function OperationSpecificPolkadot({operation}: OperationSpecificPolkadot
       <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
       {!!operation.fromAddress && <RowOperation label={t('detailsSentFrom')} content={<AddressOperation address={operation.fromAddress}/>}/>}
       {!!operation.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress}/>}/>}
-      {!!coin?.id && <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />}
     </ContainerOperation>
   );
 }

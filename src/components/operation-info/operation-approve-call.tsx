@@ -30,7 +30,7 @@ export function OperationApproveCall({operation}: OperationApproveCallProps) {
           <AmountOperation
             amount={operation.commission}
             ticker={coin?.ticker}
-            type={Type.positive}
+            type={Type.negative}
           />
         )}
       />}

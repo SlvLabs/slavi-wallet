@@ -58,7 +58,7 @@ const OperationElementSwap = ({onPress, operation}: OperationProps) => {
               />
               <OperationAmount
                 amount={makeRoundedBalance(cryptoPrecision, operation.data!.srcAmount, cryptoLimit)}
-                type={Type.positive}
+                type={Type.negative}
                 ticker={srcCoinData?.ticker}
               />
             </View>

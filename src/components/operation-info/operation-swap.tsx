@@ -38,7 +38,7 @@ export function OperationSwap({operation}: OperationSwapProps) {
             {operation.data?.srcAmount && <AmountOperation
               amount={operation.data.srcAmount}
               ticker={dstCoin?.ticker}
-              type={Type.positive}
+              type={Type.negative}
             />}
           </View>
         )}

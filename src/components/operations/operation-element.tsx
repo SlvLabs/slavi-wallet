@@ -20,6 +20,7 @@ import OperationElementPolkadotReserved from './operation-element-polkadot-reser
 import OperationElementPolkadotInvestToLock from './operation-element-polkadot-invest-to-lock';
 import OperationElementPolkadotLockToFree from './operation-element-polkadot-lock-to-free';
 import OperationElementPolkadotInvest from './operation-element-polkadot-invest';
+import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 
 export interface OperationElementProps {
   operation: ListOperation;
@@ -32,9 +33,14 @@ export interface OperationProps extends OperationElementProps {
 
 const OperationElement = (props: OperationElementProps) => {
   const navigation = useNavigation();
+  const coinData = useCoinDetails(props.operation.coin);
 
   const onPress = () => {
     navigation.navigate(ROUTES.OPERATIONS.DETAILS, {id: props.operation.id});
+  }
+
+  if(!coinData?.id) {
+    return null;
   }
 
   switch (props.operation.type) {

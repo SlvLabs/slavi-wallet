@@ -5,7 +5,7 @@ import AccountInitializationStack from './AccountInitializationStack';
 import AccountReadyScreen from '../containers/account-initialization/AccountReadyScreen';
 import UpdateRequiredScreen from '../containers/update-required-screen';
 import ApplicationTabs from './ApplicationTabs';
-import HelpPageTabs from '../containers/account-initialization/HelpPageScreen';
+import HelpPageScreen from '../containers/account-initialization/HelpPageScreen';
 
 interface MainNavigatorProps {
   isInitialized: boolean;
@@ -38,7 +38,7 @@ const MainNavigator = (props: MainNavigatorProps) => {
   }
 
   if (props.helpShow) {
-    return <HelpPageTabs />;
+    return <HelpPageScreen />;
   }
 
   return <ApplicationTabs />;

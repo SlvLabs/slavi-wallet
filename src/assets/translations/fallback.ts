@@ -461,6 +461,7 @@ const translations = {
   filterNftDeposit: 'Nft deposit',
   filterNftSend: 'Nft withdrawal',
   filterBurn: 'Burn',
+  tickerAddress: '{{ticker}} address',
 };
 
 export default translations;

@@ -125,15 +125,15 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
   return (
     <View style={styles.carouselContainer}>
       <View style={styles.leftButton}>
-        <CarouselSlideButton direction={'prev'} onPress={snapToPrev} disabled={currentIndex === 0}/>
+        <CarouselSlideButton direction={'prev'} onPress={snapToPrev} disabled={currentIndex === 0} />
       </View>
       <View style={styles.carouselMargin}>
         <Carousel
           renderItem={_renderItem}
           data={props.addresses}
           sliderWidth={220}
-          sliderHeight={700}
-          itemWidth={120}
+          // sliderHeight={700}
+          itemWidth={220}
           loop={false}
           enableSnap={true}
           shouldOptimizeUpdates={true}
@@ -144,7 +144,8 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
           ref={c => {
             carousel.current = c;
           }}
-          enableMomentum={true}
+          vertical={false}
+          // enableMomentum={true}
           useScrollView={true}
         />
       </View>
@@ -160,11 +161,13 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   carouselContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
     paddingRight: 16,
     paddingLeft: 16,
     marginTop: 24,
@@ -176,12 +179,12 @@ const styles = StyleSheet.create({
   },
   leftButton: {
     width: 36,
-    alignItems: 'center'
+    justifyContent: 'center',
   },
   rightButton: {
     width: 36,
-    alignItems: 'center',
-  }
+    justifyContent: 'center',
+  },
 });
 
 export default forwardRef(AddressesCarousel);

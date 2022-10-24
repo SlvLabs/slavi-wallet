@@ -2,9 +2,11 @@ import React from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Text} from 'react-native-elements';
 import theme from '../../theme';
+import useTranslation from '../../utils/use-translation';
 
 export interface AddressViewProps {
   address: string;
+  ticker: string;
   name?: string;
   containerStyle?: ViewStyle;
   nameStyle?: TextStyle;
@@ -12,16 +14,13 @@ export interface AddressViewProps {
 }
 
 const AddressView = (props: AddressViewProps) => {
+  const {t} = useTranslation();
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      {!!props.name && (
-        <Text style={{...styles.name, ...props.nameStyle}}>
-          {props.name}
-        </Text>
-      )}
-      <Text style={{...styles.address, ...props.addressStyle}}>
-        {props.address}
+      <Text style={{...styles.name, ...props.nameStyle}}>
+        {props.name || t('tickerAddress', {ticker: props.ticker})}
       </Text>
+      <Text style={{...styles.address, ...props.addressStyle}}>{props.address}</Text>
     </View>
   );
 };

@@ -3485,6 +3485,13 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
+"@types/react-addons-shallow-compare@^0.14.22":
+  version "0.14.22"
+  resolved "https://registry.yarnpkg.com/@types/react-addons-shallow-compare/-/react-addons-shallow-compare-0.14.22.tgz#25177d8ab88aedfc2937b434b09b1fcbc9c2eccd"
+  integrity sha512-krgFRorWtbVJLzpJsJD6O27Lew3YHuemVZbL9RFvq8TF1w9DbrHjiiLuIyWIL6AjunBkUrQlErfbUv1TYKiK9w==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native-charts-wrapper@^0.5.1":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@types/react-native-charts-wrapper/-/react-native-charts-wrapper-0.5.2.tgz#212d3f8829c464deaedec0fb0ff5cf0751cf395e"
@@ -3509,14 +3516,6 @@
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/@types/react-native-share/-/react-native-share-3.3.3.tgz#95e1087ad1d7972c85223dbfa52450455f604c9c"
   integrity sha512-aZNKQjXtsuooG21wSsT8WUMkD+TiSNGi6i1XEKHLEFD3CSRUGAJI/PFXPzdWGsPw7Z0z4xW3IDKCbjyu0grRVg==
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" "*"
-
-"@types/react-native-snap-carousel@^3.8.3":
-  version "3.8.5"
-  resolved "https://registry.yarnpkg.com/@types/react-native-snap-carousel/-/react-native-snap-carousel-3.8.5.tgz#5b3cb208119e3599d5537b5fc83653a155c6275d"
-  integrity sha512-EMBwQo/om2HZM/J6u8Bvz7i0BEO/v6frrpmlvUQ579CMsgYQPlYzQ1ne4KDdRq08+yDSG8/8AwIi1R+185ROsg==
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -9768,7 +9767,7 @@ prompts@^2.0.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.10, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -10098,11 +10097,6 @@ react-native-ratings@^7.2.0:
     lodash "^4.17.15"
     prop-types "^15.7.2"
 
-react-native-reanimated-carousel@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.0.4.tgz#eee407c7370547fa3f47cf0ddc27555d99f00c63"
-  integrity sha512-y8Mg8v5wdcm9WdA0ze9jIJ0/zfo37269Irce5RlAIFr3xwkZU+6TqdsaygST0C9ZQKQsMvg9L327NZcuSDakCw==
-
 react-native-reanimated@^2.7.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.9.1.tgz#d9a932e312c13c05b4f919e43ebbf76d996e0bc1"
@@ -10161,12 +10155,12 @@ react-native-size-matters@^0.3.1:
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz#24d0cfc335a2c730f6d58bd7b43ea5a41be4b49f"
   integrity sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw==
 
-react-native-snap-carousel@^3.9.1:
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-3.9.1.tgz#6fd9bd8839546c2c6043a41d2035afbc6fe0443e"
-  integrity sha512-xWEGusacIgK1YaDXLi7Gao2+ISLoGPVEBR8fcMf4tOOJQufutlNwkoLu0l6B8Qgsrre0nTxoVZikRgGRDWlLaQ==
+react-native-snap-carousel@^4.0.0-beta.6:
+  version "4.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-4.0.0-beta.6.tgz#cc73108f83cbcf227cd1c6367f17926e8451fd01"
+  integrity sha512-jr6Kesrn+/047FwL32JRwAL6/l4Soz2uw73rFM5LfoGTgZhPatUsw60eTE3bznqFewPhoFIKezYe2m3LypTnIA==
   dependencies:
-    prop-types "^15.6.1"
+    "@types/react-addons-shallow-compare" "^0.14.22"
     react-addons-shallow-compare "15.6.2"
 
 react-native-status-bar-height@^2.5.0:

@@ -109,7 +109,7 @@ const ReceiveScreen = () => {
           onEdit={editRecvAddr}
           ref={ref}
         />
-        <AddressView address={address || ''} name={addressName} containerStyle={styles.address}/>
+        <AddressView address={address || ''} name={addressName} ticker={data.ticker} containerStyle={styles.address}/>
         <ReceiveControlButtons
           address={address || ''}
           dataToShare={qr}

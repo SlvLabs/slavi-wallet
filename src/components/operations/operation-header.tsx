@@ -10,22 +10,30 @@ export interface OperationHeaderProps {
 }
 
 const formatDate = (date: Date): string => {
-  const now = new Date().getDate();
-  if (date.getDate() === now) {
+  const now = new Date();
+  if (
+    now.getFullYear() === date.getFullYear() &&
+    now.getMonth() === date.getMonth() &&
+    now.getDate() === date.getDate()
+  ) {
     return 'Today';
-  } else if (date.getDate() === now - 1) {
-    return 'Yesterday';
-  } else {
-    return date.toLocaleDateString();
   }
+  now.setDate(now.getDate() - 1);
+  if (
+    now.getFullYear() === date.getFullYear() &&
+    now.getMonth() === date.getMonth() &&
+    now.getDate() === date.getDate()
+  ) {
+    return 'Yesterday';
+  }
+
+  return date.toLocaleDateString();
 };
 
 const OperationHeader = (props: OperationHeaderProps) => {
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <Text style={{...styles.header, ...props.headerStyle}}>
-        {formatDate(props.date)}
-      </Text>
+      <Text style={{...styles.header, ...props.headerStyle}}>{formatDate(props.date)}</Text>
     </View>
   );
 };

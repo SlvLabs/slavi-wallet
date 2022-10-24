@@ -1,16 +1,15 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import {Image, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useMemo, useRef} from 'react';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import {useDispatch} from 'react-redux';
 import {skipHelp} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
-import {TabView} from 'react-native-tab-view';
 import Layout from '../../utils/layout';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import HelpWavesBackground from '../../components/background/help-waves-background';
 import {help_1, help_2, help_3, help_4, help_5} from '../../assets/images';
-
+import Carousel from 'react-native-snap-carousel';
 enum Pages {
   deposit,
   trade,
@@ -26,48 +25,12 @@ const images = {
   [4]: help_5,
 };
 const allPages: Pages[] = [Pages.deposit, Pages.trade, Pages.buy, Pages.stake, Pages.nft];
-interface RenderSceneParams {
-  route: {key: string};
-  jumpTo(key: string): void;
-}
-const RenderScene = ({route: {key}, jumpTo}: RenderSceneParams) => {
-  if (key === 'end') {
-    return <></>;
-  }
-  return <HelpPageScreen page={+key as Pages} jumpTo={jumpTo} />;
-};
-
-const routes = allPages.map(p => ({key: p.toString()}));
-routes.push({key: 'end'});
-
-export default function HelpPageTabs() {
-  const [index, setIndex] = React.useState(0);
-  const dispatch = useDispatch();
-  const onIndexChange = useCallback(
-    _index => {
-      if (_index >= allPages.length) {
-        dispatch(skipHelp());
-      } else {
-        setIndex(_index);
-      }
-    },
-    [dispatch],
-  );
-  return (
-    <TabView
-      renderTabBar={() => null}
-      navigationState={{index, routes}}
-      renderScene={RenderScene}
-      onIndexChange={onIndexChange}
-      initialLayout={{width: Layout.window.width}}
-    />
-  );
-}
+const allPagesWithEnd = [...allPages, allPages.length];
 
 type PagesHeaders = `help_header_${Pages}`;
 type PagesDescriptions = `help_description_${Pages}`;
 
-export interface JumpButtonProps {
+interface JumpButtonProps {
   onPress(): void;
   direction: 'prev' | 'next';
   enabled: boolean;
@@ -91,58 +54,121 @@ function JumpButton({onPress, direction, enabled}: JumpButtonProps) {
   );
 }
 
-export interface HelpPageScreenProps {
-  page: Pages;
-  jumpTo(page: string): void;
-}
-
-function _HelpPageScreen({page, jumpTo}: HelpPageScreenProps) {
-  const {t} = useTranslation();
+export default function HelpPageScreen() {
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const _currentPageRef = useRef<number>(0);
+  const onSnapToItem = useCallback((newIndex: number) => {
+    setCurrentPage(newIndex);
+    _currentPageRef.current = newIndex;
+  }, []);
   const dispatch = useDispatch();
+
+  const {t} = useTranslation();
   const headers = useMemo(() => allPages.map(p => t(`help_header_${p}` as PagesHeaders)), [t]);
   const descriptions = useMemo(() => allPages.map(p => t(`help_description_${p}` as PagesDescriptions)), [t]);
-  const goLeft = useCallback(() => {
-    if (page === 0) {
-      return;
-    }
-    jumpTo((page - 1).toString());
-  }, [jumpTo, page]);
 
-  const goRight = useCallback(() => {
-    if (page === allPages.length - 1) {
-      dispatch(skipHelp());
-    } else {
-      jumpTo((page + 1).toString());
+  let carousel = useRef<Carousel<any> | null>(null);
+  const snapToNext = useCallback(() => {
+    if (carousel.current) {
+      if (_currentPageRef.current === allPages.length - 1) {
+        dispatch(skipHelp());
+      } else {
+        carousel.current.snapToNext();
+      }
     }
-  }, [jumpTo, dispatch, page]);
+  }, [carousel, dispatch]);
 
+  const snapToPrev = useCallback(() => {
+    if (carousel.current) {
+      carousel.current.snapToPrev();
+    }
+  }, [carousel]);
   const onSkip = useCallback(() => {
     dispatch(skipHelp());
   }, [dispatch]);
+  const _renderItem = useCallback(
+    ({item}: {item: Pages}) => {
+      if (item === allPages.length) {
+        return <View style={styles.logoViewView2} />;
+      }
+      return (
+        <View style={styles.logoViewView2}>
+          <View style={styles[`logoView${item}` as LogoViewWithPage]}>
+            <Image source={images[item]} style={styles[`logo${item}` as LogoWithPage]} />
+          </View>
+          <View style={styles.textBlock}>
+            <Text style={styles.header}>{headers[item]}</Text>
+            <Text style={styles.description}>{descriptions[item]}</Text>
+          </View>
+        </View>
+      );
+    },
+    [headers, descriptions],
+  );
+  const scrollPos = useRef<number | null>(null);
+  const carouselOnScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (scrollPos.current !== null) {
+        if (_currentPageRef.current === allPages.length - 1) {
+          if (e.nativeEvent.contentOffset.x - scrollPos.current > Layout.window.width / 4) {
+            dispatch(skipHelp());
+          }
+        }
+      }
+    },
+    [dispatch],
+  );
+
+  const carouselOnScrollStart = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (_currentPageRef.current === allPages.length - 1) {
+      scrollPos.current = e.nativeEvent.contentOffset.x;
+    } else {
+      scrollPos.current = null;
+    }
+  }, []);
 
   return (
     <HelpWavesBackground>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.skipWrap} onPress={onSkip}>
-          <Text style={styles.skip}>{page === allPages.length - 1 ? t('helpFinish') : t('helpSkip')}</Text>
-        </TouchableOpacity>
-        <View style={styles[`logoView${page}` as LogoViewWithPage]}>
-          <Image source={images[page]} style={styles[`logo${page}` as LogoWithPage]} />
+        <View style={styles.skipWrap}>
+          <TouchableOpacity onPress={onSkip}>
+            <Text style={styles.skip}>{currentPage === allPages.length - 1 ? t('helpFinish') : t('helpSkip')}</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.textBlock}>
-          <Text style={styles.header}>{headers[page]}</Text>
-          <Text style={styles.description}>{descriptions[page]}</Text>
+        <View style={styles.carousel}>
+          <Carousel
+            ref={c => {
+              carousel.current = c;
+            }}
+            // onSnapToItem={onSnapToItem}
+            onScrollIndexChanged={onSnapToItem}
+            renderItem={_renderItem}
+            data={allPagesWithEnd}
+            sliderWidth={Layout.window.width - 60}
+            itemWidth={Layout.window.width - 60}
+            loop={false}
+            enableSnap={true}
+            shouldOptimizeUpdates={true}
+            firstItem={0}
+            inactiveSlideOpacity={-1}
+            decelerationRate={'fast'}
+            horizontal={true}
+            vertical={false}
+            disableIntervalMomentum={true}
+            useExperimentalSnap={true}
+            onScrollBeginDrag={carouselOnScrollStart}
+            onScroll={carouselOnScroll}
+          />
         </View>
         <View style={styles.loaderView}>
-          <JumpButton onPress={goLeft} direction={'prev'} enabled={page > 0} />
-          <PointerProgressBar stepsCount={allPages.length} activeStep={page} activeColor={theme.colors.violet} />
-          <JumpButton onPress={goRight} direction={'next'} enabled={true} />
+          <JumpButton onPress={snapToPrev} direction={'prev'} enabled={currentPage > 0} />
+          <PointerProgressBar stepsCount={allPages.length} activeStep={currentPage} activeColor={theme.colors.violet} />
+          <JumpButton onPress={snapToNext} direction={'next'} enabled={true} />
         </View>
       </View>
     </HelpWavesBackground>
   );
 }
-const HelpPageScreen = React.memo(_HelpPageScreen);
 
 type LogoViewWithPage = `logoView${Pages}`;
 type LogoWithPage = `logo${Pages}`;
@@ -155,6 +181,18 @@ const styles = StyleSheet.create({
   buttonsBlock: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  carousel: {
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  logoViewView2: {
+    flex: 0,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    height: '100%',
   },
   logoView0: {
     flex: 0,
@@ -254,7 +292,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     justifyContent: 'flex-end',
     flexDirection: 'row',
-    flex: 1,
+    flex: 0,
   },
   skip: {
     fontFamily: theme.fonts.default,

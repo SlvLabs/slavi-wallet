@@ -43,6 +43,7 @@ const ROUTES = {
     LANGUAGE: 'Settings/Language',
     CURRENCY_CHANGE: 'Settings/CurrencyChange',
     INVALIDATE_CACHES: 'Settings/InvalidateCaches',
+    NOTIFICATION_SETTINGS: 'Settings/NotificationSettings',
     WALLET_CONNECT: 'Settings/WalletConnect',
     SECURITY: 'Settings/Security',
     AUTO_BLOCKING: 'Settings/AutoBlocking',

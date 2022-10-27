@@ -47,6 +47,11 @@ const SettingsScreen = () => {
     [navigation],
   );
 
+  const goToNotificationSettings = useCallback(
+    () => navigation.navigate(ROUTES.SETTINGS.NOTIFICATION_SETTINGS),
+    [navigation],
+  );
+
   const goToWalletConnect = useCallback(
     () => navigation.navigate(ROUTES.SETTINGS.WALLET_CONNECT),
     [navigation]
@@ -90,6 +95,12 @@ const SettingsScreen = () => {
         <ListItem key={5} bottomDivider onPress={goToInvalidateCache} containerStyle={styles.listItem}>
           <ListItem.Content style={styles.content}>
             <ListItem.Title style={styles.title}>{t('Clear cache')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={6} bottomDivider onPress={goToNotificationSettings} containerStyle={styles.listItem}>
+          <ListItem.Content style={styles.content}>
+            <ListItem.Title style={styles.title}>{t('Push notifications')}</ListItem.Title>
           </ListItem.Content>
           {chevron}
         </ListItem>

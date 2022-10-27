@@ -12,6 +12,7 @@ import useTranslation from '../utils/use-translation';
 import MainWalletConnectScreen from '../containers/wallet-connect/main-wallet-connect-screen';
 import SecurityScreen from '../containers/settings/security-screen';
 import AutoBlockingScreen from '../containers/settings/auto-blocking-screen';
+import NotificationSettingsScreen from '../containers/settings/notification-settings-screen';
 
 const StackNavigator = createStackNavigator();
 
@@ -52,6 +53,11 @@ const SettingsStack = () =>  {
         name={ROUTES.SETTINGS.INVALIDATE_CACHES}
         component={InvalidateCachesScreen}
         options={{title: t('Invalidate some caches')}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.SETTINGS.NOTIFICATION_SETTINGS}
+        component={NotificationSettingsScreen}
+        options={{title: t('Push notification')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.WALLET_CONNECT}

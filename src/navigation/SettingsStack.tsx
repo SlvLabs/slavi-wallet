@@ -57,7 +57,7 @@ const SettingsStack = () =>  {
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.NOTIFICATION_SETTINGS}
         component={NotificationSettingsScreen}
-        options={{title: t('Push notification')}}
+        options={{title: t('PushNotificationHeader')}}
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.WALLET_CONNECT}

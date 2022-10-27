@@ -87,14 +87,14 @@ export default function NotificationSettingsScreen() {
   );
   if (initLoading) {
     return (
-      <Screen title={t('Push notification')}>
+      <Screen title={t('PushNotificationHeader')}>
         <View />
       </Screen>
     );
   }
   if (initError) {
     return (
-      <Screen title={t('Push notification')}>
+      <Screen title={t('PushNotificationHeader')}>
         <View>
           <Text style={styles.error}>{initError}</Text>
         </View>
@@ -102,7 +102,7 @@ export default function NotificationSettingsScreen() {
     );
   }
   return (
-    <Screen title={t('Push notification')}>
+    <Screen title={t('PushNotificationHeader')}>
       <View style={styles.container}>
         <SwitchRowBig
           label={t('pushNotifications')}
@@ -213,5 +213,6 @@ const styles = StyleSheet.create({
     fontSize: Layout.isSmallDevice ? 13 : 14,
     lineHeight: 28,
     color: theme.colors.textLightGray,
+    textTransform: 'capitalize',
   },
 });

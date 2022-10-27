@@ -109,7 +109,7 @@ const translations = {
   "English":"English",
   "USD":"USD",
   "Clear cache":"Clear cache",
-  "Push notification": "Push notification",
+  "PushNotificationHeader": "Push notification",
   "pushNotifications": "Push notifications",
   "cryptoOperations": "Crypto operations",
   "nftOperations": "NFT operations",

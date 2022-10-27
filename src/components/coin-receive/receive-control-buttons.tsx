@@ -112,11 +112,9 @@ const ReceiveControlButtons = (props: ReceiveControlButtonsProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   icon: {
-    marginRight: 8,
-    marginLeft: 8,
     backgroundColor: theme.colors.simpleCoinBackground,
     padding: Layout.isSmallDevice ? 8 : 16,
     borderRadius: 8,

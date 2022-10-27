@@ -101,7 +101,7 @@ const ReceiveScreen = () => {
             name: element.name,
             id: element.id,
           }))}
-          qrSize={Layout.isSmallDevice ? 150 : 170}
+          qrSize={Layout.isSmallDevice ? 170 : 190}
           onDataChange={onQrChange}
           amount={amount}
           coin={specService.getSpec(coin)?.bip21Name || ''}

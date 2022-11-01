@@ -141,6 +141,7 @@ android {
         versionCode 9
         versionName "1.9"
         multiDexEnabled true
+        resValue "string", "build_config_package", "com.defiwalletmobile"
         missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
@@ -194,6 +195,14 @@ android {
 
         }
     }
+    flavorDimensions "default"
+    productFlavors {
+        prod {
+        }
+        dev {
+            applicationIdSuffix ".dev"
+        }
+    }
     dexOptions {
         javaMaxHeapSize "3g"
     }
@@ -242,8 +251,9 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 project.ext.envConfigFiles = [
-        debug: ".env.development",
-        release: ".env.production",
-        anothercustombuild: ".env.production",
+        proddebug: ".env",
+        prodrelease: ".env",
+        devrelease: ".env.dev",
+        devdebug: ".env.dev",
 ]
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"

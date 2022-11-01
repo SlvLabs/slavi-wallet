@@ -41,8 +41,6 @@ target 'slaviWalletMobile' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  pod 'RNCharts', :path => '../node_modules/react-native-charts-wrapper'
-
   target 'slaviWalletMobileTests' do
     inherit! :complete
     # Pods for testing

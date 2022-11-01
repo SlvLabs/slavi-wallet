@@ -18,19 +18,12 @@ export class FirebaseService {
   }
 
   async init() {
+    await this.requestPermission();
+    
     messaging().onMessage(this.onMessage.bind(this));
     messaging().onNotificationOpenedApp(this.onOpen.bind(this));
 
     this.sounds = await NotificationSounds.getNotifications('notification');
-
-    await notifee.requestPermission();
-
-    const settings = await notifee.getNotificationSettings();
-    if (settings.authorizationStatus == AuthorizationStatus.AUTHORIZED) {
-      console.log('Notification permissions has been authorized');
-    } else if (settings.authorizationStatus == AuthorizationStatus.DENIED) {
-      console.log('Notification permissions has been denied');
-    }
 
     if(!await notifee.isChannelCreated('slavi-wallet-channel')) {
       await notifee.createChannel({
@@ -51,6 +44,8 @@ export class FirebaseService {
   }
 
   async requestPermission() {
+    await notifee.requestPermission();
+
     const authorizationStatus = await messaging().requestPermission();
 
     if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {

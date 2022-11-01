@@ -66,11 +66,11 @@ export const createCoreBootstrap = (
     NotificationClientInterface: firebaseService,
   });
   return {
-    loadInitial: () => coreBootstrap.loadInitial(translations),
-    loadWalletServices: async () => {
+    loadInitial: async () => {
       await firebaseService.init();
-      return coreBootstrap.loadWalletServices();
+      await coreBootstrap.loadInitial(translations);
     },
+    loadWalletServices: async () => coreBootstrap.loadWalletServices(),
   };
 };
 const bootstrap = async (

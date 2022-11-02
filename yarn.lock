@@ -3221,6 +3221,13 @@
     lodash "^4.17.19"
     moment "^2.27.0"
 
+"@slavi/react-web-socket@git+ssh://git@gitlab.com/defi-wallet/react-web-socket#3.0.2":
+  version "3.0.2"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/react-web-socket#52f1a892f45bfff28ac19ab65af4ddd2aa3a71f9"
+  dependencies:
+    events "^3.1.0"
+    lodash "^4.17.15"
+
 "@slavi/react-web-socket@git+ssh://git@gitlab.com/defi-wallet/react-web-socket#master":
   version "3.0.0"
   resolved "git+ssh://git@gitlab.com/defi-wallet/react-web-socket#611a7c72f6787ea1efe3972d15e64629ef611436"
@@ -3230,11 +3237,11 @@
 
 "@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#master":
   version "1.0.0"
-  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#0637197746bd65a288f6318ae97596b993c04320"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#9d3719458b86454e70743b5b28f6f6f32f3e7fa7"
   dependencies:
     "@reduxjs/toolkit" "^1.3.6"
     "@slavi/crypto-core" "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master"
-    "@slavi/react-web-socket" "git+ssh://git@gitlab.com/defi-wallet/react-web-socket#master"
+    "@slavi/react-web-socket" "git+ssh://git@gitlab.com/defi-wallet/react-web-socket#3.0.2"
     "@solana/web3.js" "^1.31.0"
     "@walletconnect/client" "^1.7.1"
     bip21 "^2.0.3"

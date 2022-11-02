@@ -1,6 +1,6 @@
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import ROUTES from '../navigation/config/routes';
-import notifee, {AndroidImportance, AuthorizationStatus} from '@notifee/react-native';
+import notifee, {AndroidImportance} from '@notifee/react-native';
 import {Event} from '@notifee/react-native/src/types/Notification';
 import NotificationSounds, {Sound} from 'react-native-notification-sounds';
 
@@ -19,7 +19,7 @@ export class FirebaseService {
 
   async init() {
     await this.requestPermission();
-    
+
     messaging().onMessage(this.onMessage.bind(this));
     messaging().onNotificationOpenedApp(this.onOpen.bind(this));
 
@@ -40,6 +40,8 @@ export class FirebaseService {
     notifee.onForegroundEvent(this.onLocalNotification.bind(this));
     notifee.onBackgroundEvent(this.onLocalNotification.bind(this));
 
+    await notifee.setBadgeCount(0);
+
     // TODO: process initial notification
   }
 
@@ -59,6 +61,10 @@ export class FirebaseService {
 
   async getToken() {
     return messaging().getToken();
+  }
+
+  async deleteToken() {
+    return messaging().deleteToken();
   }
 
   onTokenRefresh(listener: (token: string) => void) {

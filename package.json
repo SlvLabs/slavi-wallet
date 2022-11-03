@@ -39,7 +39,7 @@
     "@react-navigation/stack": "^5.3.7",
     "@reduxjs/toolkit": "^1.3.6",
     "@slavi/react-native-daterange-picker": "git+ssh://git@gitlab.com/defi-wallet/react-native-daterange-picker.git#master",
-    "@slavi/wallet-core": "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#333d9ae3d3422fb0f9f646e062e8ed10e5b27b6d",
+    "@slavi/wallet-core": "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#1cc5cacb8aeda082405eeb1a9e00ea9d096bb15c",
     "@substrate/txwrapper-polkadot": "1.2.21",
     "@types/react-native-tab-view": "^2.3.0",
     "@walletconnect/client": "^1.7.1",

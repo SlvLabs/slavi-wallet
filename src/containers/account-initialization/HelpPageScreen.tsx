@@ -131,7 +131,7 @@ export default function HelpPageScreen() {
     <HelpWavesBackground>
       <View style={styles.container}>
         <View style={styles.skipWrap}>
-          <TouchableOpacity onPress={onSkip}>
+          <TouchableOpacity onPress={onSkip} style={styles.skipTouch}>
             <Text style={styles.skip}>{currentPage === allPages.length - 1 ? t('helpFinish') : t('helpSkip')}</Text>
           </TouchableOpacity>
         </View>
@@ -293,6 +293,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flexDirection: 'row',
     flex: 0,
+  },
+  skipTouch: {
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    marginRight: -20,
+    marginTop: -20,
   },
   skip: {
     fontFamily: theme.fonts.default,

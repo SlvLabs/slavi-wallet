@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useRef,
-  useState
+  useState,
 } from 'react';
 import Carousel from 'react-native-snap-carousel';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
@@ -32,10 +32,13 @@ export interface AddressesCarouselProps {
 }
 
 export interface AddressesCarouselHandle {
-  snapById: (id: number) => void
+  snapById: (id: number) => void;
 }
 
-const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, AddressesCarouselProps> = (props: AddressesCarouselProps, ref) => {
+const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, AddressesCarouselProps> = (
+  props: AddressesCarouselProps,
+  ref,
+) => {
   const {addresses} = props;
   const refs = useRef<any>();
   let carousel = useRef<Carousel<any> | null>(null);
@@ -54,25 +57,18 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
               name: item.name,
             }}
             size={props.qrSize}
-            getRef={ref => {
+            getRef={_ref => {
               if (!refs.current) {
                 refs.current = [];
               }
-              refs.current[index] = ref;
+              refs.current[index] = _ref;
             }}
             onEdit={props.onEdit}
           />
         </View>
       );
     },
-    [
-      props.amount,
-      props.containerStyle,
-      props.coin,
-      props.onDataChange,
-      props.onEdit,
-      props.qrSize,
-    ],
+    [props.amount, props.containerStyle, props.coin, props.onEdit, props.qrSize],
   );
 
   const onSnapItem = useCallback(
@@ -86,28 +82,15 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
     [props],
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (
-        props.addresses &&
-        props.addresses.length > 0 &&
-        refs.current &&
-        refs.current[0]
-      ) {
-        onSnapItem(0);
-      }
-    }, 300);
-  }, []);
-
   useEffect(() => setCurrentIndex(carousel.current?.currentIndex || 0), [carousel.current?.currentIndex]);
 
   useImperativeHandle(ref, () => ({
     snapById(id: number) {
       const index = addresses.findIndex(element => element.id === id);
-      if(index !== -1) {
+      if (index !== -1) {
         onSnapItem(index);
       }
-    }
+    },
   }));
 
   const snapToNext = useCallback(() => {
@@ -145,6 +128,10 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
             carousel.current = c;
           }}
           vertical={false}
+          decelerationRate={'fast'}
+          horizontal={true}
+          useExperimentalSnap={true}
+          disableIntervalMomentum={true}
           // enableMomentum={true}
           useScrollView={true}
         />

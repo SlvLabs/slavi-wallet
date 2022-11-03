@@ -131,7 +131,7 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
           decelerationRate={'fast'}
           horizontal={true}
           useExperimentalSnap={true}
-          disableIntervalMomentum={true}
+          // disableIntervalMomentum={true} //disable multi swipe
           // enableMomentum={true}
           useScrollView={true}
         />

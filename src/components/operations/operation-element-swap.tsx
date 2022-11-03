@@ -57,7 +57,7 @@ const OperationElementSwap = ({onPress, operation}: OperationProps) => {
                 style={styles.coinLogo}
               />
               <OperationAmount
-                amount={makeRoundedBalance(cryptoPrecision, operation.data!.srcAmount, cryptoLimit)}
+                amount={`-${makeRoundedBalance(cryptoPrecision, operation.data!.srcAmount, cryptoLimit)}`}
                 type={Type.negative}
                 ticker={srcCoinData?.ticker}
               />

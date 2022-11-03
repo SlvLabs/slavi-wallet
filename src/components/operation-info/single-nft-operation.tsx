@@ -17,9 +17,10 @@ import Layout from '../../utils/layout';
 
 export interface SingleNftOperationProps {
   operation: OperationDetails;
+  type?: Type
 }
 
-export function SingleNftOperation({operation}: SingleNftOperationProps) {
+export function SingleNftOperation({operation, type}: SingleNftOperationProps) {
   const {t} = useTranslation();
 
   const coin = useCoinDetails(operation.coin);
@@ -36,7 +37,7 @@ export function SingleNftOperation({operation}: SingleNftOperationProps) {
             <AmountOperation
               amount={movement.amount}
               ticker={movement.name}
-              type={Type.positive}
+              type={type || Type.positive}
             />
           )}
         />)}

@@ -163,6 +163,7 @@ const App: () => ReactNode = () => {
   );
 
   useEffect(() => {
+    console.log('loadInitial')
     setInitialLoaded(false);
     store.dispatch(setGlobalLoading());
     coreBootstraper.loadInitial().then(() => {
@@ -182,6 +183,7 @@ const App: () => ReactNode = () => {
       return;
     }
 
+    console.log('loadWalletServices')
     store.dispatch(setGlobalLoading());
     performanceMonitor.startTrace('BOOTSTRAP').then(trace => {
       coreBootstraper

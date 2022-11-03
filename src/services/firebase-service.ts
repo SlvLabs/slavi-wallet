@@ -39,10 +39,6 @@ export class FirebaseService {
 
     notifee.onForegroundEvent(this.onLocalNotification.bind(this));
     notifee.onBackgroundEvent(this.onLocalNotification.bind(this));
-
-    await notifee.setBadgeCount(0);
-
-    // TODO: process initial notification
   }
 
   async requestPermission() {
@@ -93,11 +89,10 @@ export class FirebaseService {
         vibrationPattern: [300, 500],
       },
       ios: {
-        badgeCount: 1,
         sound: this.sounds[0].url,
         foregroundPresentationOptions: {
           alert: true,
-          badge: true,
+          badge: false,
           sound: true,
         },
       },

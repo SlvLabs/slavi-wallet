@@ -1,27 +1,27 @@
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import ROUTES from '../navigation/config/routes';
 import notifee, {AndroidImportance} from '@notifee/react-native';
-import {Event} from '@notifee/react-native/src/types/Notification';
+import {Event, EventType} from '@notifee/react-native/src/types/Notification';
 import NotificationSounds, {Sound} from 'react-native-notification-sounds';
-
-export type NavigationFunction = (route: string, params?: any) => void;
+import {AndroidLaunchActivityFlag} from '@notifee/react-native/src/types/NotificationAndroid';
+import { navigate } from '../navigation/navigate';
 
 export class FirebaseService {
-  private readonly navigation: NavigationFunction;
   private sounds: Sound[] = [];
 
   private static channelId = 'slavi-wallet-channel';
   private static channelName = 'slavi-wallet-channel';
 
-  constructor(navigation: NavigationFunction) {
-    this.navigation = navigation;
+  constructor() {
+    messaging().onMessage(this.onMessage.bind(this));
+    messaging().onNotificationOpenedApp(FirebaseService.onOpen);
+
+    notifee.onForegroundEvent(FirebaseService.onLocalNotification);
+    notifee.onBackgroundEvent(FirebaseService.onLocalNotification);
   }
 
   async init() {
     await this.requestPermission();
-
-    messaging().onMessage(this.onMessage.bind(this));
-    messaging().onNotificationOpenedApp(this.onOpen.bind(this));
 
     this.sounds = await NotificationSounds.getNotifications('notification');
 
@@ -37,8 +37,9 @@ export class FirebaseService {
       });
     }
 
-    notifee.onForegroundEvent(this.onLocalNotification.bind(this));
-    notifee.onBackgroundEvent(this.onLocalNotification.bind(this));
+    await FirebaseService.processInitialNotification();
+
+    await notifee.setBadgeCount(0);
   }
 
   async requestPermission() {
@@ -67,10 +68,6 @@ export class FirebaseService {
     messaging().onTokenRefresh(listener);
   }
 
-  private onOpen(message: FirebaseMessagingTypes.RemoteMessage): void {
-    this.navigate(message?.data?.type, message.data);
-  }
-
   private async onMessage(message: FirebaseMessagingTypes.RemoteMessage): Promise<void> {
     if(!message.notification?.body) {
       return;
@@ -82,11 +79,12 @@ export class FirebaseService {
       android: {
         sound: this.sounds[0].url,
         channelId: FirebaseService.channelId,
+        vibrationPattern: [300, 500],
         pressAction: {
           id: message.messageId || 'default',
-          launchActivity: message.data?.type,
-        },
-        vibrationPattern: [300, 500],
+          launchActivity: 'com.defiwalletmobile.MainActivity',
+          launchActivityFlags: [AndroidLaunchActivityFlag.SINGLE_TOP]
+        }
       },
       ios: {
         sound: this.sounds[0].url,
@@ -101,20 +99,29 @@ export class FirebaseService {
 
   }
 
-  private async onLocalNotification(notification: Event) {
-    this.navigate(notification.detail.pressAction?.launchActivity, notification.detail.notification?.data);
+  private static onOpen(message: FirebaseMessagingTypes.RemoteMessage): void {
+    FirebaseService.navigateNotification(message.data);
   }
 
-  private navigate(notificationType?: string, data?: { [key: string]: string }) {
-    if(!this.navigation) {
+  private static async onLocalNotification(notification: Event) {
+    console.log('onLocalNotification', notification)
+    await notifee.setBadgeCount(0);
+    if(notification.type === EventType.PRESS) {
+      FirebaseService.navigateNotification(notification.detail.notification?.data);
+    }
+  }
+
+  private static async navigateNotification(data?: { [key: string]: string }) {
+    console.log('navigateNotification: ', data)
+    if(!data?.type) {
       return;
     }
 
-    switch (notificationType) {
+    switch (data?.type) {
       case 'operations':
-        this.navigation(ROUTES.TABS.OPERATIONS);
+        navigate(ROUTES.TABS.OPERATIONS);
         if(data?.operationId) {
-          this.navigation(ROUTES.TABS.OPERATIONS, {
+          navigate(ROUTES.TABS.OPERATIONS, {
             screen: ROUTES.OPERATIONS.DETAILS,
             params: {
               id: +data.operationId,
@@ -123,12 +130,22 @@ export class FirebaseService {
         }
         break;
       case 'swap':
-        this.navigation(ROUTES.TABS.SWAP);
+        navigate(ROUTES.TABS.SWAP);
         break;
       case 'main':
-        this.navigation(ROUTES.TABS.COINS);
+        navigate(ROUTES.TABS.COINS);
         break;
     }
+  }
+
+  private static async processInitialNotification() {
+    const initialNotification  = await notifee.getInitialNotification();
+    if(initialNotification && initialNotification.notification?.data?.type) {
+      FirebaseService.navigateNotification(initialNotification.notification.data);
+    }
+
+    const remoteInitialNotification = await messaging().getInitialNotification();
+    FirebaseService.navigateNotification(remoteInitialNotification?.data)
   }
 
 }

@@ -8,19 +8,22 @@ import useTranslation from '../../utils/use-translation';
 
 export interface AddressOperationProps {
   address: string;
+  addressName?: string;
   style?: TextStyle;
 }
 
-export function AddressOperation({address, style}: AddressOperationProps) {
+export function AddressOperation({address, style, addressName}: AddressOperationProps) {
   const {t} = useTranslation();
 
   const copy = useCallback(() => {
     Clipboard.setString(address);
     Toast.show(t('Copied to clipboard'));
   }, []);
+
+  console.log(address, addressName)
   return (
     <TouchableOpacity onPress={copy}>
-      <Text style={{...styles.text, ...style}}>{shrinkAddress(address, 5, 5,20)}</Text>
+      <Text style={{...styles.text, ...style}}>{addressName || shrinkAddress(address, 5, 5,20)}</Text>
     </TouchableOpacity>
   );
 }

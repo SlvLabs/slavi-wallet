@@ -35,7 +35,7 @@ export function OperationApproveCall({operation}: OperationApproveCallProps) {
         )}
       />}
       {!!operation.contract && <RowOperation label={t('detailsInteractedWith')} content={<AddressOperation address={operation.contract}/>}/>}
-      {!!operation.fromAddress && <RowOperation label={t('detailsInteractedFrom')} content={<AddressOperation address={operation.fromAddress}/>}/>}
+      {!!operation.fromAddress && <RowOperation label={t('detailsInteractedFrom')} content={<AddressOperation address={operation.fromAddress.address} addressName={operation.fromAddress.name}/>}/>}
       {!!coin?.id && <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />}
     </ContainerOperation>
   );

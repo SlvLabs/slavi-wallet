@@ -45,5 +45,6 @@ export const operationApproveCall = require('./opearion-call.png');
 export const operationSwap = require('./operation-swap.png');
 export const operationNftTransfer = require('./operation-nft-transfer.png');
 export const swapIcon = require('./swap-icon.png');
+export const attention = require('./attention.png');
 
 export * from './earn-stubs';

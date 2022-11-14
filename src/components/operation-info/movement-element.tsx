@@ -8,6 +8,7 @@ import theme from '../../theme';
 export interface MovementOperationProps {
   label: string;
   address: string;
+  addressName?: string;
   amount: string;
   ticker: string;
   type: Type;
@@ -16,12 +17,12 @@ export interface MovementOperationProps {
 const cryptoPrecision = 8;
 const cryptoLimit = 0.00000001
 
-export function MovementElement({label, address, amount, ticker, type}: MovementOperationProps) {
+export function MovementElement({label, address, amount, ticker, type, addressName}: MovementOperationProps) {
   return (
     <View style={styles.container}>
       <View style={styles.leftColumn}>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.address}>{shrinkAddress(address, 8, 8, 20)}</Text>
+        <Text style={styles.address}>{addressName || shrinkAddress(address, 8, 8, 20)}</Text>
       </View>
       <OperationAmount
         amount={makeRoundedBalance(cryptoPrecision, amount, cryptoLimit)}

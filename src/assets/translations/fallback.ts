@@ -470,6 +470,14 @@ const translations = {
   filterNftSend: 'Nft withdrawal',
   filterBurn: 'Burn',
   tickerAddress: '{{ticker}} address',
+  'Push notifications': 'Push notifications',
+  deleteAccount: 'Delete account',
+  logout: 'Account log out',
+  attention: 'Attention!',
+  deleteAccountDescription: 'Deleting your account will result in the loss of access to your funds inside this wallet.',
+  logoutDescription: 'Logging out can result in the loss of access to your funds inside this wallet. Please save your private keys',
+  attentionContinue: 'Continue',
+  attentionCancel: 'Cancel',
 };
 
 export default translations;

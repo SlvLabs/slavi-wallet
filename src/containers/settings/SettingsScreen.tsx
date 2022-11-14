@@ -9,6 +9,8 @@ import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/sel
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Screen from '../../components/screen';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
+import {useDeleteAccount} from '../../hooks/useDeleteAccount';
+import {useLogout} from '../../hooks/useLogout';
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>;
 
@@ -64,6 +66,9 @@ const SettingsScreen = () => {
     },
     [navigation, authService]
   );
+
+  const {modal: deleteAccountModal, show: showDeleteAccount} = useDeleteAccount();
+  const {modal: logoutModal, show: showLogout} = useLogout();
 
   return (
     <Screen title={t('Settings')} disableBackButton={true}>
@@ -139,7 +144,19 @@ const SettingsScreen = () => {
           </ListItem.Content>
           {chevron}
         </ListItem>
+        <ListItem key={'deleteAccount'} bottomDivider onPress={showDeleteAccount} containerStyle={styles.listItem}>
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{t('deleteAccount')}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+        <ListItem key={'logout'} bottomDivider onPress={showLogout} containerStyle={styles.listItem}>
+          <ListItem.Content>
+            <ListItem.Title style={styles.title}>{t('logout')}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
       </KeyboardAwareScrollView>
+      {deleteAccountModal}
+      {logoutModal}
     </Screen>
   );
 };

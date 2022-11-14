@@ -10,6 +10,7 @@ import {
 import React from 'react';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
+import {useSelectIsAuthorized} from '@slavi/wallet-core/src/store/modules/auth/selectors';
 
 export interface ModalProps {
   visible?: boolean;
@@ -25,6 +26,8 @@ export interface BaseModalProps extends ModalProps {
 }
 
 const BaseModal = (props: BaseModalProps) => {
+  const isAuth = useSelectIsAuthorized();
+
   const content = (
     <View style={{...styles.modalView, ...props.modalStyle}} >
       <TouchableWithoutFeedback>
@@ -42,7 +45,7 @@ const BaseModal = (props: BaseModalProps) => {
   );
 
   return (
-    <Modal animationType="fade" transparent={true} visible={props.visible} statusBarTranslucent={true}>
+    <Modal animationType="fade" transparent={true} visible={isAuth && props.visible} statusBarTranslucent={true}>
       {props.onCancel ? (
         <TouchableOpacity style={styles.centeredView} onPress={props.onCancel}>
           {content}

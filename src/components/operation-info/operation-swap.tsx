@@ -61,7 +61,7 @@ export function OperationSwap({operation}: OperationSwapProps) {
           />
         )}
       />}
-      {!!operation.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress}/>}/>}
+      {!!operation.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name}/>}/>}
       {!!coin?.id && <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />}
     </ContainerOperation>
   );

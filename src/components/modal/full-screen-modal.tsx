@@ -10,6 +10,7 @@ import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../utils/layout';
+import {useSelectIsAuthorized} from '@slavi/wallet-core/src/store/modules/auth/selectors';
 
 export interface FullScreenModalProps {
   visible: boolean;
@@ -27,10 +28,11 @@ const defaultAnimation = 'slide';
 const defaultIconColor = theme.colors.lightGray;
 
 const FullScreenModal = (props: FullScreenModalProps) => {
+  const isAuth = useSelectIsAuthorized();
   return (
     <Modal
       animationType={props.animationType || defaultAnimation}
-      visible={props.visible}
+      visible={isAuth && props.visible}
       statusBarTranslucent={true}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.container}>
         <View style={styles.paddingContainer}>

@@ -217,6 +217,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.dark,
+    zIndex: 999,
+    elevation: 999,
   },
   gradient: {
     flex: 1,

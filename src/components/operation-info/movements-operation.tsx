@@ -39,7 +39,8 @@ export function MovementsOperation({from, to, ticker}: MovementsOperationProps) 
             {from.map((movement) => (
               <MovementElement
                 label={t('detailsFrom')}
-                address={movement.address}
+                address={movement.address.address}
+                addressName={movement.address.name}
                 amount={movement.amount}
                 type={Type.negative}
                 ticker={ticker}
@@ -55,7 +56,8 @@ export function MovementsOperation({from, to, ticker}: MovementsOperationProps) 
             {to.map((movement, index) => (
               <MovementElement
                 label={t('detailsTo')}
-                address={movement.address}
+                address={movement.address.address}
+                addressName={movement.address.name}
                 amount={movement.amount}
                 type={Type.positive}
                 ticker={ticker}

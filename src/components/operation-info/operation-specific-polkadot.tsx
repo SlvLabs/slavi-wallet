@@ -34,8 +34,8 @@ export function OperationSpecificPolkadot({operation}: OperationSpecificPolkadot
         />)}
       <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created}/>}/>
       <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
-      {!!operation.fromAddress && <RowOperation label={t('detailsSentFrom')} content={<AddressOperation address={operation.fromAddress}/>}/>}
-      {!!operation.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress}/>}/>}
+      {!!operation.fromAddress && <RowOperation label={t('detailsSentFrom')} content={<AddressOperation address={operation.fromAddress.address} addressName={operation.fromAddress.name}/>}/>}
+      {!!operation.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name}/>}/>}
     </ContainerOperation>
   );
 }

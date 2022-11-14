@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '700',
     fontSize: Layout.isSmallDevice ? 18: 20,
-    lineHeight: Layout.isSmallDevice ? 14 : 28,
+    lineHeight: Layout.isSmallDevice ? 24 : 28,
     color: theme.colors.white,
     marginTop: 24,
   },

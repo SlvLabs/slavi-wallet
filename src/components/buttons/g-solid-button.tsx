@@ -13,7 +13,7 @@ const GSolidButton = (props: SolidButtonProps) => {
       ViewComponent={LinearGradient}
       linearGradientProps={gradient || (disabled ? theme.gradients.disabledButton : theme.gradients.button)}
       containerStyle={styles.buttonContainer}
-      disabledTitleStyle={{color: theme.colors.textLightGray1, ...props.disabledTitleStyle}}
+      disabledTitleStyle={{color: theme.colors.textLightGray1}}
       {...props}
     />
   );

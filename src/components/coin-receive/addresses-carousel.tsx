@@ -115,7 +115,6 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
           renderItem={_renderItem}
           data={props.addresses}
           sliderWidth={220}
-          // sliderHeight={700}
           itemWidth={220}
           loop={false}
           enableSnap={true}
@@ -128,11 +127,10 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
             carousel.current = c;
           }}
           vertical={false}
+          /* @ts-ignore */
           decelerationRate={'fast'}
           horizontal={true}
           useExperimentalSnap={true}
-          // disableIntervalMomentum={true} //disable multi swipe
-          // enableMomentum={true}
           useScrollView={true}
         />
       </View>

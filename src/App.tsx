@@ -2,14 +2,7 @@ import './global';
 
 import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {AppState, Platform, StatusBar, Text} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
@@ -19,10 +12,7 @@ import {createCoreBootstrap} from './services/bootstraper';
 import {ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
 import asyncStorageProvider from './services/asynс-storage-provider';
 import servicesContext from '@slavi/wallet-core/src/contexts/services-context';
-import {
-  setGlobalLoading,
-  unsetGlobalLoading,
-} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
+import {setGlobalLoading, unsetGlobalLoading} from '@slavi/wallet-core/src/store/modules/global-loading/global-loading';
 import crashlytics from '@react-native-firebase/crashlytics';
 import DefaultBoundary from './error-bounary/default-boundary';
 import SimpleErrorBoundary from './components/error-boundary/simple-error-boundary';
@@ -40,13 +30,13 @@ import useAutoBlock from './utils/use-auto-block';
 import AuthModal from './components/modal/auth-modal';
 import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
-import { unsetRequireTimeFix } from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import {unsetRequireTimeFix} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
 
 const App: () => ReactNode = () => {
-  const [isAccountInitialized, setAccountInitialized] =
-    useState<boolean>(false);
+  const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
   const [isBootstrapped, setBootstrapped] = useState<boolean>(true);
+  const [isRealBootstraped, setIsRealBootstrapped] = useState<boolean>(false);
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [isInitFinishShow, setInitFinishShow] = useState<boolean>(false);
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
@@ -56,14 +46,14 @@ const App: () => ReactNode = () => {
 
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = useState<boolean>(false);
-  const [isMnemonicConfirmed, setIsMnemonicConfirmed] =
-    useState<boolean>(false);
+  const [isMnemonicConfirmed, setIsMnemonicConfirmed] = useState<boolean>(false);
+  const [activeCoins, setActiveCoins] = useState<string[]>([]);
 
   const services = useRef<ServiceLocatorCoreInterface>({
     dataStoreProvider: asyncStorageProvider,
   });
 
-  const devMode = useMemo(() => Config.DEV_MODE === '1', [Config.DEV_MODE]);
+  const devMode = Config.DEV_MODE === '1';
 
   const store = useMemo(() => initStore(services.current), []);
 
@@ -71,10 +61,7 @@ const App: () => ReactNode = () => {
     store.dispatch(unsetRequireTimeFix());
   }, [store]);
 
-  const authSubscriber = useCallback(
-    () => setAccountInitialized(store.getState().account.isInitialized),
-    [store],
-  );
+  const authSubscriber = useCallback(() => setAccountInitialized(store.getState().account.isInitialized), [store]);
   store.subscribe(authSubscriber);
 
   store.subscribe(() => {
@@ -105,25 +92,46 @@ const App: () => ReactNode = () => {
     setHelpShow(store.getState().initialization.helpShow);
   });
 
-  const onAuthChange = useCallback((authorized: boolean) => {
-    if(!services.current.authService) {
-      return;
-    }
-
-    const state = store.getState();
-
-    if(!state.globalLoading.loading) {
-      if (services.current.authService.isAuthEnable()) {
-        setIsAuthorized(authorized);
-      } else {
-        setIsAuthorized(true);
-      }
-    }
-  }, []);
-
   store.subscribe(() =>
-    setIsMnemonicConfirmed(store.getState().account.confirmed),
+    setActiveCoins(prev => {
+      const possibleNew = Object.values(store.getState().coins.coins)
+        .filter(c => c.shown)
+        .map(c => c.name);
+      let should = false;
+      if (possibleNew.length === prev.length) {
+        for (const coin of possibleNew) {
+          if (!prev.includes(coin)) {
+            should = true;
+            break;
+          }
+        }
+      } else {
+        should = true;
+      }
+      return should ? possibleNew : prev;
+    }),
   );
+
+  const onAuthChange = useCallback(
+    (authorized: boolean) => {
+      if (!services.current.authService) {
+        return;
+      }
+
+      const state = store.getState();
+
+      if (!state.globalLoading.loading) {
+        if (services.current.authService.isAuthEnable()) {
+          setIsAuthorized(authorized);
+        } else {
+          setIsAuthorized(true);
+        }
+      }
+    },
+    [store],
+  );
+
+  store.subscribe(() => setIsMnemonicConfirmed(store.getState().account.confirmed));
 
   const performanceMonitor = useMemo(() => {
     let performanceMonitorInterface: PerformanceMonitorInterface;
@@ -146,44 +154,39 @@ const App: () => ReactNode = () => {
         services.current,
         devMode,
         Config.APP_VERSION,
-
       ),
     [store, devMode, performanceMonitor],
   );
 
   useEffect(() => {
-    console.log('loadInitial')
     setInitialLoaded(false);
     store.dispatch(setGlobalLoading());
     coreBootstraper.loadInitial().then(() => {
       setInitialLoaded(true);
       const authService = services.current.authService;
       if (authService) {
-
         setIsAuthorized(authService.getAuthState());
         authService?.onAuthChange.add(onAuthChange);
       }
       store.dispatch(unsetGlobalLoading());
     });
-  }, [store, coreBootstraper]);
+  }, [store, coreBootstraper, onAuthChange]);
 
   useEffect(() => {
     if (!isMnemonicConfirmed || !initialLoaded) {
       return;
     }
-
-    console.log('loadWalletServices')
+    setIsRealBootstrapped(false);
     store.dispatch(setGlobalLoading());
     performanceMonitor.startTrace('BOOTSTRAP').then(trace => {
       coreBootstraper
         .loadWalletServices()
         .then(() => {
-          console.log('bootstraped');
-
           trace.stop();
 
           store.dispatch<any>(initializationLoad()).then(() => {
             store.dispatch(unsetGlobalLoading());
+            setIsRealBootstrapped(true);
           });
         })
         .catch(e => {
@@ -194,17 +197,41 @@ const App: () => ReactNode = () => {
     });
     return () => {
       if (services.current.ws) {
+        // expecting close socket on any change
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         services.current.ws.close();
+        setIsRealBootstrapped(false);
       }
     };
-  }, [
-    store,
-    devMode,
-    initialLoaded,
-    isMnemonicConfirmed,
-    coreBootstraper,
-    performanceMonitor,
-  ]);
+  }, [store, devMode, initialLoaded, isMnemonicConfirmed, coreBootstraper, performanceMonitor]);
+
+  useEffect(() => {
+    if (!initialLoaded || !isMnemonicConfirmed || !isRealBootstraped) {
+      return;
+    }
+    let canceled = false;
+    const addressService = services?.current.addressesService;
+    if (!addressService) {
+      return;
+    } else {
+      performanceMonitor
+        .startTrace('change generation')
+        .then(async trace => {
+          if (services.current.addressesService) {
+            await services.current.addressesService.handleChangeAddressesInitial(activeCoins, () => canceled);
+          }
+          trace.stop();
+        })
+        .catch(e => {
+          crashlytics().recordError(e);
+          console.error(e);
+          console.error(e.stack);
+        });
+      return () => {
+        canceled = true;
+      };
+    }
+  }, [performanceMonitor, activeCoins, initialLoaded, isMnemonicConfirmed, isRealBootstraped]);
 
   useEffect(() => {
     if (isUpdateAvailable) {
@@ -221,15 +248,17 @@ const App: () => ReactNode = () => {
     const onChange = (newState: 'active' | 'background' | 'inactive' | 'unknown' | 'extension') => {
       if (newState === 'active') {
         setIsFocused(true);
-      } else if (newState === 'background' || newState === 'inactive') {
-        setIsFocused(false);
+      } else {
+        if (newState === 'background' || newState === 'inactive') {
+          setIsFocused(false);
+        }
       }
     };
 
     AppState.addEventListener('change', onChange);
     return () => {
       AppState.removeEventListener('change', onChange);
-    }
+    };
   }, []);
 
   const authLoading = useAutoBlock(services.current.authService);
@@ -241,21 +270,19 @@ const App: () => ReactNode = () => {
         <servicesContext.Provider value={services.current}>
           <SafeAreaProvider>
             {!isBootstrapped && isAccountInitialized && <AuthModal visible={!isAuthorized} loading={authLoading} />}
-              <MainNavigator
-                isInitialized={isInitialized}
-                isAccountInitialized={isAccountInitialized}
-                isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
-                isInitializationFinished={isInitFinishShow}
-                isUpdateRequired={isUpdateRequired}
-                helpShow={helpShow}
-              />
+            <MainNavigator
+              isInitialized={isInitialized}
+              isAccountInitialized={isAccountInitialized}
+              isLoading={isBootstrapped || store.getState().globalLoading.loading !== 0}
+              isInitializationFinished={isInitFinishShow}
+              isUpdateRequired={isUpdateRequired}
+              helpShow={helpShow}
+            />
             {!isBootstrapped && <WalletConnectSessionRequestModal />}
             {!isBootstrapped && <WalletConnectSignRequestModal />}
             {!isBootstrapped && <WalletConnectTxRequestModal />}
             {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
-            {!isBootstrapped && isAccountInitialized && isInitialized && (
-              <WalletConnectLink loading={!isAuthorized} />
-            )}
+            {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized} />}
             {devMode && (
               <Text
                 style={{

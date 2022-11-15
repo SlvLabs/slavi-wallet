@@ -1,10 +1,10 @@
 import React, {useMemo} from 'react';
-import {Animated, Easing, StyleSheet, View, ViewStyle} from 'react-native';
+import {Animated, Easing, ImageStyle, StyleSheet, View, ViewStyle} from 'react-native';
 import {spinner} from '../assets/images';
 
 export interface SpinnerProps {
   containerStyle?: ViewStyle;
-  spinnerStyle?: ViewStyle;
+  spinnerStyle?: ImageStyle;
 }
 
 const Spinner = (props: SpinnerProps) => {

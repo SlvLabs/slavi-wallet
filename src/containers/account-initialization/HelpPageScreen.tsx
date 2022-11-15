@@ -140,7 +140,6 @@ export default function HelpPageScreen() {
             ref={c => {
               carousel.current = c;
             }}
-            // onSnapToItem={onSnapToItem}
             onScrollIndexChanged={onSnapToItem}
             renderItem={_renderItem}
             data={allPagesWithEnd}
@@ -151,6 +150,7 @@ export default function HelpPageScreen() {
             shouldOptimizeUpdates={true}
             firstItem={0}
             inactiveSlideOpacity={-1}
+            /* @ts-ignore */
             decelerationRate={'fast'}
             horizontal={true}
             vertical={false}

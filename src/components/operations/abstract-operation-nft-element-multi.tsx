@@ -16,6 +16,7 @@ export interface AbstractOperationNftElementMultiProps extends OperationElementP
   logo: ImageSourcePropType;
   extraLogo?: ImageSourcePropType;
   amount?: string;
+  onPress?: () => void;
 }
 
 const cryptoPrecision = 8;

@@ -20,7 +20,6 @@ import ROUTES from '../../navigation/config/routes';
 import NoticeRow from '../../components/error/notice-row';
 import Spinner from '../../components/spinner';
 import Screen from '../../components/screen';
-import SafeAreaView from 'react-native-safe-area-view';
 
 const BuyCoinScreen = () => {
   const route = useRoute<CoinBuyRouteProps>();
@@ -126,25 +125,25 @@ const BuyCoinScreen = () => {
   return (
   <Screen title={t('Buy') + (coinDetails.ticker ? ' ' + coinDetails.ticker : '')}>
     {initError ? (
-      <SafeAreaView style={styles.screen} forceInset={{top: 'always', bottom: 'never'}}>
+      <View style={styles.screen}>
         <CannotProceedModal
           visible={cannotProceedModalVisible}
           onSubmit={onCannotProceedOK}
           text={initError}
           showImg={false}
         />
-      </SafeAreaView>
+      </View>
     ) : notAvailable ? (
-      <SafeAreaView style={styles.screen} forceInset={{top: 'always', bottom: 'never'}}>
+      <View style={styles.screen}>
         <CannotProceedModal
           visible={cannotProceedModalVisible}
           onSubmit={onCannotProceedOK}
           text={'Sorry, our service is not available in the location you are in'}
           showImg={true}
         />
-      </SafeAreaView>
+      </View>
     ) : (
-      <SafeAreaView style={styles.screen} forceInset={{top: 'always', bottom: 'never'}}>
+      <View style={styles.screen}>
         <AddressSelector
           label={t('To account')}
           containerStyle={styles.addressSelector}
@@ -191,7 +190,7 @@ const BuyCoinScreen = () => {
           containerStyle={styles.continue}
         />
         <ConfirmationModal visible={confirmationModalVisible} onSubmit={onSubmit} onCancel={confirmationModalCancel} />
-      </SafeAreaView>
+      </View>
     )}
   </Screen>
   )

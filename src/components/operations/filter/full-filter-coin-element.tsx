@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {ActivityIndicator, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import getImageSource from '../../../utils/get-image-source';
 import {Image} from 'react-native-elements';
 import CoinType from '@slavi/wallet-core/src/utils/coin-types';
@@ -45,9 +39,7 @@ const FullFilterCoinElement = (props: FullFilterCoinElementProps) => {
       </View>
       <View style={styles.rightColumn}>
         <View style={styles.selectedIndicator}>
-          {props.selected && (
-            <CustomIcon name={'check'} size={24} color={theme.colors.green} />
-          )}
+          {props.selected && <CustomIcon name={'check'} size={24} color={theme.colors.green} />}
         </View>
       </View>
     </TouchableOpacity>
@@ -122,7 +114,7 @@ const styles = StyleSheet.create({
   },
   containerActive: {
     backgroundColor: theme.colors.maxDarkBackground,
-  }
+  },
 });
 
 export default FullFilterCoinElement;

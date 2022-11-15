@@ -11,12 +11,13 @@ import CoinsFilterModal from './coins-filter-modal';
 export interface FullFilterCoinSectionProps {
   selectedCoins: string[];
   submitCoins: (coins: string[]) => void;
+  visible: boolean;
 }
 
 const COIN_COUNT = 3;
 
 const FullFilterCoinSection = (props: FullFilterCoinSectionProps) => {
-  const {selectedCoins: initialSelectedCoins, submitCoins} = props;
+  const {selectedCoins: initialSelectedCoins, submitCoins, visible} = props;
 
   const {t} = useTranslation();
 
@@ -24,9 +25,7 @@ const FullFilterCoinSection = (props: FullFilterCoinSectionProps) => {
   const coins = useCoinsSelector().slice(COIN_COUNT);
 
   const [coinModalShown, setCoinModalShown] = useState<boolean>(false);
-  const [selectedCoins, setSelectedCoins] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [selectedCoins, setSelectedCoins] = useState<Record<string, boolean>>({});
 
   const hideCoinFilter = useCallback(() => setCoinModalShown(false), []);
   const showCoinFilter = useCallback(() => setCoinModalShown(true), []);
@@ -39,13 +38,11 @@ const FullFilterCoinSection = (props: FullFilterCoinSectionProps) => {
     [hideCoinFilter, submitCoins],
   );
 
-  useEffect(
-    () =>
-      setSelectedCoins(
-        Object.fromEntries(initialSelectedCoins.map(coin => [coin, true])),
-      ),
-    [initialSelectedCoins],
-  );
+  useEffect(() => {
+    if (visible) {
+      setSelectedCoins(Object.fromEntries(initialSelectedCoins.map(coin => [coin, true])));
+    }
+  }, [initialSelectedCoins, visible]);
 
   const onCoinPress = (coin: string) => {
     const plainSelected: string[] = [];
@@ -66,13 +63,9 @@ const FullFilterCoinSection = (props: FullFilterCoinSectionProps) => {
     </TouchableOpacity>
   );
 
-  return (
+  return visible ? (
     <FullFilterSection title={t('Coins')} rightHeaderElement={showAllElement}>
-      <FullFilterCoinList
-        coins={coins}
-        onSelect={onCoinPress}
-        selectedCoins={selectedCoins}
-      />
+      <FullFilterCoinList coins={coins} onSelect={onCoinPress} selectedCoins={selectedCoins} />
       <CoinsFilterModal
         visible={coinModalShown}
         onCancel={hideCoinFilter}
@@ -80,7 +73,7 @@ const FullFilterCoinSection = (props: FullFilterCoinSectionProps) => {
         selectedCoins={props.selectedCoins}
       />
     </FullFilterSection>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({

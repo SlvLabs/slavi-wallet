@@ -1,10 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import FullFilterChip from './full-filter-chip';
+import {TranslationsKey} from '../../../utils/use-translation';
 
 export interface ChipData {
   id: string;
-  text: string;
+  text: TranslationsKey;
 }
 
 export interface FullFilterChipListProps {

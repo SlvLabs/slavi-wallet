@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import useTranslation, {TranslationsKey} from '../../../utils/use-translation';
 
 export interface FullFilterChipProps {
-  title: string;
+  title: TranslationsKey;
   selected: boolean;
   onPress: () => void;
 }
@@ -13,23 +13,17 @@ export interface FullFilterChipProps {
 const FullFilterChip = (props: FullFilterChipProps) => {
   const {t} = useTranslation();
 
-  const title = useMemo(() => t(props.title as TranslationsKey), [props.title, t]);
+  const title = useMemo(() => t(props.title), [props.title, t]);
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={props.onPress}>
+    <TouchableOpacity style={styles.container} onPress={props.onPress}>
       {props.selected ? (
-        <LinearGradient {...theme.gradients.button} style={styles.contentContainer} >
-          <Text style={{...styles.title, ...styles.activeTitle}}>
-            {title}
-          </Text>
+        <LinearGradient {...theme.gradients.button} style={styles.contentContainer}>
+          <Text style={{...styles.title, ...styles.activeTitle}}>{title}</Text>
         </LinearGradient>
       ) : (
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>
-            {title}
-          </Text>
+          <Text style={styles.title}>{title}</Text>
         </View>
       )}
     </TouchableOpacity>
@@ -49,7 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textTransform: 'uppercase',
-    color: theme.colors.textLightGray3
+    color: theme.colors.textLightGray3,
   },
   activeTitle: {
     color: theme.colors.white,
@@ -63,7 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     backgroundColor: theme.colors.cardBackground3,
-  }
+  },
 });
 
 export default FullFilterChip;

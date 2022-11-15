@@ -103,9 +103,11 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
       rightIconOnPress={submit}
       rightIconColor={theme.colors.green}>
       <ScrollView>
-        {!props.hideCoinsFilter && (
-          <FullFilterCoinSection selectedCoins={selectedCoins} submitCoins={setSelectedCoins} />
-        )}
+        <FullFilterCoinSection
+          selectedCoins={selectedCoins}
+          submitCoins={setSelectedCoins}
+          visible={!props.hideCoinsFilter}
+        />
         <FullFilterDateSection
           startDate={startDate}
           finishDate={finishDate}

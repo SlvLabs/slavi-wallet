@@ -57,11 +57,18 @@ function JumpButton({onPress, direction, enabled}: JumpButtonProps) {
 export default function HelpPageScreen() {
   const [currentPage, setCurrentPage] = React.useState(0);
   const _currentPageRef = useRef<number>(0);
-  const onSnapToItem = useCallback((newIndex: number) => {
-    setCurrentPage(newIndex);
-    _currentPageRef.current = newIndex;
-  }, []);
   const dispatch = useDispatch();
+  const onSnapToItem = useCallback(
+    (newIndex: number) => {
+      if (newIndex === allPages.length) {
+        dispatch(skipHelp());
+        return;
+      }
+      setCurrentPage(newIndex);
+      _currentPageRef.current = newIndex;
+    },
+    [dispatch],
+  );
 
   const {t} = useTranslation();
   const headers = useMemo(() => allPages.map(p => t(`help_header_${p}` as PagesHeaders)), [t]);
@@ -108,6 +115,10 @@ export default function HelpPageScreen() {
   const scrollPos = useRef<number | null>(null);
   const carouselOnScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (_currentPageRef.current === allPages.length) {
+        dispatch(skipHelp());
+        return;
+      }
       if (scrollPos.current !== null) {
         if (_currentPageRef.current === allPages.length - 1) {
           if (e.nativeEvent.contentOffset.x - scrollPos.current > Layout.window.width / 4) {

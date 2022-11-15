@@ -11,6 +11,7 @@ import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
 import Screen from '../../components/screen';
+import {usePinProtection} from '../../hooks/usePinProtection';
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -35,6 +36,8 @@ const MnemonicImportScreen = () => {
   useEffect(() => {
     dispatch(setMnemonicError(''))
   }, [dispatch, mnemonic]);
+
+  usePinProtection();
 
   return (
     <Screen title={t('Import new mnemonic phrase')}>

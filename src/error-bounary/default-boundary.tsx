@@ -1,6 +1,5 @@
 import React, {ComponentType} from 'react';
 import crashlytics from '@react-native-firebase/crashlytics';
-import SafeAreaView from 'react-native-safe-area-view';
 
 export interface DefaultBoundaryProps {
   children: React.ReactNode;

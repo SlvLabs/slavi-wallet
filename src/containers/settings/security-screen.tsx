@@ -7,11 +7,12 @@ import PinCodeModal from '../../components/modal/pin-code-modal';
 import {hasHardwareAsync} from 'expo-local-authentication';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {ListItem} from 'react-native-elements';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useAutoBlockOptions from '../../utils/use-auto-block-options';
 import Screen from '../../components/screen';
 import Layout from '../../utils/layout';
+import {usePinProtection} from '../../hooks/usePinProtection';
 
 export default function SecurityScreen() {
   const authService = useAuthService();
@@ -70,9 +71,7 @@ export default function SecurityScreen() {
     hasHardwareAsync().then(result => setBiometricIsSupported(result));
   }, []);
 
-  useFocusEffect(() => {
-    authService.forbid();
-  });
+  usePinProtection();
 
   return (
     <Screen title={'Security'}>

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     fontSize: 10,
     lineHeight: 14,
-    color: theme.colorsOld.lightGray,
+    color: theme.colors.lightGray,
     textTransform: 'uppercase',
   },
 });

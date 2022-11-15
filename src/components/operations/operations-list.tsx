@@ -3,10 +3,7 @@ import {SectionList, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {useMemo} from 'react';
 import OperationHeader from './operation-header';
 import OperationElement from './operation-element';
-import {
-  ListOperation,
-  OperationListParams,
-} from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
+import {ListOperation, OperationListParams} from '@slavi/wallet-core/src/providers/ws/hooks/use-operations-list';
 import {Icon} from 'react-native-elements';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
@@ -29,9 +26,9 @@ interface Section {
 const OperationsList = (props: OperationsListProps) => {
   const sections = useMemo(() => {
     return Object.values(props.sections)
-      .map((element: any) => ({
+      .map(element => ({
         title: element.day,
-        data: element.elements.sort((a: any, b: any) => b.created - a.created),
+        data: element.elements.sort((a, b) => b.created - a.created),
       }))
       .sort((a: Section, b: Section) => b.title.getTime() - a.title.getTime());
   }, [props.sections]);
@@ -51,16 +48,9 @@ const OperationsList = (props: OperationsListProps) => {
             sections={sections}
             keyExtractor={(item, index) => '' + item.created + index}
             renderSectionHeader={({section: {title}}) => (
-              <OperationHeader
-                containerStyle={styles.sectionHeader}
-                date={title}
-              />
+              <OperationHeader containerStyle={styles.sectionHeader} date={title} />
             )}
-            renderItem={item => (
-              <OperationElement
-                operation={item.item}
-              />
-            )}
+            renderItem={item => <OperationElement operation={item.item} />}
             onEndReached={props.onEndReached}
             onEndReachedThreshold={0.5}
             style={styles.list}
@@ -70,16 +60,9 @@ const OperationsList = (props: OperationsListProps) => {
         ) : (
           <View style={{...styles.placeholder, ...props.placeholderStyle}}>
             <View style={styles.iconContainer}>
-              <Icon
-                type={'feather'}
-                name={'grid'}
-                size={64}
-                color={theme.colors.textLightGray1}
-              />
+              <Icon type={'feather'} name={'grid'} size={64} color={theme.colors.textLightGray1} />
             </View>
-            <Text style={styles.placeholderText}>
-              {t('Operations not found')}
-            </Text>
+            <Text style={styles.placeholderText}>{t('Operations not found')}</Text>
           </View>
         )}
       </View>
@@ -119,7 +102,7 @@ const styles = StyleSheet.create({
     padding: 30,
     alignSelf: 'center',
     borderRadius: 16,
-  }
+  },
 });
 
 export default OperationsList;

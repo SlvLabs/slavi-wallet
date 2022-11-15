@@ -13,16 +13,12 @@ const OperationsListScreen = () => {
 
   return (
     <Screen title={t('Operations history')} disableBackButton={true}>
-      { isLoading && (
+      {isLoading && (
         <View style={styles.spinnerContainer}>
           <Spinner />
         </View>
       )}
-      <OperationsList
-        sections={operations}
-        onEndReached={getMore}
-        filter={updateParams}
-      />
+      <OperationsList sections={operations} onEndReached={getMore} filter={updateParams} />
     </Screen>
   );
 };
@@ -32,7 +28,7 @@ const styles = StyleSheet.create({
     minHeight: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
 });
 
 export default OperationsListScreen;

@@ -9,10 +9,8 @@ export type State = CoreState & AppState;
 
 const reducers: ReducersMapObject = {};
 
-const initStore = (
-  services: ServiceLocatorCoreInterface,
-): EnhancedStore<State> => {
-  return store.createStore<AppState>(services, reducers);
+const initStore = (services: ServiceLocatorCoreInterface): EnhancedStore<State> => {
+  return store.createStore(services, reducers);
 };
 
 export {initStore};

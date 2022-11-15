@@ -1,11 +1,5 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {Modal, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import moment, {Moment} from 'moment';
 // @ts-ignore - without types
 import DateRangePicker from '@slavi/react-native-daterange-picker';
@@ -30,28 +24,67 @@ const FullFilterDate = (props: FullFilterDateProps) => {
     onStartDateChange,
     onFinishDateChange,
     onClose,
+    visible,
   } = props;
 
   const {t} = useTranslation();
 
   const [startDate, setStartDate] = useState<Moment | null>(initialStartDate);
-  const [finishDate, setFinishDate] =
-    useState<Moment | null>(initialFinishDate);
+  const [finishDate, setFinishDate] = useState<Moment | null>(initialFinishDate);
   const [displayedDate, setDisplayedDate] = useState<Moment>(moment());
 
-  const onChange = useCallback(dates => {
-    if (typeof dates.startDate !== 'undefined') {
-      setStartDate(dates.startDate);
+  useEffect(() => {
+    if (visible) {
+      setStartDate(initialStartDate);
     }
+  }, [initialStartDate, visible]);
 
-    if (dates.endDate) {
-      setFinishDate(dates.endDate);
+  useEffect(() => {
+    if (visible) {
+      setFinishDate(initialFinishDate);
     }
+  }, [initialFinishDate, visible]);
 
-    if (typeof dates.displayedDate !== 'undefined') {
-      setDisplayedDate(dates.displayedDate);
-    }
-  }, []);
+  const onChange = useCallback(
+    (dates: {startDate?: Moment; endDate?: Moment; displayedDate?: Moment}) => {
+      if (dates.startDate && dates.endDate) {
+        setStartDate(dates.startDate);
+        setFinishDate(dates.endDate);
+      } else {
+        if (dates.startDate) {
+          if (finishDate) {
+            if (+dates.startDate > +finishDate) {
+              setStartDate(finishDate);
+              setFinishDate(dates.startDate);
+            } else {
+              setStartDate(dates.startDate);
+            }
+          } else {
+            setStartDate(dates.startDate);
+            setFinishDate(dates.startDate);
+          }
+        }
+
+        if (dates.endDate) {
+          if (startDate) {
+            if (+dates.endDate < +startDate) {
+              setFinishDate(startDate);
+              setStartDate(dates.endDate);
+            } else {
+              setFinishDate(dates.endDate);
+            }
+          } else {
+            setStartDate(dates.endDate);
+            setFinishDate(dates.endDate);
+          }
+        }
+      }
+      if (typeof dates.displayedDate !== 'undefined') {
+        setDisplayedDate(dates.displayedDate);
+      }
+    },
+    [startDate, finishDate],
+  );
 
   const onClear = useCallback(() => {
     setStartDate(null);
@@ -77,9 +110,7 @@ const FullFilterDate = (props: FullFilterDateProps) => {
           <TouchableOpacity onPress={onClose} style={styles.button}>
             <Text style={styles.buttonText}>{t('Cancel')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{...styles.button, ...styles.buttonOk}}
-            onPress={onSubmit}>
+          <TouchableOpacity style={{...styles.button, ...styles.buttonOk}} onPress={onSubmit}>
             <Text style={styles.buttonText}>{t('Ok')}</Text>
           </TouchableOpacity>
         </View>
@@ -105,10 +136,8 @@ const FullFilterDate = (props: FullFilterDateProps) => {
         monthNextButton={<Icon name={'chevron-right'} type={'feather'} size={28} color={theme.colors.white} />}
         dayTextStyle={styles.dayText}
         selectedStyle={styles.selectedStyle}
-        dayHeaderTextStyle={styles.dayHeaderTextStyle}
-
-      >
-        <View style={styles.background}/>
+        dayHeaderTextStyle={styles.dayHeaderTextStyle}>
+        <View style={styles.background} />
       </DateRangePicker>
     </Modal>
   );
@@ -176,7 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     color: theme.colors.white,
-  }
+  },
 });
 
 export default FullFilterDate;

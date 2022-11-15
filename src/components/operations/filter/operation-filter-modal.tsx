@@ -43,32 +43,28 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
     submitDates,
     submitAddress,
     onCancel,
+    visible,
   } = props;
 
   const {t} = useTranslation();
 
-  const [selectedCoins, setSelectedCoins] = useState<string[]>(
-    props.selectedCoins,
-  );
-  const [selectedStatuses, setSelectedStatuses] = useState<OperationStatus[]>(
-    props.selectedStatuses,
-  );
-  const [selectedTypes, setSelectedTypes] = useState<OperationType[]>(
-    props.selectedTypes,
-  );
+  const [selectedCoins, setSelectedCoins] = useState<string[]>(props.selectedCoins);
+  const [selectedStatuses, setSelectedStatuses] = useState<OperationStatus[]>(props.selectedStatuses);
+  const [selectedTypes, setSelectedTypes] = useState<OperationType[]>(props.selectedTypes);
   const [startDate, setStartDate] = useState<Moment | null>(initialStartDate);
-  const [finishDate, setFinishDate] =
-    useState<Moment | null>(initialFinishDate);
+  const [finishDate, setFinishDate] = useState<Moment | null>(initialFinishDate);
 
   const [address, setAddress] = useState<string | undefined>(initialAddress);
 
   useEffect(() => {
-    setSelectedCoins(initialSelectedCoins);
-    setSelectedStatuses(initialSelectedStatuses);
-    setSelectedTypes(initialSelectedTypes);
-    setStartDate(initialStartDate || null);
-    setFinishDate(initialFinishDate || null);
-    setAddress(initialAddress);
+    if (visible) {
+      setSelectedCoins(initialSelectedCoins);
+      setSelectedStatuses(initialSelectedStatuses);
+      setSelectedTypes(initialSelectedTypes);
+      setStartDate(initialStartDate);
+      setFinishDate(initialFinishDate);
+      setAddress(initialAddress);
+    }
   }, [
     initialFinishDate,
     initialSelectedCoins,
@@ -76,11 +72,11 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
     initialSelectedTypes,
     initialStartDate,
     initialAddress,
+    visible,
   ]);
 
   const submit = useCallback(() => {
     submitCoins(selectedCoins);
-    submitStatuses(selectedStatuses);
     submitStatuses(selectedStatuses);
     submitDates(startDate, finishDate);
     submitAddress(address);
@@ -108,10 +104,7 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
       rightIconColor={theme.colors.green}>
       <ScrollView>
         {!props.hideCoinsFilter && (
-          <FullFilterCoinSection
-            selectedCoins={selectedCoins}
-            submitCoins={setSelectedCoins}
-          />
+          <FullFilterCoinSection selectedCoins={selectedCoins} submitCoins={setSelectedCoins} />
         )}
         <FullFilterDateSection
           startDate={startDate}
@@ -119,18 +112,9 @@ const OperationFilterModal = (props: OperationFilterModalProps) => {
           onStartDateChange={setStartDate}
           onFinishDateChange={setFinishDate}
         />
-        <FullFilterStatusSection
-          selectedStatuses={selectedStatuses}
-          onSubmit={setSelectedStatuses}
-        />
-        <FullFilterTypeSection
-          selectedTypes={selectedTypes}
-          onSubmit={submitTypes}
-        />
-        <FullFilterAddressSection
-          onAddressChange={setAddress}
-          address={address}
-        />
+        <FullFilterStatusSection selectedStatuses={selectedStatuses} onSubmit={setSelectedStatuses} />
+        <FullFilterTypeSection selectedTypes={selectedTypes} onSubmit={submitTypes} />
+        <FullFilterAddressSection onAddressChange={setAddress} address={address} />
       </ScrollView>
     </FullScreenModal>
   );

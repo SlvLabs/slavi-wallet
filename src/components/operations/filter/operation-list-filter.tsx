@@ -1,10 +1,5 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import theme from '../../../theme';
 import CustomIcon from '../../custom-icon/custom-icon';
 import OperationFilterModal from './operation-filter-modal';
@@ -99,23 +94,11 @@ const OperationListFilter = (props: OperationListFilterProps) => {
     [hideTypeFilter],
   );
 
-  const coinsIsActive = useMemo<boolean>(
-    () => coins && coins.length > 0,
-    [coins],
-  );
-  const typesIsActive = useMemo<boolean>(
-    () => types && types.length > 0,
-    [types],
-  );
-  const statusesIsActive = useMemo<boolean>(
-    () => statuses && statuses.length > 0,
-    [statuses],
-  );
-  const addressesIsActive = useMemo<boolean>(() => !!address, [address]);
-  const datesIsActive = useMemo<boolean>(
-    () => !!startDate && !!finishDate,
-    [finishDate, startDate],
-  );
+  const coinsIsActive = coins && coins.length > 0;
+  const typesIsActive = types && types.length > 0;
+  const statusesIsActive = statuses && statuses.length > 0;
+  const addressesIsActive = !!address;
+  const datesIsActive = !!startDate && !!finishDate;
 
   useDidUpdateEffect(() => {
     props.filter({
@@ -134,35 +117,13 @@ const OperationListFilter = (props: OperationListFilterProps) => {
       horizontal={true}
       showsHorizontalScrollIndicator={false}>
       <TouchableOpacity style={styles.chip} onPress={showFilter}>
-        <CustomIcon name={'full-filter'} size={18} color={theme.colors.green}/>
+        <CustomIcon name={'full-filter'} size={18} color={theme.colors.green} />
       </TouchableOpacity>
-      {!props.hideCoinsFilter && (
-        <ScrollFilterChip
-          text={t('Coins')}
-          onPress={showCoinFilter}
-          active={coinsIsActive}
-        />
-      )}
-      <ScrollFilterChip
-        text={t('Date')}
-        onPress={showDatePicker}
-        active={datesIsActive}
-      />
-      <ScrollFilterChip
-        text={t('Status')}
-        onPress={showStatusFilter}
-        active={statusesIsActive}
-      />
-      <ScrollFilterChip
-        text={t('Type')}
-        onPress={showTypeFilter}
-        active={typesIsActive}
-      />
-      <ScrollFilterChip
-        text={t('Address')}
-        onPress={showAddressFilter}
-        active={addressesIsActive}
-      />
+      {!props.hideCoinsFilter && <ScrollFilterChip text={t('Coins')} onPress={showCoinFilter} active={coinsIsActive} />}
+      <ScrollFilterChip text={t('Date')} onPress={showDatePicker} active={datesIsActive} />
+      <ScrollFilterChip text={t('Status')} onPress={showStatusFilter} active={statusesIsActive} />
+      <ScrollFilterChip text={t('Type')} onPress={showTypeFilter} active={typesIsActive} />
+      <ScrollFilterChip text={t('Address')} onPress={showAddressFilter} active={addressesIsActive} />
       <OperationFilterModal
         visible={fullModalShown}
         onCancel={hideFilter}

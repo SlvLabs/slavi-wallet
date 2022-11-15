@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import FullScreenModal from '../../modal/full-screen-modal';
 import {StyleSheet, View} from 'react-native';
 import theme from '../../../theme';
@@ -12,23 +12,25 @@ export interface AddressesFilterModalProps {
   address?: string;
 }
 const AddressFilterModal = (props: AddressesFilterModalProps) => {
-  const {onSubmit, address: initialAddress} = props;
+  const {onSubmit, address: initialAddress, visible} = props;
 
   const {t} = useTranslation();
 
   const [address, setAddress] = useState<string | undefined>(initialAddress);
 
-  const submit = () => {
+  const submit = useCallback(() => {
     onSubmit(address);
-  };
+  }, [address, onSubmit]);
 
   useEffect(() => {
-    setAddress(initialAddress);
-  }, [initialAddress]);
+    if (visible) {
+      setAddress(initialAddress);
+    }
+  }, [initialAddress, visible]);
 
   return (
     <FullScreenModal
-      visible={props.visible}
+      visible={visible}
       onCancel={props.onCancel}
       title={t('Select addresses')}
       rightIconName={'check'}

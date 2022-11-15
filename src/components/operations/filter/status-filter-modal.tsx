@@ -13,35 +13,27 @@ export interface StatusFilterModalProps {
   selectedStatuses: OperationStatus[];
 }
 
-const statuses = Object.entries(OperationStatus).map(
-  ([_, value]): ChipData => ({id: value, text: value}),
-);
+const statuses = Object.entries(OperationStatus).map(([_, value]): ChipData => ({id: value, text: value}));
 
 const StatusFilterModal = (props: StatusFilterModalProps) => {
-  const {onSubmit, selectedStatuses: initialSelectedStatuses} = props;
+  const {onSubmit, selectedStatuses: initialSelectedStatuses, visible} = props;
 
   const {t} = useTranslation();
 
-  const [selectedStatuses, setSelectedStatuses] = useState<
-    Record<string, boolean>
-  >({});
+  const [selectedStatuses, setSelectedStatuses] = useState<Record<string, boolean>>({});
 
-  useEffect(
-    () =>
-      setSelectedStatuses(
-        Object.fromEntries(
-          initialSelectedStatuses.map(status => [status, true]),
-        ),
-      ),
-    [initialSelectedStatuses],
-  );
+  useEffect(() => {
+    if (visible) {
+      setSelectedStatuses(Object.fromEntries(initialSelectedStatuses.map(status => [status, true])));
+    }
+  }, [initialSelectedStatuses, visible]);
 
-  const onStatusPress = (chip: string) => {
-    setSelectedStatuses({
-      ...selectedStatuses,
-      [chip]: !selectedStatuses[chip],
-    });
-  };
+  const onStatusPress = useCallback((chip: string) => {
+    setSelectedStatuses(p => ({
+      ...p,
+      [chip]: !p[chip],
+    }));
+  }, []);
 
   const submit = useCallback(() => {
     const selected: OperationStatus[] = [];
@@ -55,18 +47,14 @@ const StatusFilterModal = (props: StatusFilterModalProps) => {
 
   return (
     <FullScreenModal
-      visible={props.visible}
+      visible={visible}
       onCancel={props.onCancel}
       title={t('Select statuses')}
       rightIconName={'check'}
       rightIconOnPress={submit}
       rightIconColor={theme.colors.green}>
       <ScrollView>
-        <FullFilterChipList
-          chips={statuses}
-          selectedChips={selectedStatuses}
-          onSelect={onStatusPress}
-        />
+        <FullFilterChipList chips={statuses} selectedChips={selectedStatuses} onSelect={onStatusPress} />
       </ScrollView>
     </FullScreenModal>
   );

@@ -15,28 +15,24 @@ export interface TypeFilterModalProps {
 }
 
 const TypeFilterModal = (props: TypeFilterModalProps) => {
-  const {onSubmit, selectedTypes: initialSelectedTypes} = props;
+  const {onSubmit, selectedTypes: initialSelectedTypes, visible} = props;
 
   const {t} = useTranslation();
 
-  const [selectedTypes, setSelectedTypes] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [selectedTypes, setSelectedTypes] = useState<Record<string, boolean>>({});
 
-  useEffect(
-    () =>
-      setSelectedTypes(
-        Object.fromEntries(initialSelectedTypes.map(type => [type, true])),
-      ),
-    [initialSelectedTypes],
-  );
+  useEffect(() => {
+    if (visible) {
+      setSelectedTypes(Object.fromEntries(initialSelectedTypes.map(type => [type, true])));
+    }
+  }, [initialSelectedTypes, visible]);
 
-  const onTypePress = (chip: string) => {
-    setSelectedTypes({
-      ...selectedTypes,
-      [chip]: !selectedTypes[chip],
-    });
-  };
+  const onTypePress = useCallback((chip: string) => {
+    setSelectedTypes(p => ({
+      ...p,
+      [chip]: !p[chip],
+    }));
+  }, []);
 
   const submit = useCallback(() => {
     const selected: OperationType[] = [];
@@ -50,18 +46,14 @@ const TypeFilterModal = (props: TypeFilterModalProps) => {
 
   return (
     <FullScreenModal
-      visible={props.visible}
+      visible={visible}
       onCancel={props.onCancel}
       title={t('Select types')}
       rightIconName={'check'}
       rightIconOnPress={submit}
       rightIconColor={theme.colors.green}>
       <ScrollView>
-        <FullFilterChipList
-          chips={availableType}
-          onSelect={onTypePress}
-          selectedChips={selectedTypes}
-        />
+        <FullFilterChipList chips={availableType} onSelect={onTypePress} selectedChips={selectedTypes} />
       </ScrollView>
     </FullScreenModal>
   );

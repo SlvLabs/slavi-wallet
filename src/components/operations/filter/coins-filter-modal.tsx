@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
-import useCoinsSelector, {
-  DisplayCoinData,
-} from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
+import useCoinsSelector, {DisplayCoinData} from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import FullScreenModal from '../../modal/full-screen-modal';
 import useTranslation from '../../../utils/use-translation';
 import FullFilterCoinList from './full-filter-coin-list';
@@ -17,7 +15,7 @@ export interface CoinsFilterModalProps {
 }
 
 const CoinsFilterModal = (props: CoinsFilterModalProps) => {
-  const {selectedCoins: initialSelectedCoins, onSubmit} = props;
+  const {selectedCoins: initialSelectedCoins, onSubmit, visible} = props;
 
   const {t} = useTranslation();
 
@@ -25,17 +23,13 @@ const CoinsFilterModal = (props: CoinsFilterModalProps) => {
 
   const [filter, setFilter] = useState<string>('');
   const [filteredCoins, setFilteredCoins] = useState<DisplayCoinData[]>(coins);
-  const [selectedCoins, setSelectedCoins] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [selectedCoins, setSelectedCoins] = useState<Record<string, boolean>>({});
 
-  useEffect(
-    () =>
-      setSelectedCoins(
-        Object.fromEntries(initialSelectedCoins.map(coin => [coin, true])),
-      ),
-    [initialSelectedCoins],
-  );
+  useEffect(() => {
+    if (visible) {
+      setSelectedCoins(Object.fromEntries(initialSelectedCoins.map(coin => [coin, true])));
+    }
+  }, [initialSelectedCoins, visible]);
 
   useEffect(() => {
     if (filter) {
@@ -61,24 +55,22 @@ const CoinsFilterModal = (props: CoinsFilterModalProps) => {
     onSubmit(selected);
   }, [onSubmit, selectedCoins]);
 
-  const onCoinPress = (coin: string) => {
-    setSelectedCoins({
-      ...selectedCoins,
-      [coin]: !selectedCoins?.[coin],
-    });
-  };
+  const onCoinPress = useCallback((coin: string) => {
+    setSelectedCoins(p => ({
+      ...p,
+      [coin]: !p?.[coin],
+    }));
+  }, []);
 
   return (
     <FullScreenModal
-      visible={props.visible}
+      visible={visible}
       onCancel={props.onCancel}
       title={t('Select coins')}
       rightIconName={'check'}
       rightIconOnPress={submit}
       rightIconColor={theme.colors.green}>
-      <ScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps={'handled'}>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
         <SearchInput
           containerStyle={styles.search}
           placeholder={t('Search...')}

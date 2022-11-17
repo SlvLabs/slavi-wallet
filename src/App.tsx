@@ -32,6 +32,8 @@ import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import {unsetRequireTimeFix} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
+import {NotificationUnsupported} from './services/notification/errors/notification-unsupported';
+import Toast from 'react-native-simple-toast';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -158,19 +160,34 @@ const App: () => ReactNode = () => {
     [store, devMode, performanceMonitor],
   );
 
+  const onLoadInitial = useCallback(() => {
+    setInitialLoaded(true);
+    const authService = services.current.authService;
+    if (authService) {
+      setIsAuthorized(authService.getAuthState());
+      authService?.onAuthChange.add(onAuthChange);
+    }
+    store.dispatch(unsetGlobalLoading());
+  }, [onAuthChange, store])
+
   useEffect(() => {
     setInitialLoaded(false);
     store.dispatch(setGlobalLoading());
-    coreBootstraper.loadInitial().then(() => {
-      setInitialLoaded(true);
-      const authService = services.current.authService;
-      if (authService) {
-        setIsAuthorized(authService.getAuthState());
-        authService?.onAuthChange.add(onAuthChange);
-      }
-      store.dispatch(unsetGlobalLoading());
-    });
-  }, [store, coreBootstraper, onAuthChange]);
+    coreBootstraper.loadInitial().then(onLoadInitial)
+      .catch(e => {
+        try {
+          crashlytics().recordError(e);
+        } catch (e) {}
+
+        if(e instanceof NotificationUnsupported) {
+          Toast.showWithGravity('Notification unsupported on this device', Toast.LONG, Toast.BOTTOM);
+          onLoadInitial();
+        }
+        else {
+          Toast.showWithGravity('Internal error', Toast.LONG, Toast.BOTTOM);
+        }
+      });
+  }, [store, coreBootstraper, onLoadInitial]);
 
   useEffect(() => {
     if (!isMnemonicConfirmed || !initialLoaded) {

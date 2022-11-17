@@ -1,10 +1,10 @@
 import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import ROUTES from '../navigation/config/routes';
+import ROUTES from '../../navigation/config/routes';
 import notifee, {AndroidImportance} from '@notifee/react-native';
 import {Event, EventType} from '@notifee/react-native/src/types/Notification';
 import NotificationSounds, {Sound} from 'react-native-notification-sounds';
 import {AndroidLaunchActivityFlag} from '@notifee/react-native/src/types/NotificationAndroid';
-import { navigate } from '../navigation/navigate';
+import { navigate } from '../../navigation/navigate';
 
 export class FirebaseService {
   private sounds: Sound[] = [];

@@ -10,7 +10,8 @@ import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import translations from '../assets/translations/fallback';
-import {FirebaseService} from './firebase-service';
+import {FirebaseService} from './notification/firebase-service';
+import {NotificationUnsupported} from './notification/errors/notification-unsupported';
 
 const wsConfig = {
   url: Config.WS_URL,
@@ -66,8 +67,12 @@ export const createCoreBootstrap = (
   });
   return {
     loadInitial: async () => {
-      await firebaseService.init();
       await coreBootstrap.loadInitial(translations);
+      try {
+        await firebaseService.init();
+      } catch (e) {
+        throw new NotificationUnsupported(e);
+      }
     },
     loadWalletServices: async () => coreBootstrap.loadWalletServices(),
   };

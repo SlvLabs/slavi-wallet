@@ -32,8 +32,8 @@ import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import {unsetRequireTimeFix} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
-import {NotificationUnsupported} from './services/notification/errors/notification-unsupported';
 import Toast from 'react-native-simple-toast';
+import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -196,20 +196,29 @@ const App: () => ReactNode = () => {
     setIsRealBootstrapped(false);
     store.dispatch(setGlobalLoading());
     performanceMonitor.startTrace('BOOTSTRAP').then(trace => {
+      const callback = () => {
+        trace.stop();
+
+        store.dispatch<any>(initializationLoad()).then(() => {
+          store.dispatch(unsetGlobalLoading());
+          setIsRealBootstrapped(true);
+        });
+      }
       coreBootstraper
         .loadWalletServices()
-        .then(() => {
-          trace.stop();
+        .then(callback)
+        .catch((e: Error) => {
+          try {
+            crashlytics().recordError(e);
+          } catch (e) {}
 
-          store.dispatch<any>(initializationLoad()).then(() => {
-            store.dispatch(unsetGlobalLoading());
-            setIsRealBootstrapped(true);
-          });
-        })
-        .catch(e => {
-          crashlytics().recordError(e);
-          console.error(e);
-          console.error(e.stack);
+          if(e instanceof NotificationUnsupported) {
+            Toast.showWithGravity('Notification unsupported on this device', Toast.LONG, Toast.BOTTOM);
+            callback();
+          } else {
+            console.error(e);
+            console.error(e.stack);
+          }
         });
     });
     return () => {

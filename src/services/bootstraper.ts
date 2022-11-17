@@ -11,7 +11,7 @@ import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import translations from '../assets/translations/fallback';
 import {FirebaseService} from './notification/firebase-service';
-import {NotificationUnsupported} from './notification/errors/notification-unsupported';
+import { NotificationUnsupported } from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 
 const wsConfig = {
   url: Config.WS_URL,

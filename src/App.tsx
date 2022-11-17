@@ -180,11 +180,12 @@ const App: () => ReactNode = () => {
         } catch (e) {}
 
         if(e instanceof NotificationUnsupported) {
-          Toast.showWithGravity('Notification unsupported on this device', Toast.LONG, Toast.BOTTOM);
+          console.warn('Notification unsupported on this device');
           onLoadInitial();
         }
         else {
-          Toast.showWithGravity('Internal error', Toast.LONG, Toast.BOTTOM);
+          console.error(e);
+          console.error(e.stack);
         }
       });
   }, [store, coreBootstraper, onLoadInitial]);
@@ -213,7 +214,7 @@ const App: () => ReactNode = () => {
           } catch (e) {}
 
           if(e instanceof NotificationUnsupported) {
-            Toast.showWithGravity('Notification unsupported on this device', Toast.LONG, Toast.BOTTOM);
+            console.warn('Notification unsupported on this device');
             callback();
           } else {
             console.error(e);

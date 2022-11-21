@@ -105,6 +105,14 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
     }
   }, [carousel]);
 
+  useEffect(() => {
+    setTimeout( () => {
+      if (refs.current?.[0]) {
+        refs.current[0].toDataURL(props.onDataChange);
+      }
+    }, 100);
+  }, []);
+
   return (
     <View style={styles.carouselContainer}>
       <View style={styles.leftButton}>

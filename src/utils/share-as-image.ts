@@ -1,4 +1,4 @@
-import Share, {Options} from 'react-native-share';
+import Share, {ShareOptions} from 'react-native-share';
 
 async function shareAsImage(
   address: string,
@@ -8,7 +8,7 @@ async function shareAsImage(
   if (!dataURL) {
     return;
   }
-  const options: Options = {
+  const options: ShareOptions = {
     title: 'Share address',
     url: `data:image/png;base64,${dataURL}`,
     message: `My address: ${address}`,
@@ -17,6 +17,7 @@ async function shareAsImage(
   try {
     await Share.open(options);
   } catch (e) {
+    console.error(e)
     if (onError) {
       onError(e);
     }

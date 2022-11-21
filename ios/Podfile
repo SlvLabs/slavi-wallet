@@ -23,6 +23,8 @@ target 'slaviWalletMobile' do
 
   pod 'RNFBPerf', :path => '../node_modules/@react-native-firebase/perf'
 
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)

@@ -21,8 +21,7 @@ import {useGetSwapInfo} from '@slavi/wallet-core/src/providers/ws/hooks/for-swap
 import useCoinsService from '@slavi/wallet-core/src/contexts/hooks/use-coins-service';
 import {useAddressesService, useCoinPatternService, useCoinSpecsService} from '@slavi/wallet-core';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
-import useInsufficientApprovedAmount
-  from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-insufficient-approved-amount';
+import useInsufficientApprovedAmount from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-insufficient-approved-amount';
 import EthPattern from '@slavi/wallet-core/src/services/coin-pattern/eth-pattern';
 import Erc20Pattern from '@slavi/wallet-core/src/services/coin-pattern/erc-20-pattern';
 import useUnconfirmedApprovals from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-unconfirmed-approvals';
@@ -49,7 +48,7 @@ const SwapScreen = () => {
   const [txPriority, setTxPriority] = useState<TransactionPriority>(TransactionPriority.average);
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.1);
   const [inAmount, setInAmount] = useState<string>('0.0');
-  const [inCoin, setInCoin] = useState<string|undefined>(selectedCoin);
+  const [inCoin, setInCoin] = useState<string | undefined>(selectedCoin);
   const [dstCoin, setDstCoin] = useState<string>();
   const [addressIndex, setAddressIndex] = useState<number>();
   const [balance, setBalance] = useState<string>();
@@ -62,13 +61,13 @@ const SwapScreen = () => {
   const [approveConfIsShown, setApproveConfIsShown] = useState<boolean>(false);
   const [swapConfIsShown, setSwapConfIsShown] = useState<boolean>(false);
   const [fee, setFee] = useState<string>();
-  const [approveTxs, setApproveTxs] = useState<string[]|undefined>();
+  const [approveTxs, setApproveTxs] = useState<string[] | undefined>();
   const [blocked, setBlocked] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>();
-  const [gasPrice, setGasPrice] = useState<string>();
+  const [gasPrice, setGasPrice] = useState<{gasPrice: string; priorityGasPrice: string | null}>();
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [submitSwap, setSubmitSwap] = useState<boolean>(false);       //flag for prevent double modal show
+  const [submitSwap, setSubmitSwap] = useState<boolean>(false); //flag for prevent double modal show
   const [approving, setApproving] = useState<boolean>(false);
   const [errorModalIsShown, setErrorModalIsShown] = useState<boolean>(false);
   const [approveSubmitting, setApproveSubmitting] = useState<boolean>(false);
@@ -100,39 +99,32 @@ const SwapScreen = () => {
     request: requestApproval,
     error: approvalError,
     loading: approvalsLoading,
-    approvals
+    approvals,
   } = useUnconfirmedApprovals(network, inCoin, address);
 
   const networkPattern: EthPattern | null = useMemo(() => {
-    if(network) {
-      return patternService.createEthPattern(
-        network,
-        addressService.getGetterDelegate(network),
-      );
+    if (network) {
+      return patternService.createEthPattern(network, addressService.getGetterDelegate(network));
     }
 
     return null;
   }, [network, patternService, addressService]);
 
   const coinPattern: Erc20Pattern | null = useMemo(() => {
-    if(inCoin && network && inCoin !== network && !isLoading) {
-      return patternService.createErc20Pattern(
-        inCoin,
-        addressService.getGetterDelegate(inCoin)
-      );
+    if (inCoin && network && inCoin !== network && !isLoading) {
+      return patternService.createErc20Pattern(inCoin, addressService.getGetterDelegate(inCoin));
     }
 
     return null;
-  },
-    [inCoin, patternService, addressService]);
+  }, [inCoin, network, isLoading, patternService, addressService]);
 
   const {
     error: allowanceError,
     errors: allowanceErrors,
     insufficientAmount,
     request: requestInsufficientApprovedAmount,
-    isLoading:  allowanceLoading
-  } =  useInsufficientApprovedAmount(address, network, inCoin, inAmount);
+    isLoading: allowanceLoading,
+  } = useInsufficientApprovedAmount(address, network, inCoin, inAmount);
 
   const {
     spentAmount: realSpentAmount,
@@ -141,48 +133,71 @@ const SwapScreen = () => {
     error: txError,
     errors: txErrors,
     isLoading: txLoading,
-    getSwapTx
+    getSwapTx,
   } = useGetSwapTx();
 
   const networkOptions: NetworksOptions = useMemo((): NetworksOptions => {
-    if(isLoading || !parentCoins) {
+    if (isLoading || !parentCoins) {
       return {};
     }
 
     const options: NetworksOptions = {};
-    parentCoins.forEach((coin) => {
+    parentCoins.forEach(coin => {
       options[coin.id] = {
         id: coin.id,
         name: coin.networkName || coin.name,
         logo: coins.find(element => element.id === coin.id)?.logo,
-      }
+      };
     });
 
     return options;
   }, [isLoading, parentCoins, coins]);
 
   const filteredCoins = useMemo(() => {
-    if(!network) {
+    if (!network) {
       return [];
     }
 
-    return coins.filter((coin) => coin.parent === network || coin.id === network);
+    return coins.filter(coin => coin.parent === network || coin.id === network);
   }, [network, coins]);
 
   const {
     error: availableCoinsError,
     errors: availableCoinsErrors,
     isLoading: availableCoinsLoading,
-    coins: dstCoins
+    coins: dstCoins,
   } = useAvailableCoins(network);
 
-  const {receiveAmount, error: getInfoError, errors: getInfoErrors, price} = useGetSwapInfo({
+  useEffect(() => {
+    let canceled = false;
+    networkPattern
+      ?.getCurrentGasPrice()
+      .then(r => {
+        if (!canceled) {
+          setGasPrice(r);
+        }
+      })
+      .catch(e => {
+        setError(t('internal error'));
+        console.error(e);
+      });
+    return () => {
+      canceled = true;
+    };
+  }, [t, networkPattern]);
+
+  const {
+    receiveAmount,
+    error: getInfoError,
+    errors: getInfoErrors,
+    price,
+  } = useGetSwapInfo({
     coin: network,
     fromCoin: inCoin,
     address: address,
     toCoin: dstCoin,
-    gasPrice: gasPrice,
-    amount: inAmount
+    gasPrice: gasPrice?.gasPrice,
+    amount: inAmount,
   });
 
   const showApproveConf = useCallback(() => setApproveConfIsShown(true), []);
@@ -197,7 +212,7 @@ const SwapScreen = () => {
   const setApprovingTimer = useCallback(() => {
     requestApproval();
 
-    if(approvingTimer.current) {
+    if (approvingTimer.current) {
       clearInterval(approvingTimer.current);
     }
 
@@ -206,97 +221,96 @@ const SwapScreen = () => {
     }, APPROVE_INTERVAL_CHECK);
   }, [requestApproval]);
 
-  const onApproveSubmit = useCallback(() => {
-    setLoading(true);4
-
-    const f = async () => {
-      if(!inCoin
-        || !inAmount
-        || !address
-        || !contractAddress
-        || allowanceLoading
-        || !insufficientAmount
-        || !coinPattern
-      ) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const approve = await coinPattern.approve(
-          address,
-          contractAddress,
-          {transactionPriority: txPriority}
-        );
-
-        setFee(approve.fee);
-        setApproveTxs(approve.transactions);
-        showApproveConf();
-      } catch (e) {
-        setLoading(false);
-        setError(t('internal error'));
-        return;
-      }
+  const onApproveSubmit = useCallback(async () => {
+    setLoading(true);
+    if (
+      !inCoin ||
+      !inAmount ||
+      !address ||
+      !contractAddress ||
+      allowanceLoading ||
+      !insufficientAmount ||
+      !coinPattern
+    ) {
+      setLoading(false);
+      return;
     }
 
-    f();
+    try {
+      const approve = await coinPattern.approve(address, contractAddress, {transactionPriority: txPriority});
+
+      setFee(makeRoundedBalance(6, approve.fee));
+      setApproveTxs(approve.transactions);
+      showApproveConf();
+    } catch (e) {
+      setLoading(false);
+      setError(t('internal error'));
+      return;
+    }
   }, [
-    showApproveConf,
-    contractAddress,
-    address,
-    inAmount,
     inCoin,
+    inAmount,
+    address,
+    contractAddress,
     allowanceLoading,
     insufficientAmount,
+    coinPattern,
+    txPriority,
+    showApproveConf,
+    t,
   ]);
 
   const onApproveAccept = useCallback(() => {
-    if(!approveTxs
-      || approveTxs.length === 0
-      || !network
-      || !networkPattern
-      || !address
-      || !inCoin
-      || !contractAddress
-      || approveSubmitting
+    if (
+      !approveTxs ||
+      approveTxs.length === 0 ||
+      !network ||
+      !networkPattern ||
+      !address ||
+      !inCoin ||
+      !contractAddress ||
+      approveSubmitting
     ) {
       return;
     }
 
     setApproveSubmitting(true);
-    networkPattern.sendApproveTransactions(approveTxs, {
-      address: address,
-      coin: inCoin,
-      contract: contractAddress,
-    })
+    networkPattern
+      .sendApproveTransactions(approveTxs, {
+        address: address,
+        coin: inCoin,
+        contract: contractAddress,
+      })
       .then(() => {
         setApproving(true);
         setApprovingTimer();
       })
       .catch(() => {
-      if(approvingTimer.current) {
-        clearInterval(approvingTimer.current);
-      }
-    })
+        if (approvingTimer.current) {
+          clearInterval(approvingTimer.current);
+        }
+      })
       .finally(() => {
         setLoading(false);
         setApproveSubmitting(false);
       });
 
     hideApproveConf();
-  }, [approveTxs, network, hideApproveConf, t, networkPattern, setApprovingTimer, address]);
+  }, [
+    approveTxs,
+    network,
+    networkPattern,
+    address,
+    inCoin,
+    contractAddress,
+    approveSubmitting,
+    hideApproveConf,
+    setApprovingTimer,
+  ]);
 
   const onSwapAccept = useCallback(() => {
     const f = async () => {
-      if(!dstCoin
-        || !network
-        || !tx
-        || !networkPattern
-        || !inCoin
-        || !receiveAmount
-        || error
-        || swapSubmitting
-      ) {
+      if (!dstCoin || !network || !tx || !networkPattern || !inCoin || !receiveAmount || error || swapSubmitting) {
         return;
       }
 
@@ -332,28 +346,43 @@ const SwapScreen = () => {
       }
 
       showSuccessModal();
-    }
+    };
 
     setLoading(true);
     f();
-  }, [dstCoin, coinService, tx, coinService, specService, networkPattern, insufficientAmount, showSuccessModal]);
+  }, [
+    dstCoin,
+    network,
+    tx,
+    networkPattern,
+    inCoin,
+    receiveAmount,
+    error,
+    swapSubmitting,
+    specService,
+    showSuccessModal,
+    inAmount,
+    t,
+    hideSwapConf,
+  ]);
 
   const onSwapSubmit = useCallback(async () => {
-    if(!network
-      || !inCoin
-      || !dstCoin
-      || !inAmount
-      || !slippageTolerance
-      || !address
-      || !networkPattern
-      || !gasPrice
+    if (
+      !network ||
+      !inCoin ||
+      !dstCoin ||
+      !inAmount ||
+      !slippageTolerance ||
+      !address ||
+      !networkPattern ||
+      !gasPrice
     ) {
       return;
     }
 
     const realNetwork = coins.find(e => e.id === inCoin)?.parent;
 
-    if(inCoin !== network && realNetwork !== network) {
+    if (inCoin !== network && realNetwork !== network) {
       return;
     }
 
@@ -369,23 +398,39 @@ const SwapScreen = () => {
       amount: inAmount,
       slippage: slippageTolerance,
       allowPartialFill: false,
-      gasPrice: gasPrice,
+      gasPrice: gasPrice.gasPrice,
       address: address,
     });
-  }, [network, inCoin, dstCoin, inAmount, slippageTolerance, address, networkPattern, gasPrice]);
+  }, [
+    network,
+    inCoin,
+    dstCoin,
+    inAmount,
+    slippageTolerance,
+    address,
+    networkPattern,
+    gasPrice,
+    coins,
+    coinService,
+    getSwapTx,
+  ]);
 
-  const onTxPriorityChange = useCallback((value) => setTxPriority(value), []);
+  const onTxPriorityChange = useCallback(value => setTxPriority(value), []);
 
-  const onAddressSelect = useCallback((index: number) => {
-    if(balancesState.balances[index]) {
-      setAddressIndex(index);
-      setAddress(balancesState.balances[index].address);
-      setBalance(balancesState.balances[index].balance);
-    }
-  }, [balancesState]);
+  const onAddressSelect = useCallback(
+    (index: number) => {
+      if (balancesState.balances[index]) {
+        setAddressIndex(index);
+        setAddress(balancesState.balances[index].address);
+        setBalance(balancesState.balances[index].balance);
+      }
+    },
+    [balancesState],
+  );
 
   const onNetworkSelect = useCallback((value: string) => {
     setInCoin(undefined);
+    setFee(undefined);
     setNetwork(value);
   }, []);
 
@@ -399,17 +444,17 @@ const SwapScreen = () => {
         },
       ],
     });
-  }, [navigation, hideSuccessModal])
+  }, [navigation, hideSuccessModal]);
 
   useEffect(() => {
-    if(!isLoading && !network && parentCoins?.[0]?.id) {
+    if (!isLoading && !network && parentCoins?.[0]?.id) {
       setNetwork(selectedNetwork || parentCoins[0].id);
     }
-  }, [parentCoins, isLoading, network, selectedCoin]);
+  }, [parentCoins, isLoading, network, selectedCoin, selectedNetwork]);
 
   useEffect(() => {
-    if(!inCoin && filteredCoins?.[0]) {
-      if(!filteredCoins.find(e => e.id === selectedCoin)) {
+    if (!inCoin && filteredCoins?.[0]) {
+      if (!filteredCoins.find(e => e.id === selectedCoin)) {
         setInCoin(filteredCoins[0].id);
       } else {
         setInCoin(selectedCoin);
@@ -421,11 +466,11 @@ const SwapScreen = () => {
   useEffect(() => setNetwork(selectedNetwork), [selectedNetwork]);
 
   useEffect(() => {
-    if(!balancesState || !balancesState.balances || balancesState.balances.length === 0) {
+    if (!balancesState || !balancesState.balances || balancesState.balances.length === 0) {
       return;
     }
 
-    if(!address && balancesState?.balances?.[0]) {
+    if (!address && balancesState?.balances?.[0]) {
       setAddress(balancesState.balances[0].address);
       setBalance(balancesState.balances[0].balance);
       setAddressIndex(0);
@@ -433,7 +478,7 @@ const SwapScreen = () => {
     }
 
     const index = balancesState.balances.findIndex(e => e.address === address);
-    if(index !== -1) {
+    if (index !== -1) {
       setBalance(balancesState.balances[index].balance);
       setAddressIndex(index);
     }
@@ -444,24 +489,24 @@ const SwapScreen = () => {
     setSrcTicker(coin?.ticker);
     setFeeTicker(coin?.parentTicker || coin?.ticker);
     setSrcLogo(coin?.logo);
-  }, [inCoin]);
+  }, [coins, inCoin]);
 
   useEffect(() => {
-    if(!dstCoins) {
+    if (!dstCoins) {
       return;
     }
 
     const coin = dstCoins.find(c => c.id === dstCoin);
     setDstTicker(coin?.ticker);
     setDstLogo(coin?.logo);
-  }, [dstCoin, network]);
+  }, [dstCoin, dstCoins, network]);
 
   useEffect(() => {
-    if(tx && network && networkPattern && submitSwap) {
-      const estimateFee = networkPattern.getFee(txPriority, tx.gas);
-      const networkBalance = (coins.find((c) => c.id === network))?.total || '0'
-      if(stringNumberGt(networkBalance, estimateFee)) {
-        setFee(estimateFee);
+    if (tx && network && networkPattern && submitSwap && gasPrice) {
+      const estimateFee = networkPattern.getFee(gasPrice, tx.gas, txPriority);
+      const networkBalance = coins.find(c => c.id === network)?.total || '0';
+      if (stringNumberGt(networkBalance, estimateFee)) {
+        setFee(makeRoundedBalance(6, estimateFee));
         showSwapConf();
       } else {
         setLoading(false);
@@ -471,12 +516,12 @@ const SwapScreen = () => {
       setSubmitSwap(false);
       setBlocked(false);
     }
-  }, [tx, network, txPriority, networkPattern, submitSwap]);
+  }, [tx, network, txPriority, networkPattern, submitSwap, coins, showSwapConf, t, gasPrice]);
 
   useEffect(() => {
-    if(dstCoins && dstCoins.length > 0) {
+    if (dstCoins && dstCoins.length > 0) {
       for (const c of dstCoins) {
-        if(c.id !== network && c.default) {
+        if (c.id !== network && c.default) {
           setDstCoin(c.id);
           setDstLogo(c.logo);
         }
@@ -485,48 +530,48 @@ const SwapScreen = () => {
   }, [dstCoins, network]);
 
   useEffect(() => {
-    if(isLoading) {
+    if (isLoading) {
       return;
     }
 
-    if(getInfoError === 'insufficient liquidity' || txError === 'insufficient liquidity') {
+    if (getInfoError === 'insufficient liquidity' || txError === 'insufficient liquidity') {
       setError(t('insufficientLiquidity'));
       setLoading(false);
       setBlocked(false);
       return;
     }
 
-    if(txError === 'insufficient funds') {
+    if (txError === 'insufficient funds') {
       setError(`${t('insufficientNetworkFunds')} ${network}`);
       setLoading(false);
       setBlocked(false);
       return;
     }
 
-    if(txError === 'cannot estimate' || getInfoError === 'cannot estimate') {
+    if (txError === 'cannot estimate' || getInfoError === 'cannot estimate') {
       setError(t('sleepingToleranceError'));
       setLoading(false);
       setBlocked(false);
       return;
     }
 
-    if(txError === 'not enough allowance') {
+    if (txError === 'not enough allowance') {
       setError(t('notEnoughAllowance'));
       setLoading(false);
       setBlocked(false);
       return;
     }
 
-    if(
-      networksError
-      || allowanceError
-      || allowanceErrors
-      || spenderError
-      || availableCoinsError
-      || availableCoinsErrors
-      || txError
-      || txErrors
-      || approvalError
+    if (
+      networksError ||
+      allowanceError ||
+      allowanceErrors ||
+      spenderError ||
+      availableCoinsError ||
+      availableCoinsErrors ||
+      txError ||
+      txErrors ||
+      approvalError
     ) {
       setBlocked(false);
       setLoading(false);
@@ -547,15 +592,9 @@ const SwapScreen = () => {
     t,
     showErrorModal,
     approvalError,
+    isLoading,
+    network,
   ]);
-
-  useEffect(() => {
-    if(!networkPattern) {
-      return;
-    }
-
-    setGasPrice(networkPattern.getGasLimit(txPriority));
-  }, [networkPattern, txPriority]);
 
   useEffect(() => {
     setLoading(isLoading || allowanceLoading || txLoading || availableCoinsLoading);
@@ -566,18 +605,18 @@ const SwapScreen = () => {
   }, [network, inCoin, inAmount, address, error]);
 
   useEffect(() => {
-    if(!approving) {
+    if (!approving) {
       requestInsufficientApprovedAmount();
     }
   }, [address, network, inCoin, approving, requestInsufficientApprovedAmount]);
 
   useEffect(() => {
-    if(!approvalsLoading) {
-      if(approvals && approvals.length > 0) {
+    if (!approvalsLoading) {
+      if (approvals && approvals.length > 0) {
         setApproving(true);
         setWaitSwapProvider(true);
       } else {
-        if(approvingTimer.current) {
+        if (approvingTimer.current) {
           clearInterval(approvingTimer.current);
         }
 
@@ -587,24 +626,23 @@ const SwapScreen = () => {
   }, [approvals, approvalsLoading, requestInsufficientApprovedAmount]);
 
   useEffect(() => {
-    if(initialized) {
+    if (initialized) {
       return;
     }
     setApprovingTimer();
     setInitialized(true);
   }, [initialized, setApprovingTimer]);
 
-
   useEffect(() => {
     return () => {
-      if(approvingTimer.current) {
+      if (approvingTimer.current) {
         clearInterval(approvingTimer.current);
       }
 
-      if(waitSwapProviderTimer.current) {
+      if (waitSwapProviderTimer.current) {
         clearInterval(waitSwapProviderTimer.current);
       }
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -612,13 +650,13 @@ const SwapScreen = () => {
   }, [inCoin, network, dstCoin, inAmount, address]);
 
   useEffect(() => {
-      if(inAmount && balance && stringNumberGt(inAmount, balance)) {
-        setError(t('Insufficient funds'));
-      }
+    if (inAmount && balance && stringNumberGt(inAmount, balance)) {
+      setError(t('Insufficient funds'));
+    }
   }, [inAmount, balance, t]);
 
   useEffect(() => {
-    if(inCoin && dstCoin && inCoin === dstCoin) {
+    if (inCoin && dstCoin && inCoin === dstCoin) {
       setError(t('sameSwap'));
     }
   }, [inCoin, dstCoin, t]);
@@ -628,24 +666,24 @@ const SwapScreen = () => {
   }, [inCoin]);
 
   useEffect(() => {
-    if(error) {
+    if (error) {
       setLoading(false);
     }
   }, [error]);
 
   useEffect(() => {
-    return  navigation.addListener('focus', () => {
-      if(!balancesState.isLoading) {
+    return navigation.addListener('focus', () => {
+      if (!balancesState.isLoading) {
         balancesState.request();
       }
 
       requestInsufficientApprovedAmount();
     });
-  }, [navigation, balancesState.isLoading, balancesState.request]);
+  }, [navigation, balancesState.isLoading, balancesState.request, balancesState, requestInsufficientApprovedAmount]);
 
   useEffect(() => {
-    if(!insufficientAmount && !allowanceLoading) {
-      if(waitSwapProviderTimer.current){
+    if (!insufficientAmount && !allowanceLoading) {
+      if (waitSwapProviderTimer.current) {
         clearInterval(waitSwapProviderTimer.current);
       }
       setWaitSwapProvider(false);
@@ -653,7 +691,7 @@ const SwapScreen = () => {
   }, [insufficientAmount, allowanceLoading]);
 
   useEffect(() => {
-    if(waitSwapProvider && !approving && !waitSwapProviderTimer.current) {
+    if (waitSwapProvider && !approving && !waitSwapProviderTimer.current) {
       waitSwapProviderTimer.current = setInterval(() => {
         requestInsufficientApprovedAmount();
       }, APPROVE_INTERVAL_CHECK);
@@ -663,22 +701,24 @@ const SwapScreen = () => {
   const showSettings = useCallback(() => setSettingsIsShown(true), []);
   const hideSettings = useCallback(() => setSettingsIsShown(false), []);
 
-  const onSettingsChange = useCallback((speed: TransactionPriority, value: number) => {
+  const onSettingsChange = useCallback(
+    (speed: TransactionPriority, value: number) => {
       setSlippageTolerance(value);
       onTxPriorityChange(speed);
       hideSettings();
-  }, [onTxPriorityChange, hideSettings]);
+    },
+    [onTxPriorityChange, hideSettings],
+  );
 
   return (
     <Screen
       title={t('exchange')}
-      controls={(
-      <TouchableOpacity style={styles.button} onPress={showSettings}>
-        <CustomIcon name={'settings-outline'} size={20} color={theme.colors.textLightGray3} />
-      </TouchableOpacity>
-    )}
-      titleContainerStyle={styles.headerTitleContainer}
-    >
+      controls={
+        <TouchableOpacity style={styles.button} onPress={showSettings}>
+          <CustomIcon name={'settings-outline'} size={20} color={theme.colors.textLightGray3} />
+        </TouchableOpacity>
+      }
+      titleContainerStyle={styles.headerTitleContainer}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
         <View style={styles.swapBlock}>
           <NetworkSelector
@@ -718,21 +758,18 @@ const SwapScreen = () => {
             ticker={srcTicker || ''}
           />
         </View>
-          <View style={styles.priceView}>
-            <Text style={styles.price}>
-              {(!!price && price !== '0') && t('price')}
-            </Text>
-            <Text style={styles.price}>
-              {(!!price && price !== '0') && `${makeRoundedBalance(4,price)} ${srcTicker} ${t('per')} 1 ${dstTicker}`}
-            </Text>
-          </View>
+        <View style={styles.priceView}>
+          <Text style={styles.price}>{!!price && price !== '0' && t('price')}</Text>
+          <Text style={styles.price}>
+            {!!price && price !== '0' && `${makeRoundedBalance(4, price)} ${srcTicker} ${t('per')} 1 ${dstTicker}`}
+          </Text>
+        </View>
         {approving || waitSwapProvider ? (
           <View style={styles.approvingView}>
             <CustomIcon name={'timer'} size={20} color={theme.colors.white} />
             <Text style={styles.approvingText}>{t('approving')}</Text>
           </View>
-        ) :
-          (!!insufficientAmount ? (
+        ) : insufficientAmount ? (
           <SolidButton
             title={t('approve')}
             containerStyle={styles.submitButton}
@@ -748,7 +785,7 @@ const SwapScreen = () => {
             loading={blocked || loading}
             disabled={disabled}
           />
-        ))}
+        )}
         <Text style={styles.error}>{error}</Text>
         <ApproveConfirmationModal
           visible={approveConfIsShown}
@@ -780,11 +817,7 @@ const SwapScreen = () => {
           onCancel={hideErrorModal}
           description={t('internalErrorDesc')}
         />
-        <SwapSuccessModal
-          visible={successModalIsShown}
-          onCancel={hideSuccessModal}
-          onAccept={onFinish}
-        />
+        <SwapSuccessModal visible={successModalIsShown} onCancel={hideSuccessModal} onAccept={onFinish} />
       </KeyboardAwareScrollView>
       {settingsIsShown && (
         <SettingsModal
@@ -797,7 +830,7 @@ const SwapScreen = () => {
       )}
     </Screen>
   );
-}
+};
 
 const styles = StyleSheet.create({
   headerBlock: {
@@ -814,7 +847,8 @@ const styles = StyleSheet.create({
     height: Layout.isSmallDevice ? 32 : 40,
     borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',  },
+    justifyContent: 'center',
+  },
   swapBlock: {},
   swapButton: {
     backgroundColor: theme.colors.grayDark,
@@ -839,9 +873,11 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   backButton: {
-    transform: [{
-      rotate: '180deg',
-    }],
+    transform: [
+      {
+        rotate: '180deg',
+      },
+    ],
   },
   destBlock: {
     marginTop: -12,
@@ -909,7 +945,7 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   network: {
     marginBottom: 12,
@@ -917,7 +953,7 @@ const styles = StyleSheet.create({
   },
   headerTitleContainer: {
     marginRight: Layout.isSmallDevice ? -32 : -40,
-  }
+  },
 });
 
 export default SwapScreen;

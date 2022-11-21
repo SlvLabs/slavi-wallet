@@ -29,6 +29,7 @@ import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-hig
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 import ScrollableScreen from '../../components/scrollable-screen';
 import InvalidGasPrice from '@slavi/wallet-core/src/services/errors/invalid-gas-price';
+import makeRoundedBalance from '../../utils/make-rounded-balance';
 
 export interface SendEthScreenProps {
   coin: string;
@@ -80,8 +81,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   const balancesState = useAddressesBalance(props.coin);
   const fromAddress = typeof senderIndex !== 'undefined' ? balancesState.balances[senderIndex]?.address : undefined;
   const accountBalance =
-    typeof senderIndex !== 'undefined' &&
-    typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
+    typeof senderIndex !== 'undefined' && typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
       ? balancesState.balances[senderIndex].balance
       : '0';
   const validator = useVoutValidator(props.coin, accountBalance);
@@ -120,7 +120,8 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     [coinDetails.parent, coinSpec.bip21Name, coinSpecService, onQrReadFailed, recipient],
   );
 
-  const validate = useCallback((strict?: boolean): boolean => {
+  const validate = useCallback(
+    (strict?: boolean): boolean => {
       const result = validator(recipient.address, recipient.amount, strict);
 
       setIsValid(result.isValid);
@@ -134,7 +135,9 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       setVoutError(tmp);
 
       return result.isValid;
-  }, [recipient, validator]);
+    },
+    [recipient, validator],
+  );
 
   const onRecipientChange = (data: RecipientUpdatingData) => {
     setRecipient({
@@ -173,6 +176,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           gasPrice: advancedGasPrice,
         });
       } catch (e) {
+        console.error(e);
         const err = except<InsufficientFunds>(InsufficientFunds, e);
         if (err) {
           let text = t(
@@ -193,8 +197,8 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
             if (err1) {
               setWarn(t('Can not create transaction. Try latter or contact support.'));
             } else {
-              const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
-              if (err2) {
+              const err3 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
+              if (err3) {
                 setError(t('Can not create transaction. absurdly high fee.'));
               }
             }
@@ -245,13 +249,13 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     });
   };
 
-  const setAdvancedOptions = (gasPrice?: string, gasLimit?: string) => {
+  const setAdvancedOptions = useCallback((gasPrice?: string, gasLimit?: string) => {
     setAdvancedGasLimit(gasLimit);
     if (gasPrice) {
       setAdvancedGasPrice(EthPattern.gweiToWei(gasPrice));
     }
     setAdvancedModalIsShown(false);
-  };
+  }, []);
 
   useDidUpdateEffect(() => validate(), [recipient, validate]);
 
@@ -261,8 +265,8 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     }
   }, [balancesState.balances.length]);
 
-  const currentGasPrice = advancedGasPrice || props.pattern.getGasLimit(txPriority) || '0';
-  const currentGasLimit = advancedGasLimit || props.pattern.getDefaultGasPrice();
+  const currentGasPrice = advancedGasPrice || props.pattern.getDefaultGasPrice(txPriority) || '0';
+  const currentGasLimit = advancedGasLimit || props.pattern.getDefaultGasLimit();
 
   const enableRecipientPaysFee = useCallback(() => setRecipientPayFee(true), []);
 
@@ -320,15 +324,11 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           loading={locked || sendingLocked}
         />
       </View>
-      <QrReaderModal
-        visible={activeQR}
-        onQRRead={onQRRead}
-        onClose={() => setActiveQR(false)}
-      />
+      <QrReaderModal visible={activeQR} onQRRead={onQRRead} onClose={() => setActiveQR(false)} />
       <ConfirmationModal
         visible={confIsShown}
         vouts={txResult?.vouts || []}
-        fee={txResult?.fee}
+        fee={makeRoundedBalance(6, txResult?.fee)}
         onAccept={send}
         onCancel={cancelConfirmSending}
         ticker={coinDetails.ticker}

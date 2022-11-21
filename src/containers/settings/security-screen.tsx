@@ -7,7 +7,7 @@ import PinCodeModal from '../../components/modal/pin-code-modal';
 import {hasHardwareAsync} from 'expo-local-authentication';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {ListItem} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import useAutoBlockOptions from '../../utils/use-auto-block-options';
 import Screen from '../../components/screen';
@@ -22,9 +22,14 @@ export default function SecurityScreen() {
   const [pinEnabled, setPinEnabled] = useState<boolean>(authService.isAuthEnable);
   const [biometricEnabled, setBiometricEnabled] = useState<boolean>(authService.isBiometricEnable);
   const [biometricIsSupported, setBiometricIsSupported] = useState<boolean>(false);
-  const [autoBlockTimeout] = useState<string>(options[authService.getAutoBlockTimeout()]);
+  const [autoBlockTimeout, setAutoBlockTimeout] = useState(options[authService.getAutoBlockTimeout()]);
   const {t} = useTranslation();
   const navigation = useNavigation();
+
+  const updateBlockTimeout = useCallback(() => {
+    setAutoBlockTimeout(options[authService.getAutoBlockTimeout()]);
+  }, [authService, options]);
+  useFocusEffect(updateBlockTimeout);
 
   const showModal = useCallback(() => setModalIsShown(true), []);
   const hideModal = useCallback(() => setModalIsShown(false), []);

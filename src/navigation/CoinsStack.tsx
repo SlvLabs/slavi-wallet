@@ -18,6 +18,7 @@ import NtfSuccessSendingScreen from '../containers/nft/ntf-success-sending-scree
 import BuyCoinScreen from '../containers/coins/BuyCoinScreen';
 import {BuyCoinWebViewScreen} from '../containers/coins/BuyCoinWebViewScreen';
 import ScreenHeader from '../components/screen-header';
+import {CoinFullListScreen} from '../containers/coins/coin-full-list-screen';
 
 export interface CoinsStackParamList extends ParamListBase {
   List: {};
@@ -148,6 +149,11 @@ const CoinsStack = () => {
       <StackNavigator.Screen
         name={ROUTES.COINS.NFT_SUCCESS}
         component={NtfSuccessSendingScreen}
+        options={{headerShown: false}}
+      />
+      <StackNavigator.Screen
+        name={ROUTES.COINS.FULL_LIST}
+        component={CoinFullListScreen}
         options={{headerShown: false}}
       />
     </StackNavigator.Navigator>

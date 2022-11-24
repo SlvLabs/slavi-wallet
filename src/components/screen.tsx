@@ -9,16 +9,15 @@ import Layout from '../utils/layout';
 export interface ScreenProps extends ScreenHeaderProps {
   children: ReactNode;
   containerStyle?: ViewStyle;
+  contentStyle?: ViewStyle;
 }
 
-export default function Screen(props: ScreenProps) {
-  const {children, containerStyle, ...headerProps} = props;
-
+export default function Screen({children, containerStyle, contentStyle, ...headerProps}: ScreenProps) {
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
         <ScreenHeader {...headerProps} />
-        <View style={styles.content}>{children}</View>
+        <View style={{...styles.content, ...contentStyle}}>{children}</View>
       </LinearGradient>
     </View>
   );

@@ -24,8 +24,6 @@ const SearchInput = (props: SearchInputProps) => {
   const onFocus = useCallback(() => setFocused(true), []);
   const onBlur = useCallback(() => setFocused(false), []);
 
-  const focusedStyle = focused ? styles.focusedInput : {};
-
   const clear = useCallback(() => props.onChange?.(''), [props.onChange]);
 
   return (
@@ -33,14 +31,13 @@ const SearchInput = (props: SearchInputProps) => {
       <View
         style={{
           ...styles.inputContainer,
-          ...focusedStyle,
           ...props.inputContainerStyle,
         }}>
         {!focused && (
           <CustomIcon
             name={'search'}
-            color={theme.colorsOld.lightGray}
-            size={24}
+            color={theme.colors.textLightGray3}
+            size={18}
             style={styles.icon}
           />
         )}
@@ -49,7 +46,7 @@ const SearchInput = (props: SearchInputProps) => {
           value={props.value}
           placeholder={props.placeholder}
           style={{...styles.input, ...props.inputStyle}}
-          placeholderTextColor={theme.colorsOld.lightGray}
+          placeholderTextColor={theme.colors.textLightGray3}
           selectTextOnFocus={true}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -58,8 +55,8 @@ const SearchInput = (props: SearchInputProps) => {
           <TouchableOpacity onPress={clear} style={styles.icon}>
             <CustomIcon
               name={'close'}
-              color={theme.colorsOld.lightGray}
-              size={24}
+              color={theme.colors.textLightGray3}
+              size={18}
             />
           </TouchableOpacity>
         )}
@@ -74,9 +71,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     textAlignVertical: 'center',
-    backgroundColor: theme.colorsOld.cultured,
     borderRadius: 16,
     padding: 16,
+    borderColor: theme.colors.borderGray,
+    borderWidth: 1,
+    backgroundColor: theme.colors.grayDark,
   },
   input: {
     fontFamily: theme.fonts.default,
@@ -87,17 +86,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
     padding: 0,
     flex: 10,
-  },
-  focusedInput: {
-    backgroundColor: theme.colorsOld.white,
-    shadowColor: theme.colorsOld.gray,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowRadius: 16,
-    shadowOpacity: 0.32,
-    elevation: 16,
   },
   icon: {
     paddingRight: 8,

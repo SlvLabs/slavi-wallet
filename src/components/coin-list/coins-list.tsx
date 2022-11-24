@@ -58,7 +58,7 @@ const CoinsList = (props: CoinListProps) => {
             <Icon
               name={'appstore-o'}
               type={'antdesign'}
-              color={theme.colorsOld.gray}
+              color={theme.colors.grayDark}
               size={150}
             />
           </View>

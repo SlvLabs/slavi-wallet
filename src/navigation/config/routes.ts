@@ -31,6 +31,7 @@ const ROUTES = {
     NFT_INFO: 'Coins/NftInfo',
     NFT_SEND: 'Coins/NftSend',
     NFT_SUCCESS: 'Coins/NftSuccess',
+    FULL_LIST: 'Coins/FullList',
   },
   OPERATIONS: {
     LIST: 'Operations/List',

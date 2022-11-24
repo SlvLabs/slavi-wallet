@@ -5,7 +5,6 @@ import {ParamsItem} from './search-params-button';
 import {CoinDisplayData} from './coins-list-element';
 import CoinsList, {showCoinsEnum} from './coins-list';
 import searcher from '@slavi/wallet-core/src/utils/search-in-arrays-of-object-by-string-field';
-import TokenAddButton from '../../containers/token/token-add-button';
 import OutlineButton from '../buttons/outline-button';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
@@ -115,7 +114,6 @@ const CoinListCard = (props: CoinsListCardProps) => {
 
   const {t} = useTranslation();
   const coins = useCoinsSelector();
-  const [addClicked, setAddClicked] = useState<boolean>(false);
   const navigation = useNavigation();
   const route = useRoute();
   const coinService = useCoinsService();
@@ -132,9 +130,9 @@ const CoinListCard = (props: CoinsListCardProps) => {
     sort: sortingProvider.get(),
   });
 
-  const onAddPress = () => {
-    setAddClicked(!addClicked);
-  };
+  const onAddPress = useCallback(() => {
+    navigation.navigate(ROUTES.COINS.FULL_LIST)
+  }, [navigation]);
 
   useEffect(() => {
     dispatchCoinsToCard(CoinsUpdateAction(coins));
@@ -179,7 +177,7 @@ const CoinListCard = (props: CoinsListCardProps) => {
   useEffect(() => {
     return navigation.addListener('focus', () => {
       if((route.params as any)?.hideAdd) {
-        setAddClicked(false)
+        clearSearch()
       }
     });
   }, [route.params]);
@@ -201,13 +199,6 @@ const CoinListCard = (props: CoinsListCardProps) => {
     setSearch('');
   }, []);
 
-  const resetList = useCallback(() => {
-    clearSearch();
-    if (addClicked) {
-      onAddPress();
-    }
-  }, [addClicked, clearSearch, onAddPress]);
-
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <SearchCoinRow
@@ -224,21 +215,18 @@ const CoinListCard = (props: CoinsListCardProps) => {
         toShow={
           search.length > 0
             ? showCoinsEnum.all
-            : addClicked
-            ? showCoinsEnum.onlyNotShown
             : showCoinsEnum.onlyShown
         }
         fiat={fiat}
         crypto={crypto}
         fiatSymbol={fiatSymbol}
       />
-      {(addClicked || search.length > 0) && (
+      {(search.length > 0) && (
         <View style={styles.buttonContainer}>
-          <TokenAddButton />
           <OutlineButton
             title={t('Show all coins')}
             containerStyle={styles.bottomButton}
-            onPress={resetList}
+            onPress={clearSearch}
           />
         </View>
       )}

@@ -4,12 +4,11 @@ import {CoinInfoRouteProps} from '../../navigation/CoinsStack';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import ROUTES from '../../navigation/config/routes';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
-import useCoinInfo from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
 import store from '@slavi/wallet-core/src/store';
 import CoinTabs from '../../components/coin-info/tabs/coin-tabs';
 import CoinControlButtons from '../../components/coin-info/coin-control-buttons';
 import {CoinParams} from '../../components/coin-info/tabs/info-view';
-import {useCoinSpecsService} from '@slavi/wallet-core';
+import {useCoinInfo, useCoinSpecsService} from '@slavi/wallet-core';
 import useTranslation from '../../utils/use-translation';
 import ScrollableScreen from '../../components/scrollable-screen';
 

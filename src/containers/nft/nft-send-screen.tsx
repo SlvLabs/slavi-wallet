@@ -230,7 +230,7 @@ export default function NftSendScreen() {
         containerStyle={styles.button}
         onPress={onContinuePress}
         loading={loading}
-        disabled={!!generalError}
+        disabled={!!generalError || !address}
       />
       {modal}
       {!!address && !!tx && (

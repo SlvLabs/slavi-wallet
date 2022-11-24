@@ -79,7 +79,7 @@ export default function SecurityScreen() {
   usePinProtection();
 
   return (
-    <Screen title={'Security'}>
+    <Screen title={t('security')}>
       <View style={styles.container}>
         <View style={styles.row}>
           <Text style={styles.label}>{t('pinEnabled')}</Text>

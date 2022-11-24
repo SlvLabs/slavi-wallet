@@ -246,6 +246,10 @@ const translations = {
   "To do this, select the blockchain that owns the token and specify the address of the contract":"To do this, select the blockchain that owns the token and specify the address of the contract",
   "Something went wrong. Please try again later or contact support":"Something went wrong. Please try again later or contact support",
   "Invalid address":"Invalid address",
+  "Invalid amount": "Invalid amount",
+  "You cannot send 0 or less coins": "You cannot send 0 or less coins",
+  "Not enough balance": "Not enough balance",
+  "Can not sub fee from amount for multiple recipients": "Can not sub fee from amount for multiple recipients",
   "By value": "By value",
   "Add recepient": "Add recepient",
   "Slow":"Slow",
@@ -374,7 +378,6 @@ const translations = {
   nftShowHiddenTokens: 'Show',
   apply: 'Apply',
   inDevelopment: 'In development',
-
   'Service provider': 'Service provider',
   'Bifinity': 'Binance Connect',
   'must spend more than {amount} {currency}': 'must spend more than {amount} {currency}',

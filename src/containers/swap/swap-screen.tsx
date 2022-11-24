@@ -904,7 +904,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: theme.colors.red,
-    textTransform: 'capitalize',
     alignItems: 'center',
     textAlign: 'center',
     marginTop: 12,

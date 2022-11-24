@@ -14,7 +14,7 @@ import {OperationsLogo} from './operations-logo';
 export interface AbstractOperationMovementProps extends OperationProps {
   operation: ListOperation;
   balanceType: Type;
-  title?: string;
+  title: string;
   logo: ImageSourcePropType;
   extraLogo?: ImageSourcePropType;
 }

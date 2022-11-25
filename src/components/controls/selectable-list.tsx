@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
 import {CheckBox, Icon} from 'react-native-elements';
 import theme from '../../theme';
@@ -15,14 +15,17 @@ const keyExtractor = (item: any, index: number) => index.toString();
 export default function SelectableList(props: SelectableListProps) {
   const {options, current, onSelect, containerStyle} = props;
 
+  const lastElementIndex = useMemo(() => Object.keys(options).length - 1, [options]);
+
   const renderParamsElement = useCallback(
-    ({item: [value, label]}) => {
+    ({item: [value, label], index}) => {
+      const isLast = index === lastElementIndex;
       return (
         <TouchableOpacity
           onPress={() => {
             onSelect(value);
           }}
-          style={styles.itemContainer}>
+          style={isLast ? {...styles.itemContainer, ...styles.lastItemContainer} : styles.itemContainer}>
           <CheckBox
             uncheckedColor={theme.colors.lightTransparent}
             checkedColor={theme.colors.green}
@@ -48,7 +51,7 @@ export default function SelectableList(props: SelectableListProps) {
         </TouchableOpacity>
       )
     },
-    [current, onSelect]
+    [current, onSelect, lastElementIndex]
   );
 
   return <FlatList
@@ -61,9 +64,7 @@ export default function SelectableList(props: SelectableListProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.maxTransparent,
+    backgroundColor: 'transparent'
   },
   itemText: {
     fontFamily: theme.fonts.default,
@@ -81,4 +82,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: -16,
   },
+  lastItemContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.maxTransparent,
+  }
 });

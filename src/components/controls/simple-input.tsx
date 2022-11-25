@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   buttonWrap: {
-    flex: 2,
+    flex: 3,
   },
   iconWrap: {
     flex: 1,

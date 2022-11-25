@@ -1,21 +1,22 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
-import {FlatList, Image, ListRenderItemInfo, StyleSheet, Switch, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, ListRenderItemInfo, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
-  CoinFullListElement,
+  CoinFullListElement as CoinFullListElementData,
   useCoinsFullList
 } from '@slavi/wallet-core/src/providers/ws/hooks/coins/use-coins-full-list';
 import Spinner from '../../components/spinner';
-import SearchInput from '../../components/controls/search-input';
 import theme from '../../theme';
 import { Text } from 'react-native';
 import Screen from '../../components/screen';
-import getImageSource from '../../utils/get-image-source';
 import Layout from '../../utils/layout';
 import {zoom_plus} from '../../assets/images';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import SimpleToast from 'react-native-simple-toast';
+import SimpleInput from '../../components/controls/simple-input';
+import CustomIcon from '../../components/custom-icon/custom-icon';
+import {CoinFullListElement} from '../../components/coin-full-list/coin-full-list-element';
 
 export function CoinFullListScreen() {
   const {t} = useTranslation();
@@ -35,26 +36,16 @@ export function CoinFullListScreen() {
     }
   }, [error])
 
-  const renderItem = useCallback(({item}: ListRenderItemInfo<CoinFullListElement>) => {
+  const renderItem = useCallback(({item}: ListRenderItemInfo<CoinFullListElementData>) => {
     return (
-      <View style={styles.itemContainer}>
-        <View style={styles.leftColumn}>
-          <Image source={getImageSource(item.logo)} style={styles.logo} />
-          <View style={styles.nameColumn}>
-            <Text style={styles.name} ellipsizeMode={'tail'} numberOfLines={1}>{item.name}</Text>
-            <Text style={styles.type}>{item.type}</Text>
-          </View>
-          <View style={styles.tickerColumn}>
-            <Text style={styles.ticker}>{item.ticker}</Text>
-          </View>
-        </View>
-        <Switch
-          value={item.shown}
-          onValueChange={() => onShownChange(item.id)}
-          thumbColor={theme.colors.white}
-          trackColor={{false: theme.colors.textDarkGray, true: theme.colors.green}}
-        />
-      </View>
+      <CoinFullListElement
+          name={item.name}
+          ticker={item.ticker}
+          shown={item.shown}
+          logo={item.logo}
+          type={item.type}
+          onShownChange={() => onShownChange(item.id)}
+      />
     );
   }, []);
 
@@ -64,25 +55,32 @@ export function CoinFullListScreen() {
         <Spinner containerStyle={styles.spinner}/>
       ) : (
         <View style={styles.content}>
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            containerStyle={styles.searchContainer}
-            placeholder={t('Search...')}
-          />
-            <FlatList<CoinFullListElement>
-              data={coins}
-              renderItem={renderItem}
-              keyExtractor={item => item.id}
-              contentContainerStyle={styles.list}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={
-                <TouchableOpacity style={styles.addTokenContainer} onPress={addCustomToken}>
-                  <Image source={zoom_plus} style={styles.plusImage} />
-                  <Text style={styles.addTokenText}>{t('Add custom token')}</Text>
-                </TouchableOpacity>
-              }
+          <View style={styles.searchContainer}>
+            <SimpleInput
+              value={search}
+              onChange={setSearch}
+              placeholder={t('Search...')}
+              inputContainerStyle={styles.inputContainer}
+              placeholderTextColor={theme.colors.textLightGray3}
+              inputStyle={styles.input}
+              iconLeft={true}
+              icon={<CustomIcon name={'search'} size={22} color={theme.colors.textLightGray1}
+              />}
             />
+          </View>
+          <FlatList<CoinFullListElementData>
+            data={coins}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={
+              <TouchableOpacity style={styles.addTokenContainer} onPress={addCustomToken}>
+                <Image source={zoom_plus} style={styles.plusImage} />
+                <Text style={styles.addTokenText}>{t('Add custom token')}</Text>
+              </TouchableOpacity>
+            }
+          />
         </View>
       )}
     </Screen>
@@ -94,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: Layout.window.height,
-    paddingBottom: 50,
+    paddingBottom: 80,
   },
   list: {
     paddingBottom: 100,
@@ -105,63 +103,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     width: '100%',
-  },
-  itemContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    borderRadius: 8,
-    alignItems: 'center',
-    paddingRight: 18,
-    paddingLeft: 18,
-    paddingTop: 12,
-    paddingBottom: 12,
-    justifyContent: 'space-between',
-    backgroundColor: theme.colors.simpleCoinBackground,
-    marginBottom: 8,
-  },
-  logo: {
-    width: 32,
-    height: 32,
-    marginRight: 16,
-  },
-  nameColumn: {
-    flexDirection: 'column',
-  },
-  name: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 18,
-    color: theme.colors.textLightGray2,
-    maxWidth: Layout.isSmallDevice ? 100 : 150
-  },
-  type: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 10,
-    lineHeight: 12,
-    color: theme.colors.textLightGray,
-    textTransform: 'uppercase',
-  },
-  ticker: {
-    fontFamily: theme.fonts.default,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 18,
-    color: theme.colors.textLightGray1,
-    textTransform: 'uppercase',
-  },
-  tickerColumn: {
-    marginLeft: 4,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    height: '100%',
-  },
-  leftColumn: {
-    flexDirection: 'row',
   },
   spinner: {
     alignSelf: 'center',
@@ -191,5 +132,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: theme.colors.simpleCoinBackground,
     marginBottom: 8,
+  },
+  inputContainer: {
+    backgroundColor: theme.colors.grayDark,
+  },
+  input: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 14,
+    lineHeight: 18,
+    color: theme.colors.textLightGray1,
   },
 });

@@ -16,6 +16,7 @@ import sortByField, {Comparator} from '@slavi/wallet-core/src/utils/sort-objects
 import ROUTES from '../../navigation/config/routes';
 import store from '@slavi/wallet-core/src/store/index';
 import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
+import TokenAddButton from '../../containers/token/token-add-button';
 
 export interface CoinsListCardProps {
   containerStyle: ViewStyle;
@@ -223,6 +224,7 @@ const CoinListCard = (props: CoinsListCardProps) => {
       />
       {(search.length > 0) && (
         <View style={styles.buttonContainer}>
+          <TokenAddButton />
           <OutlineButton
             title={t('Show all coins')}
             containerStyle={styles.bottomButton}

@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 18,
     lineHeight: 21,
-    color: theme.colors.lightGray,
     paddingBottom: 20,
     alignSelf: 'flex-start',
   },
@@ -59,6 +58,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 14,
     letterSpacing: 0.4,
-    color: theme.colorsOld.darkGray,
+    color: theme.colors.lightGray,
   },
 });

@@ -7,7 +7,7 @@ import {
   banner_floyd_fight,
   banner_peercoin_listing,
   banner_slavi_academy,
-  banner_staking_1000,
+  banner_staking_1000, banner_business_time,
 } from '../../assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import SimpleToast from 'react-native-simple-toast';
@@ -35,6 +35,10 @@ export default function BannerCarousel() {
   );
   const banners: Banner[] = useMemo(
     () => [
+      {
+        image: banner_business_time,
+        onPress: () => openURL('https://www.ibtimes.com/10-key-personalities-blockchain-follow-2022-3479772'),
+      },
       {
         image: banner_peercoin_listing,
         onPress: () => {

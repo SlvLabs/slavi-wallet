@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     marginRight: 16,
+    borderRadius: 16,
   },
   name: {
     fontFamily: theme.fonts.default,

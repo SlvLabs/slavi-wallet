@@ -53,16 +53,16 @@ const CoinInfoScreen = () => {
   }, [coin, navigation]);
 
   const onPressExchange = useCallback(() => {
-    if(spec?.swap) {
+    if (spec?.swap) {
       navigation.navigate(ROUTES.TABS.SWAP, {
         screen: ROUTES.SWAP.MAIN,
         params: {
           network: data.parent,
           srcCoin: coin,
-        }
+        },
       });
     }
-  }, [spec]);
+  }, [spec, coin, data, navigation]);
 
   const {
     state: {list, dict, isLoading},
@@ -92,7 +92,7 @@ const CoinInfoScreen = () => {
         onPressSend={onPressSend}
         onPressBuy={onPressBuy}
         exchangeDisabled={!spec?.swap}
-        buyEnabled={spec?.binanceTradeAllowed || false}
+        buyEnabled={spec?.buyAllowed || false}
       />
       <CoinTabs
         infoParams={list || []}

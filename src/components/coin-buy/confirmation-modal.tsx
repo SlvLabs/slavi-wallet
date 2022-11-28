@@ -5,15 +5,16 @@ import BaseModal from '../modal/base-modal';
 import theme from '../../theme';
 import SimpleCheckbox from '../controls/simple-checkbox';
 import GSolidButton from '../buttons/g-solid-button';
+import {BuySource} from '@slavi/wallet-core/src/providers/ws/messages/buy-coin';
 
 export interface ConfirmationModalProps {
   visible: boolean;
   onSubmit: () => void;
   onCancel: () => void;
+  source: BuySource | undefined;
 }
 
-export const ConfirmationModal = (props: ConfirmationModalProps) => {
-  const {visible, onSubmit, onCancel} = props;
+export const ConfirmationModal = ({visible, onSubmit, onCancel, source}: ConfirmationModalProps) => {
   const {t} = useTranslation();
   const [accepted, setAccepted] = useState<boolean>(false);
 
@@ -23,25 +24,38 @@ export const ConfirmationModal = (props: ConfirmationModalProps) => {
     </View>
   );
 
+  const _onSubmit = useCallback(() => {
+    setAccepted(false);
+    onSubmit();
+  }, [onSubmit]);
+
   const openTermsOfUse = useCallback(() => {
-    Linking.openURL(t('bifinity terms of use link')).catch(e => console.error(e));
-  }, []);
+    if (!source) {
+      throw new Error('expected selected source');
+    }
+    Linking.openURL(
+      t(source === BuySource.binance ? 'bifinity terms of use link' : 'switchere terms of use link'),
+    ).catch(e => console.error(e));
+  }, [source, t]);
   return (
     <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} header={header}>
-
       <View style={styles.bodyContainer}>
-        <Text style={styles.body}>{t('CoinBuyDisclaimer')}</Text>
+        <Text style={styles.body}>
+          {t(source === BuySource.binance ? 'CoinBuyDisclaimer' : 'CoinBuyDisclaimerSwitchere')}
+        </Text>
       </View>
       <View style={styles.agreementView}>
         <SimpleCheckbox checked={accepted} onPress={() => setAccepted(!accepted)}>
           <View style={styles.agreementTextView}>
             <Text style={styles.agreementCheckboxLabel}>{t('CoinBuyDisclaimerCheckbox')}</Text>
-            <Text style={styles.agreementCheckboxLabelLink} onPress={openTermsOfUse}>{t('CoinBuyDisclaimerCheckboxLink')}</Text>
+            <Text style={styles.agreementCheckboxLabelLink} onPress={openTermsOfUse}>
+              {t('CoinBuyDisclaimerCheckboxLink')}
+            </Text>
           </View>
         </SimpleCheckbox>
       </View>
       <View style={styles.controlsContainer}>
-        <GSolidButton title={t('OK')} onPress={onSubmit} buttonStyle={styles.acceptButton} disabled={!accepted}/>
+        <GSolidButton title={t('OK')} onPress={_onSubmit} buttonStyle={styles.acceptButton} disabled={!accepted} />
       </View>
     </BaseModal>
   );

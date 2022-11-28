@@ -42,9 +42,11 @@ const translations = {
   "Buy": "Buy",
   "Disclaimer": "Disclaimer",
   "CoinBuyDisclaimer": "Services regarding payment are provided by Binance connect which is a third party platform. Please read and agree to Binance connect Terms of Use to proceed. If you have any questions, please contact Binance connect team. Slavi wallet is not responsible for any loss or damage caused by using the Binance connect payment platform.",
+  'CoinBuyDisclaimerSwitchere': 'Payment services are provided by a third-party company – Switchere. In order to proceed, please read and agree to Switchere Terms of Use. If you have any questions, please contact the Switchere team. Slavi Wallet doesn’t take any responsibility regarding potential losses or damages that occurred by using the Switchere payment platform.',
   'CoinBuyDisclaimerCheckbox': 'I have read and agree to the',
   'CoinBuyDisclaimerCheckboxLink': 'Terms of use',
   'bifinity terms of use link': 'https://sandbox.bifinity.org/en/about/terms-of-usage',
+  'switchere terms of use link': 'https://switchere.com/terms-of-use',
   "Price":"Price",
   "Pair":"Pair",
   "Coin":"Coin",
@@ -377,6 +379,7 @@ const translations = {
   inDevelopment: 'In development',
   'Service provider': 'Service provider',
   'Bifinity': 'Binance Connect',
+  'Switchere': 'Switchere',
   'must spend more than {amount} {currency}': 'must spend more than {amount} {currency}',
   'must spend less than {amount} {currency}': 'must spend less than {amount} {currency}',
   'cannot withdraw less than {amount} {ticker}': 'cannot withdraw less than {amount} {ticker}',
@@ -478,7 +481,8 @@ const translations = {
   logoutDescription: 'Logging out can result in the loss of access to your funds inside this wallet. Please save your private keys',
   attentionContinue: 'Continue',
   attentionCancel: 'Cancel',
-  addAssets: 'Add Assets'
+  addAssets: 'Add Assets',
+  'Best price': 'Best price',
 };
 
 export default translations;

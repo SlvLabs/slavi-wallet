@@ -24,6 +24,7 @@ export const nftLogo = require('./ntf_logo.png');
 export const upButton = require('./up-button.png');
 export const downButton = require('./down-button.png');
 export const bifinity = require('./bifinity.png');
+export const switchere = require('./switchere.png');
 export const ipDisconnect = require('./ip-disconnect.png');
 export const dollarButton = require('./dollar_button.png');
 export const buyBtn = require('./buy-btn.png');

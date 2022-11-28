@@ -54,7 +54,7 @@ const ROUTES = {
   },
   EARN: {
     MAIN: 'Defi/Main',
-    INVESTMENT: 'Defi/Main',
+    INVESTMENT: 'Defi/INVESTMENT',
   },
   SWAP: {
     MAIN: 'Swap/Main',

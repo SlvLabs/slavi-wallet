@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     opacity: 0.3,
     flexWrap: 'wrap',
-    width: 150,
+    width: 175,
     textAlign: 'center',
   },
 });

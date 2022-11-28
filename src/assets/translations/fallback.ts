@@ -484,6 +484,11 @@ const translations = {
   addAssets: 'Add Assets',
   'Best price': 'Best price',
   version: 'Vesrion',
+  addAssets: 'Add Assets',
+  // ----
+  btcStaking: 'BTC Staking',
+  stakingDeposit: 'Deposit',
+  stakingInvestements: 'Investements',
 };
 
 export default translations;

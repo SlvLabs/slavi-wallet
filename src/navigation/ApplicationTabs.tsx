@@ -7,7 +7,7 @@ import ROUTES from './config/routes';
 import CustomIcon from '../components/custom-icon/custom-icon';
 import theme from '../theme';
 import SettingsStack from './SettingsStack';
-import DefiStack from './DefiStack';
+import EarnStack from './earn-stack';
 import SwapStack from './SwapStack';
 import useTranslation from '../utils/use-translation';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -79,7 +79,7 @@ export default function ApplicationTabs() {
         }}
         lazy={true}>
         <Tab.Screen name={ROUTES.TABS.COINS} component={CoinsStack} />
-        <Tab.Screen name={ROUTES.TABS.DEFI} component={DefiStack} />
+        <Tab.Screen name={ROUTES.TABS.DEFI} component={EarnStack} />
         <Tab.Screen name={ROUTES.TABS.OPERATIONS} component={OperationsStack} />
         <Tab.Screen name={ROUTES.TABS.SWAP} component={SwapStack} />
         <Tab.Screen name={ROUTES.TABS.SETTINGS} component={SettingsStack} />

@@ -24,8 +24,9 @@ import CustomIcon from '../../components/custom-icon/custom-icon';
 import Layout from '../../utils/layout';
 import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView } from 'react-native';
-import Toast from 'react-native-simple-toast';
 import Screen from '../../components/screen';
+import {useNavigation} from '@react-navigation/native';
+import ROUTES from '../../navigation/config/routes';
 
 interface EarnCoin {
   name: string;
@@ -120,11 +121,12 @@ const TabsContent = (props: TabsContentProps) => {
   );
 }
 
-const DefiScreen = () => {
+const EarnScreen = () => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.staking);
   const [isListDisplayMode, setListDisplayMode] = useState<boolean>(false);
 
   const {t} = useTranslation();
+  const navigation = useNavigation();
 
   const tabNames: Record<Tabs, string> = useMemo(() => ({
     [Tabs.staking]: t('staking'),
@@ -134,7 +136,7 @@ const DefiScreen = () => {
   const switchDisplayMode = () => setListDisplayMode(!isListDisplayMode);
 
   const onCoinPress = useCallback(
-    () => Toast.showWithGravity(t('inDevelopment'), Toast.LONG, Toast.CENTER),
+    () => navigation.navigate(ROUTES.EARN.INVESTMENT),
     [t]
   );
 
@@ -329,4 +331,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DefiScreen;
+export default EarnScreen;

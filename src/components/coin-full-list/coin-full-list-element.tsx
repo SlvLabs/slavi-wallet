@@ -22,15 +22,17 @@ export function CoinFullListElement({shown, onShownChange, logo, type, name, tic
   }, [onShownChange]);
 
   return (
-    <View style={styles.itemContainer}>
+    <View style={ enabled ? {...styles.itemContainer, ...styles.itemEnabledContainer} : styles.itemContainer}>
       <View style={styles.leftColumn}>
         <Image source={getImageSource(logo)} style={styles.logo} />
-        <View style={styles.nameColumn}>
-          <Text style={styles.name} ellipsizeMode={'tail'} numberOfLines={1}>{name}</Text>
-          <Text style={styles.type}>{type}</Text>
-        </View>
-        <View style={styles.tickerColumn}>
-          <Text style={styles.ticker} ellipsizeMode={'tail'} numberOfLines={1}>{ticker}</Text>
+        <View style={styles.textColumn}>
+          <View style={styles.topRow}>
+            <Text style={styles.name} ellipsizeMode={'tail'} numberOfLines={1}>{name}</Text>
+            <Text style={styles.ticker} ellipsizeMode={'tail'} numberOfLines={1}>{ticker}</Text>
+          </View>
+          {!!type && <View style={styles.bottomRow}>
+            <Text style={styles.type}>{type}</Text>
+          </View>}
         </View>
       </View>
       <Switch
@@ -62,9 +64,6 @@ const styles = StyleSheet.create({
     height: 32,
     marginRight: 16,
   },
-  nameColumn: {
-    flexDirection: 'column',
-  },
   name: {
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
@@ -72,7 +71,8 @@ const styles = StyleSheet.create({
     fontSize: Layout.isSmallDevice ? 14 : 16,
     lineHeight: 18,
     color: theme.colors.textLightGray2,
-    maxWidth: Layout.isSmallDevice ? 100 : 150
+    maxWidth: Layout.isSmallDevice ? 100 : 150,
+    marginRight: 4,
   },
   type: {
     fontFamily: theme.fonts.default,
@@ -93,13 +93,21 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     maxWidth: Layout.isSmallDevice ? 70 : 100
   },
-  tickerColumn: {
-    marginLeft: 4,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    height: '100%',
-  },
   leftColumn: {
     flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  itemEnabledContainer: {
+    backgroundColor: theme.colors.cardBackground2,
+  },
+  topRow: {
+    flexDirection: 'row',
+  },
+  bottomRow: {
+    flexDirection: 'row',
+  },
+  textColumn: {
+    flexDirection: 'column',
+    justifyContent: 'center',
   }
 });

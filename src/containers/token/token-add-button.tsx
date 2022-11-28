@@ -9,7 +9,7 @@ const TokenAddButton = () => {
   const navigation = useNavigation();
 
   const onPress = useCallback(
-    () => navigation.navigate(ROUTES.COINS.TOKEN_ADDING),
+    () => navigation.navigate(ROUTES.COINS.FULL_LIST),
     [navigation],
   );
 

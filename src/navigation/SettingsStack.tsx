@@ -10,9 +10,8 @@ import CurrencyScreen from '../containers/settings/currency-screen';
 import InvalidateCachesScreen from '../containers/settings/invalidate-caches-screen';
 import useTranslation from '../utils/use-translation';
 import MainWalletConnectScreen from '../containers/wallet-connect/main-wallet-connect-screen';
-import SecurityScreen from '../containers/settings/security-screen';
-import AutoBlockingScreen from '../containers/settings/auto-blocking-screen';
 import NotificationSettingsScreen from '../containers/settings/notification-settings-screen';
+import SettingsSecurityStack from './settings-security-stack';
 
 const StackNavigator = createStackNavigator();
 
@@ -66,13 +65,7 @@ const SettingsStack = () =>  {
       />
       <StackNavigator.Screen
         name={ROUTES.SETTINGS.SECURITY}
-        component={SecurityScreen}
-        options={{title: t('security')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.SETTINGS.AUTO_BLOCKING}
-        component={AutoBlockingScreen}
-        options={{title: t('autoBlocking')}}
+        component={SettingsSecurityStack}
       />
     </StackNavigator.Navigator>
   ),[]);

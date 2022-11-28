@@ -12,7 +12,6 @@ import ROUTES from '../../navigation/config/routes';
 import useAutoBlockOptions from '../../utils/use-auto-block-options';
 import Screen from '../../components/screen';
 import Layout from '../../utils/layout';
-import {usePinProtection} from '../../hooks/usePinProtection';
 
 export default function SecurityScreen() {
   const authService = useAuthService();
@@ -70,13 +69,11 @@ export default function SecurityScreen() {
     }
   };
 
-  const onAutoBlocking = useCallback(() => navigation.navigate(ROUTES.SETTINGS.AUTO_BLOCKING), [navigation]);
+  const onAutoBlocking = useCallback(() => navigation.navigate(ROUTES.SETTINGS_SECURITY.AUTO_BLOCKING), [navigation]);
 
   useEffect(() => {
     hasHardwareAsync().then(result => setBiometricIsSupported(result));
   }, []);
-
-  usePinProtection();
 
   return (
     <Screen title={t('security')}>

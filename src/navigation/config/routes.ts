@@ -58,6 +58,10 @@ const ROUTES = {
   SWAP: {
     MAIN: 'Swap/Main',
   },
+  SETTINGS_SECURITY: {
+    MAIN: 'SettingsSecurity/Main',
+    AUTO_BLOCKING: 'SettingsSecurity/AutoBlocking',
+  },
 };
 
 export default ROUTES;

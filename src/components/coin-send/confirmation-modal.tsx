@@ -73,7 +73,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
           }}>
           {props.vouts.map((vout, index) => renderVout(vout, index, ticker))}
         </View>
-        {props.fee && (
+        {!!props.fee && (
           <View style={{...styles.feeContainer, ...props.feeContainerStyle}}>
             <Text style={{...styles.fee, ...props.feeStyle}}>
               {`${t('Fee will be')}`}

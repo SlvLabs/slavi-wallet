@@ -52,8 +52,9 @@ const ROUTES = {
   NOTIFICATION: {
     LIST: 'Notification/List',
   },
-  DEFI: {
+  EARN: {
     MAIN: 'Defi/Main',
+    INVESTMENT: 'Defi/Main',
   },
   SWAP: {
     MAIN: 'Swap/Main',

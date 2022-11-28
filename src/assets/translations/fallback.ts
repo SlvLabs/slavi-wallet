@@ -478,7 +478,11 @@ const translations = {
   logoutDescription: 'Logging out can result in the loss of access to your funds inside this wallet. Please save your private keys',
   attentionContinue: 'Continue',
   attentionCancel: 'Cancel',
-  addAssets: 'Add Assets'
+  addAssets: 'Add Assets',
+  // ----
+  btcStaking: 'BTC Staking',
+  stakingDeposit: 'Deposit',
+  stakingInvestements: 'Investements',
 };
 
 export default translations;

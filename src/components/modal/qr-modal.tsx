@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet, View} from 'react-native';
 import BaseModal, {ModalProps} from './base-modal';
 import QRCode from 'react-native-qrcode-svg';
 import theme from '../../theme';
+import Layout from '../../utils/layout';
 
 export interface QrModalProps extends ModalProps {
   title: string;
@@ -15,9 +16,17 @@ export default function QrModal(props: QrModalProps) {
 
   return (
     <BaseModal {...other} contentStyle={styles.container}>
-        <Text style={styles.header}>{title}</Text>
-        <QRCode value={data} size={256} />
-        {!!description && <Text style={styles.description}>{description}</Text>}
+      <Text style={styles.header}>{title}</Text>
+      <View style={styles.qrContainer}>
+        <View style={{...styles.qrCorner, ...styles.qrCorner1}} />
+        <View style={{...styles.qrCorner, ...styles.qrCorner2}} />
+        <View style={{...styles.qrCorner, ...styles.qrCorner3}} />
+        <View style={{...styles.qrCorner, ...styles.qrCorner4}} />
+        <View style={styles.qrBackground}>
+          <QRCode value={data} size={256} />
+        </View>
+      </View>
+      {!!description && <Text style={styles.description}>{description}</Text>}
     </BaseModal>
   );
 }
@@ -46,5 +55,57 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
     marginTop: 24,
-  }
+  },
+  qrContainer: {
+    padding: 7,
+  },
+  qrCorner: {
+    width: Layout.isSmallDevice ? 10 : 12,
+    height: Layout.isSmallDevice ? 10 : 12,
+    position: 'absolute',
+  },
+  qrCorner1: {
+    top: 0,
+    left: 0,
+    borderLeftWidth: 2,
+    borderLeftColor: theme.colors.white,
+    borderRadius: 1,
+    borderTopWidth: 2,
+    borderTopColor: theme.colors.white,
+    opacity: 0.2,
+  },
+  qrCorner2: {
+    top: 0,
+    right: 0,
+    borderRightWidth: 2,
+    borderRightColor: theme.colors.white,
+    borderRadius: 1,
+    borderTopWidth: 2,
+    borderTopColor: theme.colors.white,
+    opacity: 0.2,
+  },
+  qrCorner3: {
+    bottom: 0,
+    right: 0,
+    borderRightWidth: 2,
+    borderRightColor: theme.colors.white,
+    borderRadius: 1,
+    borderBottomWidth: 2,
+    borderBottomColor: theme.colors.white,
+    opacity: 0.2,
+  },
+  qrCorner4: {
+    bottom: 0,
+    left: 0,
+    borderLeftWidth: 2,
+    borderLeftColor: theme.colors.white,
+    borderRadius: 1,
+    borderBottomWidth: 2,
+    borderBottomColor: theme.colors.white,
+    opacity: 0.2,
+  },
+  qrBackground: {
+    backgroundColor: theme.colors.white,
+    padding: Layout.isSmallDevice ? 8 : 10,
+  },
 });

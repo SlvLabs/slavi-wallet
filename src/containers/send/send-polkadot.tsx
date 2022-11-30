@@ -1,16 +1,8 @@
 import useTranslation from '../../utils/use-translation';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
-import {
-  useAddressesService,
-  useCoinPatternService,
-  useCoinSpecsService,
-  useDidUpdateEffect,
-} from '@slavi/wallet-core';
-import React, {useCallback, useState} from 'react';
-import SendView, {
-  Recipient,
-  RecipientUpdatingData,
-} from '../../components/coin-send/send-view';
+import {useAddressesService, useCoinPatternService, useCoinSpecsService, useDidUpdateEffect} from '@slavi/wallet-core';
+import React, {useCallback, useMemo, useState} from 'react';
+import SendView, {Recipient, RecipientUpdatingData} from '../../components/coin-send/send-view';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import {StyleSheet, View} from 'react-native';
 import AlertRow from '../../components/error/alert-row';
@@ -19,7 +11,6 @@ import ConfirmationModal from '../../components/coin-send/confirmation-modal';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import SimpleToast from 'react-native-simple-toast';
 import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
-import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import AddressSelector from '../../components/buttons/address-selector';
 import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
@@ -73,21 +64,17 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
   const [keepAliveConfirm, setKeepAliveConfirm] = useState<boolean>(false);
   const [receiverPaysFee, setReceiverPaysFee] = useState<boolean>(false);
 
-  const fromAddress =
-    typeof senderIndex !== 'undefined'
-      ? balancesState.balances[senderIndex]?.address
-      : undefined;
+  const fromAddress = typeof senderIndex !== 'undefined' ? balancesState.balances[senderIndex]?.address : undefined;
   const accountBalance =
-    typeof senderIndex !== 'undefined' &&
-    typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
+    typeof senderIndex !== 'undefined' && typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
       ? balancesState.balances[senderIndex].balance
       : '0';
 
   const validator = useVoutValidator(props.coin, accountBalance);
 
-  const pattern: PolkadotPattern = coinPatternService.createPolkadotPattern(
-    props.coin,
-    addressService.getGetterDelegate(props.coin),
+  const pattern: PolkadotPattern = useMemo(
+    () => coinPatternService.createPolkadotPattern(props.coin, addressService.getGetterDelegate(props.coin)),
+    [addressService, coinPatternService, props.coin],
   );
 
   const enableReceiverPaysFee = useCallback(() => setReceiverPaysFee(true), []);
@@ -99,66 +86,82 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     });
   };
 
-  const addError = (error: string) => {
+  const addError = useCallback((error: string) => {
     setIsValid(false);
-    setErrors([...errors, error]);
-  };
+    setErrors(p => [...p, error]);
+  }, []);
 
-  const createTransaction = async (isKeepAlive: boolean = true): Promise<boolean> => {
-    setLocked(true);
-    if (validate()) {
-      if (!pattern) {
-        throw new Error('Try create transaction of unknown coin');
+  const validate = useCallback(
+    (strict?: boolean): boolean => {
+      const result = validator(recipient.address, recipient.amount, strict);
+      setIsValid(result.isValid);
+      const tmp: VoutError = {address: [], amount: []};
+      if (result.address) {
+        tmp.address.push(result.address);
       }
-
-      if (!fromAddress) {
-        addError(t('Source address not specified'));
-        return false;
+      if (result.amount) {
+        tmp.amount.push(result.amount);
       }
+      setVoutError(tmp);
 
-      let result;
-      try {
-        result = await pattern.transfer(fromAddress, {
-          recipient: recipient.address,
-          amount: recipient.amount,
-          isKeepAlive: isKeepAlive,
-          tip: '0', // TODO: from user
-          receiverPaysFee: receiverPaysFee,
-        });
-      } catch (e) {
-        setLocked(false);
-        const err1 = except<CreateTransactionError>(CreateTransactionError, e);
-        if (err1) {
-          addError(
-            t('Can not create transaction. Try latter or contact support.'),
-          );
+      return result.isValid;
+    },
+    [recipient, validator],
+  );
+
+  const createTransaction = useCallback(
+    async (isKeepAlive: boolean = true): Promise<boolean> => {
+      setLocked(true);
+      if (validate(true)) {
+        if (!pattern) {
+          throw new Error('Try create transaction of unknown coin');
+        }
+
+        if (!fromAddress) {
+          addError(t('Source address not specified'));
           return false;
         }
 
-        const keepAliveErr = except<ExistentialDepositError>(ExistentialDepositError, e);
-        if(keepAliveErr) {
-          setKeepAliveConfirm(true);
+        let result;
+        try {
+          result = await pattern.transfer(fromAddress, {
+            recipient: recipient.address,
+            amount: recipient.amount,
+            isKeepAlive: isKeepAlive,
+            tip: '0', // TODO: from user
+            receiverPaysFee: receiverPaysFee,
+          });
+        } catch (e) {
+          setLocked(false);
+          if (e instanceof CreateTransactionError) {
+            addError(t('Can not create transaction. Try latter or contact support.'));
+            return false;
+          }
+          if (e instanceof ExistentialDepositError) {
+            setKeepAliveConfirm(true);
+            return false;
+          }
+          throw e;
+        }
+
+        if (!result) {
+          SimpleToast.show(t('Error of transaction creating'));
           return false;
         }
-        throw e;
+
+        setTxResult(result);
+        return true;
       }
 
-      if (!result) {
-        SimpleToast.show(t('Error of transaction creating'));
-        return false;
-      }
+      return false;
+    },
+    [addError, fromAddress, pattern, receiverPaysFee, recipient.address, recipient.amount, t, validate],
+  );
 
-      setTxResult(result);
-      return true;
-    }
-
-    return false;
-  };
-
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     setLocked(true);
     setTimeout(async () => {
-      if(!validate(true)) {
+      if (!validate(true)) {
         setLocked(false);
         return;
       }
@@ -173,12 +176,9 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
         setLocked(false);
       }
     }, 300);
-  }
+  }, [createTransaction, validate]);
 
-  const onQrReadFailed = useCallback(
-    () => SimpleToast.show(t('Can not read qr')),
-    [t],
-  );
+  const onQrReadFailed = useCallback(() => SimpleToast.show(t('Can not read qr')), [t]);
 
   const onQRRead = useCallback(
     (data: any) => {
@@ -205,17 +205,17 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
     [coinSpec.bip21Name, onQrReadFailed, recipient],
   );
 
-  const cancelConfirmSending = () => {
+  const cancelConfirmSending = useCallback(() => {
     setConfIsShown(false);
     setLocked(false);
-  };
+  }, []);
 
-  const send = async () => {
+  const send = useCallback(async () => {
     if (!txResult) {
       throw new Error('Try send transaction before creating');
     }
     try {
-      await pattern.sendTransactions(txResult.transactions, txResult.validToBlock);
+      await pattern.sendTransactions(txResult.transactions, {validToBlock: txResult.validToBlock});
     } catch (e) {
       addError(t('Error of broadcast tx. Try again latter or contact support'));
     } finally {
@@ -227,29 +227,14 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
       recipients: [recipient],
       coin: coinDetails.id,
     });
-  };
+  }, [addError, cancelConfirmSending, coinDetails.id, navigation, pattern, recipient, t, txResult]);
 
-  const validate = useCallback((strict?: boolean): boolean => {
-    const result = validator(recipient.address, recipient.amount, strict);
-    setIsValid(result.isValid);
-    const tmp: VoutError = {address: [], amount: []};
-    if (result.address) {
-      tmp.address.push(result.address);
-    }
-    if (result.amount) {
-      tmp.amount.push(result.amount);
-    }
-    setVoutError(tmp);
-
-    return result.isValid;
-  }, [recipient, validator]);
-
-  const onKeepAliveConfirm = async () => {
-    if(await createTransaction(false)) {
+  const onKeepAliveConfirm = useCallback(async () => {
+    if (await createTransaction(false)) {
       setConfIsShown(true);
       setKeepAliveConfirm(false);
     }
-  };
+  }, [createTransaction]);
   const onKeepAliveDecline = useCallback(() => {
     setKeepAliveConfirm(false);
   }, []);
@@ -297,18 +282,9 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
         )}
       </View>
       <View style={styles.submitButton}>
-        <SolidButton
-          title={t('Send')}
-          onPress={onSubmit}
-          disabled={!isValid || locked}
-          loading={locked}
-        />
+        <SolidButton title={t('Send')} onPress={onSubmit} disabled={!isValid || locked} loading={locked} />
       </View>
-      <QrReaderModal
-        visible={activeQR}
-        onQRRead={onQRRead}
-        onClose={() => setActiveQR(false)}
-      />
+      <QrReaderModal visible={activeQR} onQRRead={onQRRead} onClose={() => setActiveQR(false)} />
       <ConfirmationModal
         visible={confIsShown}
         vouts={txResult?.vouts || []}

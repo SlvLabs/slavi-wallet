@@ -1,14 +1,8 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import RecipientInput from './recipient-input';
 import useTranslation from '../../utils/use-translation';
 import AmountInput from './amount-input';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  Text,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, ViewStyle, Text} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
@@ -41,29 +35,17 @@ export interface SendViewProps {
 const SendView = (props: SendViewProps) => {
   const {t} = useTranslation();
   const {onRecipientChange, readQr, onRemove, maximumPrecision} = props;
-  const onAmountChange = (amount: string) => onRecipientChange({amount});
+  const onAmountChange = useCallback((amount: string) => onRecipientChange({amount}), [onRecipientChange]);
 
-  const onAddressChange = (address: string) => onRecipientChange({address});
-
-  const onRemoveCallback = () => {
-    if (onRemove) {
-      onRemove();
-    }
-  };
+  const onAddressChange = useCallback((address: string) => onRecipientChange({address}), [onRecipientChange]);
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.header}>
-        {!!props.header && (
-          <Text style={styles.headerText}>{props.header}</Text>
-        )}
+        {!!props.header && <Text style={styles.headerText}>{props.header}</Text>}
         {!!onRemove && (
-          <TouchableOpacity onPress={onRemoveCallback}>
-            <CustomIcon
-              name={'close'}
-              size={16}
-              color={theme.colors.darkGreen1}
-            />
+          <TouchableOpacity onPress={onRemove}>
+            <CustomIcon name={'close'} size={16} color={theme.colors.darkGreen1} />
           </TouchableOpacity>
         )}
       </View>

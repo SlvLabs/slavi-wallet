@@ -2,16 +2,13 @@ import Config from 'react-native-config';
 import CoreBootstrap from '@slavi/wallet-core/src/utils/bootstrap';
 import {Store} from 'redux';
 import {networks} from '@slavi/crypto-core';
-import {
-  DataStoreProviderInterface,
-  ServiceLocatorCoreInterface,
-} from '@slavi/wallet-core/src/types';
+import {DataStoreProviderInterface, ServiceLocatorCoreInterface} from '@slavi/wallet-core/src/types';
 import {CoinsServiceConf} from '@slavi/wallet-core/src/services/coins-service';
 import SimpleToast from 'react-native-simple-toast';
 import PerformanceMonitorInterface from '@slavi/wallet-core/src/utils/performance-monitor-interface';
 import translations from '../assets/translations/fallback';
 import {FirebaseService} from './notification/firebase-service';
-import { NotificationUnsupported } from '@slavi/wallet-core/src/services/errors/notification-unsupported';
+import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 
 const wsConfig = {
   url: Config.WS_URL,
@@ -71,7 +68,7 @@ export const createCoreBootstrap = (
       try {
         await firebaseService.init();
       } catch (e) {
-        throw new NotificationUnsupported(e);
+        throw new NotificationUnsupported(e as Error);
       }
     },
     loadWalletServices: async () => coreBootstrap.loadWalletServices(),

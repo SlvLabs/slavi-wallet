@@ -20,7 +20,6 @@ import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
 import NftImage from '../../components/nft/nft-image';
 import {Decimal80} from '@slavi/wallet-core/src/utils/prepared-decimal';
-import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import ScrollableScreen from '../../components/scrollable-screen';
 import InvalidGasPrice from '@slavi/wallet-core/src/services/errors/invalid-gas-price';
@@ -29,7 +28,7 @@ export default function NftSendScreen() {
   const route = useRoute<NftInfoRouteProps>();
   const {id, contract, network} = route.params;
 
-  const [address, setAddress] = useState<string|undefined>();
+  const [address, setAddress] = useState<string | undefined>();
   const [amount, setAmount] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string>();
@@ -42,31 +41,28 @@ export default function NftSendScreen() {
   const addressService = useAddressesService();
   const patternService = useCoinPatternService();
 
-  const pattern = useMemo(() =>
-    patternService.createEthPattern(network, addressService.getGetterDelegate(network)),
-    [patternService]
+  const pattern = useMemo(
+    () => patternService.createEthPattern(network, addressService.getGetterDelegate(network)),
+    [addressService, network, patternService],
   );
 
-  const addressValidator = useMemo(
-    () => patternService.getAddressValidatorByCoin(network),
-    [network, patternService]
-  );
+  const addressValidator = useMemo(() => patternService.getAddressValidatorByCoin(network), [network, patternService]);
 
   const {isLoading, error, data} = useNftInfo(network, contract, id);
 
-  const onReadQr = useCallback((data: QrData) => {
-    !!data.address && setAddress(data.address);
-    !!data.amount && setAmount(data.amount);
+  const onReadQr = useCallback((qrData: QrData) => {
+    !!qrData.address && setAddress(qrData.address);
+    !!qrData.amount && setAmount(qrData.amount);
   }, []);
 
   const {showModal, modal} = useQrReader({onRead: onReadQr, coin: network});
 
   const validateAmount = useCallback(() => {
-    if(data?.type === 'ERC-721') {
+    if (data?.type === 'ERC-721') {
       return true;
     }
 
-    if(!data?.amount || (amount && (new Decimal80(amount)).greaterThan(data?.amount))) {
+    if (!data?.amount || (amount && new Decimal80(amount).greaterThan(data?.amount))) {
       setGeneralError(t('nftNotEnough'));
       return false;
     }
@@ -75,7 +71,7 @@ export default function NftSendScreen() {
   }, [data, amount, t]);
 
   const validateAddress = useCallback(() => {
-    if(address && !addressValidator.validate(address, network)) {
+    if (address && !addressValidator.validate(address, network)) {
       setGeneralError(t('nftNotValidAddress'));
       return false;
     }
@@ -88,11 +84,11 @@ export default function NftSendScreen() {
 
   const onContinuePress = useCallback(() => {
     const f = async () => {
-      if(isLoading || !data || loading) {
+      if (isLoading || !data || loading) {
         return;
       }
 
-      if(!validate()) {
+      if (!validate()) {
         return;
       }
 
@@ -104,23 +100,21 @@ export default function NftSendScreen() {
             contract: contract,
             id: data.id,
             type: data.type,
-            owner: data.owner
+            owner: data.owner,
           },
           amount,
           {
             transactionPriority: TransactionPriority.average,
-          }
+          },
         );
 
         setTx(result);
         setConfModalIsVisible(true);
       } catch (e) {
-        const err = except<InsufficientFunds>(InsufficientFunds, e);
-        if (err) {
+        if (e instanceof InsufficientFunds) {
           setGeneralError(t('nftNotEnoughNetwork'));
         } else {
-          const gasErr = except<InvalidGasPrice>(InvalidGasPrice, e);
-          if(gasErr) {
+          if (e instanceof InvalidGasPrice) {
             setGeneralError(t('invalidGas'));
           } else {
             setGeneralError(t('internal error'));
@@ -129,52 +123,47 @@ export default function NftSendScreen() {
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    f();
-  }, [pattern, data, isLoading, loading, address, amount, t, validate]);
+    f().catch(() => setGeneralError(t('internal error')));
+  }, [isLoading, data, loading, validate, pattern, address, contract, amount, t]);
 
   const onSuccess = useCallback(() => {
-      if(!address || !data) {
-        return;
-      }
+    if (!address || !data) {
+      return;
+    }
 
-      navigation.navigate(ROUTES.COINS.NFT_SUCCESS, {
-        amount: amount,
-        ticker: data.ticker,
-        name: data.name,
-        image: data.image,
-        from: data.owner,
-        to: address
-      });
-    },
-    [navigation, amount, address, data]
-  );
+    navigation.navigate(ROUTES.COINS.NFT_SUCCESS, {
+      amount: amount,
+      ticker: data.ticker,
+      name: data.name,
+      image: data.image,
+      from: data.owner,
+      to: address,
+    });
+  }, [navigation, amount, address, data]);
 
   const hideConfModal = useCallback(() => setConfModalIsVisible(false), []);
 
   const sendTx = useCallback(async () => {
-    if(!tx || !data || !address) {
+    if (!tx || !data || !address) {
       return;
     }
 
     try {
-      await pattern.sendNFTTransactions(
-        tx.transactions,
-        {
-          id: data.id,
-          contract: data?.contract,
-          coin: data?.network.id,
-          address: address,
-        },
-      );
+      await pattern.sendNFTTransactions(tx.transactions, {
+        id: data.id,
+        contract: data?.contract,
+        coin: data?.network.id,
+        address: address,
+      });
 
       hideConfModal();
       onSuccess();
     } catch (e) {
       setGeneralError(t('internal error'));
     }
-  }, [tx, onSuccess, data, hideConfModal])
+  }, [tx, data, address, pattern, hideConfModal, onSuccess, t]);
 
   useEffect(() => {
     setGeneralError(undefined);
@@ -182,24 +171,24 @@ export default function NftSendScreen() {
   }, [address, amount]);
 
   useEffect(() => {
-    if(amount) {
+    if (amount) {
       validateAmount();
     }
   }, [amount, validateAmount]);
 
   useEffect(() => {
-    if(address) {
+    if (address) {
       validateAddress();
     }
   }, [address, validateAddress]);
 
   useEffect(() => {
-    if(error) {
+    if (error) {
       setGeneralError(t('internal error'));
     }
   }, [error, t]);
 
-  if(isLoading || !data) {
+  if (isLoading || !data) {
     return (
       <View style={styles.spinnerContainer}>
         <Spinner />
@@ -209,15 +198,17 @@ export default function NftSendScreen() {
 
   return (
     <ScrollableScreen title={t('nftSendTitle')} containerStyle={styles.container}>
-      <NftImage image={data.image} imageStyle={styles.image}/>
+      <NftImage image={data.image} imageStyle={styles.image} />
       <Text style={styles.title}>{data.name}</Text>
-      {data.type === 'ERC-1155' && <IncrementableDecimalInput
-        value={amount}
-        onValueChange={setAmount}
-        containerStyle={styles.amountInput}
-        minValue={'0'}
-        maxValue={data.amount}
-      />}
+      {data.type === 'ERC-1155' && (
+        <IncrementableDecimalInput
+          value={amount}
+          onValueChange={setAmount}
+          containerStyle={styles.amountInput}
+          minValue={'0'}
+          maxValue={data.amount}
+        />
+      )}
       <RecipientInput
         onPressQr={showModal}
         value={address}
@@ -268,11 +259,11 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '600',
     fontSize: Layout.isSmallDevice ? 15 : 18,
-    lineHeight: Layout.isSmallDevice ? 21: 28,
+    lineHeight: Layout.isSmallDevice ? 21 : 28,
     color: theme.colors.white,
     marginTop: 16,
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   button: {
     marginTop: 24,
@@ -306,4 +297,3 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
-

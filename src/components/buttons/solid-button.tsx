@@ -11,7 +11,11 @@ export interface SolidButtonProps extends ButtonProps {
 const SolidButton = (props: SolidButtonProps) => {
   const {disabled, gradient} = props;
   if (disabled) {
-    return <Button {...props} />;
+    return <Button
+      {...props}
+      disabledStyle={styles.disabledButton}
+      disabledTitleStyle={styles.disabledTitle}
+    />;
   }
 
   return (
@@ -28,6 +32,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 38,
   },
+  disabledButton: {
+    backgroundColor: '#2C2E33',
+  },
+  disabledTitle: {
+    fontFamily: theme.fonts.gilroy,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    fontSize: 13,
+    lineHeight: 16,
+    color: theme.colors.textLightGray1,
+  }
 });
 
 export default SolidButton;

@@ -16,7 +16,7 @@ export function BtcEarnScreen() {
   const renderScene = useCallback(({ route }: WrappedSceneRendererProps<RouteData>) => {
     switch (route.key) {
       case 'deposit':
-        return <DepositTab />;
+        return <DepositTab coin={'DOGE'}/>;
       case 'investements':
         return <InvestmentsTab />;
       default:

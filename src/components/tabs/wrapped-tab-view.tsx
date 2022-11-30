@@ -19,7 +19,7 @@ export function WrappedTabView({routes, renderScene}: WrappedTabViewProps) {
 
   const renderTabBar = useCallback((props: WrappedTabBarRendererProps<RouteData>) => (
     <TabsBar<any>  sceneRendererProps={props} tabIndex={tabIndex} setTabIndex={setTabIndex}/>
-  ), []);
+  ), [tabIndex]);
 
   return (
     <TabView

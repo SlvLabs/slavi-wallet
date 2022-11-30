@@ -483,6 +483,24 @@ const translations = {
   btcStaking: 'BTC Staking',
   stakingDeposit: 'Deposit',
   stakingInvestements: 'Investements',
+  stakingAvailableHeader: 'Available',
+  stakingStaked: 'Staked',
+  stakingNextPayout: 'Next payout',
+  stakingStaking: 'Staking',
+  stakingApy: 'apy',
+  stakingApyDescription: 'Stake {{ticker}} and earn stable APY',
+  stakingPeriod: 'Period',
+  stakingAmountToStake: 'Amount to stake',
+  stakingMinStake: 'Min.Stake',
+  stakingMax: 'Max',
+  stakingMonthlyIncome: 'Monthly income',
+  stakingTotalIncome: 'Monthly income',
+  stakingStake: 'Stake {{ticker}}',
+  stakingConfirmationHeader: 'Are you sure to stake?',
+  stakingTxFee: 'TX fee',
+  stakingTermOfStakingAgreement: 'I have read and agree to the',
+  stakingTermOfStaking: 'Terms of staking',
+  stakingTermOfUseLink: 'slavi.io'
 };
 
 export default translations;

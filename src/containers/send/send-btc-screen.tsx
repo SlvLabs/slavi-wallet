@@ -6,20 +6,12 @@ import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import SendManyView from '../../components/coin-send/send-many-view';
 import {QrData} from '@slavi/wallet-core/src/utils/qr';
-import {
-  useCoinSpecsService,
-  useCoinPatternService,
-  useAddressesService,
-  useDidUpdateEffect,
-} from '@slavi/wallet-core';
+import {useCoinSpecsService, useCoinPatternService, useAddressesService, useDidUpdateEffect} from '@slavi/wallet-core';
 import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
 import {Recipient} from '../../components/coin-send/send-view';
 import useTranslation from '../../utils/use-translation';
-import useTxVoutsValidator, {
-  VoutError,
-} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
+import useTxVoutsValidator, {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import AlertRow from '../../components/error/alert-row';
-import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import SimpleToast from 'react-native-simple-toast';
@@ -51,23 +43,18 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
   const [recipientPayFee, setRecipientPayFee] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [voutErrors, setVoutErrors] = useState<{[index: number]: VoutError}>(
-    {},
-  );
+  const [voutErrors, setVoutErrors] = useState<{[index: number]: VoutError}>({});
   const [locked, setLocked] = useState<boolean>(false);
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
   const [txResult, setTxResult] = useState<TxCreatingResult | null>(null);
-  const [txPriority, setTxPriority] = useState<TransactionPriority>(
-    TransactionPriority.average,
-  );
+  const [txPriority, setTxPriority] = useState<TransactionPriority>(TransactionPriority.average);
 
   const coinDetails = useCoinDetails(props.coin);
   if (!coinDetails) {
     throw new Error('Unknown coin for details display');
   }
-  const coinSpecService = useCoinSpecsService();
   const addressService = useAddressesService();
-  const coinSpec = coinSpecService.getSpec(props.coin);
+  const coinSpec = useCoinSpecsService().getSpec(props.coin);
   if (!coinSpec) {
     throw new Error('Unable get coin spec for coin ' + props.coin);
   }
@@ -77,19 +64,20 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
   const coinPatternService = useCoinPatternService();
   const readQr = useCallback((index: number): void => setActiveQR(index), []);
 
-  const pattern = useMemo(() => coinPatternService.createBtcPattern(
-    props.coin,
-    addressService.getGetterDelegate(props.coin),
-    addressService.getCreatorDelegate(props.coin),
-  ), [coinPatternService]);
-
-  const onQrReadFailed = useCallback(
-    () => SimpleToast.show(t('Can not read qr')),
-    [t],
+  const pattern = useMemo(
+    () =>
+      coinPatternService.createBtcPattern(
+        props.coin,
+        addressService.getGetterDelegate(props.coin),
+        addressService.getCreatorDelegate(props.coin),
+      ),
+    [addressService, coinPatternService, props.coin],
   );
 
+  const onQrReadFailed = useCallback(() => SimpleToast.show(t('Can not read qr')), [t]);
+
   const onQRRead = useCallback(
-    (data: any) => {
+    (data: string) => {
       let parsed: QrData | undefined;
       try {
         parsed = parseDataFromQr(data, coinSpec.bip21Name);
@@ -103,49 +91,54 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         return;
       }
 
-      setActiveQR(-1);
-      setRecipients(
-        recipients.map((element, index) => {
-          if (parsed && index === activeQR) {
-            return {
-              ...element,
-              address: parsed.address || '',
-              amount: parsed.amount || '',
-            };
-          }
-          return element;
-        }),
-      );
+      setActiveQR(pQr => {
+        setRecipients(p =>
+          p.map((element, index) => {
+            if (parsed && index === pQr) {
+              return {
+                ...element,
+                address: parsed.address || '',
+                amount: parsed.amount || '',
+              };
+            }
+            return element;
+          }),
+        );
+        return -1;
+      });
     },
-    [activeQR, coinSpec.bip21Name, onQrReadFailed, recipients],
+    [coinSpec.bip21Name, onQrReadFailed],
   );
 
-  const validate = useCallback((strict?: boolean): boolean => {
-    const result = validator({
-      vouts: recipients,
-      recipientPayFee: recipientPayFee,
-    }, strict);
+  const validate = useCallback(
+    (strict?: boolean): boolean => {
+      const result = validator(
+        {
+          vouts: recipients,
+          recipientPayFee: recipientPayFee,
+        },
+        strict,
+      );
 
-    setIsValid(result.isSuccess());
-    setErrors(result.getErrors());
-    setVoutErrors(result.getVoutErrors());
+      setIsValid(result.isSuccess());
+      setErrors(result.getErrors());
+      setVoutErrors(result.getVoutErrors());
 
-    return result.isSuccess();
-  }, [recipientPayFee, recipients, validator]);
+      return result.isSuccess();
+    },
+    [recipientPayFee, recipients, validator],
+  );
 
-  const onRecipientChange = (
-    index: number,
-    recipient: {address?: string; amount?: string},
-  ) => {
-    setRecipients(
-      recipients.map((current, i) => {
+  const onRecipientChange = useCallback((index: number, recipient: {address?: string; amount?: string}) => {
+    setRecipients(p =>
+      p.map((current, i) => {
         if (i === index) {
           const newRecipient = {...current};
           if (typeof recipient.address !== 'undefined') {
             newRecipient.address = recipient.address;
           }
           if (typeof recipient.amount !== 'undefined') {
-            setRecipientPayFee(false);
+            setRecipientPayFee(pp => (p.length !== 1 ? false : pp && recipient.amount === newRecipient.amount));
             newRecipient.amount = recipient.amount;
           }
 
@@ -154,28 +147,26 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         return current;
       }),
     );
-  };
+  }, []);
 
-  const onRecipientAdd = () =>
-    setRecipients([...recipients, {...defaultRecipient}]);
+  const onRecipientAdd = useCallback(() => setRecipients(p => [...p, {...defaultRecipient}]), []);
 
-  const onRecipientRemove = (index: number) => {
-    setRecipients(recipients.filter((recipient, i) => i !== index));
-  };
+  const onRecipientRemove = useCallback((index: number) => setRecipients(p => p.filter((_, i) => i !== index)), []);
 
-  const trySetRecipientPayFee = () => {
+  const trySetRecipientPayFee = useCallback(() => {
+    console.log('try', recipients.length);
     if (recipients.length > 1) {
       return;
     }
     setRecipientPayFee(true);
-  };
+  }, [recipients.length]);
 
-  const addError = (error: string) => {
+  const addError = useCallback((error: string) => {
     setIsValid(false);
-    setErrors([...errors, error]);
-  };
+    setErrors(p => [...p, error]);
+  }, []);
 
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     setLocked(true);
     if (validate(true)) {
       if (!pattern) {
@@ -189,8 +180,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
           txPriority: txPriority,
         });
       } catch (e) {
-        const err = except<InsufficientFunds>(InsufficientFunds, e);
-        if (err) {
+        if (e instanceof InsufficientFunds) {
           addError(
             t(
               'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
@@ -198,20 +188,11 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
           );
         } else {
           setLocked(false);
-          const err1 = except<CreateTransactionError>(
-            CreateTransactionError,
-            e,
-          );
-          if (err1) {
-            addError(
-              t('Can not create transaction. Try latter or contact support.'),
-            );
+          if (e instanceof CreateTransactionError) {
+            addError(t('Can not create transaction. Try latter or contact support.'));
           } else {
-            const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
-            if (err2) {
-              addError(
-                t('Can not create transaction. absurdly high fee.'),
-              );
+            if (e instanceof AbsurdlyHighFee) {
+              addError(t('Can not create transaction. absurdly high fee.'));
             }
           }
           throw e;
@@ -227,13 +208,13 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
       setConfIsShown(true);
       setTxResult(result);
     }
-  };
+  }, [addError, pattern, recipientPayFee, recipients, t, txPriority, validate]);
 
-  const cancelConfirmSending = () => {
+  const cancelConfirmSending = useCallback(() => {
     setConfIsShown(false);
     setLocked(false);
-  };
-  const send = async () => {
+  }, []);
+  const send = useCallback(async () => {
     if (!txResult) {
       throw new Error('Try send transaction before creating');
     }
@@ -252,7 +233,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
       recipients: recipients,
       coin: coinDetails.id,
     });
-  };
+  }, [addError, cancelConfirmSending, coinDetails.id, navigation, pattern, recipients, t, txResult]);
 
   useDidUpdateEffect(() => validate(), [recipients, validate]);
 
@@ -295,18 +276,9 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         </View>
       )}
       <View style={styles.submitButton}>
-        <SolidButton
-          title={t('Send')}
-          onPress={onSubmit}
-          disabled={!isValid || locked}
-          loading={locked}
-        />
+        <SolidButton title={t('Send')} onPress={onSubmit} disabled={!isValid || locked} loading={locked} />
       </View>
-      <QrReaderModal
-        visible={activeQR >= 0}
-        onQRRead={onQRRead}
-        onClose={() => setActiveQR(-1)}
-      />
+      <QrReaderModal visible={activeQR >= 0} onQRRead={onQRRead} onClose={() => setActiveQR(-1)} />
       <ConfirmationModal
         visible={confIsShown}
         vouts={txResult?.vouts || []}
@@ -331,8 +303,8 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between'
-  }
+    justifyContent: 'space-between',
+  },
 });
 
 export default SendBtcScreen;

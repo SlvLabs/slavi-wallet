@@ -1,12 +1,9 @@
 import {StyleSheet, View} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
-import SendView, {
-  Recipient,
-  RecipientUpdatingData,
-} from '../../components/coin-send/send-view';
+import SendView, {Recipient, RecipientUpdatingData} from '../../components/coin-send/send-view';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
@@ -16,7 +13,6 @@ import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import {useAddressesService, useCoinPatternService, useCoinSpecsService, useDidUpdateEffect} from '@slavi/wallet-core';
 import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
 import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
-import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import SolidButton from '../../components/buttons/solid-button';
@@ -39,9 +35,9 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
 
   const addressService = useAddressesService();
   const coinPatternService = useCoinPatternService();
-  const pattern = coinPatternService.createSolanaPattern(
-    props.coin,
-    addressService.getGetterDelegate(props.coin),
+  const pattern = useMemo(
+    () => coinPatternService.createSolanaPattern(props.coin, addressService.getGetterDelegate(props.coin)),
+    [addressService, coinPatternService, props.coin],
   );
 
   const coinDetails = useCoinDetails(props.coin);
@@ -71,24 +67,17 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
   const [skipRentConfIsShown, setSkipRentConfIsShown] = useState<boolean>(false);
 
   const balancesState = useAddressesBalance(props.coin);
-  const fromAddress =
-    typeof senderIndex !== 'undefined'
-      ? balancesState.balances[senderIndex]?.address
-      : undefined;
+  const fromAddress = typeof senderIndex !== 'undefined' ? balancesState.balances[senderIndex]?.address : undefined;
   const accountBalance =
-    typeof senderIndex !== 'undefined' &&
-    typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
+    typeof senderIndex !== 'undefined' && typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
       ? balancesState.balances[senderIndex].balance
       : '0';
   const validator = useVoutValidator(props.coin, accountBalance);
 
-  const onQrReadFailed = useCallback(
-    () => SimpleToast.show(t('Can not read qr')),
-    [t],
-  );
+  const onQrReadFailed = useCallback(() => SimpleToast.show(t('Can not read qr')), [t]);
 
   const onQRRead = useCallback(
-    (data: any) => {
+    (data: string) => {
       let parsed: QrData | undefined;
       let bip21Name = coinSpec.bip21Name;
       if (coinDetails.parent) {
@@ -110,120 +99,121 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
       }
 
       setActiveQR(false);
-      setRecipient({
-        ...recipient,
-        address: parsed.address || '',
-        amount: parsed.amount || '',
-      });
+      setRecipient(p => ({
+        ...p,
+        address: parsed?.address || '',
+        amount: parsed?.amount || '',
+      }));
+    },
+    [coinDetails.parent, coinSpec.bip21Name, coinSpecService, onQrReadFailed],
+  );
+
+  const validate = useCallback(
+    (strict?: boolean): boolean => {
+      const result = validator(recipient.address, recipient.amount, strict);
+
+      setIsValid(result.isValid);
+      const tmp: VoutError = {address: [], amount: []};
+      if (result.address) {
+        tmp.address.push(result.address);
+      }
+      if (result.amount) {
+        tmp.amount.push(result.amount);
+      }
+      setVoutError(tmp);
+
+      return result.isValid;
+    },
+    [recipient, validator],
+  );
+
+  const onRecipientChange = useCallback((data: RecipientUpdatingData) => {
+    setRecipient(p => ({
+      address: typeof data.address === 'undefined' ? p.address : data.address,
+      amount: typeof data.amount === 'undefined' ? p.amount : data.amount,
+    }));
+    setRecipientPayFee(false);
+  }, []);
+
+  const addError = useCallback((error: string) => {
+    setIsValid(false);
+    setErrors(p => [...p, error]);
+  }, []);
+
+  const createTransaction = useCallback(
+    async (skipRentCheck: boolean = false): Promise<boolean> => {
+      setLocked(true);
+      if (!validate(true)) {
+        setLocked(false);
+        return false;
+      }
+
+      if (!fromAddress) {
+        addError(t('Source address not specified'));
+        return false;
+      }
+
+      let result;
+      try {
+        result = await pattern.baseTransfer(fromAddress, {
+          recipient: recipient.address,
+          amount: recipient.amount,
+          receiverPaysFee: recipientPayFee,
+          skipRentCheck: skipRentCheck,
+        });
+      } catch (e) {
+        if (e instanceof RentExemptError) {
+          setSkipRentConfIsShown(true);
+          return false;
+        }
+        if (e instanceof InsufficientFunds) {
+          let text = t(
+            'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
+          );
+
+          if (coinDetails.parent && e.coin === coinDetails.parent) {
+            text += ` (${coinDetails.parentName})`;
+          }
+          addError(text);
+          return false;
+        }
+
+        setLocked(false);
+        if (e instanceof CreateTransactionError) {
+          addError(t('Can not create transaction. Try latter or contact support.'));
+          return false;
+        }
+        if (e instanceof AbsurdlyHighFee) {
+          addError(t('Can not create transaction. absurdly high fee.'));
+          return false;
+        }
+
+        throw e;
+      }
+
+      if (!result) {
+        setLocked(false);
+        return false;
+      }
+
+      setTxResult(result);
+      return true;
     },
     [
+      addError,
       coinDetails.parent,
-      coinSpec.bip21Name,
-      coinSpecService,
-      onQrReadFailed,
-      recipient,
+      coinDetails.parentName,
+      fromAddress,
+      pattern,
+      recipient.address,
+      recipient.amount,
+      recipientPayFee,
+      t,
+      validate,
     ],
   );
 
-  const validate = useCallback((strict?: boolean): boolean => {
-    const result = validator(recipient.address, recipient.amount, strict);
-
-    setIsValid(result.isValid);
-    const tmp: VoutError = {address: [], amount: []};
-    if (result.address) {
-      tmp.address.push(result.address);
-    }
-    if (result.amount) {
-      tmp.amount.push(result.amount);
-    }
-    setVoutError(tmp);
-
-    return result.isValid;
-  }, [recipient, validator]);
-
-  const onRecipientChange = (data: RecipientUpdatingData) => {
-    setRecipient({
-      address: typeof data.address === 'undefined' ? recipient.address : data.address,
-      amount: typeof data.amount === 'undefined' ? recipient.amount : data.amount,
-    });
-    setRecipientPayFee(false);
-  };
-
-  const addError = (error: string) => {
-    setIsValid(false);
-    setErrors([...errors, error]);
-  };
-
-  const createTransaction = async (skipRentCheck: boolean = false): Promise<boolean> => {
-    setLocked(true);
-    if(!validate(true)) {
-      setLocked(false);
-      return false;
-    }
-
-    if (!fromAddress) {
-      addError(t('Source address not specified'));
-      return false;
-    }
-
-    let result;
-    try {
-      result = await pattern.baseTransfer(fromAddress, {
-        recipient: recipient.address,
-        amount: recipient.amount,
-        receiverPaysFee: recipientPayFee,
-        skipRentCheck: skipRentCheck,
-      });
-    } catch (e) {
-      const rentErr = except<RentExemptError>(RentExemptError, e);
-      if(rentErr) {
-        setSkipRentConfIsShown(true);
-        return false;
-      }
-
-      const err = except<InsufficientFunds>(InsufficientFunds, e);
-      if (err) {
-        let text = t(
-          'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
-        );
-
-        if(coinDetails.parent && err.coin === coinDetails.parent) {
-          text += ` (${coinDetails.parentName})`;
-        }
-        addError(text);
-        return false;
-      }
-
-      setLocked(false);
-      const err1 = except<CreateTransactionError>(CreateTransactionError,e);
-      if (err1) {
-        addError(
-          t('Can not create transaction. Try latter or contact support.'),
-        );
-        return  false;
-      }
-
-      const err2 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
-      if (err2) {
-        addError(
-          t('Can not create transaction. absurdly high fee.'),
-        );
-        return false;
-      }
-
-      throw e;
-    }
-
-    if (!result) {
-      setLocked(false);
-      return false;
-    }
-
-    setTxResult(result);
-    return true;
-  }
-
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     try {
       if (await createTransaction(false)) {
         setConfIsShown(true);
@@ -231,18 +221,17 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
         setLocked(false);
       }
     } catch (e) {
-      console.log(e)
-      SimpleToast.showWithGravity(e.toString(), SimpleToast.LONG, SimpleToast.TOP)
+      SimpleToast.showWithGravity((e as Error).toString(), SimpleToast.LONG, SimpleToast.TOP);
       setLocked(false);
     }
-  };
+  }, [createTransaction]);
 
-  const cancelConfirmSending = () => {
+  const cancelConfirmSending = useCallback(() => {
     setConfIsShown(false);
     setLocked(false);
-  };
+  }, []);
 
-  const send = async () => {
+  const send = useCallback(async () => {
     if (!txResult) {
       throw new Error('Try send transaction before creating');
     }
@@ -261,24 +250,24 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
       recipients: [recipient],
       coin: coinDetails.id,
     });
-  };
+  }, [addError, cancelConfirmSending, coinDetails.id, navigation, pattern, recipient, t, txResult]);
 
   useDidUpdateEffect(() => validate(), [recipient, validate]);
 
   useEffect(() => {
-    if(isValid) {
+    if (isValid) {
       setErrors([]);
     }
   }, [isValid]);
 
   const enableRecipientPaysFee = useCallback(() => setRecipientPayFee(true), []);
 
-  const onSkipRentConfirm = async () => {
-    if(await createTransaction(true)) {
+  const onSkipRentConfirm = useCallback(async () => {
+    if (await createTransaction(true)) {
       setConfIsShown(true);
       setSkipRentConfIsShown(false);
     }
-  };
+  }, [createTransaction]);
 
   const onSkipRentDecline = useCallback(() => {
     setSkipRentConfIsShown(false);
@@ -324,18 +313,9 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
         </View>
       )}
       <View style={styles.submitButton}>
-        <SolidButton
-          title={t('Send')}
-          onPress={onSubmit}
-          disabled={!isValid || locked}
-          loading={locked}
-        />
+        <SolidButton title={t('Send')} onPress={onSubmit} disabled={!isValid || locked} loading={locked} />
       </View>
-      <QrReaderModal
-        visible={activeQR}
-        onQRRead={onQRRead}
-        onClose={() => setActiveQR(false)}
-      />
+      <QrReaderModal visible={activeQR} onQRRead={onQRRead} onClose={() => setActiveQR(false)} />
       <ConfirmationSendModal
         visible={confIsShown}
         vouts={txResult?.vouts || []}
@@ -351,9 +331,11 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
         onPositive={onSkipRentConfirm}
         title={t('Amount less then rent')}
         description={
-          t('Address will be rented per epoch after transaction. Balance less then') + ' '
-            + coinSpec.rentExemptAmount
-          + ' ' + coinDetails.ticker
+          t('Address will be rented per epoch after transaction. Balance less then') +
+          ' ' +
+          coinSpec.rentExemptAmount +
+          ' ' +
+          coinDetails.ticker
         }
         positiveText={t('Ok')}
         negativeText={t('Cancel')}
@@ -375,8 +357,8 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between'
-  }
+    justifyContent: 'space-between',
+  },
 });
 
 export default SendSolanaBasedScreen;

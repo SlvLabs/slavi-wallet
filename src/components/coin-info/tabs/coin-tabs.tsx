@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
+import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/coins/use-coin-info';
 import InfoView, {CoinParams} from './info-view';
 import {StyleSheet, View} from 'react-native';
 import HistoryView from './history-view';
@@ -28,9 +28,7 @@ const renderInfo = (props: CoinTabsProps) => {
   );
 };
 
-const renderHistory = (props: CoinTabsProps) => (
-  <HistoryView coin={props.coin} />
-);
+const renderHistory = (props: CoinTabsProps) => <HistoryView coin={props.coin} />;
 
 const renderRates = (props: CoinTabsProps) => <RateView coin={props.coin} />;
 
@@ -51,25 +49,21 @@ const CoinTabs = (props: CoinTabsProps) => {
   const {t} = useTranslation();
 
   const names = useMemo(() => {
-    const names: Record<number, string> = {
+    const _names: Record<number, string> = {
       [ScreenKeys.info]: t('Info'),
       [ScreenKeys.history]: t('History'),
     };
 
-    if(!props.coinParams?.disablePriceHistory) {
-      names[ScreenKeys.rates] = t('rates');
+    if (!props.coinParams?.disablePriceHistory) {
+      _names[ScreenKeys.rates] = t('rates');
     }
 
-    return names;
+    return _names;
   }, [t, props.coinParams?.disablePriceHistory]);
 
   return (
     <View style={styles.container}>
-      <CoinTabsHeader
-        tabs={names}
-        activeTab={activeScreen}
-        onTabChange={setActiveScreen}
-      />
+      <CoinTabsHeader tabs={names} activeTab={activeScreen} onTabChange={setActiveScreen} />
       {renders[activeScreen](props)}
     </View>
   );

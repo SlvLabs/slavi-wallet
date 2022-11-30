@@ -9,12 +9,8 @@ export interface SendEthScreenProps {
 const SendEthScreen = (props: SendEthScreenProps) => {
   const addressService = useAddressesService();
   const coinPatternService = useCoinPatternService();
-  const pattern = coinPatternService.createEthPattern(
-    props.coin,
-    addressService.getGetterDelegate(props.coin),
-  );
+  const pattern = coinPatternService.createEthPattern(props.coin, addressService.getGetterDelegate(props.coin));
 
-  // @ts-ignore
   return <SendEthBasedScreen coin={props.coin} pattern={pattern} />;
 };
 

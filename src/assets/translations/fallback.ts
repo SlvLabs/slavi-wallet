@@ -500,13 +500,18 @@ const translations = {
   stakingMinStake: 'Min.Stake',
   stakingMax: 'Max',
   stakingMonthlyIncome: 'Monthly income',
-  stakingTotalIncome: 'Monthly income',
+  stakingTotalIncome: 'Total income',
   stakingStake: 'Stake {{ticker}}',
   stakingConfirmationHeader: 'Are you sure to stake?',
   stakingTxFee: 'TX fee',
   stakingTermOfStakingAgreement: 'I have read and agree to the',
   stakingTermOfStaking: 'Terms of staking',
-  stakingTermOfUseLink: 'slavi.io'
+  stakingTermOfUseLink: 'slavi.io',
+  '3_MONTH': '3 Months',
+  '6_MONTH': '6 Months',
+  '12_MONTH': '12 Months',
+  stakingUpToApy: 'up to {{value}}% APY',
+  'No coins': 'No coins',
 };
 
 export default translations;

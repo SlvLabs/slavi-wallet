@@ -42,6 +42,7 @@ const Spinner = (props: SpinnerProps) => {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    alignSelf: 'center',
   },
   spinner: {
     height: 100,

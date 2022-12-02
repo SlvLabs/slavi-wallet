@@ -1,45 +1,93 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {BalanceHeader} from './balance-header';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import {useCurrencyRate, useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import {ApyElement} from './apy-element';
-import SimpleRadio from '../../controls/simple-radio';
-import useTranslation from '../../../utils/use-translation';
+import SimpleRadio, {SimpleRadioOption} from '../../controls/simple-radio';
+import useTranslation, {TranslationsKey} from '../../../utils/use-translation';
 import {StakeInput} from './stake-input';
 import theme from '../../../theme';
 import SolidButton from '../../buttons/solid-button';
 import {IncomesBlock} from './incomes-block';
 import {ConfirmStakeModal} from './confirm-stake-modal';
+import {useGetTariffs} from '@slavi/wallet-core/src/providers/ws/hooks/earning/wallet-staking/use-get-tariffs';
+import {useGetCurrentStakedForCoin} from '@slavi/wallet-core/src/providers/ws/hooks/earning/wallet-staking/use-get-current-staked-for-coin';
+import {useCalculateRewards} from '@slavi/wallet-core/src/providers/ws/hooks/earning/wallet-staking/use-calculate-rewards';
+import Spinner from '../../spinner';
 
 export interface DepositTabProps {
   coin: string;
 }
 
 export function DepositTab({coin}: DepositTabProps) {
-  const [period, setPeriod] = useState<string>('3');
   const [amount, setAmount] = useState<string>('0.00');
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
 
-  const coinInfo = useCoinDetails(coin);
   const fiatSymbol = useFiatSymbolSelector();
-  const rate = useCurrencyRate(coin, coinInfo!.fiat);
+  const coinInfo = useCoinDetails(coin);
+  const rate = useCurrencyRate(coin, coinInfo?.fiat || 'USD');
+  const {
+    tariffs,
+    isLoading: isLoadingTariffs,
+    errors: errorsTariffs,
+    error: errorTariffs,
+  } = useGetTariffs(coin);
+  const {
+    stakedInfo,
+    isLoading: isStakedInfoLoading,
+    error: errorStakedInfo,
+    errors: errorsStakedInfo,
+  } = useGetCurrentStakedForCoin(coin);
+
+  const [tariff, setTariff] = useState<string>('');
+  const {monthReward, fullReward} = useCalculateRewards(amount, tariffs?.get(tariff));
 
   const {t} = useTranslation();
+
+  const periods: SimpleRadioOption<string>[] = useMemo(() => {
+    const res: SimpleRadioOption<string>[] = [];
+    if(tariffs) {
+      for (const key of tariffs.keys()) {
+        res.push({
+          label: t(key as TranslationsKey),
+          value: key,
+        })
+      }
+    }
+
+    return res;
+  }, [tariffs, t]);
+
+  const showConf = useCallback(() => setConfIsShown(true), []);
+  const hideConf = useCallback(() => setConfIsShown(false), []);
+
+  useEffect(() => {
+    setTariff(tariffs?.keys().next().value);
+  }, [tariffs]);
 
   if (!coinInfo) {
     return <></>;
   }
 
-  const periods = useMemo(() => ([
-    {value: '3', label: '3 Month'},
-    {value: '6', label: '6 Month'},
-    {value: '12', label: '12 Month'},
-  ]), []);
+  if (isLoadingTariffs || isStakedInfoLoading) {
+    return (
+      <View style={styles.container}>
+        <Spinner />
+      </View>
+    );
+  }
 
-  const showConf = useCallback(() => setConfIsShown(true), []);
-  const hideConf = useCallback(() => setConfIsShown(false), []);
+  if (!tariffs) {
+    return (
+      <View style={styles.container}>
+        <Text>ERROR</Text>
+      </View>
+    );
+  }
 
+  const currentTariff = tariffs.get(tariff);
+  console.log(currentTariff)
   return (
     <View style={styles.container}>
         <BalanceHeader
@@ -50,23 +98,28 @@ export function DepositTab({coin}: DepositTabProps) {
           fiatBalance={coinInfo.fiatBalance || '0'}
           fiatRate={rate}
           logo={coinInfo.logo}
-          staked={'123123.123'}
-          payout={'123.123123'}
+          staked={stakedInfo?.staked}
+          payout={stakedInfo?.rewards}
         />
-        <ApyElement ticker={coinInfo.ticker} logo={coinInfo.logo} value={'10'} containerStyle={styles.apy}/>
+        <ApyElement
+          ticker={coinInfo.ticker}
+          logo={coinInfo.logo}
+          value={currentTariff?.apy || '0'}
+          containerStyle={styles.apy}
+        />
         <StakeInput
           amount={amount}
           ticker={coinInfo.ticker}
           balance={coinInfo.balance}
           onAmountChange={setAmount}
           containerStyle={styles.stakeInput}
-          minStake={'1.642'}
+          minStake={currentTariff?.minStakingAmount || '0'}
         />
         <View style={styles.periodView}>
           <Text style={styles.periodLabel}>{t('stakingPeriod')}</Text>
-          <SimpleRadio options={periods} selected={period} onChange={setPeriod} />
+          <SimpleRadio<string> options={periods} selected={tariff} onChange={setTariff} />
         </View>
-      <IncomesBlock monthly={'0.05'} total={'0.1'} ticker={coinInfo.ticker} containerStyle={styles.incomes} />
+      <IncomesBlock monthly={monthReward} total={fullReward} ticker={coinInfo.ticker} containerStyle={styles.incomes} />
       <SolidButton
         title={t('stakingStake' ,{ticker: coinInfo.ticker})}
         containerStyle={styles.submitButton}
@@ -79,7 +132,7 @@ export function DepositTab({coin}: DepositTabProps) {
         ticker={coinInfo.ticker}
         onAccept={() => {}}
         amount={amount}
-        period={'1 Year'}
+        period={t(tariff as TranslationsKey)}
         logo={coinInfo.logo}
       />
     </View>

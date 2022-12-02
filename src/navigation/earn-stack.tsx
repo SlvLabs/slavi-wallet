@@ -4,8 +4,20 @@ import defaultScreenOption from './config/default-screen-options';
 import ROUTES from './config/routes';
 import EarnScreen from '../containers/earn/earn-screen';
 import {BtcEarnScreen} from '../containers/earn/btc-earn-screen';
+import {ParamListBase} from '@react-navigation/routers';
+import {RouteProp} from '@react-navigation/native';
 
-const StackNavigator = createStackNavigator();
+export interface EarnStackParamList extends ParamListBase {
+  Main: {},
+  Investment: {
+    coin: string;
+  },
+}
+
+export type EarnMainRouteProps = RouteProp<EarnStackParamList, 'Main'>;
+export type EarnInvestmentRouteProps = RouteProp<EarnStackParamList, 'Investment'>;
+
+const StackNavigator = createStackNavigator<EarnStackParamList>();
 
 const EarnStack = () => {
   return useMemo(() => (

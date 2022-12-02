@@ -4,8 +4,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
 
+export interface SimpleRadioOption<V> {
+  value: V;
+  label: string;
+}
+
 export interface SimpleRadioProps<V> {
-  options: {value: V; label: string}[];
+  options: SimpleRadioOption<V>[];
   selected: V;
   onChange: (value: V) => void;
   elementStyle?: ViewStyle;

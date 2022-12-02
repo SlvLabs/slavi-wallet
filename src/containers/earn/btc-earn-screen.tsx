@@ -4,8 +4,16 @@ import useTranslation from '../../utils/use-translation';
 import {RouteData, WrappedSceneRendererProps, WrappedTabView} from '../../components/tabs/wrapped-tab-view';
 import {DepositTab} from '../../components/earn/btc/deposit-tab';
 import {InvestmentsTab} from '../../components/earn/btc/investments-tab';
+import {useRoute} from '@react-navigation/native';
+import {EarnInvestmentRouteProps} from '../../navigation/earn-stack';
 
 export function BtcEarnScreen() {
+  const route = useRoute<EarnInvestmentRouteProps>();
+  const coin = route.params?.coin;
+  if (!coin) {
+    throw new Error('Coin is required for earning display');
+  }
+
   const {t} = useTranslation();
 
   const routes = useMemo(() => ([
@@ -16,7 +24,7 @@ export function BtcEarnScreen() {
   const renderScene = useCallback(({ route }: WrappedSceneRendererProps<RouteData>) => {
     switch (route.key) {
       case 'deposit':
-        return <DepositTab coin={'DOGE'}/>;
+        return <DepositTab coin={coin}/>;
       case 'investements':
         return <InvestmentsTab />;
       default:

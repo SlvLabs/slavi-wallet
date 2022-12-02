@@ -75,7 +75,7 @@ export function BalanceHeader({
           </View>
         </View>
       </View>
-      {(!!staked || !!payout) && (
+      {((!!staked && staked != '0') || (!!payout && payout != '0')) && (
         <View style={styles.extraRow}>
           {!!staked && (
             <View style={styles.stakedRow}>

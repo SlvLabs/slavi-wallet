@@ -21,7 +21,7 @@ export function IncomesBlock({containerStyle, monthly, total, ticker}: IncomesBl
         ticker={ticker}
       />
       <IncomeElement
-        label={t('stakingMonthlyIncome')}
+        label={t('stakingTotalIncome')}
         amount={total}
         ticker={ticker}
         containerStyle={styles.totalContainer}

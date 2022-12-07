@@ -21,6 +21,7 @@ import NoticeRow from '../../components/error/notice-row';
 import Spinner from '../../components/spinner';
 import Screen from '../../components/screen';
 import {BuySource} from '@slavi/wallet-core/src/providers/ws/messages/buy-coin';
+import {useChangedValueCallback} from '../../hooks/useChangedValueCallback';
 
 const BuyCoinScreen = () => {
   const route = useRoute<CoinBuyRouteProps>();
@@ -59,7 +60,6 @@ const BuyCoinScreen = () => {
     selectedSource,
     sourceWithTheBestPrice,
   } = useBuyCoin(coin, coinDetails.ticker, balancesState.balances[receiveAddressIndex]?.address);
-
   const [confirmationModalVisible, setConfirmationModalVisible] = useState<boolean>(false);
   const [disclaimerAccepted, setDisclaimerAccepted] = useState<{
     [key in BuySource]: boolean;
@@ -72,7 +72,7 @@ const BuyCoinScreen = () => {
   }, []);
 
   const doSubmit = useCallback(() => {
-    if (createdOrder?.url) {
+    if (createdOrder?.url && !(selectedSource === BuySource.switchere)) {
       navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {
         ticker: coinDetails.ticker,
         url: createdOrder.url,
@@ -80,7 +80,7 @@ const BuyCoinScreen = () => {
     } else {
       submitBuyCoin();
     }
-  }, [navigation, createdOrder, submitBuyCoin, coinDetails]);
+  }, [navigation, createdOrder, submitBuyCoin, coinDetails, selectedSource]);
 
   const onContinue = useCallback(() => {
     if (!selectedSource) {
@@ -106,14 +106,18 @@ const BuyCoinScreen = () => {
     navigation.goBack();
   }, [navigation]);
 
-  useEffect(() => {
-    if (createdOrder) {
-      navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {
-        ticker: coinDetails.ticker,
-        url: createdOrder.url,
-      });
-    }
-  }, [createdOrder, navigation, coinDetails]);
+  const onOrder = useCallback(
+    order => {
+      if (order) {
+        navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {
+          ticker: coinDetails.ticker,
+          url: order.url,
+        });
+      }
+    },
+    [navigation, coinDetails],
+  );
+  useChangedValueCallback(createdOrder, onOrder);
 
   const feeView = useMemo(() => {
     const feeInNetworkCoin = selectedSource && withdrawInfo?.[selectedSource]?.feeInNetworkCoin;

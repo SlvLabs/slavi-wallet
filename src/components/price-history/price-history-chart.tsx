@@ -99,6 +99,7 @@ const PriceHistoryChart = (props: PriceHistoryChartData) => {
           data={{
             dataSets: [
               {
+                label: 'rate',
                 values: values,
                 config: {
                   drawValues: false,

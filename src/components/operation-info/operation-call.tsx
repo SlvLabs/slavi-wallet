@@ -22,21 +22,28 @@ export function OperationCall({operation}: OperationCallProps) {
 
   return (
     <ContainerOperation explorerLink={operation.explorerLink}>
-      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created}/>}/>
-      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
-      {operation.commission && <RowOperation
-        label={t('detailsTransactionFee')}
-        content={(
-          <AmountOperation
-            amount={operation.commission}
-            ticker={coin?.ticker}
-            type={Type.negative}
-          />
-        )}
-      />}
-      {!!operation.contract && <RowOperation label={t('detailsInteractedWith')} content={<AddressOperation address={operation.contract}/>}/>}
-      {!!operation.fromAddress && <RowOperation label={t('detailsInteractedFrom')} content={<AddressOperation address={operation.fromAddress.address} addressName={operation.fromAddress.name}/>}/>}
-      {!!coin?.id && <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />}
+      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created} />} />
+      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status} />} />
+      {operation.commission && (
+        <RowOperation
+          label={t('detailsTransactionFee')}
+          content={<AmountOperation amount={operation.commission} ticker={coin?.ticker} type={Type.negative} />}
+        />
+      )}
+      {!!operation.contract && (
+        <RowOperation label={t('detailsInteractedWith')} content={<AddressOperation address={operation.contract} />} />
+      )}
+      {!!operation.fromAddress && (
+        <RowOperation
+          label={t('detailsInteractedFrom')}
+          content={
+            <AddressOperation address={operation.fromAddress.address} addressName={operation.fromAddress.name} />
+          }
+        />
+      )}
+      {!!coin?.id && (
+        <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />
+      )}
     </ContainerOperation>
   );
 }

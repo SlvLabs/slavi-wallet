@@ -42,16 +42,11 @@ export function EarnableCoins({coins, isListDisplayMode, onCoinPress}: EarnableC
     return (
       <View style={styles.placeholder}>
         <View style={styles.placeholderIcon}>
-          <Icon
-            name={'appstore-o'}
-            type={'antdesign'}
-            color={theme.colors.grayDark}
-            size={150}
-          />
+          <Icon name={'appstore-o'} type={'antdesign'} color={theme.colors.grayDark} size={150} />
         </View>
         <Text style={styles.placeholderText}>{t('No coins')}</Text>
       </View>
-    )
+    );
   }
 
   if (isListDisplayMode) {
@@ -61,7 +56,7 @@ export function EarnableCoins({coins, isListDisplayMode, onCoinPress}: EarnableC
           {coins.map((coin, index) => (
             <TouchableOpacity style={styles.coinRow} key={`row_${index}`} onPress={() => onCoinPress(coin)}>
               <View style={styles.row}>
-                <Image source={getImageSource(coin.logo)} style={styles.listLogo}/>
+                <Image source={getImageSource(coin.logo)} style={styles.listLogo} />
                 <Text style={styles.listTitle}>{coin.ticker}</Text>
               </View>
               {!!coin.apy && <Text style={styles.apyText}>{t('stakingUpToApy', {value: coin.apy})}</Text>}
@@ -76,12 +71,12 @@ export function EarnableCoins({coins, isListDisplayMode, onCoinPress}: EarnableC
   const secondColumn: CoinFromEarnableList[] = [];
 
   coins.forEach((coin, index) => {
-    if(index % 2 === 0) {
+    if (index % 2 === 0) {
       firstColumn.push(coin);
     } else {
       secondColumn.push(coin);
     }
-  })
+  });
 
   return (
     <View style={styles.contentPlate}>
@@ -108,7 +103,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 8,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   row: {
     flexDirection: 'row',
@@ -135,10 +130,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: Layout.isSmallDevice ? 148 : 165,
     marginBottom: 8,
+    height: Layout.isSmallDevice ? 102 : 136,
   },
   plateLogo: {
-    width: 50,
-    height: 50,
+    width: Layout.isSmallDevice ? 40 : 50,
+    height: Layout.isSmallDevice ? 40 : 50,
+    marginBottom: Layout.isSmallDevice ? 4 : 12,
   },
   plateTitle: {
     fontFamily: theme.fonts.default,
@@ -149,7 +146,6 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     textTransform: 'uppercase',
     textAlign: 'center',
-    marginTop: 16,
   },
   plateColumn: {
     flexDirection: 'column',

@@ -29,9 +29,9 @@ enum CoinsSortType {
 }
 
 interface CoinsSortParams {
-  field: string,
-  direction: number,
-  comparator?: Comparator<any>,
+  field: string;
+  direction: number;
+  comparator?: Comparator<any>;
 }
 
 const coinsSorts: Record<CoinsSortType, CoinsSortParams> = {
@@ -44,33 +44,38 @@ const coinsSorts: Record<CoinsSortType, CoinsSortParams> = {
     direction: 1,
     comparator: (a: DisplayCoinData, b: DisplayCoinData) => {
       if (+a.fiatTotal === +b.fiatTotal) {
-        if(+a.total > +b.total) return -1;
-        else if(+a.total < +b.total) return 1;
+        if (+a.total > +b.total) {
+          return -1;
+        } else if (+a.total < +b.total) {
+          return 1;
+        }
         return 0;
+      } else if (+a.fiatTotal > +b.fiatTotal) {
+        return -1;
+      } else {
+        return 1;
       }
-      else if (+a.fiatTotal > +b.fiatTotal) return -1;
-      else return 1;
     },
   },
   [CoinsSortType.priority]: {
     field: 'priority',
     direction: 1,
-  }
-}
+  },
+};
 
 interface CoinsState {
   coins: DisplayCoinData[];
-  sort: CoinsSortType,
+  sort: CoinsSortType;
 }
 
 enum CoinsActionType {
   updateCoins,
-  sortCoins
+  sortCoins,
 }
 
 type CoinsAction =
-  { type: CoinsActionType.updateCoins, coins: DisplayCoinData[]} |
-  { type: CoinsActionType.sortCoins, sort: CoinsSortType};
+  | {type: CoinsActionType.updateCoins; coins: DisplayCoinData[]}
+  | {type: CoinsActionType.sortCoins; sort: CoinsSortType};
 
 const CoinsUpdateAction = (coins: DisplayCoinData[]): CoinsAction => ({
   type: CoinsActionType.updateCoins,
@@ -84,7 +89,7 @@ const CoinsSortAction = (sort: CoinsSortType): CoinsAction => ({
 
 type CoinsReducer = Reducer<CoinsState, CoinsAction>;
 
-const coinsReducer: CoinsReducer = (state, action) =>{
+const coinsReducer: CoinsReducer = (state, action) => {
   switch (action.type) {
     case CoinsActionType.updateCoins: {
       const sort = coinsSorts[state.sort];
@@ -108,7 +113,7 @@ const coinsReducer: CoinsReducer = (state, action) =>{
       throw new Error('Unknown coins reducer action');
     }
   }
-}
+};
 
 const CoinListCard = (props: CoinsListCardProps) => {
   const {containerStyle} = props;
@@ -132,7 +137,7 @@ const CoinListCard = (props: CoinsListCardProps) => {
   });
 
   const onAddPress = useCallback(() => {
-    navigation.navigate(ROUTES.COINS.FULL_LIST)
+    navigation.navigate(ROUTES.COINS.FULL_LIST);
   }, [navigation]);
 
   useEffect(() => {
@@ -175,30 +180,26 @@ const CoinListCard = (props: CoinsListCardProps) => {
     [navigation],
   );
 
+  const clearSearch = useCallback(() => {
+    setSearch('');
+  }, []);
+
   useEffect(() => {
     return navigation.addListener('focus', () => {
-      if((route.params as any)?.hideAdd) {
-        clearSearch()
+      if ((route.params as any)?.hideAdd) {
+        clearSearch();
       }
     });
-  }, [route.params]);
+  }, [clearSearch, navigation, route.params]);
 
   useEffect(() => {
     if (search.length > 0) {
-      const newList: CoinDisplayData[] = searcher(
-        coinsToCardState.coins,
-        ['name', 'ticker'],
-        search,
-      );
+      const newList: CoinDisplayData[] = searcher(coinsToCardState.coins, ['name', 'ticker'], search);
       setCoinsToList(newList);
     } else {
       setCoinsToList(coinsToCardState.coins);
     }
   }, [coinsToCardState.coins, search]);
-
-  const clearSearch = useCallback(() => {
-    setSearch('');
-  }, []);
 
   return (
     <View style={{...styles.container, ...containerStyle}}>
@@ -213,23 +214,15 @@ const CoinListCard = (props: CoinsListCardProps) => {
         onShownChange={onShownChange}
         coins={coinsToList}
         onElementPress={onCoinPress}
-        toShow={
-          search.length > 0
-            ? showCoinsEnum.all
-            : showCoinsEnum.onlyShown
-        }
+        toShow={search.length > 0 ? showCoinsEnum.all : showCoinsEnum.onlyShown}
         fiat={fiat}
         crypto={crypto}
         fiatSymbol={fiatSymbol}
       />
-      {(search.length > 0) && (
+      {search.length > 0 && (
         <View style={styles.buttonContainer}>
           <TokenAddButton />
-          <OutlineButton
-            title={t('Show all coins')}
-            containerStyle={styles.bottomButton}
-            onPress={clearSearch}
-          />
+          <OutlineButton title={t('Show all coins')} containerStyle={styles.bottomButton} onPress={clearSearch} />
         </View>
       )}
     </View>

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {BalanceHeader} from './balance-header';
-import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
+import {CoinDetails} from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import {useCurrencyRate, useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import {ApyElement} from './apy-element';
 import SimpleRadio, {SimpleRadioOption} from '../../controls/simple-radio';
@@ -15,44 +15,57 @@ import {useGetTariffs} from '@slavi/wallet-core/src/providers/ws/hooks/earning/w
 import {useGetCurrentStakedForCoin} from '@slavi/wallet-core/src/providers/ws/hooks/earning/wallet-staking/use-get-current-staked-for-coin';
 import {useCalculateRewards} from '@slavi/wallet-core/src/providers/ws/hooks/earning/wallet-staking/use-calculate-rewards';
 import Spinner from '../../spinner';
+import {useHandleStakingCreation} from '@slavi/wallet-core/src/providers/ws/hooks/earning/wallet-staking/use-handle-staking-creation';
+import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {IWalletStakingTariff} from '@slavi/wallet-core/src/providers/ws/messages/wallet-staking';
+import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
+import AlertRow from '../../error/alert-row';
+import makeRoundedBalance from '../../../utils/make-rounded-balance';
+import {EarnErrorPlaceholder} from './earn-error-placeholder';
+
+const cryptoPrecision = 4;
 
 export interface DepositTabProps {
-  coin: string;
+  coinDetails: CoinDetails;
+  onSuccess: () => void;
 }
 
-export function DepositTab({coin}: DepositTabProps) {
+export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
   const [amount, setAmount] = useState<string>('0.00');
+  const [receiverPaysFee, setReceiverPaysFee] = useState<boolean>(false);
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
+  const [buttonLock, setButtonLock] = useState<boolean>(false);
+  const [tx, setTx] = useState<TxCreatingResult | undefined>();
+  const [error, setError] = useState<string | undefined>();
+  const [sendLoading, setSendLoading] = useState<boolean>(false);
+  const [sendingError, setSendingError] = useState<string | undefined>();
 
   const fiatSymbol = useFiatSymbolSelector();
-  const coinInfo = useCoinDetails(coin);
-  const rate = useCurrencyRate(coin, coinInfo?.fiat || 'USD');
-  const {
-    tariffs,
-    isLoading: isLoadingTariffs,
-    errors: errorsTariffs,
-    error: errorTariffs,
-  } = useGetTariffs(coin);
+  const rate = useCurrencyRate(coinDetails.id, coinDetails.fiat || 'USD');
+  const {tariffs, isLoading: isLoadingTariffs, error: errorTariffs} = useGetTariffs(coinDetails.id);
   const {
     stakedInfo,
     isLoading: isStakedInfoLoading,
     error: errorStakedInfo,
-    errors: errorsStakedInfo,
-  } = useGetCurrentStakedForCoin(coin);
+  } = useGetCurrentStakedForCoin(coinDetails.id);
+
+  const {createStakingTx, sendStakingTx} = useHandleStakingCreation(coinDetails.id);
 
   const [tariff, setTariff] = useState<string>('');
-  const {monthReward, fullReward} = useCalculateRewards(amount, tariffs?.get(tariff));
+  const [currentTariff, setCurrentTariff] = useState<IWalletStakingTariff | undefined>();
+  const {monthReward, fullReward} = useCalculateRewards(amount, currentTariff);
 
   const {t} = useTranslation();
 
   const periods: SimpleRadioOption<string>[] = useMemo(() => {
     const res: SimpleRadioOption<string>[] = [];
-    if(tariffs) {
+    if (tariffs) {
       for (const key of tariffs.keys()) {
         res.push({
           label: t(key as TranslationsKey),
           value: key,
-        })
+        });
       }
     }
 
@@ -62,80 +75,145 @@ export function DepositTab({coin}: DepositTabProps) {
   const showConf = useCallback(() => setConfIsShown(true), []);
   const hideConf = useCallback(() => setConfIsShown(false), []);
 
+  const onMax = useCallback(() => setReceiverPaysFee(true), []);
+
+  const submit = useCallback(() => {
+    if (!currentTariff) {
+      return;
+    }
+
+    setButtonLock(true);
+    setTx(undefined);
+    createStakingTx(amount, currentTariff, {receiverPaysFee: receiverPaysFee})
+      .then(_tx => {
+        setTx(_tx);
+        showConf();
+      })
+      .finally(() => {
+        setButtonLock(false);
+      })
+      .catch(e => {
+        if (e instanceof InsufficientFunds) {
+          setError(
+            t('stakingLessThenMinStake', {
+              amount: makeRoundedBalance(cryptoPrecision, currentTariff.minStakingAmount),
+              ticker: coinDetails.ticker,
+            }),
+          );
+        } else {
+          setError(t('Not enough balance'));
+        }
+      });
+  }, [currentTariff, createStakingTx, amount, receiverPaysFee, showConf, t, coinDetails.ticker]);
+
+  const send = useCallback(() => {
+    if (!tx || !currentTariff) {
+      return;
+    }
+
+    setSendLoading(true);
+    setSendingError(undefined);
+    sendStakingTx(tx, currentTariff.id)
+      .then(() => {
+        onSuccess();
+        hideConf();
+      })
+      .catch(() => {
+        setSendingError(t('internal error'));
+      })
+      .finally(() => setSendLoading(false));
+  }, [tx, currentTariff, sendStakingTx, onSuccess, hideConf, t]);
+
   useEffect(() => {
     setTariff(tariffs?.keys().next().value);
   }, [tariffs]);
 
-  if (!coinInfo) {
-    return <></>;
-  }
+  useEffect(() => {
+    if (tariff) {
+      setCurrentTariff(tariffs?.get(tariff));
+    }
+  }, [tariff, tariffs]);
+
+  useEffect(() => {
+    setError(undefined);
+    setReceiverPaysFee(false);
+  }, [amount]);
 
   if (isLoadingTariffs || isStakedInfoLoading) {
     return (
-      <View style={styles.container}>
+      <View style={styles.spinnerContainer}>
         <Spinner />
       </View>
     );
   }
 
-  if (!tariffs) {
-    return (
-      <View style={styles.container}>
-        <Text>ERROR</Text>
-      </View>
-    );
+  if (errorTariffs || errorStakedInfo) {
+    return <EarnErrorPlaceholder error={(errorTariffs || errorStakedInfo) as string} />;
   }
 
-  const currentTariff = tariffs.get(tariff);
-  console.log(currentTariff)
+  if (!tariffs) {
+    return <EarnErrorPlaceholder error={t('internal error')} />;
+  }
+
   return (
-    <View style={styles.container}>
-        <BalanceHeader
-          ticker={coinInfo?.ticker}
-          fiatTicker={coinInfo.fiat}
-          fiatSymbol={fiatSymbol}
-          balance={coinInfo.balance}
-          fiatBalance={coinInfo.fiatBalance || '0'}
-          fiatRate={rate}
-          logo={coinInfo.logo}
-          staked={stakedInfo?.staked}
-          payout={stakedInfo?.rewards}
-        />
-        <ApyElement
-          ticker={coinInfo.ticker}
-          logo={coinInfo.logo}
-          value={currentTariff?.apy || '0'}
-          containerStyle={styles.apy}
-        />
-        <StakeInput
-          amount={amount}
-          ticker={coinInfo.ticker}
-          balance={coinInfo.balance}
-          onAmountChange={setAmount}
-          containerStyle={styles.stakeInput}
-          minStake={currentTariff?.minStakingAmount || '0'}
-        />
-        <View style={styles.periodView}>
-          <Text style={styles.periodLabel}>{t('stakingPeriod')}</Text>
-          <SimpleRadio<string> options={periods} selected={tariff} onChange={setTariff} />
-        </View>
-      <IncomesBlock monthly={monthReward} total={fullReward} ticker={coinInfo.ticker} containerStyle={styles.incomes} />
+    <KeyboardAwareScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <BalanceHeader
+        ticker={coinDetails?.ticker}
+        fiatTicker={coinDetails.fiat}
+        fiatSymbol={fiatSymbol}
+        balance={coinDetails.balance}
+        fiatBalance={coinDetails.fiatBalance || '0'}
+        fiatRate={rate}
+        logo={coinDetails.logo}
+        staked={stakedInfo?.staked}
+        payout={stakedInfo?.rewards}
+      />
+      <ApyElement
+        ticker={coinDetails.ticker}
+        logo={coinDetails.logo}
+        value={currentTariff?.apy || '0'}
+        containerStyle={styles.apy}
+      />
+      <StakeInput
+        amount={amount}
+        ticker={coinDetails.ticker}
+        balance={coinDetails.balance}
+        onAmountChange={setAmount}
+        onMax={onMax}
+        containerStyle={styles.stakeInput}
+        minStake={currentTariff?.minStakingAmount || '0'}
+      />
+      <View style={styles.periodView}>
+        <Text style={styles.periodLabel}>{t('stakingPeriod')}</Text>
+        <SimpleRadio<string> options={periods} selected={tariff} onChange={setTariff} />
+      </View>
+      <IncomesBlock
+        monthly={monthReward}
+        total={fullReward}
+        ticker={coinDetails.ticker}
+        containerStyle={styles.incomes}
+      />
+      {!!error && <AlertRow text={error || ''} />}
       <SolidButton
-        title={t('stakingStake' ,{ticker: coinInfo.ticker})}
+        title={t('stakingStake', {ticker: coinDetails.ticker})}
         containerStyle={styles.submitButton}
-        onPress={showConf}
+        loading={buttonLock}
+        onPress={submit}
+        disabled={!!error}
       />
       <ConfirmStakeModal
         visible={confIsShown}
         onCancel={hideConf}
-        fee={'0.0015'}
-        ticker={coinInfo.ticker}
-        onAccept={() => {}}
+        fee={tx?.fee}
+        ticker={coinDetails.ticker}
+        onAccept={send}
         amount={amount}
         period={t(tariff as TranslationsKey)}
-        logo={coinInfo.logo}
+        logo={coinDetails.logo}
+        loading={sendLoading}
+        error={sendingError}
       />
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
 
@@ -143,6 +221,11 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 16,
     paddingBottom: 16,
+  },
+  spinnerContainer: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   apy: {
     marginTop: 12,
@@ -167,5 +250,5 @@ const styles = StyleSheet.create({
   },
   incomes: {
     marginTop: 16,
-  }
+  },
 });

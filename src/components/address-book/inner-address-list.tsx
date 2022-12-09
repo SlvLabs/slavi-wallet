@@ -50,7 +50,7 @@ const InnerAddressList = (props: InnerAddressListProps) => {
       ) : (
         <View
           style={{
-            ...styles.placeholderContainer,
+            ...styles.spinnerContainer,
             ...props.placeholderContainerStyle,
           }}>
           <Icon
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: theme.colors.borderGray,
   },
-  placeholderContainer: {
+  spinnerContainer: {
     flex: 1,
     justifyContent: 'center',
   },

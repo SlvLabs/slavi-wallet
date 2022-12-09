@@ -16,4 +16,7 @@ export const availableType: AvailableFilter[] = [
   {id: OperationType.nftRecv, text: 'filterNftDeposit'},
   {id: OperationType.nftSend, text: 'filterNftSend'},
   {id: OperationType.burn, text: 'filterBurn'},
+  {id: OperationType.stakingWalletDeposit, text: 'filterEarnDeposit'},
+  {id: OperationType.stakingWalletReturn, text: 'filterEarnWithdraw'},
+  {id: OperationType.stakingWalletReward, text: 'filterEarnPayment'},
 ];

@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react';
-import BaseModal, { ModalProps } from '../../modal/base-modal';
+import React, {useCallback, useEffect, useState} from 'react';
+import BaseModal, {ModalProps} from '../../modal/base-modal';
 import {Image, Linking, StyleSheet, Text, View} from 'react-native';
 import useTranslation from '../../../utils/use-translation';
 import theme from '../../../theme';
@@ -12,31 +12,41 @@ import {nftArrow} from '../../../assets/images';
 import Layout from '../../../utils/layout';
 import getImageSource from '../../../utils/get-image-source';
 import CustomIcon from '../../custom-icon/custom-icon';
+import AlertRow from "../../error/alert-row";
 
 export interface ConfirmStakeModalProps extends ModalProps {
   onAccept: () => void;
   amount: string;
-  fee: string;
+  fee?: string;
   ticker: string;
   period: string;
   logo?: string;
+  loading: boolean;
+  error?: string;
 }
 
 const cryptoPrecision = 4;
 
-export function ConfirmStakeModal({onAccept, fee, ticker, logo, amount, period, ...modalProps}: ConfirmStakeModalProps) {
+export function ConfirmStakeModal({
+  onAccept,
+  fee,
+  ticker,
+  logo,
+  amount,
+  period,
+  loading,
+  error,
+  ...modalProps
+}: ConfirmStakeModalProps) {
   const [accepted, setAccepted] = useState<boolean>(false);
 
   const {t} = useTranslation();
 
-  const _onAccept = useCallback(() => {
-    onAccept();
-    modalProps.onCancel?.();
-  }, [onAccept]);
-
   const openTermsOfUse = useCallback(() => {
     Linking.openURL(t('stakingTermOfUseLink')).catch(e => console.error(e));
-  }, []);
+  }, [t]);
+
+  useEffect(() => setAccepted(false), [modalProps.visible]);
 
   return (
     <BaseModal contentStyle={styles.content} {...modalProps} showCloseIcon={true}>
@@ -44,7 +54,7 @@ export function ConfirmStakeModal({onAccept, fee, ticker, logo, amount, period, 
       <View style={styles.stakeBlock}>
         <View style={styles.row}>
           <View style={styles.row}>
-            <Image source={getImageSource(logo)} style={styles.logo}/>
+            <Image source={getImageSource(logo)} style={styles.logo} />
             <Text style={styles.label}>{t('stakingStake')}</Text>
           </View>
           <CryptoAmountText
@@ -55,13 +65,13 @@ export function ConfirmStakeModal({onAccept, fee, ticker, logo, amount, period, 
           />
         </View>
         <View style={styles.delimiterView}>
-          <View style={styles.delimiter}/>
+          <View style={styles.delimiter} />
           <Image source={nftArrow} style={styles.arrow} />
-          <View style={styles.delimiter}/>
+          <View style={styles.delimiter} />
         </View>
         <View style={styles.row}>
           <View style={styles.row}>
-            <CustomIcon name={'time2'} color={theme.colors.textLightGray} size={20} style={styles.clockIcon}/>
+            <CustomIcon name={'time2'} color={theme.colors.textLightGray} size={20} style={styles.clockIcon} />
             <Text style={styles.label}>{t('stakingPeriod')}</Text>
           </View>
           <Text style={styles.amount}>{period}</Text>
@@ -79,16 +89,20 @@ export function ConfirmStakeModal({onAccept, fee, ticker, logo, amount, period, 
       <SimpleCheckbox checked={accepted} onPress={() => setAccepted(!accepted)}>
         <View style={styles.agreementTextView}>
           <Text style={styles.agreementCheckboxLabel}>{t('stakingTermOfStakingAgreement')}</Text>
-          <Text style={styles.agreementCheckboxLabelLink} onPress={openTermsOfUse}>{t('stakingTermOfStaking')}</Text>
+          <Text style={styles.agreementCheckboxLabelLink} onPress={openTermsOfUse}>
+            {t('stakingTermOfStaking')}
+          </Text>
         </View>
       </SimpleCheckbox>
+      {!!error && <AlertRow text={error} />}
       <SolidButton
         title={t('Ok')}
-        onPress={_onAccept}
+        onPress={onAccept}
         containerStyle={styles.acceptButton}
         disabled={!accepted}
+        loading={loading}
       />
-      <OutlineButton title={t('Cancel')} onPress={modalProps.onCancel} containerStyle={styles.cancelButton}/>
+      <OutlineButton title={t('Cancel')} onPress={modalProps.onCancel} containerStyle={styles.cancelButton} />
     </BaseModal>
   );
 }
@@ -189,7 +203,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   delimiter: {
-    width: Layout.window.width/2 - 80,
+    width: Layout.window.width / 2 - 80,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.borderGray,
     marginRight: 10,
@@ -224,5 +238,5 @@ const styles = StyleSheet.create({
   },
   clockIcon: {
     marginRight: 10,
-  }
+  },
 });

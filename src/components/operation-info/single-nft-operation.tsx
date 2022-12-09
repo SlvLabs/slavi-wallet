@@ -17,7 +17,7 @@ import Layout from '../../utils/layout';
 
 export interface SingleNftOperationProps {
   operation: OperationDetails;
-  type?: Type
+  type?: Type;
 }
 
 export function SingleNftOperation({operation, type}: SingleNftOperationProps) {
@@ -33,20 +33,25 @@ export function SingleNftOperation({operation, type}: SingleNftOperationProps) {
       {movement?.amount && (
         <RowOperation
           label={t('detailsAmount')}
-          content={(
-            <AmountOperation
-              amount={movement.amount}
-              ticker={movement.name}
-              type={type || Type.positive}
-            />
-          )}
-        />)}
-      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created}/>}/>
-      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
-      {!!movement?.fromAddress && <RowOperation label={t('detailsSentFrom')} content={<AddressOperation address={movement?.fromAddress}/>}/>}
-      {!!movement?.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={movement?.toAddress}/>}/>}
+          content={<AmountOperation amount={movement.amount} ticker={movement.name} type={type || Type.positive} />}
+        />
+      )}
+      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created} />} />
+      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status} />} />
+      {!!movement?.fromAddress && (
+        <RowOperation label={t('detailsSentFrom')} content={<AddressOperation address={movement?.fromAddress} />} />
+      )}
+      {!!movement?.toAddress && (
+        <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={movement?.toAddress} />} />
+      )}
       {!!coin?.id && <RowOperation label={t('detailsBlockchain')} content={<NetworkOperation coinId={coin.id} />} />}
-      {!!operation.nft?.type && <RowOperation label={t('detailsTokenStandard')} isLast={true} content={<TextOperation text={operation.nft?.type} />} />}
+      {!!operation.nft?.type && (
+        <RowOperation
+          label={t('detailsTokenStandard')}
+          isLast={true}
+          content={<TextOperation text={operation.nft?.type} />}
+        />
+      )}
     </ContainerOperation>
   );
 }
@@ -58,5 +63,5 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginBottom: 27,
-  }
+  },
 });

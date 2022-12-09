@@ -13,16 +13,29 @@ export interface StakeInputProps {
   onAmountChange: (amount: string) => void;
   balance: string;
   ticker: string;
+  onMax: () => void;
   containerStyle?: ViewStyle;
 }
 
 const cryptoPrecision = 4;
 
-export function StakeInput({amount, onAmountChange, balance, ticker, containerStyle, minStake}: StakeInputProps) {
+export function StakeInput({
+  amount,
+  onAmountChange,
+  balance,
+  ticker,
+  containerStyle,
+  minStake,
+  onMax,
+}: StakeInputProps) {
   const {t} = useTranslation();
 
-  const onMaxPress = useCallback(() => onAmountChange(balance), [balance, onAmountChange]);
+  const onMaxPress = useCallback(() => {
+    onAmountChange(balance);
+    onMax();
+  }, [balance, onAmountChange, onMax]);
 
+  console.log(typeof amount)
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.leftColumn}>
@@ -34,15 +47,16 @@ export function StakeInput({amount, onAmountChange, balance, ticker, containerSt
           errorContainerStyle={styles.errorInput}
           disableErrorStyle={true}
           inputContainerStyle={styles.srcInput}
+          maximumPrecision={8}
         />
         <View style={styles.row}>
           <Text style={styles.balanceLabel}>{t('stakingAvailableHeader')}:</Text>
           <CryptoAmountText
-              ticker={ticker}
-              value={makeRoundedBalance(cryptoPrecision, balance)}
-              style={styles.balanceText}
-              tickerStyle={styles.balanceText}
-            />
+            ticker={ticker}
+            value={makeRoundedBalance(cryptoPrecision, balance)}
+            style={styles.balanceText}
+            tickerStyle={styles.balanceText}
+          />
         </View>
       </View>
       <View style={styles.rightColumn}>

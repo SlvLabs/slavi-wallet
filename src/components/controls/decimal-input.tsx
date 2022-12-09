@@ -34,7 +34,7 @@ const validate = (re: RegExp, value?: string): boolean => {
   return re.test(value);
 };
 
-const createValidator = (regexp: RegExp) => ((value?: string) => validate(regexp, value));
+const createValidator = (regexp: RegExp) => (value?: string) => validate(regexp, value);
 
 const {validateInteger, validateReal, validateIntegerPositive, validateRealPositive} = {
   validateReal: createValidator(/^-?\d+(\.\d*)?$/),
@@ -73,24 +73,27 @@ const DecimalInput = (props: DecimalInputProps) => {
     throw new Error('Unknown decimal type: ' + props.inputType);
   }
 
-  const onChange = useCallback((value?: string) => {
-    let filteredValue = filter(value);
-    let isValid: boolean;
+  const onChange = useCallback(
+    (_value?: string) => {
+      let filteredValue = filter(_value);
+      let isValid: boolean;
 
-    setInnerError('');
-    isValid = validator(filteredValue);
-    if (isValid) {
-      if(inputType === DecimalType.Real && maximumPrecision) {
-        filteredValue = toPrecision(filteredValue, maximumPrecision);
-      }
+      setInnerError('');
+      isValid = validator(filteredValue);
+      if (isValid) {
+        if (inputType === DecimalType.Real && maximumPrecision) {
+          filteredValue = toPrecision(filteredValue, maximumPrecision);
+        }
 
-      if (originalOnChange) {
-        originalOnChange(filteredValue);
+        if (originalOnChange) {
+          originalOnChange(filteredValue);
+        }
+      } else {
+        setInnerError(t('Invalid numeric value'));
       }
-    } else {
-      setInnerError(t('Invalid numeric value'));
-    }
-  }, [originalOnChange]);
+    },
+    [inputType, maximumPrecision, originalOnChange, t, validator],
+  );
 
   return (
     <SimpleInput

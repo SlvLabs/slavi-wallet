@@ -623,7 +623,7 @@ PODS:
     - Yoga
   - RNScreens (2.18.1):
     - React-Core
-  - RNShare (5.2.2):
+  - RNShare (8.0.0):
     - React-Core
   - RNSVG (12.1.1):
     - React
@@ -1028,7 +1028,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: 11e6e30bbc49079b7f0c321ac5830e6d113d0224
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
-  RNShare: 5cfe16bfd42cd2c4869a7692462181ac8cc15a6d
+  RNShare: 36aa3e6958373a0ad1c95a1c960adef589da3794
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SRSRadialGradient: 49ba49a7a8f257c3fe785c250867b07185d1d01e
@@ -1038,6 +1038,6 @@ SPEC CHECKSUMS:
   Yoga: b316a990bb6d115afa1b436b5626ac7c61717d17
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6f42346109aac7182f2f563ead059435de06a562
+PODFILE CHECKSUM: dd0a7501afa52e66cf8c3daf17f6c3a8cf38851d
 
 COCOAPODS: 1.11.3

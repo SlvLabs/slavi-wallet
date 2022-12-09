@@ -42,7 +42,7 @@ export default function NftList() {
           update={filter.update}
           updateLoading={filter.isUpdateLoading}
         />
-        <View style={styles.placeholderContainer}>
+        <View style={styles.spinnerContainer}>
           <Image source={nftPlaceholder3} style={styles.placeholderImage} />
           <Text style={styles.placeholderTitle}>{t('noNftTitle')}</Text>
           <Text style={styles.placeholderDescription}>{t('noNftDescription')}</Text>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     minHeight: Layout.window.height - 280,
   },
-  placeholderContainer: {
+  spinnerContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

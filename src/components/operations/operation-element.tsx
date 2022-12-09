@@ -21,6 +21,9 @@ import OperationElementPolkadotInvestToLock from './operation-element-polkadot-i
 import OperationElementPolkadotLockToFree from './operation-element-polkadot-lock-to-free';
 import OperationElementPolkadotInvest from './operation-element-polkadot-invest';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
+import {OperationElementEarnDeposit} from "./operation-element-earn-deposit";
+import {OperationElementEarnWithdraw} from "./operation-element-earn-withdraw";
+import {OperationElementEarnPayment} from "./operation-element-earn-payment";
 
 export interface OperationElementProps {
   operation: ListOperation;
@@ -37,9 +40,9 @@ const OperationElement = (props: OperationElementProps) => {
 
   const onPress = () => {
     navigation.navigate(ROUTES.OPERATIONS.DETAILS, {id: props.operation.id});
-  }
+  };
 
-  if(!coinData?.id) {
+  if (!coinData?.id) {
     return null;
   }
 
@@ -73,11 +76,17 @@ const OperationElement = (props: OperationElementProps) => {
     case OperationType.polkadotReserved:
       return <OperationElementPolkadotReserved {...props} onPress={onPress} />;
     case OperationType.polkadotLocktofree:
-      return <OperationElementPolkadotLockToFree {...props} onPress={onPress}  />;
+      return <OperationElementPolkadotLockToFree {...props} onPress={onPress} />;
     case OperationType.polkadotInvesttolock:
-      return <OperationElementPolkadotInvestToLock {...props} onPress={onPress}  />;
+      return <OperationElementPolkadotInvestToLock {...props} onPress={onPress} />;
     case OperationType.polkadotInvest:
-      return <OperationElementPolkadotInvest {...props} onPress={onPress}  />;
+      return <OperationElementPolkadotInvest {...props} onPress={onPress} />;
+    case OperationType.stakingWalletDeposit:
+      return <OperationElementEarnDeposit {...props} onPress={onPress} />;
+    case OperationType.stakingWalletReturn:
+      return <OperationElementEarnWithdraw {...props} onPress={onPress} />;
+    case OperationType.stakingWalletReward:
+      return <OperationElementEarnPayment {...props} onPress={onPress} />;
     default:
       return null;
   }

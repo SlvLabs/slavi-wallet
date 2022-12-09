@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import useCoinsSelector, { useCoinsSelectorFilter } from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
+import useCoinsSelector, {useCoinsSelectorFilter} from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CoinSelectList, {CoinListElementData} from '../../components/coins/coins-select-list';
 import Screen from '../../components/screen';
@@ -25,17 +25,12 @@ export default function CoinSelectListScreen() {
 
   const onElementPress = useCallback(
     (coin: CoinListElementData) => navigation.navigate(nextScreen, {coin: coin.id, ticker: coin.ticker}),
-    [navigation]
+    [navigation],
   );
 
   return (
     <Screen title={t('Select coins')}>
-        <CoinSelectList
-          coins={coins}
-          balanceShown={balanceShown}
-          onElementPress={onElementPress}
-          headerHidden={true}
-        />
+      <CoinSelectList coins={coins} balanceShown={balanceShown} onElementPress={onElementPress} headerHidden={true} />
     </Screen>
   );
 }

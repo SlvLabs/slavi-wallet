@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 import Layout from '../../utils/layout';
@@ -8,12 +8,13 @@ export interface OpeningButtonProps {
   opened: boolean;
   title: string;
   onPress: () => void;
+  containerStyle?: ViewStyle;
 }
 
-export default function OpeningButton({opened, title, onPress}: OpeningButtonProps) {
+export default function OpeningButton({opened, title, onPress, containerStyle}: OpeningButtonProps) {
   return (
     <TouchableOpacity
-      style={{...styles.container, ...(opened ? styles.openedContainer : styles.closedContainer)}}
+      style={{...styles.container, ...containerStyle, ...(opened ? styles.openedContainer : styles.closedContainer)}}
       onPress={onPress}
     >
       <Text style={{...styles.title, ...(opened ? styles.openedTitle : styles.closedTitle)}}>{title}</Text>

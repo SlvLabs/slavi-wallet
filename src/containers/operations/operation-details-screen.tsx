@@ -17,6 +17,9 @@ import {OperationCall} from '../../components/operation-info/operation-call';
 import {OperationApproveCall} from '../../components/operation-info/operation-approve-call';
 import {OperationSpecificPolkadot} from '../../components/operation-info/operation-specific-polkadot';
 import {OperationNftTransfer} from '../../components/operation-info/operation-nft-transfer';
+import {OperationEarnDeposit} from '../../components/operation-info/operation-earn-deposit';
+import {OperationEarnWithdraw} from '../../components/operation-info/operation-earn-withdraw';
+import {OperationEarnPayment} from '../../components/operation-info/operation-earn-payment';
 
 const titleByType: Record<OperationType, TranslationsKey> = {
   [OperationType.recv]: 'depositScreenHeader',
@@ -38,6 +41,9 @@ const titleByType: Record<OperationType, TranslationsKey> = {
   [OperationType.polkadotReward]: 'polkadotReward',
   [OperationType.commission]: 'polkadotCommission',
   [OperationType.stakingWallet]: 'walletInvest',
+  [OperationType.stakingWalletDeposit]: 'stakingWalletDeposit',
+  [OperationType.stakingWalletReturn]: 'stakingWalletWithdraw',
+  [OperationType.stakingWalletReward]: 'stakingWalletReward',
 };
 
 export function OperationDetailsScreen() {
@@ -49,64 +55,59 @@ export function OperationDetailsScreen() {
   const {isLoading, operation} = useOperationDetails(id);
 
   useEffect(() => {
-    if(!isLoading && operation) {
+    if (!isLoading && operation) {
       setTitle(t(titleByType[operation.type]));
     }
   }, [isLoading, operation, t]);
 
   const content = useMemo(() => {
     switch (operation?.type) {
-      case OperationType.recv: {
-        return <OperationDeposit operation={operation} />
-      }
-      case OperationType.send: {
-        return <OperationWithdrawal operation={operation} />
-      }
-      case OperationType.swap: {
-        return <OperationSwap operation={operation} />
-      }
+      case OperationType.recv:
+        return <OperationDeposit operation={operation} />;
+      case OperationType.send:
+        return <OperationWithdrawal operation={operation} />;
+      case OperationType.swap:
+        return <OperationSwap operation={operation} />;
       case OperationType.commission:
-      case OperationType.burn: {
-        return <OperationBurn operation={operation} />
-      }
-      case OperationType.nftRecv: {
-        return <OperationNftDeposit operation={operation}/>
-      }
-      case OperationType.nftSend: {
-        return <OperationNftWithdrawal operation={operation} />
-      }
+      case OperationType.burn:
+        return <OperationBurn operation={operation} />;
+      case OperationType.nftRecv:
+        return <OperationNftDeposit operation={operation} />;
+      case OperationType.nftSend:
+        return <OperationNftWithdrawal operation={operation} />;
       case OperationType.nftTransfer:
       case OperationType.nftSendMulti:
-      case OperationType.nftRecvMulti: {
-        return <OperationNftTransfer operation={operation} />
-      }
-      case OperationType.contractCall: {
-        return <OperationCall operation={operation} />
-      }
-      case OperationType.approveCall: {
-        return <OperationApproveCall operation={operation} />
-      }
+      case OperationType.nftRecvMulti:
+        return <OperationNftTransfer operation={operation} />;
+      case OperationType.contractCall:
+        return <OperationCall operation={operation} />;
+      case OperationType.approveCall:
+        return <OperationApproveCall operation={operation} />;
       case OperationType.polkadotLocktofree:
       case OperationType.polkadotInvest:
       case OperationType.polkadotInvesttolock:
       case OperationType.polkadotReserved:
-      case OperationType.polkadotReward: {
-        return <OperationSpecificPolkadot operation={operation} />
-      }
-      default: return null;
+      case OperationType.polkadotReward:
+        return <OperationSpecificPolkadot operation={operation} />;
+      case OperationType.stakingWalletDeposit:
+        return <OperationEarnDeposit operation={operation} />;
+      case OperationType.stakingWalletReturn:
+        return <OperationEarnWithdraw operation={operation} />;
+      case OperationType.stakingWalletReward:
+        return <OperationEarnPayment operation={operation} />;
+      default:
+        return null;
     }
   }, [operation]);
 
-  return (
-  isLoading ? (
-      <View style={styles.spinnerContainer}>
-        <Spinner />
-      </View>
-      ) : (
-      <ScrollableScreen title={title} contentStyle={styles.container}>
-        {content}
-      </ScrollableScreen>
-    )
+  return isLoading ? (
+    <View style={styles.spinnerContainer}>
+      <Spinner />
+    </View>
+  ) : (
+    <ScrollableScreen title={title} contentStyle={styles.container}>
+      {content}
+    </ScrollableScreen>
   );
 }
 
@@ -118,5 +119,5 @@ const styles = StyleSheet.create({
     minHeight: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
 });

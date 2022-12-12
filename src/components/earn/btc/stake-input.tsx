@@ -35,7 +35,6 @@ export function StakeInput({
     onMax();
   }, [balance, onAmountChange, onMax]);
 
-  console.log(typeof amount)
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.leftColumn}>

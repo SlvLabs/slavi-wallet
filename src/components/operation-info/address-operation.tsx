@@ -20,7 +20,6 @@ export function AddressOperation({address, style, addressName}: AddressOperation
     Toast.show(t('Copied to clipboard'));
   }, []);
 
-  console.log(address, addressName)
   return (
     <TouchableOpacity onPress={copy}>
       <Text style={{...styles.text, ...style}}>{addressName || shrinkAddress(address, 5, 5,20)}</Text>

@@ -543,6 +543,8 @@ const translations = {
   filterEarnDeposit: 'Eran deposit',
   filterEarnWithdraw: 'Eran withdraw',
   filterEarnPayment: 'Eran payment',
+  invalidDecimal: 'Invalid amount value: not numeric',
+  insufficientFunds: 'Not enough balance for shipping and payment. commissions',
 };
 
 export default translations;

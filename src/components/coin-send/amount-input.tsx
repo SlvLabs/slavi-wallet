@@ -41,7 +41,6 @@ const AmountInput = (props: AmountInputProps) => {
 
   const errorMessage = useMemo(() => errors?.reduce((acc: string, cur: string) => acc + cur + ' ', ''), [errors]);
 
-  console.log(typeof amount)
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
       <View style={{...styles.content, ...props.contentStyle}}>

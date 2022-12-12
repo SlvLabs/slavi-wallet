@@ -23,6 +23,9 @@ import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficie
 import AlertRow from '../../error/alert-row';
 import makeRoundedBalance from '../../../utils/make-rounded-balance';
 import {EarnErrorPlaceholder} from './earn-error-placeholder';
+import {useBtcAmountValidator} from '@slavi/wallet-core/src/validation/hooks/use-btc-amount-validator';
+import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
+import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
 
 const cryptoPrecision = 4;
 
@@ -41,6 +44,7 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
   const [sendLoading, setSendLoading] = useState<boolean>(false);
   const [sendingError, setSendingError] = useState<string | undefined>();
 
+  const balance: string = useSpendableBalance(coinDetails.id);
   const fiatSymbol = useFiatSymbolSelector();
   const rate = useCurrencyRate(coinDetails.id, coinDetails.fiat || 'USD');
   const {tariffs, isLoading: isLoadingTariffs, error: errorTariffs} = useGetTariffs(coinDetails.id);
@@ -55,6 +59,14 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
   const [tariff, setTariff] = useState<string>('');
   const [currentTariff, setCurrentTariff] = useState<IWalletStakingTariff | undefined>();
   const {monthReward, fullReward} = useCalculateRewards(amount, currentTariff);
+
+  const amountError = useBtcAmountValidator(
+    coinDetails.id,
+    amount,
+    TransactionPriority.average,
+    currentTariff?.depositAddress,
+    receiverPaysFee,
+  );
 
   const {t} = useTranslation();
 
@@ -101,7 +113,7 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
             }),
           );
         } else {
-          setError(t('Not enough balance'));
+          setError(t('insufficientFunds'));
         }
       });
   }, [currentTariff, createStakingTx, amount, receiverPaysFee, showConf, t, coinDetails.ticker]);
@@ -124,6 +136,11 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
       .finally(() => setSendLoading(false));
   }, [tx, currentTariff, sendStakingTx, onSuccess, hideConf, t]);
 
+  const onAmountChange = useCallback((_amount: string) => {
+    setAmount(_amount);
+    setReceiverPaysFee(false);
+  }, []);
+
   useEffect(() => {
     setTariff(tariffs?.keys().next().value);
   }, [tariffs]);
@@ -136,7 +153,6 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
 
   useEffect(() => {
     setError(undefined);
-    setReceiverPaysFee(false);
   }, [amount]);
 
   if (isLoadingTariffs || isStakedInfoLoading) {
@@ -161,7 +177,7 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
         ticker={coinDetails?.ticker}
         fiatTicker={coinDetails.fiat}
         fiatSymbol={fiatSymbol}
-        balance={coinDetails.balance}
+        balance={balance}
         fiatBalance={coinDetails.fiatBalance || '0'}
         fiatRate={rate}
         logo={coinDetails.logo}
@@ -177,12 +193,13 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
       <StakeInput
         amount={amount}
         ticker={coinDetails.ticker}
-        balance={coinDetails.balance}
-        onAmountChange={setAmount}
+        balance={balance}
+        onAmountChange={onAmountChange}
         onMax={onMax}
         containerStyle={styles.stakeInput}
         minStake={currentTariff?.minStakingAmount || '0'}
       />
+      {!!amountError && <AlertRow text={t(amountError as TranslationsKey)} />}
       <View style={styles.periodView}>
         <Text style={styles.periodLabel}>{t('stakingPeriod')}</Text>
         <SimpleRadio<string> options={periods} selected={tariff} onChange={setTariff} />
@@ -193,13 +210,13 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
         ticker={coinDetails.ticker}
         containerStyle={styles.incomes}
       />
-      {!!error && <AlertRow text={error || ''} />}
+      {!!error && <AlertRow text={error} />}
       <SolidButton
         title={t('stakingStake', {ticker: coinDetails.ticker})}
         containerStyle={styles.submitButton}
         loading={buttonLock}
         onPress={submit}
-        disabled={!!error}
+        disabled={!!error || !!amountError}
       />
       <ConfirmStakeModal
         visible={confIsShown}

@@ -483,6 +483,7 @@ const translations = {
   attentionCancel: 'Cancel',
   addAssets: 'Add Assets',
   'Best price': 'Best price',
+  version: 'Vesrion',
 };
 
 export default translations;

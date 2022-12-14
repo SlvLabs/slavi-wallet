@@ -209,38 +209,38 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities (7.8.0):
-    - GoogleUtilities/AppDelegateSwizzler (= 7.8.0)
-    - GoogleUtilities/Environment (= 7.8.0)
-    - GoogleUtilities/ISASwizzler (= 7.8.0)
-    - GoogleUtilities/Logger (= 7.8.0)
-    - GoogleUtilities/MethodSwizzler (= 7.8.0)
-    - GoogleUtilities/Network (= 7.8.0)
-    - "GoogleUtilities/NSData+zlib (= 7.8.0)"
-    - GoogleUtilities/Reachability (= 7.8.0)
-    - GoogleUtilities/SwizzlerTestHelpers (= 7.8.0)
-    - GoogleUtilities/UserDefaults (= 7.8.0)
-  - GoogleUtilities/AppDelegateSwizzler (7.8.0):
+  - GoogleUtilities (7.10.0):
+    - GoogleUtilities/AppDelegateSwizzler (= 7.10.0)
+    - GoogleUtilities/Environment (= 7.10.0)
+    - GoogleUtilities/ISASwizzler (= 7.10.0)
+    - GoogleUtilities/Logger (= 7.10.0)
+    - GoogleUtilities/MethodSwizzler (= 7.10.0)
+    - GoogleUtilities/Network (= 7.10.0)
+    - "GoogleUtilities/NSData+zlib (= 7.10.0)"
+    - GoogleUtilities/Reachability (= 7.10.0)
+    - GoogleUtilities/SwizzlerTestHelpers (= 7.10.0)
+    - GoogleUtilities/UserDefaults (= 7.10.0)
+  - GoogleUtilities/AppDelegateSwizzler (7.10.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.8.0):
+  - GoogleUtilities/Environment (7.10.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/ISASwizzler (7.8.0)
-  - GoogleUtilities/Logger (7.8.0):
+  - GoogleUtilities/ISASwizzler (7.10.0)
+  - GoogleUtilities/Logger (7.10.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.8.0):
+  - GoogleUtilities/MethodSwizzler (7.10.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.8.0):
+  - GoogleUtilities/Network (7.10.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.8.0)"
-  - GoogleUtilities/Reachability (7.8.0):
+  - "GoogleUtilities/NSData+zlib (7.10.0)"
+  - GoogleUtilities/Reachability (7.10.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/SwizzlerTestHelpers (7.8.0):
+  - GoogleUtilities/SwizzlerTestHelpers (7.10.0):
     - GoogleUtilities/MethodSwizzler
-  - GoogleUtilities/UserDefaults (7.8.0):
+  - GoogleUtilities/UserDefaults (7.10.0):
     - GoogleUtilities/Logger
   - libevent (2.1.12)
   - lottie-ios (3.4.4)
@@ -564,6 +564,8 @@ PODS:
     - React-Core
   - RNDateTimePicker (3.5.2):
     - React-Core
+  - RNDeviceInfo (10.3.0):
+    - React-Core
   - RNFBAnalytics (15.7.0):
     - Firebase/Analytics (= 9.6.0)
     - React-Core
@@ -623,7 +625,7 @@ PODS:
     - Yoga
   - RNScreens (2.18.1):
     - React-Core
-  - RNShare (5.2.2):
+  - RNShare (8.0.0):
     - React-Core
   - RNSVG (12.1.1):
     - React
@@ -724,6 +726,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
@@ -896,6 +899,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/picker"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBAnalytics:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
@@ -969,7 +974,7 @@ SPEC CHECKSUMS:
   glog: 5337263514dd6f09803962437687240c5dc39aa4
   GoogleAppMeasurement: 6de2b1a69e4326eb82ee05d138f6a5cb7311bcb1
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
-  GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
+  GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
   lottie-react-native: b702fab740cdb952a8e2354713d3beda63ff97b0
@@ -1018,6 +1023,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
   RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
+  RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
   RNFBAnalytics: 9b5790e2b3d96c11ae1c02be6430e778f11801ed
   RNFBApp: c3c9e694e9d34c14250a069916eb05785c5f3c32
   RNFBCrashlytics: bb410a988e8660fbbe5a7032ff4ecec267dbd4f7
@@ -1028,7 +1034,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: 11e6e30bbc49079b7f0c321ac5830e6d113d0224
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
-  RNShare: 5cfe16bfd42cd2c4869a7692462181ac8cc15a6d
+  RNShare: 36aa3e6958373a0ad1c95a1c960adef589da3794
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SRSRadialGradient: 49ba49a7a8f257c3fe785c250867b07185d1d01e
@@ -1038,6 +1044,6 @@ SPEC CHECKSUMS:
   Yoga: b316a990bb6d115afa1b436b5626ac7c61717d17
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6f42346109aac7182f2f563ead059435de06a562
+PODFILE CHECKSUM: dd0a7501afa52e66cf8c3daf17f6c3a8cf38851d
 
 COCOAPODS: 1.11.3

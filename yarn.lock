@@ -3228,9 +3228,28 @@
     events "^3.1.0"
     lodash "^4.17.15"
 
-"@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#bcbaef2106f505160bc129e09d2ce679e601b1a7":
+"@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#ce9248fe748d1a7d099fa5694742ea8ccf33771c":
   version "1.0.0"
-  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#bcbaef2106f505160bc129e09d2ce679e601b1a7"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#ce9248fe748d1a7d099fa5694742ea8ccf33771c"
+  dependencies:
+    "@reduxjs/toolkit" "^1.3.6"
+    "@slavi/crypto-core" "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master"
+    "@slavi/react-web-socket" "git+ssh://git@gitlab.com/defi-wallet/react-web-socket#3.0.3"
+    "@solana/web3.js" "^1.31.0"
+    "@walletconnect/client" "^1.7.1"
+    bip21 "^2.0.3"
+    bs58 "^4.0.1"
+    decimal.js "^10.2.1"
+    ed25519-hd-key "1.2.0"
+    eth-sig-util "^3.0.1"
+    ethers "^5.0.23"
+    i18next "^19.8.2"
+    lodash "^4.17.20"
+    react-i18next "^11.7.3"
+
+"@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#v1.4.0":
+  version "1.0.0"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#1e4f35359f6b94425e3aed539be3c438ce91153b"
   dependencies:
     "@reduxjs/toolkit" "^1.3.6"
     "@slavi/crypto-core" "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master"
@@ -9986,6 +10005,11 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
+react-native-device-info@^10.3.0:
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.3.0.tgz#6bab64d84d3415dd00cc446c73ec5e2e61fddbe7"
+  integrity sha512-/ziZN1sA1REbJTv5mQZ4tXggcTvSbct+u5kCaze8BmN//lbxcTvWsU6NQd4IihLt89VkbX+14IGc9sVApSxd/w==
+
 react-native-elements@*:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-3.4.2.tgz#66602be9c5e0e0a2a831913adec80ff6518d1ee2"
@@ -10168,6 +10192,11 @@ react-native-share@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-8.0.0.tgz#95520a16fca151822ce8a3b00240cf3a17eacb97"
   integrity sha512-IFUKcWQ1/VgtsQmuC3EKaIPMhKqssTblwCojtTB4dehWJ2ZUPsIstPXJGqcmWqg7/S3cLNfCLvxf/tVaZvptxw==
+
+react-native-shimmer-placeholder@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-shimmer-placeholder/-/react-native-shimmer-placeholder-2.0.9.tgz#0096932289bd9ec5747cd4f1c9d15f91ba02157a"
+  integrity sha512-s2pfAAO6uaybREYM2KcaxP3c2XlZvLfHfzmhMlGEoOhSKaoM92KpA1Hx0BeC75yilkliJuowqO/hFzvLB0h7hg==
 
 react-native-simple-toast@^1.1.2:
   version "1.1.3"

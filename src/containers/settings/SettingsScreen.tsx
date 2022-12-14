@@ -1,4 +1,4 @@
-import {InteractionManager, StyleSheet, Text} from 'react-native';
+import {InteractionManager, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback} from 'react';
 import {ListItem} from 'react-native-elements';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
@@ -6,13 +6,14 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import theme from '../../theme';
 import {useFiatSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Screen from '../../components/screen';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 import {useDeleteAccount} from '../../hooks/useDeleteAccount';
 import {useLogout} from '../../hooks/useLogout';
+import {getReadableVersion} from 'react-native-device-info';
 
-const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>;
+const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22} />;
 
 const SettingsScreen = () => {
   const {t, i18n} = useTranslation();
@@ -21,51 +22,36 @@ const SettingsScreen = () => {
   const authService = useAuthService();
 
   const goToMnemonicExport = useCallback(
-    () => InteractionManager.runAfterInteractions(
-      () => {
+    () =>
+      InteractionManager.runAfterInteractions(() => {
         authService.forbid();
         navigation.navigate(ROUTES.SETTINGS.EXPORT_MNEMONIC);
-      }
-    ),
+      }),
     [navigation, authService],
   );
-  const goToMnemonicImport = useCallback(
-    () => {
-      authService.forbid();
-      navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC);
-    }, [navigation]
-  );
+  const goToMnemonicImport = useCallback(() => {
+    authService.forbid();
+    navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC);
+  }, [authService, navigation]);
   const goToLanguage = useCallback(
-    () => InteractionManager.runAfterInteractions(
-    () => navigation.navigate(ROUTES.SETTINGS.LANGUAGE)
-    ), [navigation]);
-  const goToCurrencyChange = useCallback(
-    () => navigation.navigate(ROUTES.SETTINGS.CURRENCY_CHANGE),
+    () => InteractionManager.runAfterInteractions(() => navigation.navigate(ROUTES.SETTINGS.LANGUAGE)),
     [navigation],
   );
+  const goToCurrencyChange = useCallback(() => navigation.navigate(ROUTES.SETTINGS.CURRENCY_CHANGE), [navigation]);
 
-  const goToInvalidateCache = useCallback(
-    () => navigation.navigate(ROUTES.SETTINGS.INVALIDATE_CACHES),
-    [navigation],
-  );
+  const goToInvalidateCache = useCallback(() => navigation.navigate(ROUTES.SETTINGS.INVALIDATE_CACHES), [navigation]);
 
   const goToNotificationSettings = useCallback(
     () => navigation.navigate(ROUTES.SETTINGS.NOTIFICATION_SETTINGS),
     [navigation],
   );
 
-  const goToWalletConnect = useCallback(
-    () => navigation.navigate(ROUTES.SETTINGS.WALLET_CONNECT),
-    [navigation]
-  );
+  const goToWalletConnect = useCallback(() => navigation.navigate(ROUTES.SETTINGS.WALLET_CONNECT), [navigation]);
 
-  const goToSecurity = useCallback(
-    () => {
-      authService.forbid();
-      navigation.navigate(ROUTES.SETTINGS.SECURITY);
-    },
-    [navigation, authService]
-  );
+  const goToSecurity = useCallback(() => {
+    authService.forbid();
+    navigation.navigate(ROUTES.SETTINGS.SECURITY);
+  }, [navigation, authService]);
 
   const {modal: deleteAccountModal, show: showDeleteAccount} = useDeleteAccount();
   const {modal: logoutModal, show: showLogout} = useLogout();
@@ -73,12 +59,7 @@ const SettingsScreen = () => {
   return (
     <Screen title={t('Settings')} disableBackButton={true}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
-        <ListItem
-          key={'head_1'}
-          bottomDivider
-          disabled={true}
-          containerStyle={{...styles.listItem}}
-        >
+        <ListItem key={'head_1'} bottomDivider disabled={true} containerStyle={{...styles.listItem}}>
           <ListItem.Content>
             <ListItem.Title style={styles.header}>{t('General')}</ListItem.Title>
           </ListItem.Content>
@@ -114,8 +95,7 @@ const SettingsScreen = () => {
           key={'head_2'}
           bottomDivider
           disabled={true}
-          containerStyle={{...styles.listItem, ...styles.headerContainer}}
-        >
+          containerStyle={{...styles.listItem, ...styles.headerContainer}}>
           <ListItem.Content>
             <ListItem.Title style={styles.header}>{t('Private')}</ListItem.Title>
           </ListItem.Content>
@@ -154,6 +134,9 @@ const SettingsScreen = () => {
             <ListItem.Title style={styles.title}>{t('logout')}</ListItem.Title>
           </ListItem.Content>
         </ListItem>
+        <View style={styles.versionView}>
+          <Text style={styles.version}>{`${t('version')}: ${getReadableVersion()}`}</Text>
+        </View>
       </KeyboardAwareScrollView>
       {deleteAccountModal}
       {logoutModal}
@@ -205,7 +188,21 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+  },
+  versionView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 40,
+    paddingBottom: 20,
+  },
+  version: {
+    fontFamily: theme.fonts.default,
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: 22,
+    color: theme.colors.lightGray,
   },
 });
 

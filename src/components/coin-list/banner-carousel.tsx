@@ -1,31 +1,23 @@
-import {Image, ImageSourcePropType, Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
+import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useCallback} from 'react';
 import Layout from '../../utils/layout';
-import {
-  banner_dapp_guide,
-  banner_binance_connect,
-  banner_floyd_fight,
-  banner_peercoin_listing,
-  banner_slavi_academy,
-  banner_staking_1000, banner_business_time,
-} from '../../assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import SimpleToast from 'react-native-simple-toast';
 import useTranslation from '../../utils/use-translation';
 import {useNavigation} from '@react-navigation/native';
-import ROUTES from '../../navigation/config/routes';
-
-interface Banner {
-  image: ImageSourcePropType;
-  onPress?: () => void;
-}
+import {Shimmer} from '../shimmer/shimmer';
+import {Banner, BannerType, useBanners} from '@slavi/wallet-core/src/providers/ws/hooks/use-banners';
+import getImageSource from '../../utils/get-image-source';
 
 export default function BannerCarousel() {
   const {t} = useTranslation();
   const navigation = useNavigation();
+
+  const {loading, banners, onImageLoad} = useBanners(3);
+
   const openURL = useCallback(
-    async (url: string) => {
-      if (await Linking.canOpenURL(url)) {
+    async (url?: string) => {
+      if (url && (await Linking.canOpenURL(url))) {
         await Linking.openURL(url);
       } else {
         SimpleToast.show(t('Can not open link'));
@@ -33,58 +25,57 @@ export default function BannerCarousel() {
     },
     [t],
   );
-  const banners: Banner[] = useMemo(
-    () => [
-      {
-        image: banner_business_time,
-        onPress: () => openURL('https://www.ibtimes.com/10-key-personalities-blockchain-follow-2022-3479772'),
-      },
-      {
-        image: banner_peercoin_listing,
-        onPress: () => {
-          navigation.navigate(ROUTES.COINS.INFO, {coin: 'PEERCOIN'});
-        },
-      },
-      {
-        image: banner_floyd_fight,
-        onPress: () => openURL('https://twitter.com/slavi_io/status/1591713742894813185'),
-      },
-      {
-        image: banner_staking_1000,
-      },
-      {
-        image: banner_dapp_guide,
-        onPress: () => openURL('https://medium.com/@SlaviDapp/slavi-dapp-complete-guide-7d2cf9eb8a12'),
-      },
-      {
-        image: banner_slavi_academy,
-        onPress: () => openURL('https://academy.slavi.io/'),
-      },
-      {
-        image: banner_binance_connect,
-        onPress: () => openURL('https://twitter.com/slavi_io/status/1542167673227853831'),
-      },
-    ],
-    [openURL, navigation],
+
+  const openInternal = useCallback(
+    (route?: string, params?: Record<string, string>) => {
+      if (route) {
+        navigation.navigate(route, params);
+      } else {
+        SimpleToast.show(t('Can not open link'));
+      }
+    },
+    [navigation, t],
   );
-  const renderItem = useCallback(({item}: {item: Banner}) => {
-    return (
-      <TouchableOpacity onPress={item.onPress} activeOpacity={0.5} disabled={!item.onPress}>
-        <Image source={item.image} style={styles.image} />
-      </TouchableOpacity>
-    );
-  }, []);
+
+  const onBannerPress = useCallback(
+    (banner: Banner) => {
+      switch (banner.type) {
+        case BannerType.external:
+          openURL(banner.data!.externalUrl);
+          return;
+        case BannerType.internal:
+          openInternal(banner.data.routeName, banner.data?.routeParams);
+          return;
+      }
+    },
+    [openInternal, openURL],
+  );
+
+  const renderItem = useCallback(
+    ({item, index}: {item: Banner; index: number}) => {
+      return (
+        <Shimmer style={styles.shimmer} visible={!loading}>
+          <TouchableOpacity
+            onPress={() => onBannerPress(item)}
+            activeOpacity={0.5}
+            disabled={item.type === BannerType.noAction}>
+            <Image source={getImageSource(item.imageUrl)} style={styles.image} onLoadEnd={() => onImageLoad(index)} />
+          </TouchableOpacity>
+        </Shimmer>
+      );
+    },
+    [loading, onBannerPress, onImageLoad],
+  );
+
   return (
     <View style={styles.container}>
       <Carousel
         data={banners}
         renderItem={renderItem}
         loop={true}
-        // enableSnap={true}
-        autoPlay={true}
+        autoPlay={!loading}
         autoPlayInterval={3000}
         style={styles.carousel}
-        // snapEnabled={true}
         width={Layout.isSmallDevice ? 172 : 192}
         height={Layout.isSmallDevice ? 90 : 102}
       />
@@ -94,7 +85,6 @@ export default function BannerCarousel() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -114,29 +104,9 @@ const styles = StyleSheet.create({
     width: Layout.isSmallDevice ? 160 : 180,
     height: Layout.isSmallDevice ? 90 : 102,
   },
+  shimmer: {
+    width: Layout.isSmallDevice ? 160 : 180,
+    height: Layout.isSmallDevice ? 90 : 102,
+    borderRadius: 8,
+  },
 });
-
-/*
-
-    <Carousel
-      data={data}
-      renderItem={renderItem}
-      loop={true}
-      autoplay={true}
-      autoplayInterval={3000}
-      style={styles.carousel}
-      horizontal={true}
-      vertical={false}
-      inactiveSlideOpacity={1}
-      // activeSlideAlignment={'center'}
-      // firstItem={0}
-      useScrollView={false}
-      enableSnap={true}
-      loopClonesPerSide={data.length}
-      removeClippedSubviews={false}
-      sliderWidth={Layout.window.width}
-      // itemWidth={Layout.window.width}
-      itemWidth={Layout.isSmallDevice ? 172 : 192}
-      height={Layout.isSmallDevice ? 90 : 102}
-    />
-*/

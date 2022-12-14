@@ -47,13 +47,6 @@ export const operationSwap = require('./operation-swap.png');
 export const operationNftTransfer = require('./operation-nft-transfer.png');
 export const swapIcon = require('./swap-icon.png');
 export const attention = require('./attention.png');
-export const banner_dapp_guide = require('./banner_dapp_guide.png');
-export const banner_binance_connect = require('./banner_binance_connect.png');
-export const banner_floyd_fight = require('./banner_floyd_fight.png');
-export const banner_slavi_academy = require('./banner_slavi_academy.png');
-export const banner_staking_1000 = require('./banner_staking_1000.png');
-export const banner_peercoin_listing = require('./banner_peercoin_listing.png');
-export const banner_business_time = require('./banner_business_time.png');
 export const zoom_plus = require('./zoom_plus.png');
 
 export * from './earn-stubs';

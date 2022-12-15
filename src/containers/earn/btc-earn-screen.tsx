@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import WrappedTabView, {
   RouteData,
@@ -13,6 +13,8 @@ import Screen from '../../components/screen';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 
 export function BtcEarnScreen() {
+  const [forceReload, setForceReload] = useState<number>(0);
+
   const tabsRef = useRef<WrappedTabViewHandle>(null);
 
   const route = useRoute<EarnInvestmentRouteProps>();
@@ -38,6 +40,7 @@ export function BtcEarnScreen() {
 
   const toInvestementsTab = useCallback(() => {
     if (tabsRef.current) {
+      setForceReload(p => p + 1);
       tabsRef.current.switchTo(1);
     }
   }, []);
@@ -48,12 +51,12 @@ export function BtcEarnScreen() {
         case 'deposit':
           return <DepositTab coinDetails={coinDetails} onSuccess={toInvestementsTab} />;
         case 'investements':
-          return <InvestmentsTab coinDetails={coinDetails} />;
+          return <InvestmentsTab coinDetails={coinDetails} forceReload={forceReload} />;
         default:
           return null;
       }
     },
-    [coinDetails, toInvestementsTab],
+    [coinDetails, forceReload, toInvestementsTab],
   );
 
   return (

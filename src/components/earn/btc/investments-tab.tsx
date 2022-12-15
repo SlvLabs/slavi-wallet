@@ -16,11 +16,12 @@ import {Placeholder} from '../../placeholder';
 
 export interface InvestmentsTabProps {
   coinDetails: CoinDetails;
+  forceReload?: number;
 }
 
 const cryptoPrecision = 4;
 
-export function InvestmentsTab({coinDetails}: InvestmentsTabProps) {
+export function InvestmentsTab({coinDetails, forceReload}: InvestmentsTabProps) {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [reloading, setReloading] = useState<boolean>(false);
 
@@ -44,6 +45,12 @@ export function InvestmentsTab({coinDetails}: InvestmentsTabProps) {
     setReloading(true);
     reload();
   }, [reload]);
+
+  useEffect(() => {
+    if (forceReload) {
+      reload();
+    }
+  }, [forceReload, reload]);
 
   useEffect(() => {
     if (!initialized && !isLoading) {

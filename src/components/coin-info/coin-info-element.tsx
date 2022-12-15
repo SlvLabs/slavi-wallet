@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
+import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/coins/use-coin-info';
 import TextWithLabel from './info-elements/text-with-label';
 import IconTextWithLabel from './info-elements/icon-text-with-label';
 import theme from '../../theme';
@@ -27,23 +27,13 @@ const CoinInfoElement = (props: CoinInfoElementProps) => {
       case Types.textWithLabel:
         return <TextWithLabel label={data.data.label} text={data.data.text} />;
       case Types.iconTextWithLabel:
-        return (
-          <IconTextWithLabel
-            label={data.data.label}
-            text={data.data.text}
-            icon={data.data.icon}
-          />
-        );
+        return <IconTextWithLabel label={data.data.label} text={data.data.text} icon={data.data.icon} />;
       default:
         return;
     }
   }, []);
 
-  return (
-    <View style={{...styles.container, ...props.containerStyle}}>
-      {renderContent(props.info)}
-    </View>
-  );
+  return <View style={{...styles.container, ...props.containerStyle}}>{renderContent(props.info)}</View>;
 };
 
 const styles = StyleSheet.create({

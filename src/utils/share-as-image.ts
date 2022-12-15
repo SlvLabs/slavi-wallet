@@ -17,7 +17,6 @@ async function shareAsImage(
   try {
     await Share.open(options);
   } catch (e) {
-    console.error(e)
     if (onError) {
       onError(e);
     }

@@ -13,7 +13,6 @@ import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import {useCoinSpecsService, useDidUpdateEffect} from '@slavi/wallet-core';
 import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
 import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
-import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
@@ -89,7 +88,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
   const onQrReadFailed = useCallback(() => SimpleToast.show(t('Can not read qr')), [t]);
 
   const onQRRead = useCallback(
-    (data: any) => {
+    (data: string) => {
       let parsed: QrData | undefined;
       let bip21Name = coinSpec.bip21Name;
       if (coinDetails.parent) {
@@ -111,13 +110,13 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       }
 
       setActiveQR(false);
-      setRecipient({
-        ...recipient,
-        address: parsed.address || '',
-        amount: parsed.amount || '',
-      });
+      setRecipient(p => ({
+        ...p,
+        address: parsed?.address || '',
+        amount: parsed?.amount || '',
+      }));
     },
-    [coinDetails.parent, coinSpec.bip21Name, coinSpecService, onQrReadFailed, recipient],
+    [coinDetails.parent, coinSpec.bip21Name, coinSpecService, onQrReadFailed],
   );
 
   const validate = useCallback(
@@ -139,13 +138,13 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
     [recipient, validator],
   );
 
-  const onRecipientChange = (data: RecipientUpdatingData) => {
-    setRecipient({
-      address: typeof data.address === 'undefined' ? recipient.address : data.address,
-      amount: typeof data.amount === 'undefined' ? recipient.amount : data.amount,
-    });
+  const onRecipientChange = useCallback((data: RecipientUpdatingData) => {
+    setRecipient(p => ({
+      address: typeof data.address === 'undefined' ? p.address : data.address,
+      amount: typeof data.amount === 'undefined' ? p.amount : data.amount,
+    }));
     setRecipientPayFee(false);
-  };
+  }, []);
   const setError = useCallback((error: string) => {
     setIsValid(false);
     setErrors([error]);
@@ -176,29 +175,24 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           gasPrice: advancedGasPrice,
         });
       } catch (e) {
-        console.error(e);
-        const err = except<InsufficientFunds>(InsufficientFunds, e);
-        if (err) {
+        if (e instanceof InsufficientFunds) {
           let text = t(
             'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
           );
 
-          if (coinDetails.parent && err.coin === coinDetails.parent) {
+          if (coinDetails.parent && e.coin === coinDetails.parent) {
             text += ` (${coinDetails.parentName})`;
           }
           setError(text);
         } else {
           setLocked(false);
-          const err2 = except<InvalidGasPrice>(InvalidGasPrice, e);
-          if (err2) {
+          if (e instanceof InvalidGasPrice) {
             setWarn(t('invalidGas'));
           } else {
-            const err1 = except<CreateTransactionError>(CreateTransactionError, e);
-            if (err1) {
+            if (e instanceof CreateTransactionError) {
               setWarn(t('Can not create transaction. Try latter or contact support.'));
             } else {
-              const err3 = except<AbsurdlyHighFee>(AbsurdlyHighFee, e);
-              if (err3) {
+              if (e instanceof AbsurdlyHighFee) {
                 setError(t('Can not create transaction. absurdly high fee.'));
               }
             }
@@ -218,10 +212,10 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
       setLocked(false);
     }
   };
-  const cancelConfirmSending = () => {
+  const cancelConfirmSending = useCallback(() => {
     setConfIsShown(false);
     setLocked(false);
-  };
+  }, []);
   const send = async () => {
     if (sendingLocked) {
       return;

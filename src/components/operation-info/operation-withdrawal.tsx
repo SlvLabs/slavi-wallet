@@ -26,19 +26,30 @@ export function OperationWithdrawal({operation}: OperationWithdrawalProps) {
       {operation.amount && (
         <RowOperation
           label={t('detailsAmount')}
-          content={(
-            <AmountOperation
-              amount={operation.amount}
-              ticker={coin?.ticker}
-              type={Type.negative}
-            />
-          )}
-        />)}
-      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created}/>}/>
-      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
-      {!!operation.fromAddress && <RowOperation label={t('detailsSentFrom')} content={<AddressOperation address={operation.fromAddress.address} addressName={operation.fromAddress.name}/>}/>}
-      {!!operation.toAddress && <RowOperation isLast={true} label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name}/>}/>}
-      {operation.to.length > 1 || operation.from.length > 1 && <MovementsOperation to={operation.to} from={operation.from} ticker={coin!.ticker}/>}
+          content={<AmountOperation amount={operation.amount} ticker={coin?.ticker} type={Type.negative} />}
+        />
+      )}
+      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created} />} />
+      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status} />} />
+      {!!operation.fromAddress && (
+        <RowOperation
+          label={t('detailsSentFrom')}
+          content={
+            <AddressOperation address={operation.fromAddress.address} addressName={operation.fromAddress.name} />
+          }
+        />
+      )}
+      {!!operation.toAddress && (
+        <RowOperation
+          isLast={true}
+          label={t('detailsReceivedTo')}
+          content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name} />}
+        />
+      )}
+      {operation.to.length > 1 ||
+        (operation.from.length > 1 && (
+          <MovementsOperation to={operation.to} from={operation.from} ticker={coin!.ticker} />
+        ))}
     </ContainerOperation>
   );
 }

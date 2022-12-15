@@ -35,15 +35,11 @@ const AmountInput = (props: AmountInputProps) => {
   };
 
   const onAmountChange = (inputValue: string) => {
-
     setAmount(inputValue);
     onChange(inputValue, false);
   };
 
-  const errorMessage = useMemo(
-    () => errors?.reduce((acc: string, cur: string) => acc + cur + ' ', ''),
-    [errors],
-  );
+  const errorMessage = useMemo(() => errors?.reduce((acc: string, cur: string) => acc + cur + ' ', ''), [errors]);
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>

@@ -7,7 +7,6 @@ import OutlineButton from '../buttons/outline-button';
 import useTranslation from '../../utils/use-translation';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import theme from '../../theme';
-import except from '@slavi/wallet-core/src/utils/typed-error/except';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import NumberText from '../text/number-text';
 
@@ -19,51 +18,37 @@ export default function WalletConnectTxRequestModal() {
   const {t} = useTranslation();
 
   const onApprove = useCallback(async () => {
-    if(request.peerId &&
-      request.method &&
-      request.coin &&
-      request.address &&
-      request.payload) {
-
+    if (request.peerId && request.method && request.coin && request.address && request.payload) {
       try {
         await walletConnectService.approveRequest(
           request.peerId,
           request.method,
           request.coin,
           request.address,
-          request.payload
+          request.payload,
         );
       } catch (err) {
-        const err1 = except<CreateTransactionError>(
-          CreateTransactionError,
-          err,
-        );
-        if (err1) {
-          setError(
-            t('Can not create transaction. Try latter or contact support.'),
-          );
+        if (err instanceof CreateTransactionError) {
+          setError(t('Can not create transaction. Try latter or contact support.'));
         } else {
-          setError(err.toString());
+          setError((err as Error).toString());
         }
       }
     }
-  }, [request, walletConnectService]);
+  }, [t, request, walletConnectService]);
 
   const onReject = useCallback(async () => {
-    if(request.peerId && request.id) {
+    if (request.peerId && request.id) {
       try {
-        await walletConnectService.rejectAction(
-          request.peerId,
-          request.id,
-        );
+        await walletConnectService.rejectAction(request.peerId, request.id);
       } catch (err) {
-        setError(err);
+        setError((err as Error).toString());
       }
     }
   }, [walletConnectService, request]);
 
   useEffect(() => {
-    if(!request.active) {
+    if (!request.active) {
       setError(undefined);
     }
   }, [request.active]);
@@ -87,18 +72,11 @@ export default function WalletConnectTxRequestModal() {
         <Text style={styles.error}>{error}</Text>
       </View>
       <View style={styles.buttonsRow}>
-        <SolidButton
-          title={t('walletConnectApprove')}
-          onPress={onApprove}
-          containerStyle={styles.topButton}
-        />
-        <OutlineButton
-          title={t('walletConnectReject')}
-          onPress={onReject}
-        />
+        <SolidButton title={t('walletConnectApprove')} onPress={onApprove} containerStyle={styles.topButton} />
+        <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
     </BaseModal>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -171,5 +149,5 @@ const styles = StyleSheet.create({
   },
   feeContainer: {
     marginBottom: 12,
-  }
+  },
 });

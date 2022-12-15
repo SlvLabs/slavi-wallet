@@ -16,41 +16,33 @@ export default function WalletConnectSignRequestModal() {
   const {t} = useTranslation();
 
   const onApprove = useCallback(async () => {
-    if(signRequest.peerId &&
-      signRequest.method &&
-      signRequest.coin &&
-      signRequest.address &&
-      signRequest.payload) {
-
+    if (signRequest.peerId && signRequest.method && signRequest.coin && signRequest.address && signRequest.payload) {
       try {
         await walletConnectService.approveRequest(
           signRequest.peerId,
           signRequest.method,
           signRequest.coin,
           signRequest.address,
-          signRequest.payload
+          signRequest.payload,
         );
       } catch (err) {
-        setError(err.toString());
+        setError((err as Error).toString());
       }
     }
   }, [signRequest, walletConnectService]);
 
   const onReject = useCallback(async () => {
-    if(signRequest.peerId && signRequest.id) {
+    if (signRequest.peerId && signRequest.id) {
       try {
-        await walletConnectService.rejectAction(
-          signRequest.peerId,
-          signRequest.id,
-        );
+        await walletConnectService.rejectAction(signRequest.peerId, signRequest.id);
       } catch (err) {
-        setError(err);
+        setError((err as Error).toString());
       }
     }
   }, [walletConnectService, signRequest]);
 
   useEffect(() => {
-    if(!signRequest.active) {
+    if (!signRequest.active) {
       setError(undefined);
     }
   }, [signRequest.active]);
@@ -76,18 +68,11 @@ export default function WalletConnectSignRequestModal() {
         <Text style={styles.error}>{error}</Text>
       </View>
       <View style={styles.buttonsRow}>
-        <SolidButton
-          title={t('walletConnectApprove')}
-          onPress={onApprove}
-          containerStyle={styles.topButton}
-        />
-        <OutlineButton
-          title={t('walletConnectReject')}
-          onPress={onReject}
-        />
+        <SolidButton title={t('walletConnectApprove')} onPress={onApprove} containerStyle={styles.topButton} />
+        <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
     </BaseModal>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -161,5 +146,5 @@ const styles = StyleSheet.create({
   messageContainer: {},
   messageScroll: {
     maxHeight: 300,
-  }
+  },
 });

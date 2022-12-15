@@ -55,12 +55,7 @@ const CoinsList = (props: CoinListProps) => {
       ) : (
         <View style={styles.placeholder}>
           <View style={styles.placeholderIcon}>
-            <Icon
-              name={'appstore-o'}
-              type={'antdesign'}
-              color={theme.colors.grayDark}
-              size={150}
-            />
+            <Icon name={'appstore-o'} type={'antdesign'} color={theme.colors.grayDark} size={150} />
           </View>
           <Text style={styles.placeholderText}>No coins</Text>
         </View>

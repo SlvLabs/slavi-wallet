@@ -7,7 +7,7 @@ import theme from '../../theme';
 
 export interface QrInSendModalProps {
   visible: boolean;
-  onQRRead(data: any): void;
+  onQRRead(data: string): void;
   onClose(): void;
   negativeBtnStyle?: ViewStyle;
 }
@@ -16,7 +16,7 @@ const QrReaderModal = (props: QrInSendModalProps) => {
   const {t} = useTranslation();
   return (
     <Modal animationType="fade" transparent={false} visible={props.visible}>
-      <View style={styles.background} >
+      <View style={styles.background}>
         <QRCodeScanner
           onRead={e => props.onQRRead(e.data)}
           containerStyle={styles.centeredView}
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.screenBackground,
   },
   bottomContainer: {
-    flex: 10
+    flex: 10,
   },
   bottomText: {
     fontFamily: theme.fonts.default,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   bottomContent: {
     alignItems: 'center',
-  }
+  },
 });
 
 export default QrReaderModal;

@@ -32,7 +32,6 @@ import WalletConnectLink from './components/wallet-connect/wallet-connect-link';
 import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import {unsetRequireTimeFix} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
-import Toast from 'react-native-simple-toast';
 import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 
 const App: () => ReactNode = () => {
@@ -168,22 +167,23 @@ const App: () => ReactNode = () => {
       authService?.onAuthChange.add(onAuthChange);
     }
     store.dispatch(unsetGlobalLoading());
-  }, [onAuthChange, store])
+  }, [onAuthChange, store]);
 
   useEffect(() => {
     setInitialLoaded(false);
     store.dispatch(setGlobalLoading());
-    coreBootstraper.loadInitial().then(onLoadInitial)
+    coreBootstraper
+      .loadInitial()
+      .then(onLoadInitial)
       .catch(e => {
         try {
           crashlytics().recordError(e);
         } catch (e) {}
 
-        if(e instanceof NotificationUnsupported) {
+        if (e instanceof NotificationUnsupported) {
           console.warn('Notification unsupported on this device');
           onLoadInitial();
-        }
-        else {
+        } else {
           console.error(e);
           console.error(e.stack);
         }
@@ -204,7 +204,7 @@ const App: () => ReactNode = () => {
           store.dispatch(unsetGlobalLoading());
           setIsRealBootstrapped(true);
         });
-      }
+      };
       coreBootstraper
         .loadWalletServices()
         .then(callback)
@@ -213,7 +213,7 @@ const App: () => ReactNode = () => {
             crashlytics().recordError(e);
           } catch (e) {}
 
-          if(e instanceof NotificationUnsupported) {
+          if (e instanceof NotificationUnsupported) {
             console.warn('Notification unsupported on this device');
             callback();
           } else {

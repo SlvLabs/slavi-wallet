@@ -1,6 +1,6 @@
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/use-coin-info';
+import {CoinListElement} from '@slavi/wallet-core/src/providers/ws/hooks/coins/use-coin-info';
 import CoinInfoElement from '../coin-info-element';
 import MainLink from '../main-link';
 import theme from '../../../theme';
@@ -35,30 +35,21 @@ const InfoView = (props: InfoViewProps) => {
         <View>
           {!!props?.coinParams?.description && (
             <View style={styles.descriptionContainer}>
-              <Text style={styles.description}>
-                {props.coinParams.description}
-              </Text>
+              <Text style={styles.description}>{props.coinParams.description}</Text>
             </View>
           )}
           {!!props?.coinParams?.mainLinks && (
             <View style={styles.mainListLinks}>
               {props.coinParams.mainLinks.map((element, index: number) => {
                 return (
-                  <MainLink
-                    text={element.text}
-                    icon={element.icon}
-                    link={element.link}
-                    key={`coin_param_${index}`}
-                  />
+                  <MainLink text={element.text} icon={element.icon} link={element.link} key={`coin_param_${index}`} />
                 );
               })}
             </View>
           )}
           <View style={styles.infoParamsList}>
             {props.params.map((element, index) => {
-              return (
-                <CoinInfoElement info={element} key={`coin_info_${index}`} />
-              );
+              return <CoinInfoElement info={element} key={`coin_info_${index}`} />;
             })}
           </View>
         </View>

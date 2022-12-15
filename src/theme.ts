@@ -59,6 +59,7 @@ export default {
     placeholderText: '#7A7A7E',
     buttonBorder: 'rgba(128, 144, 173, 0.3)',
     lightScroll: '#636771',
+    tabsBackground: 'rgba(10, 10, 12, 0.4)',
   },
   /** @deprecated */
   colorsOld: {
@@ -199,6 +200,11 @@ export default {
     },
     activeTabV2: {
       colors: ['#EBE5FC', '#b099d0'],
+      locations: [0, 1],
+      useAngle: false,
+    },
+    activeTabV3: {
+      colors: ['rgba(116, 122, 142, 0.2)', 'rgba(35, 38, 48, 0.2)'],
       locations: [0, 1],
       useAngle: false,
     },

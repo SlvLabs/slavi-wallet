@@ -44,7 +44,7 @@ function NftListElement({
   }, [token_id, switchHidden, hidden]);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <NftImage image={image} imageStyle={styles.image} placeHolderContainerStyle={styles.placeholderContainer} />
+      <NftImage image={image} imageStyle={styles.image} placeHolderContainerStyle={styles.spinnerContainer} />
       <View style={styles.columns}>
         <View style={styles.column}>
           <View style={styles.nameRow}>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     height: 16,
     marginRight: 10,
   },
-  placeholderContainer: {
+  spinnerContainer: {
     backgroundColor: 'transparent',
     borderWidth: 0,
     height: Layout.isSmallDevice ? 256 : 300,

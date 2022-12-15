@@ -37,9 +37,7 @@ const ReceiveControlButtons = (props: ReceiveControlButtonsProps) => {
   }, [props.address, t]);
 
   const onPressShare = useCallback(async () => {
-    console.log('onPressShare', props)
     if (props.address && props.dataToShare) {
-      console.log(props.address, props.dataToShare)
       return shareAsImage(props.address, props.dataToShare);
     }
   }, [props.address, props.dataToShare]);

@@ -31,60 +31,83 @@ const CoinsListScreen = () => {
   const fiatSymbol = useFiatSymbolSelector() || '$';
   const balance = useTotalBalance({fiat: fiat, crypto: crypto});
 
-  const navigateToReceive = useCallback(() =>
-      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.RECEIVE}),
-    [navigation]);
+  const navigateToReceive = useCallback(
+    () => navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.RECEIVE}),
+    [navigation],
+  );
 
-  const navigateToSend = useCallback(() =>
-      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.SEND, filter: {positiveBalance: true}, balanceShown: true}),
-    [navigation]);
+  const navigateToSend = useCallback(
+    () =>
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {
+        nextScreen: ROUTES.COINS.SEND,
+        filter: {positiveBalance: true},
+        balanceShown: true,
+      }),
+    [navigation],
+  );
 
-  const navigateToBuy = useCallback(() =>
-      navigation.navigate(ROUTES.COINS.COINS_SELECT, {nextScreen: ROUTES.COINS.BUY_COIN, filter: {isBuyCoin: true}, balanceShown: true}),
-    [navigation]);
-  const routes = useMemo(() => ([
-    {key: 'coins', title: t('assets')},
-    {key: 'nft', title: t('nfts')},
-  ]), [t]);
+  const navigateToBuy = useCallback(
+    () =>
+      navigation.navigate(ROUTES.COINS.COINS_SELECT, {
+        nextScreen: ROUTES.COINS.BUY_COIN,
+        filter: {isBuyCoin: true},
+        balanceShown: true,
+      }),
+    [navigation],
+  );
+  const routes = useMemo(
+    () => [
+      {key: 'coins', title: t('assets')},
+      {key: 'nft', title: t('nfts')},
+    ],
+    [t],
+  );
 
-  const renderScene = useCallback(({ route }: SceneRendererProps & {route: Route}) => {
-    switch (route.key) {
-      case 'coins':
-        return (
-          <View style={tabIndex !== 0 && styles.hidden}>
-            <CoinListCard containerStyle={styles.coinsCard} />
-          </View>
-        );
-      case 'nft':
-        return (
-          <View style={tabIndex !== 1 && styles.hidden}>
-            <NftList />
-          </View>
-        );
-    }
-  }, [tabIndex]);
+  const renderScene = useCallback(
+    ({route}: SceneRendererProps & {route: Route}) => {
+      switch (route.key) {
+        case 'coins':
+          return (
+            <View style={tabIndex !== 0 && styles.hidden}>
+              <CoinListCard containerStyle={styles.coinsCard} />
+            </View>
+          );
+        case 'nft':
+          return (
+            <View style={tabIndex !== 1 && styles.hidden}>
+              <NftList />
+            </View>
+          );
+      }
+    },
+    [tabIndex],
+  );
 
-  const renderTabs = useCallback((props: any) => {
-    const {navigationState} = props;
-    return (
-      <View style={styles.tabBar}>
-        {navigationState.routes.map((route: Route, i: number) => (
-          <TouchableOpacity key={`tab_${i}`} onPress={() => setTabIndex(i)} style={styles.tabOptionContainer}>
-            {tabIndex === i ? (
-              <LinearGradient {...theme.gradients.activeTabV2} style={{...styles.tabOption, ...styles.activeTabOption}}>
-                <Text style={styles.activeTabLabel}>{route.title}</Text>
-              </LinearGradient>
-            ) : (
-              <View style={styles.tabOption}>
-                <Text style={styles.tabLabel}>{route.title}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        ))
-        }
-      </View>
-    );
-  }, [tabIndex]);
+  const renderTabs = useCallback(
+    (props: any) => {
+      const {navigationState} = props;
+      return (
+        <View style={styles.tabBar}>
+          {navigationState.routes.map((route: Route, i: number) => (
+            <TouchableOpacity key={`tab_${i}`} onPress={() => setTabIndex(i)} style={styles.tabOptionContainer}>
+              {tabIndex === i ? (
+                <LinearGradient
+                  {...theme.gradients.activeTabV2}
+                  style={{...styles.tabOption, ...styles.activeTabOption}}>
+                  <Text style={styles.activeTabLabel}>{route.title}</Text>
+                </LinearGradient>
+              ) : (
+                <View style={styles.tabOption}>
+                  <Text style={styles.tabLabel}>{route.title}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+      );
+    },
+    [tabIndex],
+  );
 
   return (
     <View style={styles.container}>
@@ -99,7 +122,7 @@ const CoinsListScreen = () => {
         <BannerCarousel />
         <View style={styles.content}>
           <TabView
-            navigationState={{ index: tabIndex, routes }}
+            navigationState={{index: tabIndex, routes}}
             renderScene={renderScene}
             renderTabBar={renderTabs}
             onIndexChange={setTabIndex}
@@ -166,7 +189,7 @@ const styles = StyleSheet.create({
   },
   hidden: {
     display: 'none',
-  }
+  },
 });
 
 export default CoinsListScreen;

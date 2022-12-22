@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {ReactNode, useCallback, useMemo, useState} from 'react';
 import {
   StyleSheet,
   ViewStyle,
@@ -25,6 +25,7 @@ export interface AddressSelectorProps {
   placeholderStyle?: TextStyle;
   textStyle?: TextStyle;
   disabled?: boolean;
+  children?: ReactNode;
 }
 
 const AddressSelector = (props: AddressSelectorProps) => {
@@ -61,15 +62,18 @@ const AddressSelector = (props: AddressSelectorProps) => {
         onPress={showModal}
         disabled={props.disabled}
       >
-        <View style={styles.textContainer}>
-          {props.label && (
-            <View>
-              <Text style={styles.label}>{props.label}</Text>
-            </View>
-          )}
-          <Text style={textStyle}>{text}</Text>
+        <View style={styles.row}>
+          <View style={styles.textContainer}>
+            {props.label && (
+              <View>
+                <Text style={styles.label}>{props.label}</Text>
+              </View>
+            )}
+            <Text style={textStyle}>{text}</Text>
+          </View>
+          <CustomIcon name={'arrow'} size={18} color={theme.colors.textLightGray1} style={styles.icon} />
         </View>
-        <CustomIcon name={'arrow'} size={18} color={theme.colors.textLightGray1} style={styles.icon} />
+        {props.children}
       </TouchableOpacity>
       <AddressSelectorModal
         addresses={props.addresses}
@@ -92,6 +96,8 @@ const styles = StyleSheet.create({
     paddingRight: 24,
     paddingTop: 22,
     paddingBottom: 22,
+  },
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

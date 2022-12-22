@@ -85,7 +85,7 @@ export default function ApplicationTabs() {
         <Tab.Screen name={ROUTES.TABS.SETTINGS} component={SettingsStack} />
       </Tab.Navigator>
     ),
-    [getScreenOptions],
+    [getScreenOptions, insets.bottom],
   );
 }
 
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 10
-  }
+    paddingBottom: 10,
+  },
 });
 
 // export default ApplicationTabs;

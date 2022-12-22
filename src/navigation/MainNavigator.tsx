@@ -2,12 +2,12 @@ import LoadingScreen from '../containers/LoadingScreen';
 import React from 'react';
 import InitializationStack from './InitializationStack';
 import AccountInitializationStack from './AccountInitializationStack';
-import AccountReadyScreen from '../containers/account-initialization/AccountReadyScreen';
 import UpdateRequiredScreen from '../containers/update-required-screen';
 import ApplicationTabs from './ApplicationTabs';
 import HelpPageScreen from '../containers/account-initialization/HelpPageScreen';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import {isReadyRef, navigationRef} from './navigate';
+import InitializationFinishStack from './initialization-finish-stack';
 
 interface MainNavigatorProps {
   isInitialized: boolean;
@@ -44,7 +44,12 @@ const MainNavigator = (props: MainNavigatorProps) => {
   }
 
   if (props.isInitializationFinished) {
-    return <AccountReadyScreen />;
+    console.log('isInitializationFinished');
+    return (
+      <NavigationContainer theme={DarkTheme}>
+        <InitializationFinishStack />
+      </NavigationContainer>
+    );
   }
 
   if (props.helpShow) {
@@ -52,7 +57,7 @@ const MainNavigator = (props: MainNavigatorProps) => {
   }
 
   return (
-    <NavigationContainer theme={DarkTheme} ref={navigationRef} onReady={() => isReadyRef.resolve() }>
+    <NavigationContainer theme={DarkTheme} ref={navigationRef} onReady={() => isReadyRef.resolve()}>
       <ApplicationTabs />
     </NavigationContainer>
   );

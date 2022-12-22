@@ -11,7 +11,7 @@ export interface SwapStackParamList extends ParamListBase {
   swap: {
     network: string;
     srcCoin: string;
-  }
+  };
 }
 
 export type CoinSwapRouteProps = RouteProp<SwapStackParamList, 'swap'>;
@@ -21,18 +21,21 @@ const StackNavigator = createStackNavigator<SwapStackParamList>();
 const SwapStack = () => {
   const {t} = useTranslation();
 
-  return useMemo( () => (
-    <StackNavigator.Navigator
-      initialRouteName={ROUTES.SWAP.MAIN}
-      headerMode={'screen'}
-      screenOptions={defaultScreenOption}>
-      <StackNavigator.Screen
-        name={ROUTES.SWAP.MAIN}
-        component={SwapScreen}
-        options={{title: t('Swap'), headerShown: false}}
-      />
-    </StackNavigator.Navigator>
-  ), []);
-}
+  return useMemo(
+    () => (
+      <StackNavigator.Navigator
+        initialRouteName={ROUTES.SWAP.MAIN}
+        headerMode={'screen'}
+        screenOptions={defaultScreenOption}>
+        <StackNavigator.Screen
+          name={ROUTES.SWAP.MAIN}
+          component={SwapScreen}
+          options={{title: t('Swap'), headerShown: false}}
+        />
+      </StackNavigator.Navigator>
+    ),
+    [t],
+  );
+};
 
 export default SwapStack;

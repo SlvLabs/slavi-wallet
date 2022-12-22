@@ -154,7 +154,6 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
   const onRecipientRemove = useCallback((index: number) => setRecipients(p => p.filter((_, i) => i !== index)), []);
 
   const trySetRecipientPayFee = useCallback(() => {
-    console.log('try', recipients.length);
     if (recipients.length > 1) {
       return;
     }

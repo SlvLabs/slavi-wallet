@@ -15,10 +15,13 @@ export function SelectModal(props: SelectModalProps) {
   const {options, current, header, onSelect, ...other} = props;
   const {onCancel} = props;
 
-  const _onSelect = useCallback((value: string) => {
-    onSelect(value);
-    onCancel?.();
-  }, [onSelect, onCancel]);
+  const _onSelect = useCallback(
+    (value: string) => {
+      onSelect(value);
+      onCancel?.();
+    },
+    [onSelect, onCancel],
+  );
 
   return (
     <BaseModal {...other}>
@@ -29,7 +32,7 @@ export function SelectModal(props: SelectModalProps) {
           </View>
         )}
         <View style={styles.list}>
-          <SelectableList onSelect={_onSelect} options={options} current={current}/>
+          <SelectableList onSelect={_onSelect} options={options} current={current} />
         </View>
       </View>
     </BaseModal>

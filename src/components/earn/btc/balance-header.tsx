@@ -42,10 +42,18 @@ export function BalanceHeader({
       <View style={styles.mainRow}>
         <Image source={getImageSource(logo)} style={styles.logo} />
         <View style={styles.content}>
-          <View style={styles.leftColumn}>
+          <View style={styles.splitRow}>
             <Text style={styles.name}>{t('stakingAvailableHeader')}</Text>
+            <CryptoAmountText
+              ticker={ticker}
+              value={makeRoundedBalance(cryptoPrecision, balance)}
+              style={styles.balance}
+              tickerStyle={styles.balance}
+            />
+          </View>
+          <View style={styles.splitRow}>
             {fiatRate && (
-              <View style={styles.row}>
+              <View style={styles.greaterColumn}>
                 <Text style={styles.rate}>{`1 ${ticker} = ${fiatSymbol}`}</Text>
                 <CryptoAmountText
                   ticker={fiatTicker}
@@ -55,15 +63,7 @@ export function BalanceHeader({
                 />
               </View>
             )}
-          </View>
-          <View style={styles.rightColumn}>
-            <CryptoAmountText
-              ticker={ticker}
-              value={makeRoundedBalance(cryptoPrecision, balance)}
-              style={styles.balance}
-              tickerStyle={styles.balance}
-            />
-            <View style={styles.row}>
+            <View style={styles.lesserColumn}>
               <Text style={styles.fiatBalance}>≈</Text>
               <CryptoAmountText
                 ticker={fiatTicker}
@@ -124,13 +124,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  leftColumn: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+  greaterColumn: {
+    flex: 4,
+    flexDirection: 'row',
   },
-  rightColumn: {
-    flexDirection: 'column',
-    alignItems: 'flex-end',
+  lesserColumn: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   name: {
     fontFamily: theme.fonts.default,
@@ -167,9 +168,13 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  content: {
+  splitRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  content: {
+    flexDirection: 'column',
+    // justifyContent: 'space-between',
     flex: 1,
   },
   extraRow: {

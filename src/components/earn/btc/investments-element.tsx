@@ -9,12 +9,14 @@ import theme from '../../../theme';
 import CryptoAmountText from '../../text/crypto-amount-text';
 import makeRoundedBalance from '../../../utils/make-rounded-balance';
 import OpeningButton from '../../buttons/opening-button';
-import {formatPeriod} from '../../../utils/format-timestamp-period';
+import {formatPeriodUtc} from '../../../utils/format-timestamp-period';
 import {InvestmentsPayment} from './investments-payment';
+import shrinkAddress from '../../../utils/shrink-address';
 
 export interface InvestmentsElementProps {
   ticker: string;
   paymentInfo: IWalletStakingUserStake;
+  showAddress: boolean;
 }
 
 const cryptoPrecision = 4;
@@ -28,7 +30,7 @@ const statusColors: Record<WalletStakingStatus, string> = {
   [WalletStakingStatus.rejected]: theme.colors.errorRed,
 };
 
-export function InvestmentsElement({ticker, paymentInfo}: InvestmentsElementProps) {
+export function InvestmentsElement({ticker, paymentInfo, showAddress}: InvestmentsElementProps) {
   const [opened, setOpened] = useState<boolean>(false);
   const {t} = useTranslation();
 
@@ -37,7 +39,7 @@ export function InvestmentsElement({ticker, paymentInfo}: InvestmentsElementProp
       {!!paymentInfo.activateTime && (
         <View style={styles.row}>
           <Text style={styles.label}>{t('stakingPeriod')}</Text>
-          <Text style={styles.text}>{formatPeriod(paymentInfo.activateTime, paymentInfo.endTime)}</Text>
+          <Text style={styles.text}>{formatPeriodUtc(paymentInfo.activateTime, paymentInfo.endTime)}</Text>
         </View>
       )}
       <View style={styles.row}>
@@ -59,6 +61,12 @@ export function InvestmentsElement({ticker, paymentInfo}: InvestmentsElementProp
           {t(`stakingStatus_${paymentInfo.status}`)}
         </Text>
       </View>
+      {showAddress && (
+        <View style={styles.row}>
+          <Text style={styles.label}>{t('paymentAddress')}</Text>
+          <Text style={styles.text}>{shrinkAddress(paymentInfo.paymentAddress, 8, 8, 30)}</Text>
+        </View>
+      )}
       {(!!paymentInfo.rewards && paymentInfo.rewards.length) > 0 && (
         <View>
           {opened && (

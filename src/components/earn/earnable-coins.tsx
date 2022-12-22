@@ -77,7 +77,6 @@ export function EarnableCoins({coins, isListDisplayMode, onCoinPress}: EarnableC
       secondColumn.push(coin);
     }
   });
-
   return (
     <View style={styles.contentPlate}>
       <PlateColumn coins={firstColumn} onCoinPress={onCoinPress} />
@@ -107,6 +106,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center'
   },
   listLogo: {
     width: 32,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   coinPlate: {
     backgroundColor: theme.colors.screenBackground,
     borderRadius: 8,
-    padding: 24,
+    padding: Layout.isSmallDevice ? 12 : 16,
     alignItems: 'center',
     justifyContent: 'center',
     width: Layout.isSmallDevice ? 148 : 165,

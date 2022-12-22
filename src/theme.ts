@@ -60,6 +60,8 @@ export default {
     buttonBorder: 'rgba(128, 144, 173, 0.3)',
     lightScroll: '#636771',
     tabsBackground: 'rgba(10, 10, 12, 0.4)',
+    blueBackground: '#0A0D22',
+    disabledTitle: '#26272A',
   },
   /** @deprecated */
   colorsOld: {
@@ -120,31 +122,31 @@ export default {
   gradients: {
     header: {
       colors: ['#000000', '#053930'],
-      start: {x: 0.5, y: -0.2 },
-      end: {x: 0.5, y: 1 }
+      start: {x: 0.5, y: -0.2},
+      end: {x: 0.5, y: 1},
     },
     cardGradient: {
       colors: ['#575B80', 'rgba(143, 155, 255, 0)'],
-      start: {x: 0.5, y: 0.5 },
-      end: {x: 0.5, y: 1 }
+      start: {x: 0.5, y: 0.5},
+      end: {x: 0.5, y: 1},
     },
     activeIcon: {
       colors: ['#17DC90', '#067e50'],
-      locations: [0,0.7]
+      locations: [0, 0.7],
     },
     inactiveIcon: {
       colors: ['#FFE39C', '#ab9160'],
-      locations: [0,0.7]
+      locations: [0, 0.7],
     },
     radialLoadingGradient: {
       colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],
-      center: [100,250],
-      radius: 400
+      center: [100, 250],
+      radius: 400,
     },
     radialLoadingGradientAlt: {
       colors: ['rgba(107, 40, 160, 0.25)', 'rgba(46, 19, 55, 0)'],
-      center: [100,250],
-      radius: 400
+      center: [100, 250],
+      radius: 400,
     },
     radialLoadingGradientBottom: {
       colors: ['rgba(107, 40, 160, 0.25)', 'rgba(46, 19, 55, 0)'],
@@ -153,8 +155,8 @@ export default {
     },
     radialBackgroundGradient: {
       colors: ['rgba(40, 160, 129, 0.2)', 'rgba(19, 34, 55, 0)'],
-      center: [100,100],
-      radius: 250
+      center: [100, 100],
+      radius: 250,
     },
     radialWavesGradient: {
       colors: ['rgba(107, 40, 160, 0.5)', 'rgba(46, 19, 55, 0)'],
@@ -172,26 +174,26 @@ export default {
       radius: 150,
     },
     button: {
-      colors: ['#00CB7C', '#00785B',],
+      colors: ['#00CB7C', '#00785B'],
       locations: [0.5, 1],
       useAngle: true,
       angle: 62,
-      angleCenter: { x: 0.5, y: 0.5 },
+      angleCenter: {x: 0.5, y: 0.5},
     },
     violetButton: {
-      colors: ['#A428DE', '#5D1298',],
+      colors: ['#A428DE', '#5D1298'],
       locations: [0.5, 1],
       useAngle: true,
       angle: 62,
-      angleCenter: { x: 0.5, y: 0.5 },
+      angleCenter: {x: 0.5, y: 0.5},
     },
 
     disabledButton: {
-      colors: ['#2C2E33', '#26282D',],
+      colors: ['#2C2E33', '#26282D'],
       locations: [0.5, 1],
       useAngle: true,
       angle: 62,
-      angleCenter: { x: 0.5, y: 0.5 },
+      angleCenter: {x: 0.5, y: 0.5},
     },
     activeTab: {
       colors: ['#2D303E', 'rgba(35, 38, 48, 0.5)'],
@@ -212,6 +214,17 @@ export default {
       colors: ['#272B35', '#181A20'],
       useAngle: true,
       angle: 154.67,
+    },
+    screenReferralBackground: {
+      colors: ['#0A0D22', '#0A0D22'],
+    },
+    goldenButton: {
+      colors: ['#F1DCA3', '#EBD28E', '#B48E2E', '#D6A84B'],
+      locations: [0, 0.34, 0.82, 1],
+    },
+    goldenDisabledButton: {
+      colors: ['rgba(241, 220, 163, 0.4)', 'rgba(235, 210, 142, 0.4)', 'rgba(180, 142, 46, 0.4)'],
+      locations: [0, 0.34, 89.5],
     },
   },
   gradientsOld: {

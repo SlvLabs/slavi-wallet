@@ -4,7 +4,7 @@ const DEFAULT_BEGIN_LETTERS_COUNT = 10;
 const DEFAULT_END_LETTERS_COUNT = 10;
 const DEFAULT_MAX_LENGTH = Layout.isSmallDevice ? 25 : 35;
 
-export default function shrinkAddress (
+export default function shrinkAddress(
   address: string,
   beginLettersCount?: number,
   endLettersCount?: number,

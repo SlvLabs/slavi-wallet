@@ -549,7 +549,7 @@ const translations = {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mauris urna, consequat ut feugiat eget, lobortis id ipsum. Quisque nec nisi purus. Nulla vel risus non lacus pulvinar pharetra.',
   stakingMoreInfo: 'More info',
   stakingLessInfo: 'Less info',
-  stakingPayments: 'Payments',
+  stakingPayments: 'Rewards',
   stakingPaymentStatus_earning: 'Earning',
   stakingPaymentStatus_waiting: 'Waiting',
   stakingPaymentStatus_payed: 'Payed',
@@ -620,7 +620,15 @@ const translations = {
   referralCodeDescription2: 'paste this code and claim rewards',
   referralTelegramsLink: 'https://telegram.org/',
   referralDiscordLink: 'https://discord.com/',
+  referralBtnMint: 'Mint',
+  nftMintConfTitle: 'Are you sure you want to mint following NFT?',
+  nftMintFee: 'Calculated fee',
   backExit: 'For exit press back button again',
+
+  //---
+
+  paymentAddress: 'Payment address',
+  insufficientFundsForCommission: 'Not enough balance for paying commission',
 };
 
 export default translations;

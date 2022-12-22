@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
-  KeyboardTypeOptions, ReturnKeyTypeOptions,
+  KeyboardTypeOptions,
+  ReturnKeyTypeOptions,
   StyleSheet,
   Text,
   TextInput,
@@ -16,6 +17,7 @@ export interface SimpleInputProps {
   onChange?: (value: string) => void;
   placeholder?: string;
   buttonText?: string;
+  buttonStyle?: TextStyle;
   onButtonPress?: () => void;
   icon?: React.ReactNode;
   onIconPress?: () => void;
@@ -29,12 +31,13 @@ export interface SimpleInputProps {
   errorStyle?: TextStyle;
   label?: string;
   labelStyle?: TextStyle;
-  placeholderTextColor?: string,
+  placeholderTextColor?: string;
   iconLeft?: boolean;
   returnKeyType?: ReturnKeyTypeOptions;
   disableFocusStyle?: boolean;
   disableErrorStyle?: boolean;
   skipDisabledStyle?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -62,24 +65,27 @@ const SimpleInput = (props: SimpleInputProps) => {
   }
 
   const onFocus = useCallback(() => {
-    if(!disabledStyle) {
+    if (!disabledStyle) {
       setFocusStyle(styles.focused);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.disableFocusStyle]);
 
   const onBlur = useCallback(() => {
     setFocusStyle({});
   }, []);
 
-  const IconElement = useMemo<React.ReactNode>(() => (
-    props.icon && (
-      <TouchableOpacity onPress={props.onIconPress} style={styles.iconWrap}>
-        {props.icon}
-      </TouchableOpacity>
-      )
-  ), [props.icon, props.onIconPress]);
+  const IconElement = useMemo<React.ReactNode>(
+    () =>
+      props.icon && (
+        <TouchableOpacity onPress={props.onIconPress} style={styles.iconWrap}>
+          {props.icon}
+        </TouchableOpacity>
+      ),
+    [props.icon, props.onIconPress],
+  );
 
-  const onContainerClick = useCallback(() => input.current?.focus(), [input.current]);
+  const onContainerClick = useCallback(() => input.current?.focus(), []);
 
   return (
     <TouchableOpacity style={{...styles.container, ...props.containerStyle}} onPress={onContainerClick}>
@@ -93,9 +99,7 @@ const SimpleInput = (props: SimpleInputProps) => {
         }}>
         {props.iconLeft && IconElement}
         <View style={styles.leftCol}>
-          {!!props.label && (
-            <Text style={styles.label}>{props.label}</Text>
-          )}
+          {!!props.label && <Text style={styles.label}>{props.label}</Text>}
           <TextInput
             onChangeText={props.onChange}
             value={props.value}
@@ -108,27 +112,24 @@ const SimpleInput = (props: SimpleInputProps) => {
             placeholderTextColor={props.placeholderTextColor}
             returnKeyType={props.returnKeyType}
             editable={!props.disabled}
-            ref={(_input) => {
-              if(input) {
+            ref={_input => {
+              if (input) {
                 input.current = _input;
               }
             }}
+            textAlign={props.textAlign}
           />
         </View>
         {!!props.buttonText && (
-          <TouchableOpacity
-            onPress={props.onButtonPress}
-            style={styles.buttonWrap}>
-            <Text style={styles.button}>{props.buttonText}</Text>
+          <TouchableOpacity onPress={props.onButtonPress} style={styles.buttonWrap}>
+            <Text style={{...styles.button, ...props.buttonStyle}}>{props.buttonText}</Text>
           </TouchableOpacity>
         )}
         {!props.iconLeft && IconElement}
       </View>
       {!!props.errorMessage && (
         <View style={{...styles.errorContainer, ...props.errorContainerStyle}}>
-          <Text style={{...styles.error, ...props.errorStyle}}>
-            {props.errorMessage}
-          </Text>
+          <Text style={{...styles.error, ...props.errorStyle}}>{props.errorMessage}</Text>
         </View>
       )}
     </TouchableOpacity>
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   leftCol: {
     flexDirection: 'column',
     flex: 8,
-  }
+  },
 });
 
 export default SimpleInput;

@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useEffect} from 'react';
 import SolidButton from '../../components/buttons/solid-button';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
 import useTranslation from '../../utils/use-translation';
@@ -8,14 +8,32 @@ import {useDispatch} from 'react-redux';
 import {hideFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {walletLogo} from '../../assets/images';
 import WavesBackground from '../../components/background/waves-background';
+import {useGetReferralInfo} from '@slavi/wallet-core/src/providers/ws/hooks/referral/use-get-referral-info';
+import {useNavigation} from '@react-navigation/native';
+import ROUTES from '../../navigation/config/routes';
+import {CampaignStatus} from '@slavi/wallet-core/src/providers/ws/messages/refferal';
 
 const AccountReadyScreen = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  const getToWork = useCallback(() => {
-    dispatch(hideFinish());
-  }, [dispatch]);
+  const {isLoading, data, reload} = useGetReferralInfo(false);
+
+  useEffect(() => {
+    if (isLoading || !data) {
+      return;
+    }
+
+    if (data?.campaignStatus === CampaignStatus.active) {
+      navigation.navigate(ROUTES.ACCOUNT_INITIALIZATION.REFERRAL, {
+        invitingCode: data.invitingCode,
+        codeLen: data.codeLength,
+      });
+    } else {
+      dispatch(hideFinish());
+    }
+  }, [data, dispatch, isLoading, navigation]);
 
   return (
     <WavesBackground>
@@ -27,7 +45,7 @@ const AccountReadyScreen = () => {
         <Text style={styles.description}>{t('Your wallet is ready to work.')}</Text>
       </View>
       <View style={styles.buttonsBlock}>
-        <SolidButton title={t('Get to work')} onPress={getToWork} />
+        <SolidButton title={t('Get to work')} onPress={reload} loading={isLoading} />
         <View style={styles.loaderView}>
           <PointerProgressBar stepsCount={6} activeStep={5} />
         </View>

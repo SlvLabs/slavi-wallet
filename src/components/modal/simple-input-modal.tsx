@@ -40,11 +40,7 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
         inputStyle={styles.input}
         inputContainerStyle={styles.inputContainerStyle}
       />
-      <SolidButton
-        onPress={_onSubmit}
-        title={t('Save')}
-        buttonStyle={{...styles.button, ...props.buttonStyle}}
-      />
+      <SolidButton onPress={_onSubmit} title={t('Save')} buttonStyle={{...styles.button, ...props.buttonStyle}} />
     </BaseModal>
   );
 };
@@ -52,12 +48,12 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
 const styles = StyleSheet.create({
   button: {},
   input: {
-    flex: 0
+    flex: 0,
   },
   inputContainerStyle: {
     marginBottom: 24,
-    backgroundColor: theme.colors.dark
-  }
+    backgroundColor: theme.colors.dark,
+  },
 });
 
 export default SimpleInputModal;

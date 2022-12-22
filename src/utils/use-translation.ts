@@ -6,6 +6,6 @@ export type TranslationsKey = keyof typeof translations;
 
 export type CustomTranslateFunction = (k: TranslationsKey, options?: {[key: string]: any}) => string;
 
-export default function useTranslation(): {i18n: i18n; t: CustomTranslateFunction} {
+export default function useTranslation(): {i18n: i18n; t: CustomTranslateFunction; ready: boolean} {
   return originalUseTranslation();
 }

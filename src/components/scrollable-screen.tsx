@@ -1,9 +1,9 @@
 import theme from '../theme';
 import ScreenHeader, {ScreenHeaderProps} from './screen-header';
-import {StyleSheet, ViewStyle} from 'react-native';
-import React, {ReactNode} from 'react';
-import { View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {RefreshControlProps, StyleSheet, ViewStyle} from 'react-native';
+import React, {ReactElement, ReactNode} from 'react';
+import {View} from 'react-native';
+import LinearGradient, {LinearGradientProps} from 'react-native-linear-gradient';
 import Layout from '../utils/layout';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -11,23 +11,32 @@ export interface ScrollableScreenProps extends ScreenHeaderProps {
   children: ReactNode;
   containerStyle?: ViewStyle;
   contentStyle?: ViewStyle;
+  gradientStyle?: ViewStyle;
+  gradient?: LinearGradientProps;
+  refreshControl?: ReactElement<RefreshControlProps>;
 }
 
-export default function ScrollableScreen(props: ScrollableScreenProps) {
-  const {children, containerStyle, contentStyle, ...headerProps} = props;
-
+export default function ScrollableScreen({
+  children,
+  containerStyle,
+  contentStyle,
+  gradient,
+  gradientStyle,
+  refreshControl,
+  ...headerProps
+}: ScrollableScreenProps) {
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{...styles.container, ...containerStyle}}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       keyboardShouldPersistTaps={'handled'}
-    >
-      <LinearGradient {...theme.gradients.screenBackground} style={styles.gradient}>
+      refreshControl={refreshControl}>
+      <LinearGradient
+        {...{...theme.gradients.screenBackground, ...gradient}}
+        style={{...styles.gradient, ...gradientStyle}}>
         <ScreenHeader {...headerProps} />
-        <View style={{...styles.content, ...contentStyle}}>
-          {children}
-        </View>
+        <View style={{...styles.content, ...contentStyle}}>{children}</View>
       </LinearGradient>
     </KeyboardAwareScrollView>
   );
@@ -35,7 +44,7 @@ export default function ScrollableScreen(props: ScrollableScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: '100%'
+    minHeight: '100%',
   },
   gradient: {
     flex: 1,

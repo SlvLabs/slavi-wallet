@@ -23,18 +23,21 @@ import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficie
 import AlertRow from '../../error/alert-row';
 import makeRoundedBalance from '../../../utils/make-rounded-balance';
 import {EarnErrorPlaceholder} from './earn-error-placeholder';
-import {useBtcAmountValidator} from '@slavi/wallet-core/src/validation/hooks/use-btc-amount-validator';
-import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
 import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
+import AddressSelector from '../../buttons/address-selector';
+import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
+import {useCoinAmountValidator} from '@slavi/wallet-core/src/validation/hooks/use-coin-amount-validator';
+import {Vout} from '@slavi/wallet-core/src/services/coin-pattern/coin-pattern-interface';
 
 const cryptoPrecision = 4;
 
 export interface DepositTabProps {
   coinDetails: CoinDetails;
   onSuccess: () => void;
+  showAddresses: boolean;
 }
 
-export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
+export function DepositTab({coinDetails, onSuccess, showAddresses}: DepositTabProps) {
   const [amount, setAmount] = useState<string>('0.00');
   const [receiverPaysFee, setReceiverPaysFee] = useState<boolean>(false);
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
@@ -44,15 +47,59 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
   const [sendLoading, setSendLoading] = useState<boolean>(false);
   const [sendingError, setSendingError] = useState<string | undefined>();
 
-  const balance: string = useSpendableBalance(coinDetails.id);
+  const balance = useSpendableBalance(coinDetails.id);
+  const parentBalance = useSpendableBalance(coinDetails.parent ?? coinDetails.id);
   const fiatSymbol = useFiatSymbolSelector();
   const rate = useCurrencyRate(coinDetails.id, coinDetails.fiat || 'USD');
   const {tariffs, isLoading: isLoadingTariffs, error: errorTariffs} = useGetTariffs(coinDetails.id);
+  const balancesState = useAddressesBalance(showAddresses ? coinDetails.id : undefined);
+  const parentBalancesState = useAddressesBalance(showAddresses && coinDetails.parent ? coinDetails.parent : undefined);
+
+  const [senderIndex, setSenderIndex] = useState<number>();
+
+  const fromAddress = typeof senderIndex !== 'undefined' ? balancesState.balances[senderIndex]?.address : undefined;
+  const accountBalance =
+    typeof senderIndex !== 'undefined' && typeof balancesState.balances[senderIndex]?.balance !== 'undefined'
+      ? balancesState.balances[senderIndex].balance
+      : '0';
+  const accountParentBalance =
+    coinDetails.parent && fromAddress
+      ? parentBalancesState.balances.find(a => a.address === fromAddress)?.balance ?? '0'
+      : accountBalance;
   const {
     stakedInfo,
     isLoading: isStakedInfoLoading,
     error: errorStakedInfo,
-  } = useGetCurrentStakedForCoin(coinDetails.id);
+  } = useGetCurrentStakedForCoin(coinDetails.id, fromAddress);
+
+  const [balances, setBalances] = useState<{balance: string; balanceForCommission: string}>(
+    showAddresses
+      ? {
+          balance: accountBalance,
+          balanceForCommission: accountParentBalance,
+        }
+      : {balance, balanceForCommission: parentBalance},
+  );
+
+  const [transferOptions, setTransferOptions] = useState<{from?: string; receiverPaysFee: boolean}>(
+    showAddresses ? {from: fromAddress, receiverPaysFee} : {receiverPaysFee},
+  );
+  const [vouts, setVouts] = useState<[] | [Vout]>([]);
+
+  useEffect(() => {
+    const newBalance = showAddresses
+      ? {
+          balance: accountBalance,
+          balanceForCommission: accountParentBalance,
+        }
+      : {balance, balanceForCommission: parentBalance};
+    setBalances(p => {
+      if (p.balance !== newBalance.balance && p.balanceForCommission !== newBalance.balanceForCommission) {
+        return newBalance;
+      }
+      return p;
+    });
+  }, [showAddresses, accountParentBalance, parentBalance, accountBalance, balance]);
 
   const {createStakingTx, sendStakingTx} = useHandleStakingCreation(coinDetails.id);
 
@@ -60,13 +107,33 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
   const [currentTariff, setCurrentTariff] = useState<IWalletStakingTariff | undefined>();
   const {monthReward, fullReward} = useCalculateRewards(amount, currentTariff);
 
-  const amountError = useBtcAmountValidator(
-    coinDetails.id,
-    amount,
-    TransactionPriority.average,
-    currentTariff?.depositAddress,
-    receiverPaysFee,
-  );
+  useEffect(() => {
+    setTransferOptions({from: fromAddress, receiverPaysFee});
+  }, [receiverPaysFee, fromAddress]);
+
+  useEffect(() => {
+    setVouts(p => {
+      const vout = p[0];
+      if (!currentTariff?.depositAddress || !amount) {
+        if (!vout) {
+          return p;
+        }
+        return [];
+      }
+      if (vout?.address !== currentTariff.depositAddress || vout.amount !== amount) {
+        return [{amount, address: currentTariff.depositAddress}];
+      }
+      return p;
+    });
+  }, [currentTariff?.depositAddress, amount]);
+
+  const {amountError, isLoading: isAmountChecking} = useCoinAmountValidator({
+    balanceForCommission: balances.balanceForCommission,
+    balance: balances.balance,
+    vouts,
+    options: transferOptions,
+    coin: coinDetails.id,
+  });
 
   const {t} = useTranslation();
 
@@ -96,7 +163,7 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
 
     setButtonLock(true);
     setTx(undefined);
-    createStakingTx(amount, currentTariff, {receiverPaysFee: receiverPaysFee})
+    createStakingTx(amount, currentTariff, {receiverPaysFee: receiverPaysFee, from: fromAddress})
       .then(_tx => {
         setTx(_tx);
         showConf();
@@ -116,7 +183,7 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
           setError(t('insufficientFunds'));
         }
       });
-  }, [currentTariff, createStakingTx, amount, receiverPaysFee, showConf, t, coinDetails.ticker]);
+  }, [currentTariff, createStakingTx, amount, receiverPaysFee, showConf, t, coinDetails.ticker, fromAddress]);
 
   const send = useCallback(() => {
     if (!tx || !currentTariff) {
@@ -173,12 +240,22 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      {showAddresses && (
+        <AddressSelector
+          label={t('From account')}
+          containerStyle={styles.addressSelector}
+          addresses={balancesState.balances}
+          onSelect={setSenderIndex}
+          selectedAddress={senderIndex}
+          ticker={coinDetails.ticker}
+        />
+      )}
       <BalanceHeader
         ticker={coinDetails?.ticker}
         fiatTicker={coinDetails.fiat}
         fiatSymbol={fiatSymbol}
-        balance={balance}
-        fiatBalance={coinDetails.fiatBalance || '0'}
+        balance={showAddresses ? accountBalance : balance}
+        fiatBalance={(showAddresses ? accountBalance : coinDetails.fiatBalance) || '0'}
         fiatRate={rate}
         logo={coinDetails.logo}
         staked={stakedInfo?.staked}
@@ -193,7 +270,7 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
       <StakeInput
         amount={amount}
         ticker={coinDetails.ticker}
-        balance={balance}
+        balance={showAddresses ? accountBalance : balance}
         onAmountChange={onAmountChange}
         onMax={onMax}
         containerStyle={styles.stakeInput}
@@ -216,13 +293,13 @@ export function DepositTab({coinDetails, onSuccess}: DepositTabProps) {
         containerStyle={styles.submitButton}
         loading={buttonLock}
         onPress={submit}
-        disabled={!!error || !!amountError}
+        disabled={!!error || isAmountChecking}
       />
       <ConfirmStakeModal
         visible={confIsShown}
         onCancel={hideConf}
         fee={tx?.fee}
-        ticker={coinDetails.ticker}
+        ticker={coinDetails.parentTicker ?? coinDetails.ticker}
         onAccept={send}
         amount={amount}
         period={t(tariff as TranslationsKey)}
@@ -238,6 +315,9 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 16,
     paddingBottom: 16,
+  },
+  addressSelector: {
+    marginBottom: 8,
   },
   spinnerContainer: {
     height: '100%',

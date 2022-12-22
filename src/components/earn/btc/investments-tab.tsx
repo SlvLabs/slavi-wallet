@@ -16,12 +16,13 @@ import {Placeholder} from '../../placeholder';
 
 export interface InvestmentsTabProps {
   coinDetails: CoinDetails;
+  showAddress: boolean;
   forceReload?: number;
 }
 
 const cryptoPrecision = 4;
 
-export function InvestmentsTab({coinDetails, forceReload}: InvestmentsTabProps) {
+export function InvestmentsTab({coinDetails, forceReload, showAddress}: InvestmentsTabProps) {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [reloading, setReloading] = useState<boolean>(false);
 
@@ -37,7 +38,7 @@ export function InvestmentsTab({coinDetails, forceReload}: InvestmentsTabProps) 
 
   const renderItem = useCallback(
     ({item}: ListRenderItemInfo<IWalletStakingUserStake>) =>
-      coinDetails ? <InvestmentsElement ticker={coinDetails.ticker} paymentInfo={item} /> : <></>,
+      coinDetails ? <InvestmentsElement ticker={coinDetails.ticker} paymentInfo={item} showAddress={showAddress}/> : <></>,
     [coinDetails],
   );
 

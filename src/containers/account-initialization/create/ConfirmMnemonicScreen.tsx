@@ -9,16 +9,13 @@ import useTranslation from '../../../utils/use-translation';
 import InitializationBackground from '../../../components/background/initialization-background';
 import SolidButton from '../../../components/buttons/solid-button';
 import PointerProgressBar from '../../../components/progress/pointer-progress-bar';
-import { ConfirmMnemonic } from '@slavi/wallet-core/src/store/modules/account/account-thunk-actions';
+import {ConfirmMnemonic} from '@slavi/wallet-core/src/store/modules/account/account-thunk-actions';
 import {showFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import Layout from '../../../utils/layout';
 
 const ConfirmMnemonicScreen = () => {
   const mnemonic = useSelector((state: State) => state.account.mnemonic);
-  const words = useMemo(
-    () => mnemonic.split(' ').sort(() => Math.random() - 0.5),
-    [mnemonic],
-  );
+  const words = useMemo(() => mnemonic.split(' ').sort(() => Math.random() - 0.5), [mnemonic]);
 
   const [availableWords, setAvailableWords] = useState<string[]>([]);
   const [selectWords, setSelectedWords] = useState<string[]>([]);
@@ -34,7 +31,7 @@ const ConfirmMnemonicScreen = () => {
   const selectWord = useCallback(
     (word: string, index?: number) => {
       setSelectedWords([...selectWords, word]);
-      setAvailableWords(availableWords.filter((val: string, i) => (val !== word) || (i !== index)));
+      setAvailableWords(availableWords.filter((val: string, i) => val !== word || i !== index));
     },
     [availableWords, selectWords],
   );
@@ -42,7 +39,7 @@ const ConfirmMnemonicScreen = () => {
   const unselectWord = useCallback(
     (word: string, index?: number) => {
       setAvailableWords([...availableWords, word]);
-      setSelectedWords(selectWords.filter((val: string, i) => (val !== word) || (i !== index)));
+      setSelectedWords(selectWords.filter((val: string, i) => val !== word || i !== index));
     },
     [availableWords, selectWords],
   );
@@ -54,36 +51,28 @@ const ConfirmMnemonicScreen = () => {
   const goNext = useCallback(() => {
     dispatch(showFinish());
     dispatch<any>(ConfirmMnemonic(mnemonic));
-  }, [dispatch]);
+  }, [dispatch, mnemonic]);
 
   return (
     <InitializationBackground>
       <View style={styles.textBlock}>
         <Text style={styles.header}>{t('Type your secret phrase')}</Text>
         <Text style={styles.description}>
-          {t(
-            "Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone.",
-          )}
+          {t("Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone.")}
         </Text>
       </View>
-      <MnemonicArea
-        words={availableWords}
-        style={styles.availableContainer}
-        onPressWorld={selectWord}
-      />
+      <MnemonicArea words={availableWords} style={styles.availableContainer} onPressWorld={selectWord} />
       <MnemonicArea
         words={selectWords}
         style={styles.selectedContainer}
         onPressWorld={unselectWord}
         wordStyle={styles.word}
       />
-      {isWrong && (
-        <AlertRow text={t('The secret phrase was entered incorrectly')} />
-      )}
+      {isWrong && <AlertRow text={t('The secret phrase was entered incorrectly')} />}
       <View style={styles.buttonsBlock}>
-        <SolidButton title={t('Continue')} onPress={goNext} disabled={selectWords.length != words.length || isWrong}/>
+        <SolidButton title={t('Continue')} onPress={goNext} disabled={selectWords.length != words.length || isWrong} />
         <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={6} activeStep={4}/>
+          <PointerProgressBar stepsCount={6} activeStep={4} />
         </View>
       </View>
     </InitializationBackground>
@@ -143,7 +132,7 @@ const styles = StyleSheet.create({
   },
   word: {
     backgroundColor: theme.colors.darkWord,
-  }
+  },
 });
 
 export default ConfirmMnemonicScreen;

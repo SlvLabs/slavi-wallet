@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {WalletStakingRewardStatus} from '@slavi/wallet-core/src/providers/ws/messages/wallet-staking';
 import {View, Text, StyleSheet} from 'react-native';
-import {formatPeriod} from '../../../utils/format-timestamp-period';
+import {formatPeriodUtc} from '../../../utils/format-timestamp-period';
 import theme from '../../../theme';
 import CryptoAmountText from '../../text/crypto-amount-text';
 import {makeFloorBalance} from '../../../utils/make-rounded-balance';
@@ -28,7 +28,7 @@ export function InvestmentsPayment({start, end, status, amount, ticker}: Investm
   const textStyle = useMemo(() => ({...styles.text, color: statusColors[status]}), [status]);
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{formatPeriod(start, end)}</Text>
+      <Text style={styles.label}>{formatPeriodUtc(start, end)}</Text>
       <View style={styles.row}>
         <CryptoAmountText
           ticker={ticker}

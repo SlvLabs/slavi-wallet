@@ -49,7 +49,6 @@ const ReceiveScreen = () => {
   }, []);
 
   const onQrChange = useCallback((qrData: string | null) => {
-    console.log('onQrChange', qrData)
     setQr(qrData);
   }, []);
 

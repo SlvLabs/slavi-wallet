@@ -18,17 +18,8 @@ const defaultPositiveText = 'Yes';
 const defaultNegativeText = 'No';
 
 export default function ConfirmationModal(props: ConfirmationModalProps) {
-  const {
-    title,
-    description,
-    visible,
-    onCancel,
-    modalStyle,
-    contentStyle,
-    onPositive,
-    positiveText,
-    negativeText
-  } = props;
+  const {title, description, visible, onCancel, modalStyle, contentStyle, onPositive, positiveText, negativeText} =
+    props;
 
   const {t} = useTranslation();
 
@@ -38,7 +29,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
   const _onPositive = useCallback(() => {
     onPositive();
     onCancel?.();
-  }, [onPositive])
+  }, [onCancel, onPositive]);
 
   return (
     <BaseModal
@@ -48,19 +39,9 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
       contentStyle={contentStyle}
       showCloseIcon={true}>
       <Text style={styles.header}>{title}</Text>
-      {!!description && (
-        <Text style={styles.description}>{description}</Text>
-      )}
-      <SolidButton
-        onPress={_onPositive}
-        title={t(_positiveText as TranslationsKey)}
-        containerStyle={styles.button}
-      />
-      <OutlineButton
-        onPress={onCancel}
-        title={t(_negativeText as TranslationsKey)}
-        containerStyle={styles.button}
-      />
+      {!!description && <Text style={styles.description}>{description}</Text>}
+      <SolidButton onPress={_onPositive} title={t(_positiveText as TranslationsKey)} containerStyle={styles.button} />
+      <OutlineButton onPress={onCancel} title={t(_negativeText as TranslationsKey)} containerStyle={styles.button} />
     </BaseModal>
   );
 }
@@ -86,5 +67,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 12,
-  }
+  },
 });

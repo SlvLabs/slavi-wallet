@@ -12,7 +12,7 @@ import {EarnInvestmentRouteProps} from '../../navigation/earn-stack';
 import Screen from '../../components/screen';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 
-export function BtcEarnScreen() {
+export function WalletStakingEarnScreen() {
   const [forceReload, setForceReload] = useState<number>(0);
 
   const tabsRef = useRef<WrappedTabViewHandle>(null);
@@ -44,19 +44,20 @@ export function BtcEarnScreen() {
       tabsRef.current.switchTo(1);
     }
   }, []);
+  const showAddresses = route.params?.showAddresses ?? false;
 
   const renderScene = useCallback(
     ({route: tabRoute}: WrappedSceneRendererProps<RouteData>) => {
       switch (tabRoute.key) {
         case 'deposit':
-          return <DepositTab coinDetails={coinDetails} onSuccess={toInvestementsTab} />;
+          return <DepositTab coinDetails={coinDetails} onSuccess={toInvestementsTab} showAddresses={showAddresses} />;
         case 'investements':
-          return <InvestmentsTab coinDetails={coinDetails} forceReload={forceReload} />;
+          return <InvestmentsTab coinDetails={coinDetails} forceReload={forceReload} showAddress={showAddresses} />;
         default:
           return null;
       }
     },
-    [coinDetails, forceReload, toInvestementsTab],
+    [coinDetails, forceReload, showAddresses, toInvestementsTab],
   );
 
   return (

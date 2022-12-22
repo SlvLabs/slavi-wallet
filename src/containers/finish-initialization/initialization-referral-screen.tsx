@@ -12,6 +12,7 @@ import {hideFinish} from '@slavi/wallet-core/src/store/modules/initialization/in
 import {useRoute} from '@react-navigation/native';
 import {ReferralRouteProps} from '../../navigation/initialization-finish-stack';
 import {CaptchaModal} from '../../components/captcha/captcha-modal';
+import LinearGradient from 'react-native-linear-gradient';
 
 export function InitializationReferralScreen() {
   const route = useRoute<ReferralRouteProps>();
@@ -36,7 +37,7 @@ export function InitializationReferralScreen() {
   const goNext = useCallback(() => dispatch(hideFinish()), [dispatch]);
 
   return (
-    <View style={styles.container}>
+    <LinearGradient {...theme.gradients.screenBackground} style={styles.container}>
       <Lottie source={referralAnimation} autoPlay={true} loop={true} style={styles.logo} />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description1}>{t('referralInitDescription1')}</Text>
@@ -67,7 +68,7 @@ export function InitializationReferralScreen() {
         loading={isLoading}
       />
       <CaptchaModal visible={captchaShown} onSolved={onCaptchaSolved} onCancel={hideCaptcha} />
-    </View>
+    </LinearGradient>
   );
 }
 

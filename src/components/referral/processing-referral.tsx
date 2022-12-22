@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Lottie from 'lottie-react-native';
-import {referralAnimation} from '../../assets/annimation';
+import {referralFinishedAnimation} from '../../assets/annimation';
 import Layout from '../../utils/layout';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
@@ -17,7 +17,7 @@ export function ProcessingReferral({points}: ProcessingReferralProps) {
 
   return (
     <View style={styles.container}>
-      <Lottie source={referralAnimation} autoPlay={true} loop={true} style={styles.logo} />
+      <Lottie source={referralFinishedAnimation} autoPlay={true} loop={true} style={styles.logo} />
       <View style={styles.content}>
         <Text style={styles.header}>{t('referralCongratulations')}</Text>
         <Text style={styles.amountLabel}>{t('referralEarned')}</Text>

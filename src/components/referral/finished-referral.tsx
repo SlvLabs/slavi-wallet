@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Layout from '../../utils/layout';
 import theme from '../../theme';
 import Lottie from 'lottie-react-native';
-import {referralAnimation} from '../../assets/annimation';
+import {referralFinishedAnimation} from '../../assets/annimation';
 import useTranslation from '../../utils/use-translation';
 import CryptoAmountText from '../text/crypto-amount-text';
 import {InvitingCode} from './inviting-code';
@@ -19,7 +19,7 @@ export function FinishedReferral({points, slvAmount, token}: FinishedReferralPro
 
   return (
     <View style={styles.container}>
-      <Lottie source={referralAnimation} autoPlay={true} loop={true} style={styles.logo} />
+      <Lottie source={referralFinishedAnimation} autoPlay={true} loop={true} style={styles.logo} />
       <View style={styles.content}>
         <Text style={styles.header}>{t('referralCongratulations')}</Text>
         <View style={styles.earnedRow}>

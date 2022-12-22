@@ -6,9 +6,9 @@ import {loadingBackground} from '../assets/images';
 import theme from '../theme';
 // @ts-ignore
 import RadialGradient from 'react-native-radial-gradient';
-import { Animated } from 'react-native';
+import {Animated} from 'react-native';
 import Lottie from 'lottie-react-native';
-import {loadingAnimation} from '../assets/annimation';
+import {loadingNewYearAnimation} from '../assets/annimation';
 import Layout from '../utils/layout';
 
 const POINT_COUNT = 4;
@@ -18,59 +18,60 @@ const LoadingScreen = () => {
 
   const animations = useRef(Array.from(Array(POINT_COUNT), () => new Animated.Value(0))).current;
 
-  for(let i = 0; i < POINT_COUNT; i++) {
-    Animated.loop(Animated.sequence([
-      Animated.timing(animations[i], {
-      useNativeDriver: false,
-      toValue: 1,
-      duration: 500,
-      delay: i*500,
-    }),
-    Animated.timing(animations[i], {
-      useNativeDriver: false,
-      toValue: 0,
-      duration: 2000,
-      delay: (i+1)*500,
-    })
-    ])).start();
+  for (let i = 0; i < POINT_COUNT; i++) {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animations[i], {
+          useNativeDriver: false,
+          toValue: 1,
+          duration: 500,
+          delay: i * 500,
+        }),
+        Animated.timing(animations[i], {
+          useNativeDriver: false,
+          toValue: 0,
+          duration: 2000,
+          delay: (i + 1) * 500,
+        }),
+      ]),
+    ).start();
   }
 
   return (
-      <ImageBackground source={loadingBackground} style={styles.background}>
-        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientAlt}>
-          <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientBottom}>
-            <View style={styles.logoView}>
-              <Lottie source={loadingAnimation} autoPlay={true} loop={false} style={styles.logo}/>
+    <ImageBackground source={loadingBackground} style={styles.background}>
+      <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientAlt}>
+        <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientBottom}>
+          <View style={styles.logoView}>
+            <Lottie source={loadingNewYearAnimation} autoPlay={true} loop={false} style={styles.logo} />
+          </View>
+          <View style={styles.bottomText}>
+            <View style={styles.welcomeView}>
+              <Text style={styles.welcomeText}>Welcome to</Text>
             </View>
-            <View style={styles.bottomText}>
-              <View style={styles.welcomeView}>
-                <Text style={styles.welcomeText}>Welcome to</Text>
-              </View>
-              <Text style={styles.nameText}>Slavi Multi-Chain</Text>
-              <Text style={styles.nameText}>DApp</Text>
-              {connectionError && (
-                <Text>Problem connecting to the server try again later</Text>
-              )}
-            </View>
+            <Text style={styles.nameText}>Slavi Multi-Chain</Text>
+            <Text style={styles.nameText}>DApp</Text>
+            {connectionError && <Text>Problem connecting to the server try again later</Text>}
+          </View>
 
-            <Animated.View style={styles.indicator}>
-              {animations.map((animation, index) =>
-                <Animated.View
-                  style={[styles.loadingPoint, {
-                      backgroundColor: animation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [theme.colors.grayDark, theme.colors.violet],
-                      })
-                    }]
-                  }
-                  key={`loading_point_${index}`}
-                />
-              )}
-
-            </Animated.View>
-          </RadialGradient>
+          <Animated.View style={styles.indicator}>
+            {animations.map((animation, index) => (
+              <Animated.View
+                style={[
+                  styles.loadingPoint,
+                  {
+                    backgroundColor: animation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [theme.colors.grayDark, theme.colors.violet],
+                    }),
+                  },
+                ]}
+                key={`loading_point_${index}`}
+              />
+            ))}
+          </Animated.View>
         </RadialGradient>
-      </ImageBackground>
+      </RadialGradient>
+    </ImageBackground>
   );
 };
 
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'bold',
     lineHeight: 42,
-    color: theme.colors.white
+    color: theme.colors.white,
   },
   welcomeText: {
     fontFamily: theme.fonts.default,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 26,
-    color: theme.colors.gold
+    color: theme.colors.gold,
   },
   welcomeView: {
     marginBottom: 26,
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     paddingTop: 100,
   },
   logo: {
-    height: Layout.window.height * 600 / 724,
+    height: (Layout.window.height * 600) / 724,
   },
   background: {
     flex: 1,
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
-  }
+  },
 });
 
 export default LoadingScreen;

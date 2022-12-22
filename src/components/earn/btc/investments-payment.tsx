@@ -4,7 +4,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {formatPeriod} from '../../../utils/format-timestamp-period';
 import theme from '../../../theme';
 import CryptoAmountText from '../../text/crypto-amount-text';
-import makeRoundedBalance from '../../../utils/make-rounded-balance';
+import {makeFloorBalance} from '../../../utils/make-rounded-balance';
 import useTranslation from '../../../utils/use-translation';
 
 export interface InvestmentsPaymentProps {
@@ -21,7 +21,7 @@ const statusColors = {
   [WalletStakingRewardStatus.waiting]: theme.colors.textLightGray,
 };
 
-const cryptoPrecision = 4;
+const cryptoPrecision = 5;
 
 export function InvestmentsPayment({start, end, status, amount, ticker}: InvestmentsPaymentProps) {
   const {t} = useTranslation();
@@ -32,7 +32,7 @@ export function InvestmentsPayment({start, end, status, amount, ticker}: Investm
       <View style={styles.row}>
         <CryptoAmountText
           ticker={ticker}
-          value={makeRoundedBalance(cryptoPrecision, amount)}
+          value={makeFloorBalance(cryptoPrecision, amount)}
           style={textStyle}
           tickerStyle={textStyle}
         />

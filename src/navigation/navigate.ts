@@ -11,6 +11,6 @@ export async function navigate(name: any, params?: any) {
   if (navigationRef.current) {
     navigationRef.current.navigate(name, params);
   } else {
-    console.error('Invalid navigation')
+    console.error('Invalid navigation');
   }
 }

@@ -11,17 +11,19 @@ export interface ScreenHeaderProps {
   disableBackButton?: boolean;
   headerContainerStyle?: ViewStyle;
   titleContainerStyle?: ViewStyle;
+  backButtonStyle?: ViewStyle;
+  iconSize?: number;
 }
 
-export default function ScreenHeader(props: ScreenHeaderProps) {
-  const {
-    title,
-    controls,
-    headerContainerStyle,
-    titleContainerStyle,
-    disableBackButton
-  } = props;
-
+export default function ScreenHeader({
+  title,
+  controls,
+  headerContainerStyle,
+  titleContainerStyle,
+  disableBackButton,
+  backButtonStyle,
+  iconSize,
+}: ScreenHeaderProps) {
   const navigation = useNavigation();
 
   const onBackPress = useCallback(() => {
@@ -34,25 +36,25 @@ export default function ScreenHeader(props: ScreenHeaderProps) {
   return (
     <View style={{...styles.container, ...headerContainerStyle}}>
       {!disableBackButton && (
-        <TouchableOpacity style={{
-          ...styles.button,
-          ...styles.backButton,
-        }} onPress={onBackPress}>
-          <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
+        <TouchableOpacity
+          style={{
+            ...styles.button,
+            ...styles.backButton,
+            ...backButtonStyle,
+          }}
+          onPress={onBackPress}>
+          <CustomIcon name={'arrow'} size={iconSize || 20} color={theme.colors.textLightGray3} />
         </TouchableOpacity>
       )}
-      <View style={{
-        ...styles.headerContainer,
-        ...titleContainerStyle,
-        ...(!!disableBackButton ? {} : styles.headerContainerWithBackButton)
-      }}>
+      <View
+        style={{
+          ...styles.headerContainer,
+          ...titleContainerStyle,
+          ...(disableBackButton ? {} : styles.headerContainerWithBackButton),
+        }}>
         <Text style={styles.header}>{title}</Text>
       </View>
-      {!!controls && (
-        <View style={styles.controls}>
-          {controls}
-        </View>
-      )}
+      {!!controls && <View style={styles.controls}>{controls}</View>}
     </View>
   );
 }
@@ -69,8 +71,8 @@ const styles = StyleSheet.create({
       },
       android: {
         paddingTop: 36,
-      }
-    })
+      },
+    }),
   },
   button: {
     backgroundColor: theme.colors.grayDark,
@@ -107,5 +109,5 @@ const styles = StyleSheet.create({
   },
   headerContainerWithBackButton: {
     marginLeft: Layout.isSmallDevice ? -32 : -40,
-  }
+  },
 });

@@ -10,7 +10,7 @@ import {showFinish} from '@slavi/wallet-core/src/store/modules/initialization/in
 import {useDispatch, useSelector} from 'react-redux';
 import {store} from '@slavi/wallet-core';
 import InsertableTextArea from '../../../components/controls/insertable-text-area';
-import { selectMnemonicError } from '@slavi/wallet-core/src/store/modules/account/selectors';
+import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/selectors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
 import Layout from '../../../utils/layout';
@@ -23,7 +23,7 @@ const ImportAccountScreen = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const showConf = useCallback(() => setConfIsShown(true),[]);
+  const showConf = useCallback(() => setConfIsShown(true), []);
   const hideConf = useCallback(() => setConfIsShown(false), []);
 
   const updateMnemonic = useCallback(async () => {
@@ -32,7 +32,7 @@ const ImportAccountScreen = () => {
   }, [dispatch, mnemonic]);
 
   useEffect(() => {
-    dispatch(setMnemonicError(''))
+    dispatch(setMnemonicError(''));
   }, [dispatch, mnemonic]);
 
   return (
@@ -42,7 +42,7 @@ const ImportAccountScreen = () => {
           <Text style={styles.header}>{t('Import exists account')}</Text>
           <Text style={styles.description}>
             {t(
-              "Enter the secret phrase from another wallet. Usually it is 12, sometimes more, words separated by spaces",
+              'Enter the secret phrase from another wallet. Usually it is 12, sometimes more, words separated by spaces',
             )}
           </Text>
         </View>
@@ -56,14 +56,14 @@ const ImportAccountScreen = () => {
           visible={confIsShown}
           onCancel={hideConf}
           description={t(
-            'I saved the phrase outside the wallet and I understand that in case of loss I will not be able to restore access'
+            'I saved the phrase outside the wallet and I understand that in case of loss I will not be able to restore access',
           )}
         />
       </KeyboardAwareScrollView>
       <View style={styles.buttonsBlock}>
-        <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic}/>
+        <SolidButton title={t('Continue')} onPress={showConf} disabled={!mnemonic} />
         <View style={styles.loaderView}>
-          <PointerProgressBar stepsCount={6} activeStep={4}/>
+          <PointerProgressBar stepsCount={6} activeStep={4} />
         </View>
       </View>
     </InitializationBackground>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 20,
-  }
+  },
 });
 
 export default ImportAccountScreen;

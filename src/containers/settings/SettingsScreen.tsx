@@ -46,6 +46,8 @@ const SettingsScreen = () => {
     [navigation],
   );
 
+  const goToReferral = useCallback(() => navigation.navigate(ROUTES.SETTINGS.REFERRAL), [navigation]);
+
   const goToWalletConnect = useCallback(() => navigation.navigate(ROUTES.SETTINGS.WALLET_CONNECT), [navigation]);
 
   const goToSecurity = useCallback(() => {
@@ -64,29 +66,35 @@ const SettingsScreen = () => {
             <ListItem.Title style={styles.header}>{t('General')}</ListItem.Title>
           </ListItem.Content>
         </ListItem>
-        <ListItem key={3} bottomDivider onPress={goToLanguage} containerStyle={styles.listItem}>
+        <ListItem key={'language'} bottomDivider onPress={goToLanguage} containerStyle={styles.listItem}>
           <ListItem.Content style={styles.content}>
             <ListItem.Title style={styles.title}>{t('Language')}</ListItem.Title>
             <Text style={styles.subText}>{t(i18n.language as TranslationsKey)}</Text>
           </ListItem.Content>
           {chevron}
         </ListItem>
-        <ListItem key={4} bottomDivider onPress={goToCurrencyChange} containerStyle={styles.listItem}>
+        <ListItem key={'currency'} bottomDivider onPress={goToCurrencyChange} containerStyle={styles.listItem}>
           <ListItem.Content style={styles.content}>
             <ListItem.Title style={styles.title}>{t('Currency')}</ListItem.Title>
             <Text style={styles.subText}>{currentCurrency}</Text>
           </ListItem.Content>
           {chevron}
         </ListItem>
-        <ListItem key={5} bottomDivider onPress={goToInvalidateCache} containerStyle={styles.listItem}>
+        <ListItem key={'cache'} bottomDivider onPress={goToInvalidateCache} containerStyle={styles.listItem}>
           <ListItem.Content style={styles.content}>
             <ListItem.Title style={styles.title}>{t('Clear cache')}</ListItem.Title>
           </ListItem.Content>
           {chevron}
         </ListItem>
-        <ListItem key={6} bottomDivider onPress={goToNotificationSettings} containerStyle={styles.listItem}>
+        <ListItem key={'push'} bottomDivider onPress={goToNotificationSettings} containerStyle={styles.listItem}>
           <ListItem.Content style={styles.content}>
             <ListItem.Title style={styles.title}>{t('Push notifications')}</ListItem.Title>
+          </ListItem.Content>
+          {chevron}
+        </ListItem>
+        <ListItem key={'referral'} bottomDivider onPress={goToReferral} containerStyle={styles.listItem}>
+          <ListItem.Content style={styles.content}>
+            <ListItem.Title style={styles.title}>{t('referralTitle')}</ListItem.Title>
           </ListItem.Content>
           {chevron}
         </ListItem>
@@ -100,13 +108,13 @@ const SettingsScreen = () => {
             <ListItem.Title style={styles.header}>{t('Private')}</ListItem.Title>
           </ListItem.Content>
         </ListItem>
-        <ListItem key={1} bottomDivider onPress={goToMnemonicExport} containerStyle={styles.listItem}>
+        <ListItem key={'item_6'} bottomDivider onPress={goToMnemonicExport} containerStyle={styles.listItem}>
           <ListItem.Content>
             <ListItem.Title style={styles.title}>{t('Export mnemonic phrase')}</ListItem.Title>
           </ListItem.Content>
           {chevron}
         </ListItem>
-        <ListItem key={2} bottomDivider onPress={goToMnemonicImport} containerStyle={styles.listItem}>
+        <ListItem key={'item_7'} bottomDivider onPress={goToMnemonicImport} containerStyle={styles.listItem}>
           <ListItem.Content>
             <ListItem.Title style={styles.title}>{t('Import new mnemonic phrase')}</ListItem.Title>
           </ListItem.Content>

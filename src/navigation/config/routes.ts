@@ -10,6 +10,7 @@ const ROUTES = {
     IMPORT_MNEMONIC: 'Account/ImportMnemonic',
     CREATE_MNEMONIC: 'Account/CreateMnemonic',
     CONFIRM_MNEMONIC: 'Account/ConfirmMnemonic',
+    REFERRAL: 'Account/Referral',
   },
   TABS: {
     COINS: 'Tabs/Coins',
@@ -48,6 +49,7 @@ const ROUTES = {
     WALLET_CONNECT: 'Settings/WalletConnect',
     SECURITY: 'Settings/Security',
     AUTO_BLOCKING: 'Settings/AutoBlocking',
+    REFERRAL: 'Settings/Referral',
   },
   NOTIFICATION: {
     LIST: 'Notification/List',

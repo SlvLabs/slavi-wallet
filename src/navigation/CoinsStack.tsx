@@ -51,20 +51,20 @@ export interface CoinsStackParamList extends ParamListBase {
     network: string;
     contract: string;
     id: string;
-  },
+  };
   NftSend: {
     network: string;
     contract: string;
     id: string;
-  },
+  };
   NftSuccess: {
-    name: string,
-    from: string,
-    to: string,
-    amount?: string,
-    ticker?: string,
-    image?: string,
-  }
+    name: string;
+    from: string;
+    to: string;
+    amount?: string;
+    ticker?: string;
+    image?: string;
+  };
 }
 
 export type CoinInfoRouteProps = RouteProp<CoinsStackParamList, 'Info'>;
@@ -72,10 +72,7 @@ export type CoinReceiveRouteProps = RouteProp<CoinsStackParamList, 'Receive'>;
 export type CoinBuyRouteProps = RouteProp<CoinsStackParamList, 'BuyCoin'>;
 export type CoinBuyWebViewProps = RouteProp<CoinsStackParamList, 'BuyCoinWebView'>;
 export type CoinSendRouteProps = RouteProp<CoinsStackParamList, 'Send'>;
-export type CoinSuccessfullySendingRouteProps = RouteProp<
-  CoinsStackParamList,
-  'SuccessfullySending'
->;
+export type CoinSuccessfullySendingRouteProps = RouteProp<CoinsStackParamList, 'SuccessfullySending'>;
 export type NftInfoRouteProps = RouteProp<CoinsStackParamList, 'NftInfo'>;
 export type NftSendRouteProps = RouteProp<CoinsStackParamList, 'NftSend'>;
 export type NftSuccessRouteProps = RouteProp<CoinsStackParamList, 'NftSuccess'>;
@@ -84,80 +81,76 @@ const StackNavigator = createStackNavigator<CoinsStackParamList>();
 
 const CoinsStack = () => {
   const {t} = useTranslation();
-  return useMemo( () => (
-    <StackNavigator.Navigator
-      initialRouteName={ROUTES.COINS.LIST}
-      headerMode={'screen'}
-      screenOptions={defaultScreenOption}>
-      <StackNavigator.Screen
-        name={ROUTES.COINS.LIST}
-        component={CoinsListScreen}
-        options={{headerShown: false, headerTransparent: true}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.INFO}
-        component={CoinInfoScreen}
-        options={{title: t('Coin information')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.SEND}
-        component={SendScreen}
-        options={{title: t('Send coins')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.RECEIVE}
-        component={ReceiveScreen}
-        options={{title: t('Receive coins')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.BUY_COIN}
-        component={BuyCoinScreen}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.BUY_COIN_WEB_VIEW}
-        component={BuyCoinWebViewScreen}
-        options={({route}) => {
-          const params = route.params as CoinsStackParamList['BuyCoin'];
-          return {title: t('Buy') + (params?.ticker ? ' ' + params?.ticker : '')};
-        }}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.TOKEN_ADDING}
-        component={TokenAddingScreen}
-        options={{title: t('Add custom token')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.SUCCESSFULLY_SENDING}
-        component={SuccessfullySendingScreen}
-        options={{title: t('Send coins')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.COINS_SELECT}
-        component={CoinSelectListScreen}
-        options={{title: t('Select coin'), headerShown: false}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.NFT_INFO}
-        component={NftInfoScreen}
-        options={{header: () => (<ScreenHeader title={t('nftExplorer')} />)}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.NFT_SEND}
-        component={NftSendScreen}
-        options={{header: () => (<ScreenHeader title={t('nftSendTitle')} />)}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.NFT_SUCCESS}
-        component={NtfSuccessSendingScreen}
-        options={{headerShown: false}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.COINS.FULL_LIST}
-        component={CoinFullListScreen}
-        options={{headerShown: false}}
-      />
-    </StackNavigator.Navigator>
-  ), []);
+  return useMemo(
+    () => (
+      <StackNavigator.Navigator
+        initialRouteName={ROUTES.COINS.LIST}
+        headerMode={'screen'}
+        screenOptions={defaultScreenOption}>
+        <StackNavigator.Screen
+          name={ROUTES.COINS.LIST}
+          component={CoinsListScreen}
+          options={{headerShown: false, headerTransparent: true}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.INFO}
+          component={CoinInfoScreen}
+          options={{title: t('Coin information')}}
+        />
+        <StackNavigator.Screen name={ROUTES.COINS.SEND} component={SendScreen} options={{title: t('Send coins')}} />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.RECEIVE}
+          component={ReceiveScreen}
+          options={{title: t('Receive coins')}}
+        />
+        <StackNavigator.Screen name={ROUTES.COINS.BUY_COIN} component={BuyCoinScreen} />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.BUY_COIN_WEB_VIEW}
+          component={BuyCoinWebViewScreen}
+          options={({route}) => {
+            const params = route.params as CoinsStackParamList['BuyCoin'];
+            return {title: t('Buy') + (params?.ticker ? ' ' + params?.ticker : '')};
+          }}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.TOKEN_ADDING}
+          component={TokenAddingScreen}
+          options={{title: t('Add custom token')}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.SUCCESSFULLY_SENDING}
+          component={SuccessfullySendingScreen}
+          options={{title: t('Send coins')}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.COINS_SELECT}
+          component={CoinSelectListScreen}
+          options={{title: t('Select coin'), headerShown: false}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.NFT_INFO}
+          component={NftInfoScreen}
+          options={{header: () => <ScreenHeader title={t('nftExplorer')} />}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.NFT_SEND}
+          component={NftSendScreen}
+          options={{header: () => <ScreenHeader title={t('nftSendTitle')} />}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.NFT_SUCCESS}
+          component={NtfSuccessSendingScreen}
+          options={{headerShown: false}}
+        />
+        <StackNavigator.Screen
+          name={ROUTES.COINS.FULL_LIST}
+          component={CoinFullListScreen}
+          options={{headerShown: false}}
+        />
+      </StackNavigator.Navigator>
+    ),
+    [t],
+  );
 };
 
 export default CoinsStack;

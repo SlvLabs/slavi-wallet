@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import useTranslation from '../../../utils/use-translation';
 import {
   IWalletStakingUserStake,
-  WalletStakingRewardStatus, WalletStakingStatus,
+  WalletStakingStatus,
 } from '@slavi/wallet-core/src/providers/ws/messages/wallet-staking';
 import theme from '../../../theme';
 import CryptoAmountText from '../../text/crypto-amount-text';
@@ -11,7 +11,6 @@ import makeRoundedBalance from '../../../utils/make-rounded-balance';
 import OpeningButton from '../../buttons/opening-button';
 import {formatPeriod} from '../../../utils/format-timestamp-period';
 import {InvestmentsPayment} from './investments-payment';
-import Layout from '../../../utils/layout';
 
 export interface InvestmentsElementProps {
   ticker: string;
@@ -51,12 +50,14 @@ export function InvestmentsElement({ticker, paymentInfo}: InvestmentsElementProp
         />
       </View>
       <View style={styles.row}>
-        <Text style={{...styles.label, ...styles.upercase}}>{t('stakingApy')}</Text>
+        <Text style={styles.label}>{t('stakingApy')}</Text>
         <Text style={styles.text}>{makeRoundedBalance(percentPrecision, paymentInfo.percent)} %</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>{t('stakingStatus')}</Text>
-        <Text style={{...styles.text, color: statusColors[paymentInfo.status]}}>{t(`stakingStatus_${paymentInfo.status}`)}</Text>
+        <Text style={{...styles.text, color: statusColors[paymentInfo.status]}}>
+          {t(`stakingStatus_${paymentInfo.status}`)}
+        </Text>
       </View>
       {(!!paymentInfo.rewards && paymentInfo.rewards.length) > 0 && (
         <View>
@@ -123,9 +124,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     color: theme.colors.white,
-  },
-  upercase: {
-    textTransform: 'uppercase',
   },
   paymentsView: {
     marginTop: 24,

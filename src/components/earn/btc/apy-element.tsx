@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     fontSize: Layout.isSmallDevice ? 14 : 16,
     lineHeight: 19,
     color: theme.colors.gold2,
-    textTransform: 'uppercase',
   },
   leftColumn: {
     flexDirection: 'row',

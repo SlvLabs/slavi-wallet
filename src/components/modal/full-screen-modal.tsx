@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity, Platform,
-} from 'react-native';
+import {Modal, StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 import LinearGradient from 'react-native-linear-gradient';
@@ -42,19 +36,11 @@ const FullScreenModal = (props: FullScreenModalProps) => {
                 <CustomIcon name={'close'} size={24} color={defaultIconColor} />
               </TouchableOpacity>
             )}
-            <View style={styles.titleContainer}>
-              {props.title && <Text style={styles.title}>{props.title}</Text>}
-            </View>
+            <View style={styles.titleContainer}>{props.title && <Text style={styles.title}>{props.title}</Text>}</View>
             {props.rightIconName && (
-              <TouchableOpacity
-              style={styles.rightIcon}
-              onPress={props.rightIconOnPress}>
-                <CustomIcon
-                  name={props.rightIconName}
-                  size={24}
-                  color={props.rightIconColor || defaultIconColor}
-                />
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.rightIcon} onPress={props.rightIconOnPress}>
+                <CustomIcon name={props.rightIconName} size={24} color={props.rightIconColor || defaultIconColor} />
+              </TouchableOpacity>
             )}
           </View>
           {props.children}
@@ -69,9 +55,9 @@ const styles = StyleSheet.create({
     flex: 1,
     ...Platform.select({
       ios: {
-        paddingTop: Layout.isSmallDevice ? 20: 50,
+        paddingTop: Layout.isSmallDevice ? 20 : 50,
       },
-    })
+    }),
   },
   paddingContainer: {
     flex: 1,
@@ -89,12 +75,12 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
   },
   titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 11,
+    marginLeft: -64,
   },
   rightIcon: {
     padding: 16,

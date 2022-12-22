@@ -9,10 +9,10 @@ import {RouteProp} from '@react-navigation/native';
 import {OperationDetailsScreen} from '../containers/operations/operation-details-screen';
 
 export interface OperationsStackParamsList extends ParamListBase {
-  List: {},
+  List: {};
   Details: {
-    id: number,
-  }
+    id: number;
+  };
 }
 
 export type OperationListRouteProps = RouteProp<OperationsStackParamsList, 'List'>;
@@ -22,22 +22,22 @@ const StackNavigator = createStackNavigator<OperationsStackParamsList>();
 
 const OperationsStack = () => {
   const {t} = useTranslation();
-  return useMemo(() => (
-    <StackNavigator.Navigator
-      initialRouteName={ROUTES.OPERATIONS.LIST}
-      headerMode={'screen'}
-      screenOptions={defaultScreenOption}>
-      <StackNavigator.Screen
-        name={ROUTES.OPERATIONS.LIST}
-        component={OperationsListScreen}
-        options={{title: t('Operations history')}}
-      />
-      <StackNavigator.Screen
-        name={ROUTES.OPERATIONS.DETAILS}
-        component={OperationDetailsScreen}
-      />
-    </StackNavigator.Navigator>
-  ), []);
+  return useMemo(
+    () => (
+      <StackNavigator.Navigator
+        initialRouteName={ROUTES.OPERATIONS.LIST}
+        headerMode={'screen'}
+        screenOptions={defaultScreenOption}>
+        <StackNavigator.Screen
+          name={ROUTES.OPERATIONS.LIST}
+          component={OperationsListScreen}
+          options={{title: t('Operations history')}}
+        />
+        <StackNavigator.Screen name={ROUTES.OPERATIONS.DETAILS} component={OperationDetailsScreen} />
+      </StackNavigator.Navigator>
+    ),
+    [t],
+  );
 };
 
 export default OperationsStack;

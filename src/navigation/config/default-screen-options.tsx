@@ -1,5 +1,4 @@
 import {StackNavigationOptions} from '@react-navigation/stack/lib/typescript/src/types';
-import React from 'react';
 import theme from '../../theme';
 
 const defaultScreenOption: StackNavigationOptions = {
@@ -11,7 +10,7 @@ const defaultScreenOption: StackNavigationOptions = {
     shadowColor: theme.colors.black,
   },
   headerTintColor: theme.colors.white,
-  cardStyle: { backgroundColor: theme.colors.screenBackground },
+  cardStyle: {backgroundColor: theme.colors.screenBackground},
   headerShown: false,
 };
 

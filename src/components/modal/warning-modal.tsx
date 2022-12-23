@@ -11,20 +11,13 @@ export interface ConfirmationModalProps extends ModalProps {
 }
 
 export default function WarningModal(props: ConfirmationModalProps) {
-  const {
-    title,
-    description,
-    visible,
-    onCancel,
-    modalStyle,
-    contentStyle,
-  } = props;
+  const {title, description, visible, onCancel, modalStyle, contentStyle} = props;
 
   const {t} = useTranslation();
 
   const onPress = useCallback(() => {
     onCancel?.();
-  }, [onCancel])
+  }, [onCancel]);
 
   return (
     <BaseModal
@@ -34,14 +27,8 @@ export default function WarningModal(props: ConfirmationModalProps) {
       contentStyle={contentStyle}
       showCloseIcon={true}>
       <Text style={styles.header}>{title}</Text>
-      {!!description && (
-        <Text style={styles.description}>{description}</Text>
-      )}
-      <SolidButton
-        onPress={onPress}
-        title={t('OK')}
-        containerStyle={styles.button}
-      />
+      {!!description && <Text style={styles.description}>{description}</Text>}
+      <SolidButton onPress={onPress} title={t('OK')} containerStyle={styles.button} />
     </BaseModal>
   );
 }
@@ -67,5 +54,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 12,
-  }
+  },
 });

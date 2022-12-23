@@ -42,16 +42,20 @@ const AddressSelectorModal = (props: AddressSelectorModalProps) => {
     [props],
   );
 
-  useEffect(() => setFilteredAddresses(addresses.filter((element) =>
-      element.address.toLowerCase().includes(search.toLowerCase()) ||
-      element.name?.toLowerCase()?.includes(search.toLowerCase())
-    )), [addresses, search])
+  useEffect(
+    () =>
+      setFilteredAddresses(
+        addresses.filter(
+          element =>
+            element.address.toLowerCase().includes(search.toLowerCase()) ||
+            element.name?.toLowerCase()?.includes(search.toLowerCase()),
+        ),
+      ),
+    [addresses, search],
+  );
 
   return (
-    <FullScreenModal
-      visible={!!props.visible}
-      onCancel={props.onCancel}
-      hideCloseButton={true}>
+    <FullScreenModal visible={!!props.visible} onCancel={props.onCancel} hideCloseButton={true}>
       <View style={styles.headerView}>
         <TouchableOpacity style={{...styles.button, ...styles.backButton}} onPress={onCancel}>
           <CustomIcon name={'arrow'} size={20} color={theme.colors.textLightGray3} />
@@ -65,8 +69,7 @@ const AddressSelectorModal = (props: AddressSelectorModalProps) => {
           placeholder={t('Search...')}
           inputContainerStyle={styles.inputContainer}
           placeholderTextColor={theme.colors.textLightGray3}
-          icon={<CustomIcon name={'search'} size={22} color={theme.colors.textLightGray1}
-          />}
+          icon={<CustomIcon name={'search'} size={22} color={theme.colors.textLightGray1} />}
         />
       </View>
       <ScrollView style={styles.scroll}>

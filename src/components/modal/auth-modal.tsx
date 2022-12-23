@@ -30,7 +30,7 @@ export default function AuthModal(props: AuthModalProps) {
   const [pin, setPin] = useState<string>();
   const [touchIdIsAvailable, setTouchIdIsAvailable] = useState<boolean>(false);
   const [faceIdIsAvailable, setFaceIdIsAvailable] = useState<boolean>(false);
-  const [error, setError] = useState<string|undefined>();
+  const [error, setError] = useState<string | undefined>();
   const [errorTimer, setErrorTimer] = useState<number>(0);
   const [locked, setLocked] = useState<boolean>(false);
   const [restoreIsActive, setRestoreIsActive] = useState<boolean>(false);
@@ -41,31 +41,28 @@ export default function AuthModal(props: AuthModalProps) {
   const onBiometric = useCallback(async () => {
     const result = await authenticateAsync({disableDeviceFallback: true, cancelLabel: t('Cancel')});
 
-    if(result.success) {
+    if (result.success) {
       authService.authorize();
     }
   }, [authService]);
 
   const onBackspace = () => setPin(pin?.slice(0, -1));
   const onPress = (num: number) => {
-    if(locked) {
+    if (locked) {
       return;
     }
 
-    if(!pin || pin.length < PIN_LENGTH) {
+    if (!pin || pin.length < PIN_LENGTH) {
       setPin(!pin ? `${num}` : `${pin}${num}`);
     }
-  }
+  };
 
-  const onRestore = useCallback(
-    () => setRestoreIsActive(true),
-    []
-  );
+  const onRestore = useCallback(() => setRestoreIsActive(true), []);
 
-  const ban =  useCallback((banTime: number) => {
+  const ban = useCallback((banTime: number) => {
     setLocked(true);
 
-    if(timer.current) {
+    if (timer.current) {
       clearInterval(timer.current);
     }
     timerValue.current = banTime;
@@ -73,7 +70,7 @@ export default function AuthModal(props: AuthModalProps) {
     timer.current = setInterval(() => {
       timerValue.current--;
       setErrorTimer(timerValue.current);
-      if(timerValue.current === 0 && timer.current) {
+      if (timerValue.current === 0 && timer.current) {
         clearInterval(timer.current);
       }
     }, 1000);
@@ -87,9 +84,9 @@ export default function AuthModal(props: AuthModalProps) {
   const onDecline = useCallback(() => setRestoreIsActive(false), []);
 
   useEffect(() => {
-    if(pin && pin.length === PIN_LENGTH) {
+    if (pin && pin.length === PIN_LENGTH) {
       authService.checkPin(pin).then(result => {
-        if(result.success) {
+        if (result.success) {
           authService.authorize();
           return;
         }
@@ -101,7 +98,7 @@ export default function AuthModal(props: AuthModalProps) {
             setError(t('pinNotMatch'));
             break;
           case CheckAuthError.ban: {
-            if(result.time) {
+            if (result.time) {
               setErrorTimer(result.time);
               ban(result.time);
             }
@@ -113,18 +110,18 @@ export default function AuthModal(props: AuthModalProps) {
   }, [pin, t, ban]);
 
   useEffect(() => {
-    if(!authService) {
+    if (!authService) {
       return;
     }
 
     const result = authService.checkBan();
 
-    if(result.success) {
+    if (result.success) {
       setLocked(false);
       return;
     }
 
-    if(result.error === CheckAuthError.ban && result.time) {
+    if (result.error === CheckAuthError.ban && result.time) {
       setLocked(true);
       setErrorTimer(result.time);
       ban(result.time);
@@ -132,8 +129,8 @@ export default function AuthModal(props: AuthModalProps) {
   }, [authService, ban]);
 
   useEffect(() => {
-    supportedAuthenticationTypesAsync().then((types => {
-      if(authService.isBiometricEnable()) {
+    supportedAuthenticationTypesAsync().then(types => {
+      if (authService.isBiometricEnable()) {
         if (types.includes(AuthenticationType.FACIAL_RECOGNITION)) {
           setFaceIdIsAvailable(true);
         }
@@ -142,11 +139,11 @@ export default function AuthModal(props: AuthModalProps) {
           setTouchIdIsAvailable(true);
         }
       }
-    }));
+    });
   }, [authService]);
 
   useEffect(() => {
-    if(errorTimer && errorTimer > 0) {
+    if (errorTimer && errorTimer > 0) {
       setLocked(true);
       setError(`${t('tooMatchErrors')} ${errorTimer}`);
     } else {
@@ -156,56 +153,53 @@ export default function AuthModal(props: AuthModalProps) {
   }, [errorTimer]);
 
   useEffect(() => {
-    if(error) {
+    if (error) {
       setError(undefined);
     }
   }, [pin]);
 
   useEffect(() => {
-    if(!visible) {
+    if (!visible) {
       setPin('');
     }
   }, [visible]);
 
   return (
-    <Modal
-      animationType={'none'}
-      visible={visible && authService.isAuthEnable()}
-      statusBarTranslucent={true}>
+    <Modal animationType={'none'} visible={visible && authService.isAuthEnable()} statusBarTranslucent={true}>
       <View style={styles.container}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradient}>
           {loading ? (
             <Spinner />
+          ) : !restoreIsActive ? (
+            <>
+              <PinInput
+                length={PIN_LENGTH}
+                enteredCount={pin?.length || 0}
+                label={t('pinLabel')}
+                onPress={onPress}
+                onBiometricPress={onBiometric}
+                onRestorePress={onRestore}
+                onBackspacePress={onBackspace}
+                faceIdIsAvailable={faceIdIsAvailable}
+                touchIdIsAvailable={touchIdIsAvailable}
+                restoreIsAvailable={true}
+                disabled={locked}
+              />
+              <Text style={styles.error}>
+                {error} {!!errorTimer}
+              </Text>
+            </>
           ) : (
-            !restoreIsActive ? (
-              <>
-                <PinInput
-                  length={PIN_LENGTH}
-                  enteredCount={pin?.length || 0}
-                  label={t('pinLabel')}
-                  onPress={onPress}
-                  onBiometricPress={onBiometric}
-                  onRestorePress={onRestore}
-                  onBackspacePress={onBackspace}
-                  faceIdIsAvailable={faceIdIsAvailable}
-                  touchIdIsAvailable={touchIdIsAvailable}
-                  restoreIsAvailable={true}
-                  disabled={locked}
-                />
-                <Text style={styles.error}>{error} {!!errorTimer}</Text>
-              </>
-            ) : (
-              <>
-                <View style={styles.textContainer}>
-                  <Text style={styles.header}>{t('restoreHeader')}</Text>
-                  <Text style={styles.description}>{t('restoreDescription')}</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <SolidButton title={t('restoreAccept')} onPress={onAccept} containerStyle={styles.button} />
-                  <OutlineButton title={t('restoreDecline')} onPress={onDecline} containerStyle={styles.button} />
-                </View>
-              </>
-            )
+            <>
+              <View style={styles.textContainer}>
+                <Text style={styles.header}>{t('restoreHeader')}</Text>
+                <Text style={styles.description}>{t('restoreDescription')}</Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <SolidButton title={t('restoreAccept')} onPress={onAccept} containerStyle={styles.button} />
+                <OutlineButton title={t('restoreDecline')} onPress={onDecline} containerStyle={styles.button} />
+              </View>
+            </>
           )}
         </RadialGradient>
       </View>

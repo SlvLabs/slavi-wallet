@@ -33,6 +33,7 @@ import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import {unsetRequireTimeFix} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
 import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
+import {useAppExit} from './hooks/use-app-exit';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -289,6 +290,8 @@ const App: () => ReactNode = () => {
   }, []);
 
   const authLoading = useAutoBlock(services.current.authService);
+
+  useAppExit();
 
   return (
     <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>

@@ -621,6 +621,7 @@ const translations = {
   referralCodeDescription2: 'paste this code and claim rewards',
   referralTelegramsLink: 'https://telegram.org/',
   referralDiscordLink: 'https://discord.com/',
+  backExit: 'For exit press back button again',
 };
 
 export default translations;

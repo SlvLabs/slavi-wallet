@@ -27,7 +27,8 @@ const FullScreenModal = (props: FullScreenModalProps) => {
     <Modal
       animationType={props.animationType || defaultAnimation}
       visible={isAuth && props.visible}
-      statusBarTranslucent={true}>
+      statusBarTranslucent={true}
+      onRequestClose={props.onCancel}>
       <LinearGradient {...theme.gradients.screenBackground} style={styles.container}>
         <View style={styles.paddingContainer}>
           <View style={styles.header}>

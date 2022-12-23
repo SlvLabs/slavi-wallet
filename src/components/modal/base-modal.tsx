@@ -1,12 +1,4 @@
-import {
-  Dimensions,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Dimensions, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 import React from 'react';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
@@ -25,29 +17,40 @@ export interface BaseModalProps extends ModalProps {
   children?: React.ReactNode;
 }
 
-const BaseModal = (props: BaseModalProps) => {
+const BaseModal = ({modalStyle, showCloseIcon, contentStyle, header, onCancel, children, visible}: BaseModalProps) => {
   const isAuth = useSelectIsAuthorized();
 
   const content = (
-    <View style={{...styles.modalView, ...props.modalStyle}} >
+    <View style={{...styles.modalView, ...modalStyle}}>
       <TouchableWithoutFeedback>
-        <View style={{...styles.modalContent, ...props.contentStyle}}>
-          {!!props.showCloseIcon && (
+        <View style={{...styles.modalContent, ...contentStyle}}>
+          {!!showCloseIcon && (
             <View style={styles.closeButtonRow}>
-              {props.header}
-              <CustomIcon name={'close'} size={24} color={theme.colors.textLightGray3} onPress={props.onCancel} style={styles.closeIcon}/>
+              {header}
+              <CustomIcon
+                name={'close'}
+                size={24}
+                color={theme.colors.textLightGray3}
+                onPress={onCancel}
+                style={styles.closeIcon}
+              />
             </View>
           )}
-          {props.children}
+          {children}
         </View>
       </TouchableWithoutFeedback>
     </View>
   );
 
   return (
-    <Modal animationType="fade" transparent={true} visible={isAuth && props.visible} statusBarTranslucent={true}>
-      {props.onCancel ? (
-        <TouchableOpacity style={styles.centeredView} onPress={props.onCancel}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isAuth && visible}
+      statusBarTranslucent={true}
+      onRequestClose={onCancel}>
+      {onCancel ? (
+        <TouchableOpacity style={styles.centeredView} onPress={onCancel}>
           {content}
         </TouchableOpacity>
       ) : (

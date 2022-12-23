@@ -1,4 +1,4 @@
-import {InteractionManager, StyleSheet, Text, View} from 'react-native';
+import {InteractionManager, Platform, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback} from 'react';
 import {ListItem} from 'react-native-elements';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
@@ -11,7 +11,7 @@ import Screen from '../../components/screen';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 import {useDeleteAccount} from '../../hooks/useDeleteAccount';
 import {useLogout} from '../../hooks/useLogout';
-import {getReadableVersion} from 'react-native-device-info';
+import {getReadableVersion, getVersion} from 'react-native-device-info';
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22} />;
 
@@ -135,7 +135,9 @@ const SettingsScreen = () => {
           </ListItem.Content>
         </ListItem>
         <View style={styles.versionView}>
-          <Text style={styles.version}>{`${t('version')}: ${getReadableVersion()}`}</Text>
+          <Text style={styles.version}>{`${t('version')}: ${
+            Platform.OS === 'ios' ? getReadableVersion() : getVersion()
+          }`}</Text>
         </View>
       </KeyboardAwareScrollView>
       {deleteAccountModal}

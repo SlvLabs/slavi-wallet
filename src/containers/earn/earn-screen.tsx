@@ -26,6 +26,7 @@ const stableCoins: CoinFromEarnableList[] = [
 
 const EarnScreen = () => {
   const [isListDisplayMode, setListDisplayMode] = useState<boolean>(false);
+  const [inDev, setInDev] = useState<boolean>(false);
 
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -73,9 +74,11 @@ const EarnScreen = () => {
     [stakableCoins, onStakeCoinPress, isListDisplayMode, onStableCoinPress],
   );
 
+  const onIndexChange = useCallback((index: number) => setInDev(index !== 0), []);
+
   return (
     <Screen
-      title={`${t('earn')} (${t('inProgress')})`}
+      title={inDev ? `${t('earn')} (${t('inProgress')})` : t('earn')}
       controls={
         <TouchableOpacity style={styles.button} onPress={switchDisplayMode}>
           <CustomIcon name={isListDisplayMode ? 'Category' : 'lines'} size={20} color={theme.colors.textLightGray3} />
@@ -83,7 +86,11 @@ const EarnScreen = () => {
       }
       headerContainerStyle={styles.headerContainer}
       titleContainerStyle={styles.headerTitleContainer}>
-      {isLoading ? <Spinner /> : <WrappedTabView renderScene={renderScene} routes={routes} />}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <WrappedTabView renderScene={renderScene} routes={routes} onIndexChange={onIndexChange} />
+      )}
     </Screen>
   );
 };

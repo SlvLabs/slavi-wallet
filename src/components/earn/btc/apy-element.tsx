@@ -20,11 +20,11 @@ export function ApyElement({logo, value, ticker, containerStyle}: ApyElementProp
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.mainBlock}>
         <View style={styles.leftColumn}>
-          <Image source={getImageSource(logo)} style={styles.logo}/>
+          <Image source={getImageSource(logo)} style={styles.logo} />
           <Text style={styles.label}>{`${t('stakingStaking')} ${ticker}`}</Text>
         </View>
         <View style={styles.rightColumn}>
-          <Text style={styles.apy}>{`${value}% ${t('stakingApy')}`}</Text>
+          <Text style={styles.apy}>{`${value}% ${t('stakingApyElement')}`}</Text>
         </View>
       </View>
       <Text style={styles.description}>{t('stakingApyDescription', {ticker: ticker})}</Text>
@@ -82,5 +82,5 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     opacity: 0.7,
     marginTop: 8,
-  }
+  },
 });

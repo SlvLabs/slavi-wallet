@@ -19,6 +19,7 @@ export interface RouteData extends Route {
 export interface WrappedTabViewProps {
   routes: RouteData[];
   renderScene: (data: WrappedSceneRendererProps<RouteData>) => ReactNode;
+  onIndexChange?: (index: number) => void;
 }
 
 export interface WrappedTabViewHandle {
@@ -26,7 +27,7 @@ export interface WrappedTabViewHandle {
 }
 
 const WrappedTabView: ForwardRefRenderFunction<WrappedTabViewHandle, WrappedTabViewProps> = (
-  {routes, renderScene},
+  {routes, renderScene, onIndexChange},
   ref,
 ) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
@@ -37,11 +38,21 @@ const WrappedTabView: ForwardRefRenderFunction<WrappedTabViewHandle, WrappedTabV
     },
   }));
 
+  const _onIndexChange = useCallback(
+    (index: number) => {
+      setTabIndex(index);
+      if (onIndexChange) {
+        onIndexChange(index);
+      }
+    },
+    [onIndexChange],
+  );
+
   const renderTabBar = useCallback(
     (props: WrappedTabBarRendererProps<RouteData>) => (
-      <TabsBar<any> sceneRendererProps={props} tabIndex={tabIndex} setTabIndex={setTabIndex} />
+      <TabsBar<any> sceneRendererProps={props} tabIndex={tabIndex} setTabIndex={_onIndexChange} />
     ),
-    [tabIndex],
+    [_onIndexChange, tabIndex],
   );
 
   return (
@@ -49,7 +60,7 @@ const WrappedTabView: ForwardRefRenderFunction<WrappedTabViewHandle, WrappedTabV
       navigationState={{index: tabIndex, routes}}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
-      onIndexChange={setTabIndex}
+      onIndexChange={_onIndexChange}
       lazy={true}
     />
   );

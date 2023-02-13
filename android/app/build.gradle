@@ -138,8 +138,8 @@ android {
         applicationId "com.defiwalletmobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
-        versionName "1.12.5"
+        versionCode 17
+        versionName "1.14.3"
         multiDexEnabled true
         resValue "string", "build_config_package", "com.defiwalletmobile"
         missingDimensionStrategy 'react-native-camera', 'general'

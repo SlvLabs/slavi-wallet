@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: Layout.isSmallDevice ? 4 : 30,
     flex: 1,
     justifyContent: 'flex-end',
+    marginTop: 20,
   },
   header: {
     fontFamily: theme.fonts.default,

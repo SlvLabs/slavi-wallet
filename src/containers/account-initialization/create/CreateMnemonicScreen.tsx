@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   textBlock: {
     marginBottom: Layout.isSmallDevice ? 15 : 30,
     flex: 1,
+    marginTop: 20,
   },
   header: {
     alignSelf: 'center',

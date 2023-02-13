@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 48,
     height: 48,
+    borderRadius: 24,
   },
   row: {
     flexDirection: 'row',

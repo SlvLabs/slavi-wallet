@@ -6,7 +6,6 @@ import useTranslation from '../../../utils/use-translation';
 import CryptoAmountText from '../../text/crypto-amount-text';
 import Layout from '../../../utils/layout';
 import makeRoundedBalance from '../../../utils/make-rounded-balance';
-import NumberText from '../../text/number-text';
 
 export interface BalanceHeaderProps {
   ticker: string;
@@ -41,10 +40,10 @@ export function BalanceHeader({
   return (
     <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.mainRow}>
-        <Image source={getImageSource(logo)} style={styles.logo}/>
+        <Image source={getImageSource(logo)} style={styles.logo} />
         <View style={styles.content}>
           <View style={styles.leftColumn}>
-            <Text style={styles.name}>{`${t('stakingAvailableHeader')} ${ticker}`}</Text>
+            <Text style={styles.name}>{t('stakingAvailableHeader')}</Text>
             {fiatRate && (
               <View style={styles.row}>
                 <Text style={styles.rate}>{`1 ${ticker} = ${fiatSymbol}`}</Text>
@@ -58,7 +57,12 @@ export function BalanceHeader({
             )}
           </View>
           <View style={styles.rightColumn}>
-            <NumberText value={makeRoundedBalance(cryptoPrecision, balance)} style={styles.balance} />
+            <CryptoAmountText
+              ticker={ticker}
+              value={makeRoundedBalance(cryptoPrecision, balance)}
+              style={styles.balance}
+              tickerStyle={styles.balance}
+            />
             <View style={styles.row}>
               <Text style={styles.fiatBalance}>≈</Text>
               <CryptoAmountText

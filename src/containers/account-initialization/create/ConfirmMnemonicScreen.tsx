@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     color: theme.colors.white,
     marginBottom: Layout.isSmallDevice ? 8 : 20,
+    textAlign: 'center',
   },
   description: {
     fontFamily: theme.fonts.default,

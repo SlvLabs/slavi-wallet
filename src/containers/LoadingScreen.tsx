@@ -8,7 +8,7 @@ import theme from '../theme';
 import RadialGradient from 'react-native-radial-gradient';
 import {Animated} from 'react-native';
 import Lottie from 'lottie-react-native';
-import {loadingNewYearAnimation} from '../assets/annimation';
+import {loadingAnimation} from '../assets/annimation';
 import Layout from '../utils/layout';
 
 const POINT_COUNT = 4;
@@ -42,7 +42,7 @@ const LoadingScreen = () => {
       <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientAlt}>
         <RadialGradient style={styles.gradient} {...theme.gradients.radialLoadingGradientBottom}>
           <View style={styles.logoView}>
-            <Lottie source={loadingNewYearAnimation} autoPlay={true} loop={false} style={styles.logo} />
+            <Lottie source={loadingAnimation} autoPlay={true} loop={false} style={styles.logo} />
           </View>
           <View style={styles.bottomText}>
             <View style={styles.welcomeView}>

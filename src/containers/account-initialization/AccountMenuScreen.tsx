@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     color: theme.colors.white,
     marginBottom: 20,
+    textAlign: 'center',
   },
   description: {
     alignSelf: 'center',

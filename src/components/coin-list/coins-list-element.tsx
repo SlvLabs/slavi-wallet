@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 36,
     height: 36,
+    borderRadius: 18,
   },
   col1: {
     justifyContent: 'center',

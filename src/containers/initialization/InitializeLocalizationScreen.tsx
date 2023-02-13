@@ -1,7 +1,5 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
-// @ts-ignore
-import RadialGradient from 'react-native-radial-gradient';
 import theme from '../../theme';
 import {simpleLogo} from '../../assets/images';
 import useTranslation from '../../utils/use-translation';
@@ -17,6 +15,7 @@ import {useCurrencyLists, useCurrencyService} from '@slavi/wallet-core';
 import useLanguageService from '@slavi/wallet-core/src/contexts/hooks/use-language-service';
 import mapArrayToSelectOptions from '../../utils/map-array-to-select-options';
 import Layout from '../../utils/layout';
+import objectMap from '@slavi/wallet-core/src/utils/object-map';
 
 const InitializeLocalizationScreen = () => {
   const {languages, isLoading: isLoadingLanguages} = useLanguages();
@@ -28,64 +27,72 @@ const InitializeLocalizationScreen = () => {
   const currencyService = useCurrencyService();
 
   const [lang, setLang] = useState<string>(i18n.language);
-  const [currency, setCurrency] = useState<string>(startCurrency || 'USD')
+  const [currency, setCurrency] = useState<string>(startCurrency || 'USD');
 
-  const onLanguageSelect = useCallback(async (value: string) => {
-    setLang(value);
-    await languageService.setCurrentLanguage(value);
-    return i18n.changeLanguage(value);
-  }, [i18n, languageService]);
+  const onLanguageSelect = useCallback(
+    async (value: string) => {
+      setLang(value);
+      await languageService.setCurrentLanguage(value);
+      return i18n.changeLanguage(value);
+    },
+    [i18n, languageService],
+  );
 
-  const onCurrencySelect = useCallback(async (value: string) => {
-    setCurrency(value);
-    return currencyService.setFiat(value);
-  }, []);
+  const onCurrencySelect = useCallback(
+    async (value: string) => {
+      setCurrency(value);
+      return currencyService.setFiat(value);
+    },
+    [currencyService],
+  );
 
-  const goNextStep = useCallback(() => navigation.navigate(ROUTES.INITIALIZATION.LICENSE_AGREEMENT), []);
+  const goNextStep = useCallback(() => navigation.navigate(ROUTES.INITIALIZATION.LICENSE_AGREEMENT), [navigation]);
 
   const languageOptions: Record<string, string> | undefined = useMemo(
-    () => mapArrayToSelectOptions(languages), [languages]
+    () => objectMap(mapArrayToSelectOptions(languages), l => t(l)),
+    [languages, t],
   );
 
   const currencyOptions: Record<string, string> | undefined = useMemo(
-    () => mapArrayToSelectOptions(fiatList), [fiatList]
-   );
+    () => mapArrayToSelectOptions(fiatList),
+    [fiatList],
+  );
 
   return (
     <InitializationBackground>
-        <View style={styles.logoView}>
-          <Image source={simpleLogo} style={styles.logo} />
+      <View style={styles.logoView}>
+        <Image source={simpleLogo} style={styles.logo} />
+      </View>
+      <View style={styles.textBlock}>
+        <Text style={styles.header}>{t('Convenient system')}</Text>
+        <Text style={styles.description}>
+          {t('We offer you a convenient system that will help solve all your problems with cryptocurrency')}
+        </Text>
+      </View>
+      <View style={styles.formBlock}>
+        <SimpleSelect
+          onSelect={onLanguageSelect}
+          value={lang}
+          options={languageOptions}
+          label={t('Language')}
+          isLoading={isLoadingLanguages}
+          containerStyle={styles.select}
+        />
+        <SimpleSelect
+          onSelect={onCurrencySelect}
+          value={currency}
+          options={currencyOptions}
+          label={t('Currency')}
+          isLoading={isLoadingCurrency}
+          containerStyle={styles.select}
+        />
+      </View>
+      <View style={styles.buttonsView}>
+        <SolidButton title={t('Continue')} onPress={goNextStep} />
+        <View style={styles.loaderView}>
+          <PointerProgressBar stepsCount={6} activeStep={0} />
         </View>
-        <View style={styles.textBlock}>
-          <Text style={styles.header}>{t('Convenient system')}</Text>
-          <Text style={styles.description}>
-            {t('We offer you a convenient system that will help solve all your problems with cryptocurrency')}
-          </Text>
-        </View>
-        <View style={styles.formBlock}>
-          <SimpleSelect
-            onSelect={onLanguageSelect}
-            value={lang}
-            options={languageOptions}
-            label={t('Language')}
-            isLoading={isLoadingLanguages}
-            containerStyle={styles.select}
-          />
-          <SimpleSelect
-            onSelect={onCurrencySelect}
-            value={currency}
-            options={currencyOptions}
-            label={t('Currency')}
-            isLoading={isLoadingCurrency}
-            containerStyle={styles.select}
-          />
-        </View>
-        <View style={styles.buttonsView}>
-          <SolidButton title={t('Continue')} onPress={goNextStep}/>
-          <View style={styles.loaderView}>
-            <PointerProgressBar stepsCount={6} activeStep={0}/>
-          </View>
-        </View>
+      </View>
     </InitializationBackground>
   );
 };
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
     color: theme.colors.dark1,
   },
   buttonsView: {
-    marginTop: Layout.isSmallDevice ? 4: 16,
+    marginTop: Layout.isSmallDevice ? 4 : 16,
     justifyContent: 'flex-end',
     flex: 1,
   },
@@ -147,7 +154,7 @@ const styles = StyleSheet.create({
   },
   select: {
     padding: Layout.isSmallDevice ? 8 : 16,
-  }
+  },
 });
 
 export default InitializeLocalizationScreen;

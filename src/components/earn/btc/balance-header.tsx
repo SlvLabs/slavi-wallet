@@ -6,6 +6,7 @@ import useTranslation from '../../../utils/use-translation';
 import CryptoAmountText from '../../text/crypto-amount-text';
 import Layout from '../../../utils/layout';
 import makeRoundedBalance from '../../../utils/make-rounded-balance';
+import NumberText from '../../text/number-text';
 
 export interface BalanceHeaderProps {
   ticker: string;
@@ -57,12 +58,7 @@ export function BalanceHeader({
             )}
           </View>
           <View style={styles.rightColumn}>
-            <CryptoAmountText
-              ticker={ticker}
-              value={makeRoundedBalance(cryptoPrecision, balance)}
-              style={styles.balance}
-              tickerStyle={styles.balance}
-            />
+            <NumberText value={makeRoundedBalance(cryptoPrecision, balance)} style={styles.balance} />
             <View style={styles.row}>
               <Text style={styles.fiatBalance}>≈</Text>
               <CryptoAmountText

@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     color: theme.colors.white,
     marginBottom: 20,
+    textAlign: 'center',
   },
   description: {
     fontFamily: theme.fonts.default,

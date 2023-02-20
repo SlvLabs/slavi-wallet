@@ -8,6 +8,8 @@
 
 #import <React/RCTLinkingManager.h>
 
+#import <RNFBDynamicLinksAppDelegateInterceptor.h>
+
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -31,6 +33,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [RNFBDynamicLinksAppDelegateInterceptor sharedInstance];
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }

@@ -33,6 +33,7 @@ import {TimeFixRequiredModal} from './components/modal/time-fix-required-modal';
 import {unsetRequireTimeFix} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {BlurView} from '@react-native-community/blur';
 import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
+import {saveReferral} from './utils/save-utm-interval';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -74,6 +75,12 @@ const App: () => ReactNode = () => {
   });
 
   store.subscribe(() => {
+    if (store.getState().initialization.finishShow) {
+      services.current.utmService?.post().catch(e => {
+        console.log((e as Error).message);
+        console.log(e.stack);
+      });
+    }
     setInitFinishShow(store.getState().initialization.finishShow);
   });
 
@@ -160,6 +167,7 @@ const App: () => ReactNode = () => {
   );
 
   const onLoadInitial = useCallback(() => {
+    saveReferral(services.current.utmService);
     setInitialLoaded(true);
     const authService = services.current.authService;
     if (authService) {

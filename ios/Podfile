@@ -25,6 +25,8 @@ target 'slaviWalletMobile' do
 
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+  pod 'RNFBDynamicLinks', :path => '../node_modules/@react-native-firebase/dynamic-links'
+
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)

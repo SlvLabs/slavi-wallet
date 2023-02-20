@@ -47,6 +47,9 @@ PODS:
   - Firebase/Crashlytics (9.6.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 9.6.0)
+  - Firebase/DynamicLinks (9.6.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 9.6.0)
   - Firebase/Messaging (9.6.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 9.6.0)
@@ -94,6 +97,8 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (~> 2.1)
+  - FirebaseDynamicLinks (9.6.0):
+    - FirebaseCore (~> 9.0)
   - FirebaseInstallations (9.6.0):
     - FirebaseCore (~> 9.0)
     - GoogleUtilities/Environment (~> 7.7)
@@ -578,6 +583,11 @@ PODS:
     - FirebaseCoreExtension (= 9.6.0)
     - React-Core
     - RNFBApp
+  - RNFBDynamicLinks (15.7.0):
+    - Firebase/DynamicLinks (= 9.6.0)
+    - GoogleUtilities/AppDelegateSwizzler
+    - React-Core
+    - RNFBApp
   - RNFBMessaging (15.7.0):
     - Firebase/Messaging (= 9.6.0)
     - FirebaseCoreExtension (= 9.6.0)
@@ -730,6 +740,7 @@ DEPENDENCIES:
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
+  - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBPerf (from `../node_modules/@react-native-firebase/perf`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -755,6 +766,7 @@ SPEC REPOS:
     - FirebaseCoreExtension
     - FirebaseCoreInternal
     - FirebaseCrashlytics
+    - FirebaseDynamicLinks
     - FirebaseInstallations
     - FirebaseMessaging
     - FirebasePerformance
@@ -907,6 +919,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBCrashlytics:
     :path: "../node_modules/@react-native-firebase/crashlytics"
+  RNFBDynamicLinks:
+    :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBPerf:
@@ -957,6 +971,7 @@ SPEC CHECKSUMS:
   FirebaseCoreExtension: e83465d1236b166d1d445bbf0e82b65acb30b73b
   FirebaseCoreInternal: bca76517fe1ed381e989f5e7d8abb0da8d85bed3
   FirebaseCrashlytics: 3210572ddb77801e5a0bd9d7bc890769f2066a0c
+  FirebaseDynamicLinks: 894ee3b4e56a77abee067d371c9a23e7b5a3c686
   FirebaseInstallations: 0a115432c4e223c5ab20b0dbbe4cbefa793a0e8e
   FirebaseMessaging: a4d7910e4af663c9cbfc1071c5bef34651690949
   FirebasePerformance: f1e62598cd98c88ce6c10e0d26223d18b85c26d6
@@ -1027,6 +1042,7 @@ SPEC CHECKSUMS:
   RNFBAnalytics: 9b5790e2b3d96c11ae1c02be6430e778f11801ed
   RNFBApp: c3c9e694e9d34c14250a069916eb05785c5f3c32
   RNFBCrashlytics: bb410a988e8660fbbe5a7032ff4ecec267dbd4f7
+  RNFBDynamicLinks: 1f67ac77c9abd806f3abf4716f85411fac00d24c
   RNFBMessaging: a006029b26c2d7b34c93c45ff1b8fedb5fae35d5
   RNFBPerf: 789e745a88bc520bcab1fcc9e6cc80d3c9aaa6aa
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
@@ -1044,6 +1060,6 @@ SPEC CHECKSUMS:
   Yoga: b316a990bb6d115afa1b436b5626ac7c61717d17
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: dd0a7501afa52e66cf8c3daf17f6c3a8cf38851d
+PODFILE CHECKSUM: 2e38e23d8878bf507ce94e02dfb4e704eefb6ef8
 
 COCOAPODS: 1.11.3

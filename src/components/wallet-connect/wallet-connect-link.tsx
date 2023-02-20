@@ -8,38 +8,41 @@ import parse from 'url-parse';
 export default function WalletConnectLink({loading}: {loading: boolean}) {
   const walletConnectService = useWalletConnectService();
 
-  const [lastEvent, setLastEvent] = useState<EventType|null>(null);
+  const [lastEvent, setLastEvent] = useState<EventType | null>(null);
 
   const eventHandler = useCallback((ev: EventType) => {
     console.log(ev);
     setLastEvent(ev);
   }, []);
 
-  const handleOpenURL = useCallback((ev: EventType|null) => {
-    let url;
-    if(loading || !ev) {
-      return;
-    }
-    console.log(ev);
-    if(ev.url && walletConnectService) {
-      const parsedUrl = parse(ev.url, true);
-      switch (parsedUrl.protocol) {
-        case 'https:':
-          url = parsedUrl.query?.uri;
-          break;
-        case 'wc:':
-          url = ev.url;
-          break;
-        default:
-          throw new Error('Invalid url protocol');
+  const handleOpenURL = useCallback(
+    (ev: EventType | null) => {
+      let url;
+      if (loading || !ev) {
+        return;
       }
+      console.log(ev);
+      if (ev.url && walletConnectService) {
+        const parsedUrl = parse(ev.url, true);
+        switch (parsedUrl.protocol) {
+          case 'https:':
+            url = parsedUrl.query?.uri;
+            break;
+          case 'wc:':
+            url = ev.url;
+            break;
+          default:
+            throw new Error('Invalid url protocol');
+        }
 
-      setLastEvent(null);
-      if(url) {
-        walletConnectService.connect(url);
+        setLastEvent(null);
+        if (url) {
+          walletConnectService.connect(url);
+        }
       }
-    }
-  }, [walletConnectService, loading]);
+    },
+    [walletConnectService, loading],
+  );
 
   useEffect(() => {
     Linking.addEventListener('url', eventHandler);
@@ -48,18 +51,20 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
   }, [eventHandler]);
 
   useEffect(() => {
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleOpenURL({url: url});
-      }
-    }).catch(err => {
-      console.warn('An error occurred', err);
-    });
+    Linking.getInitialURL()
+      .then(url => {
+        if (url) {
+          handleOpenURL({url: url});
+        }
+      })
+      .catch(err => {
+        console.warn('An error occurred', err);
+      });
   }, [loading, handleOpenURL]);
 
   useEffect(() => {
-    handleOpenURL(lastEvent)
-  }, [lastEvent, handleOpenURL])
+    handleOpenURL(lastEvent);
+  }, [lastEvent, handleOpenURL]);
 
   return <></>;
 }

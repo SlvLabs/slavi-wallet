@@ -1,4 +1,10 @@
 rootProject.name = 'slaviWalletMobile'
+include ':@react-native-firebase_dynamic-links'
+project(':@react-native-firebase_dynamic-links').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/dynamic-links/android')
+include ':@react-native-firebase_dynamic-links'
+project(':@react-native-firebase_dynamic-links').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/dynamic-links/android')
+include ':@react-native-firebase_dynamic-links'
+project(':@react-native-firebase_dynamic-links').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/dynamic-links/android')
 include ':react-native-share'
 project(':react-native-share').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-share/android')
 include ':@react-native-firebase_perf'

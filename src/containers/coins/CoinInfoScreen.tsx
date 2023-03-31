@@ -57,7 +57,7 @@ const CoinInfoScreen = () => {
       navigation.navigate(ROUTES.TABS.SWAP, {
         screen: ROUTES.SWAP.MAIN,
         params: {
-          network: data.parent,
+          network: data.parent ?? coin,
           srcCoin: coin,
         },
       });

@@ -28,41 +28,40 @@ export function OperationSwap({operation}: OperationSwapProps) {
     <ContainerOperation explorerLink={operation.explorerLink}>
       <RowOperation
         label={t('detailsAmount')}
-        content={(
+        content={
           <View>
-            {operation.data?.dstAmount && <AmountOperation
-              amount={operation.data.dstAmount}
-              ticker={srcCoin?.ticker}
-              type={Type.positive}
-            />}
-            {operation.data?.srcAmount && <AmountOperation
-              amount={`-${operation.data.srcAmount}`}
-              ticker={dstCoin?.ticker}
-              type={Type.negative}
-            />}
+            {operation.data?.dstAmount && (
+              <AmountOperation amount={operation.data.dstAmount} ticker={dstCoin?.ticker} type={Type.positive} />
+            )}
+            {operation.data?.srcAmount && (
+              <AmountOperation amount={`-${operation.data.srcAmount}`} ticker={srcCoin?.ticker} type={Type.negative} />
+            )}
           </View>
-        )}
+        }
       />
       {!!operation.rate && (
         <RowOperation
           label={t('detailsRate')}
-          content={<RateOperation rate={operation.rate} srcTicker={srcCoin?.ticker!} dstTicker={dstCoin?.ticker!}/>}
+          content={<RateOperation rate={operation.rate} srcTicker={srcCoin?.ticker!} dstTicker={dstCoin?.ticker!} />}
         />
       )}
-      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created}/>}/>
-      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status}/>}/>
-      {operation.commission && <RowOperation
-        label={t('detailsTransactionFee')}
-        content={(
-          <AmountOperation
-            amount={operation.commission}
-            ticker={coin?.ticker}
-            type={Type.negative}
-          />
-        )}
-      />}
-      {!!operation.toAddress && <RowOperation label={t('detailsReceivedTo')} content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name}/>}/>}
-      {!!coin?.id && <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />}
+      <RowOperation label={t('detailsDate')} content={<DateOperation timestamp={operation.created} />} />
+      <RowOperation label={t('detailsStatus')} content={<OperationStatus status={operation.status} />} />
+      {operation.commission && (
+        <RowOperation
+          label={t('detailsTransactionFee')}
+          content={<AmountOperation amount={operation.commission} ticker={coin?.ticker} type={Type.negative} />}
+        />
+      )}
+      {!!operation.toAddress && (
+        <RowOperation
+          label={t('detailsReceivedTo')}
+          content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name} />}
+        />
+      )}
+      {!!coin?.id && (
+        <RowOperation label={t('detailsBlockchain')} isLast={true} content={<NetworkOperation coinId={coin.id} />} />
+      )}
     </ContainerOperation>
   );
 }

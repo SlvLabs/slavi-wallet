@@ -94,7 +94,7 @@ const SettingsScreen = () => {
         </ListItem>
         <ListItem key={'referral'} bottomDivider onPress={goToReferral} containerStyle={styles.listItem}>
           <ListItem.Content style={styles.content}>
-            <ListItem.Title style={styles.title}>{t('referralTitle')}</ListItem.Title>
+            <ListItem.Title style={{...styles.title, ...styles.highlightedTitle}}>{t('referralTitle')}</ListItem.Title>
           </ListItem.Content>
           {chevron}
         </ListItem>
@@ -170,6 +170,9 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     lineHeight: 22,
     color: theme.colors.white,
+  },
+  highlightedTitle: {
+    color: theme.colors.gold2,
   },
   header: {
     fontFamily: theme.fonts.default,

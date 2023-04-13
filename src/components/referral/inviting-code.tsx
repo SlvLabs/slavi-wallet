@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     paddingBottom: 18,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   code: {
     fontFamily: theme.fonts.gilroy,
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     textAlign: 'center',
     flex: 5,
-    marginRight: -43,
   },
   copy: {
     fontFamily: theme.fonts.default,
@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     color: theme.colors.darkGreen1,
     textTransform: 'uppercase',
     textAlign: 'right',
-    flex: 1,
+    position: 'absolute',
+    right: 20,
+    top: 18,
   },
 });

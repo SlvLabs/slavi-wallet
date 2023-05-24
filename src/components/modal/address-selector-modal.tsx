@@ -13,6 +13,7 @@ export interface AddressEntry {
   address: string;
   name?: string;
   balance?: string;
+  baseBalance?: string;
 }
 
 export interface AddressSelectorModalProps extends ModalProps {
@@ -24,6 +25,7 @@ export interface AddressSelectorModalProps extends ModalProps {
   iconSize?: number;
   iconColor?: string;
   titleStyle?: TextStyle;
+  baseTicker?: string;
 }
 
 const AddressSelectorModal = (props: AddressSelectorModalProps) => {
@@ -70,6 +72,7 @@ const AddressSelectorModal = (props: AddressSelectorModalProps) => {
           inputContainerStyle={styles.inputContainer}
           placeholderTextColor={theme.colors.textLightGray3}
           icon={<CustomIcon name={'search'} size={22} color={theme.colors.textLightGray1} />}
+          iconLeft={true}
         />
       </View>
       <ScrollView style={styles.scroll}>
@@ -78,6 +81,7 @@ const AddressSelectorModal = (props: AddressSelectorModalProps) => {
           onPressElement={onSelect}
           placeholderTextStyle={styles.searchPlaceholder}
           ticker={props.ticker}
+          baseTicker={props.baseTicker}
         />
       </ScrollView>
     </FullScreenModal>
@@ -87,7 +91,6 @@ const AddressSelectorModal = (props: AddressSelectorModalProps) => {
 const styles = StyleSheet.create({
   searchContainer: {
     padding: 16,
-    paddingTop: 8,
   },
   icon: {
     flex: 1,

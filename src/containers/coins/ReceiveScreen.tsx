@@ -13,6 +13,9 @@ import AddressView from '../../components/coin-receive/address-view';
 import Layout from '../../utils/layout';
 import useTranslation from '../../utils/use-translation';
 import ScrollableScreen from '../../components/scrollable-screen';
+import Screen from '../../components/screen';
+import Spinner from '../../components/spinner';
+import {useAddressBalance} from '@slavi/wallet-core/src/providers/ws/hooks/use-address-balance';
 
 const ReceiveScreen = () => {
   const route = useRoute<CoinReceiveRouteProps>();
@@ -32,15 +35,15 @@ const ReceiveScreen = () => {
 
   const specService = useCoinSpecsService();
 
-  const addresses = useAllInnerAddressesSelector(coin).sort(
-    (a, b) => b.shift - a.shift,
-  );
+  const addresses = useAllInnerAddressesSelector(coin).sort((a, b) => b.shift - a.shift);
 
   const [id, setId] = useState<number | undefined>(addresses?.[0].id);
   const [address, setAddress] = useState<string | undefined>(addresses?.[0].address);
   const [addressName, setAddressName] = useState<string | undefined>(addresses?.[0].name);
 
   const innerBookService = useInnerAddressBookService();
+
+  const {balance, fiatBalance, btcBalance, fiat, crypto, isLoading} = useAddressBalance(coin, address);
 
   const ref = useRef<AddressesCarouselHandle>(null);
 
@@ -62,7 +65,7 @@ const ReceiveScreen = () => {
     async (name?: string) => {
       const newEntity = await innerBookService.getNewRecvAddress(coin, name?.trim() || '');
 
-      if(ref.current) {
+      if (ref.current) {
         ref.current.snapById(newEntity.id);
       }
     },
@@ -74,7 +77,7 @@ const ReceiveScreen = () => {
       if (id && address) {
         const newEntity = await innerBookService.createOrUpdateEntry({id, address, name: name?.trim() || '', coin});
 
-        if(ref.current) {
+        if (ref.current) {
           ref.current.snapById(newEntity.id);
         }
       }
@@ -82,47 +85,51 @@ const ReceiveScreen = () => {
     [address, coin, id, innerBookService],
   );
 
+  if (isLoading) {
+    return (
+      <Screen title={t('Receive coins')} contentStyle={styles.spinnerContainer}>
+        <Spinner />
+      </Screen>
+    );
+  }
+
   return (
     <ScrollableScreen title={t('Receive coins')} contentStyle={styles.container}>
-        <CoinBalanceHeader
-          logo={data.logo}
-          balance={data.balance}
-          name={data.name}
-          cryptoBalance={data.cryptoBalance}
-          cryptoTicker={data.crypto}
-          fiatBalance={data.fiatBalance}
-          fiatTicker={data.fiat}
-          type={data.type}
-          ticker={data.ticker}
-        />
-        <AddressesCarousel
-          addresses={addresses.map(element => ({
-            address: element.address,
-            name: element.name,
-            id: element.id,
-          }))}
-          qrSize={Layout.isSmallDevice ? 170 : 190}
-          onDataChange={onQrChange}
-          amount={amount}
-          coin={specService.getSpec(coin)?.bip21Name || ''}
-          onSnapToItem={onSnapToItem}
-          onEdit={editRecvAddr}
-          ref={ref}
-        />
-        <AddressView address={address || ''} name={addressName} ticker={data.ticker} containerStyle={styles.address}/>
-        <ReceiveControlButtons
-          address={address || ''}
-          dataToShare={qr}
-          editAddress={editRecvAddr}
-          editAmount={onAmountChange}
-          containerStyle={styles.receiveControlButtons}
-          addressName={addressName}
-        />
-        <EditAddressButton
-          title={t('Get new address')}
-          nameInputLabel={'Address name'}
-          onSubmit={getNewRecvAddr}
-        />
+      <CoinBalanceHeader
+        logo={data.logo}
+        balance={balance}
+        name={data.name}
+        cryptoBalance={btcBalance}
+        cryptoTicker={crypto}
+        fiatBalance={fiatBalance}
+        fiatTicker={fiat}
+        type={data.type}
+        ticker={data.ticker}
+      />
+      <AddressesCarousel
+        addresses={addresses.map(element => ({
+          address: element.address,
+          name: element.name,
+          id: element.id,
+        }))}
+        qrSize={Layout.isSmallDevice ? 170 : 190}
+        onDataChange={onQrChange}
+        amount={amount}
+        coin={specService.getSpec(coin)?.bip21Name || ''}
+        onSnapToItem={onSnapToItem}
+        onEdit={editRecvAddr}
+        ref={ref}
+      />
+      <AddressView address={address || ''} name={addressName} ticker={data.ticker} containerStyle={styles.address} />
+      <ReceiveControlButtons
+        address={address || ''}
+        dataToShare={qr}
+        editAddress={editRecvAddr}
+        editAmount={onAmountChange}
+        containerStyle={styles.receiveControlButtons}
+        addressName={addressName}
+      />
+      <EditAddressButton title={t('Get new address')} nameInputLabel={'Address name'} onSubmit={getNewRecvAddr} />
     </ScrollableScreen>
   );
 };
@@ -138,7 +145,13 @@ const styles = StyleSheet.create({
   },
   address: {
     marginTop: Layout.isSmallDevice ? 24 : 32,
-  }
+  },
+  spinnerContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default ReceiveScreen;

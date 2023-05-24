@@ -44,13 +44,23 @@ export function WalletStakingEarnScreen() {
       tabsRef.current.switchTo(1);
     }
   }, []);
+
   const showAddresses = route.params?.showAddresses ?? false;
+
+  const disabled = route.params?.disabled ?? false;
 
   const renderScene = useCallback(
     ({route: tabRoute}: WrappedSceneRendererProps<RouteData>) => {
       switch (tabRoute.key) {
         case 'deposit':
-          return <DepositTab coinDetails={coinDetails} onSuccess={toInvestementsTab} showAddresses={showAddresses} />;
+          return (
+            <DepositTab
+              coinDetails={coinDetails}
+              onSuccess={toInvestementsTab}
+              showAddresses={showAddresses}
+              disabled={disabled}
+            />
+          );
         case 'investements':
           return <InvestmentsTab coinDetails={coinDetails} forceReload={forceReload} showAddress={showAddresses} />;
         default:

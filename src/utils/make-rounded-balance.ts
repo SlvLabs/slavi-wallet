@@ -1,4 +1,5 @@
 import PreparedDecimal, {Decimal80} from '@slavi/wallet-core/src/utils/prepared-decimal';
+import Decimal from "decimal.js";
 
 const makeRoundedBalance = (round: number, balance?: string | number, limit?: string | number): string => {
   if (typeof balance === 'undefined') {
@@ -22,6 +23,18 @@ export const makeFloorBalance = (round: number, balance?: string | number, limit
     return '~0';
   }
   return balanceValue.toDecimalPlaces(round).toString();
+};
+
+export const makeCeilBalance = (round: number, balance?: string | number, limit?: string | number): string => {
+  if (typeof balance === 'undefined') {
+    return '';
+  }
+
+  const balanceValue = new Decimal80(balance || 0);
+  if (!balanceValue.eq(0) && limit && balanceValue.abs().lessThan(new Decimal80(limit))) {
+    return '~0';
+  }
+  return balanceValue.toDecimalPlaces(round, Decimal.ROUND_CEIL).toString();
 };
 
 export default makeRoundedBalance;

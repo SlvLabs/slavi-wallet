@@ -756,6 +756,7 @@ const SwapScreen = () => {
             onSelect={onAddressSelect}
             selectedAddress={addressIndex}
             ticker={srcTicker || ''}
+            baseTicker={feeTicker}
           />
         </View>
         <View style={styles.priceView}>

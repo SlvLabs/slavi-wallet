@@ -15,7 +15,7 @@ import ROUTES from '../../navigation/config/routes';
 import {useNavigation} from '@react-navigation/native';
 import NftMintConfirmation from '../nft/nft-mint-confirmation';
 import theme from '../../theme';
-import makeRoundedBalance from '../../utils/make-rounded-balance';
+import makeRoundedBalance, {makeCeilBalance} from '../../utils/make-rounded-balance';
 import Layout from '../../utils/layout';
 
 export interface RuleProps {
@@ -61,7 +61,6 @@ export function NftMintRule({attributes}: RuleProps) {
       setLoading(true);
       setGeneralError(undefined);
       try {
-        console.log({attributes, fromAddress});
         const result = await pattern.mintRef(attributes, fromAddress, {
           transactionPriority: TransactionPriority.average,
         });
@@ -121,7 +120,8 @@ export function NftMintRule({attributes}: RuleProps) {
         addresses={balancesState.balances}
         onSelect={setSenderIndex}
         selectedAddress={senderIndex}
-        ticker={coinDetails.ticker}>
+        ticker={coinDetails.ticker}
+        baseTicker={coinDetails.parentTicker}>
         <Text style={styles.balanceLabel}>
           {`${t('balance')}: ${makeRoundedBalance(6, selectedBalance)} ${coinDetails.ticker}`}
         </Text>
@@ -132,6 +132,9 @@ export function NftMintRule({attributes}: RuleProps) {
         loading={loading}
         style={styles.button}
       />
+      <Text style={styles.feeText}>
+        {t('referralClaimFee', {amount: makeCeilBalance(3, attributes.networkFee), ticker: coinDetails.ticker})}
+      </Text>
       <Text style={styles.error}>{generalError}</Text>
       {!!tx && (
         <NftMintConfirmation
@@ -181,5 +184,15 @@ const styles = StyleSheet.create({
     color: theme.colors.red,
     marginTop: 16,
     textAlign: 'center',
+  },
+  feeText: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 18,
+    color: theme.colors.lightGray,
+    marginTop: 12,
+    alignSelf: 'center',
   },
 });

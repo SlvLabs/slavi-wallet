@@ -249,8 +249,7 @@ const translations = {
   'Please try restart application. The developers will be grateful if you report this error to support support@slavicoin.io':
     'Please try restart application. The developers will be grateful if you report this error to support support@slavicoin.io',
   Percent: 'Percent',
-  'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.':
-    'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
+  serverInsufficientFunds: 'Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
   'Can not create transaction. absurdly high fee.': 'Can not create transaction. absurdly high fee.',
   'Amount less then rent': 'Amount less then rent',
   'Address will be rented per epoch after transaction. Balance less then':
@@ -624,11 +623,15 @@ const translations = {
   nftMintConfTitle: 'Are you sure you want to mint following NFT?',
   nftMintFee: 'Calculated fee',
   backExit: 'For exit press back button again',
+  referralClaimFee: 'Claim fee - {{amount}} {{ticker}}',
 
   //---
 
   paymentAddress: 'Payment address',
   insufficientFundsForCommission: 'Not enough balance for paying commission',
+  stakingEventEnded: 'Event ended',
+  baseBalance: '{{ticker}} Balance: {{balance}}',
+  insufficientBaseBalance: 'Insufficient {{coin}} balance to pay TX fees',
 };
 
 export default translations;

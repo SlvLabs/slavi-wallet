@@ -1,16 +1,7 @@
 import React, {ReactNode, useCallback, useMemo, useState} from 'react';
-import {
-  StyleSheet,
-  ViewStyle,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, ViewStyle, Text, TextStyle, TouchableOpacity, View} from 'react-native';
 import theme from '../../theme';
-import AddressSelectorModal, {
-  AddressEntry,
-} from '../modal/address-selector-modal';
+import AddressSelectorModal, {AddressEntry} from '../modal/address-selector-modal';
 import useTranslation from '../../utils/use-translation';
 import CustomIcon from '../custom-icon/custom-icon';
 
@@ -26,6 +17,7 @@ export interface AddressSelectorProps {
   textStyle?: TextStyle;
   disabled?: boolean;
   children?: ReactNode;
+  baseTicker?: string;
 }
 
 const AddressSelector = (props: AddressSelectorProps) => {
@@ -39,29 +31,22 @@ const AddressSelector = (props: AddressSelectorProps) => {
   let text = props.placeholder;
   let textStyle = {...styles.placeholder, ...props.placeholderStyle};
 
-  if (
-    typeof props.selectedAddress !== 'undefined' &&
-    props.addresses[props.selectedAddress]
-  ) {
-    text =
-      props.addresses[props.selectedAddress].name ||
-      props.addresses[props.selectedAddress].address;
+  if (typeof props.selectedAddress !== 'undefined' && props.addresses[props.selectedAddress]) {
+    text = props.addresses[props.selectedAddress].name || props.addresses[props.selectedAddress].address;
     textStyle = {...styles.text, ...props.textStyle};
   }
 
-  const containerStyle = useMemo(() =>
-    props.disabled ?
-      {...styles.container, ...props.containerStyle, ...styles.disabledContainer} :
-      {...styles.container, ...props.containerStyle},
-    [props.containerStyle, props.disabled]);
+  const containerStyle = useMemo(
+    () =>
+      props.disabled
+        ? {...styles.container, ...props.containerStyle, ...styles.disabledContainer}
+        : {...styles.container, ...props.containerStyle},
+    [props.containerStyle, props.disabled],
+  );
 
   return (
     <View>
-      <TouchableOpacity
-        style={containerStyle}
-        onPress={showModal}
-        disabled={props.disabled}
-      >
+      <TouchableOpacity style={containerStyle} onPress={showModal} disabled={props.disabled}>
         <View style={styles.row}>
           <View style={styles.textContainer}>
             {props.label && (
@@ -69,11 +54,13 @@ const AddressSelector = (props: AddressSelectorProps) => {
                 <Text style={styles.label}>{props.label}</Text>
               </View>
             )}
-            <Text style={textStyle}>{text}</Text>
+            <Text style={textStyle} numberOfLines={1} ellipsizeMode={'middle'}>
+              {text}
+            </Text>
           </View>
           <CustomIcon name={'arrow'} size={18} color={theme.colors.textLightGray1} style={styles.icon} />
         </View>
-        {props.children}
+        {/*{props.children}*/}
       </TouchableOpacity>
       <AddressSelectorModal
         addresses={props.addresses}
@@ -83,6 +70,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
         title={t('Select address')}
         onSelect={props.onSelect}
         ticker={props.ticker}
+        baseTicker={props.baseTicker}
       />
     </View>
   );
@@ -139,9 +127,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   icon: {
-    transform: [{
-      rotate: '90deg',
-    }],
+    transform: [
+      {
+        rotate: '90deg',
+      },
+    ],
     marginRight: 8,
   },
 });

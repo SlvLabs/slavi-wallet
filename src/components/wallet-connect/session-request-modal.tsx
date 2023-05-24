@@ -3,7 +3,7 @@ import BaseModal from '../modal/base-modal';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {
   useSelectCoinsForWalletConnect,
-  useSelectWalletConnectSessionRequest
+  useSelectWalletConnectSessionRequest,
 } from '@slavi/wallet-core/src/store/modules/wallet-connect/selectors';
 import useTranslation from '../../utils/use-translation';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
@@ -18,7 +18,7 @@ import NetworkSelector, {NetworkData, NetworksOptions} from '../swap/network-sel
 
 export default function WalletConnectSessionRequestModal() {
   const [coin, setCoin] = useState<CoinForWalletConnect>();
-  const [account, setAccount] = useState<string>()
+  const [account, setAccount] = useState<string>();
   const [accountIndex, setAccountIndex] = useState<number>(0);
   const [error, setError] = useState<string>();
 
@@ -29,38 +29,38 @@ export default function WalletConnectSessionRequestModal() {
   const balancesState = useAddressesBalance(coin?.id);
 
   const onApprove = useCallback(() => {
-    if(sessionRequest.peerId && coin && account) {
+    if (sessionRequest.peerId && coin && account) {
       // TODO: Catch exception and set error
-      walletConnectService.approveSession(
-        sessionRequest.peerId,
-        coin.chainId,
-        account,
-      );
+      walletConnectService.approveSession(sessionRequest.peerId, coin.chainId, account);
     } else {
       setError(t('walletAccountNotSet'));
     }
   }, [walletConnectService, sessionRequest, coin, account]);
 
   const onReject = useCallback(() => {
-    if(sessionRequest.peerId) {
+    if (sessionRequest.peerId) {
       // TODO: Catch exception and set error
       walletConnectService.rejectSession(sessionRequest.peerId);
     }
   }, [walletConnectService, sessionRequest]);
 
-  const chainSelectOptions: NetworksOptions = useMemo(() => coins.reduce<Record<string, NetworkData>>((acc, coin) => {
-    acc[coin.id] = {
-      name: coin.name,
-      logo: coin.logo,
-      id: coin.id,
-    };
-    return acc;
-  }, {}), [coins]);
+  const chainSelectOptions: NetworksOptions = useMemo(
+    () =>
+      coins.reduce<Record<string, NetworkData>>((acc, coin) => {
+        acc[coin.id] = {
+          name: coin.name,
+          logo: coin.logo,
+          id: coin.id,
+        };
+        return acc;
+      }, {}),
+    [coins],
+  );
 
   useEffect(() => {
-    if(sessionRequest.chainId) {
+    if (sessionRequest.chainId) {
       const _coin = coins.find(element => element.chainId === sessionRequest.chainId);
-      if(_coin) {
+      if (_coin) {
         setCoin(_coin);
       } else {
         setError(t('unsupportedChainId'));
@@ -69,22 +69,22 @@ export default function WalletConnectSessionRequestModal() {
   }, [sessionRequest.chainId, coins]);
 
   useEffect(() => {
-    if(!sessionRequest.active) {
+    if (!sessionRequest.active) {
       setAccount(undefined);
       setError(undefined);
     }
   }, [sessionRequest.active]);
 
   useEffect(() => {
-    if(!balancesState.isLoading && balancesState?.balances?.[accountIndex]?.address) {
+    if (!balancesState.isLoading && balancesState?.balances?.[accountIndex]?.address) {
       setAccount(balancesState?.balances?.[accountIndex]?.address);
     }
-  },  [accountIndex, balancesState]);
+  }, [accountIndex, balancesState]);
 
   return (
     <BaseModal contentStyle={styles.container} visible={sessionRequest.active} onCancel={onReject}>
       <Text style={styles.header}>{t('walletConnectSessionHeader')}</Text>
-      <Image source={{uri: sessionRequest.icon}} style={styles.logo}/>
+      <Image source={{uri: sessionRequest.icon}} style={styles.logo} />
       <Text style={styles.name}>{sessionRequest.peerName}</Text>
       <Text style={styles.uri}>{sessionRequest.peerUrl}</Text>
       {!sessionRequest.chainId ? (
@@ -98,10 +98,7 @@ export default function WalletConnectSessionRequestModal() {
       ) : (
         !!coin && (
           <View style={styles.fixedNetworkContainer}>
-            <Image
-              source={getImageSource(coin?.logo)}
-              style={styles.coinLogo}
-            />
+            <Image source={getImageSource(coin?.logo)} style={styles.coinLogo} />
             <View>
               <Text style={styles.networkLabel}>{t('walletNetwork')}</Text>
               <Text style={styles.networkName}>{coin?.name}</Text>
@@ -117,6 +114,7 @@ export default function WalletConnectSessionRequestModal() {
         onSelect={setAccountIndex}
         selectedAddress={accountIndex}
         ticker={coin?.ticker || ''}
+        baseTicker={coin?.parentTicker || undefined}
       />
       <View style={styles.errorContainer}>
         <Text style={styles.error}>{error}</Text>
@@ -128,10 +126,7 @@ export default function WalletConnectSessionRequestModal() {
           containerStyle={styles.topButton}
           disabled={!!error || !account}
         />
-        <OutlineButton
-          title={t('walletConnectReject')}
-          onPress={onReject}
-        />
+        <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
     </BaseModal>
   );

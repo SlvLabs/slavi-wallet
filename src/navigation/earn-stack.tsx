@@ -12,6 +12,7 @@ export interface EarnStackParamList extends ParamListBase {
   Investment: {
     coin: string;
     showAddresses: boolean;
+    disabled: boolean;
   };
 }
 

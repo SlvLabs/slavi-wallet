@@ -35,9 +35,10 @@ export interface DepositTabProps {
   coinDetails: CoinDetails;
   onSuccess: () => void;
   showAddresses: boolean;
+  disabled?: boolean;
 }
 
-export function DepositTab({coinDetails, onSuccess, showAddresses}: DepositTabProps) {
+export function DepositTab({coinDetails, onSuccess, showAddresses, disabled}: DepositTabProps) {
   const [amount, setAmount] = useState<string>('0.00');
   const [receiverPaysFee, setReceiverPaysFee] = useState<boolean>(false);
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
@@ -248,6 +249,7 @@ export function DepositTab({coinDetails, onSuccess, showAddresses}: DepositTabPr
           onSelect={setSenderIndex}
           selectedAddress={senderIndex}
           ticker={coinDetails.ticker}
+          baseTicker={coinDetails.parentTicker}
         />
       )}
       <BalanceHeader
@@ -289,11 +291,11 @@ export function DepositTab({coinDetails, onSuccess, showAddresses}: DepositTabPr
       />
       {!!error && <AlertRow text={error} />}
       <SolidButton
-        title={t('stakingStake', {ticker: coinDetails.ticker})}
+        title={disabled ? t('stakingEventEnded') : t('stakingStake', {ticker: coinDetails.ticker})}
         containerStyle={styles.submitButton}
         loading={buttonLock}
         onPress={submit}
-        disabled={!!error || isAmountChecking}
+        disabled={disabled || !!error || isAmountChecking}
       />
       <ConfirmStakeModal
         visible={confIsShown}

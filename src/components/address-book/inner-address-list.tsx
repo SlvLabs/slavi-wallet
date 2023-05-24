@@ -1,13 +1,6 @@
 import React from 'react';
 import {AddressEntry} from '../modal/address-selector-modal';
-import {
-  StyleSheet,
-  View,
-  ViewStyle,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, ViewStyle, Text, TextStyle, TouchableOpacity} from 'react-native';
 import InnerAddressElement from './inner-address-element';
 import {Icon} from 'react-native-elements';
 import theme from '../../theme';
@@ -16,6 +9,7 @@ import useTranslation from '../../utils/use-translation';
 export interface InnerAddressListProps {
   addresses: AddressEntry[];
   ticker: string;
+  baseTicker?: string;
   onPressElement: (index: number) => void;
   containerStyle?: ViewStyle;
   placeholderContainerStyle?: ViewStyle;
@@ -35,14 +29,14 @@ const InnerAddressList = (props: InnerAddressListProps) => {
       {!!props.addresses && props.addresses.length > 0 ? (
         <View style={styles.listContainer}>
           {props.addresses.map((element, index) => (
-            <TouchableOpacity
-              onPress={() => props.onPressElement(index)}
-              key={`address_${index}`}>
+            <TouchableOpacity onPress={() => props.onPressElement(index)} key={`address_${index}`}>
               <InnerAddressElement
                 name={element.name}
                 address={element.address}
                 balance={element.balance}
                 ticker={props.ticker}
+                baseTicker={props.baseTicker}
+                baseBalance={element.baseBalance}
               />
             </TouchableOpacity>
           ))}
@@ -59,10 +53,7 @@ const InnerAddressList = (props: InnerAddressListProps) => {
             size={props.placeholderSize || defaultPlaceholderSize}
             color={props.placeholderColor || defaultPlaceholderColor}
           />
-          <Text
-            style={{...styles.placeholderText, ...props.placeholderTextStyle}}>
-            {t('Addresses not found')}
-          </Text>
+          <Text style={{...styles.placeholderText, ...props.placeholderTextStyle}}>{t('Addresses not found')}</Text>
         </View>
       )}
     </View>

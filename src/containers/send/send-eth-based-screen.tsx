@@ -176,14 +176,11 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
         });
       } catch (e) {
         if (e instanceof InsufficientFunds) {
-          let text = t(
-            'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
-          );
-
           if (coinDetails.parent && e.coin === coinDetails.parent) {
-            text += ` (${coinDetails.parentName})`;
+            setError(t('insufficientBaseBalance', {coin: coinDetails.parentName}));
+          } else {
+            setError(t('serverInsufficientFunds'));
           }
-          setError(text);
         } else {
           setLocked(false);
           if (e instanceof InvalidGasPrice) {
@@ -283,6 +280,7 @@ const SendEthBasedScreen = (props: SendEthScreenProps) => {
           onSelect={setSenderIndex}
           selectedAddress={senderIndex}
           ticker={coinDetails.ticker}
+          baseTicker={coinDetails.parentTicker}
         />
         <SendView
           readQr={() => setActiveQR(true)}

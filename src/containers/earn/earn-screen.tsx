@@ -29,7 +29,11 @@ const EarnScreen = () => {
       if (coin.inDevelopment) {
         Toast.showWithGravity(t('inDevelopment'), Toast.LONG, Toast.CENTER);
       } else {
-        navigation.navigate(ROUTES.EARN.INVESTMENT, {coin: coin.id, showAddresses: coin.showAddressesForStakingScreen});
+        navigation.navigate(ROUTES.EARN.INVESTMENT, {
+          coin: coin.id,
+          showAddresses: coin.showAddressesForStakingScreen,
+          disabled: coin.disabledTypes.length > 0,
+        });
       }
     },
     [navigation, t],

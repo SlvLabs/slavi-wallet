@@ -38,6 +38,7 @@ export interface SimpleInputProps {
   disableErrorStyle?: boolean;
   skipDisabledStyle?: boolean;
   textAlign?: 'left' | 'center' | 'right';
+  bottomText?: string;
 }
 
 const SimpleInput = (props: SimpleInputProps) => {
@@ -98,34 +99,37 @@ const SimpleInput = (props: SimpleInputProps) => {
           ...props.inputContainerStyle,
         }}>
         {props.iconLeft && IconElement}
-        <View style={styles.leftCol}>
-          {!!props.label && <Text style={styles.label}>{props.label}</Text>}
-          <TextInput
-            onChangeText={props.onChange}
-            value={props.value}
-            placeholder={props.placeholder}
-            style={{...styles.input, ...props.inputStyle}}
-            selectTextOnFocus={true}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            keyboardType={props.keyboardType}
-            placeholderTextColor={props.placeholderTextColor}
-            returnKeyType={props.returnKeyType}
-            editable={!props.disabled}
-            ref={_input => {
-              if (input) {
-                input.current = _input;
-              }
-            }}
-            textAlign={props.textAlign}
-          />
+        <View style={styles.row}>
+          <View style={styles.leftCol}>
+            {!!props.label && <Text style={styles.label}>{props.label}</Text>}
+            <TextInput
+              onChangeText={props.onChange}
+              value={props.value}
+              placeholder={props.placeholder}
+              style={{...styles.input, ...props.inputStyle}}
+              selectTextOnFocus={true}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              keyboardType={props.keyboardType}
+              placeholderTextColor={props.placeholderTextColor}
+              returnKeyType={props.returnKeyType}
+              editable={!props.disabled}
+              ref={_input => {
+                if (input) {
+                  input.current = _input;
+                }
+              }}
+              textAlign={props.textAlign}
+            />
+          </View>
+          {!!props.buttonText && (
+            <TouchableOpacity onPress={props.onButtonPress} style={styles.buttonWrap}>
+              <Text style={{...styles.button, ...props.buttonStyle}}>{props.buttonText}</Text>
+            </TouchableOpacity>
+          )}
+          {!props.iconLeft && IconElement}
         </View>
-        {!!props.buttonText && (
-          <TouchableOpacity onPress={props.onButtonPress} style={styles.buttonWrap}>
-            <Text style={{...styles.button, ...props.buttonStyle}}>{props.buttonText}</Text>
-          </TouchableOpacity>
-        )}
-        {!props.iconLeft && IconElement}
+        {typeof props.bottomText !== 'undefined' && <Text style={styles.bottomText}>{props.bottomText}</Text>}
       </View>
       {!!props.errorMessage && (
         <View style={{...styles.errorContainer, ...props.errorContainerStyle}}>
@@ -139,8 +143,7 @@ const SimpleInput = (props: SimpleInputProps) => {
 const styles = StyleSheet.create({
   container: {},
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     textAlignVertical: 'center',
     backgroundColor: theme.colors.grayDark,
     borderRadius: 8,
@@ -205,6 +208,19 @@ const styles = StyleSheet.create({
   leftCol: {
     flexDirection: 'column',
     flex: 8,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  bottomText: {
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 14,
+    letterSpacing: 0.02,
+    color: theme.colors.lightGray,
+    textAlign: 'left',
   },
 });
 

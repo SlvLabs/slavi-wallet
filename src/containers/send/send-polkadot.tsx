@@ -264,7 +264,8 @@ const SendPolkadotScreen = (props: SendPolkadotScreenProps) => {
         />
         <SendView
           readQr={() => setActiveQR(true)}
-          coin={coinDetails.ticker}
+          coin={coinDetails.id}
+          ticker={coinDetails.ticker}
           balance={accountBalance}
           recipient={recipient}
           onRecipientChange={onRecipientChange}

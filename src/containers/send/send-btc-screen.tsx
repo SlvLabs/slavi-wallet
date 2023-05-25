@@ -252,6 +252,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
       <SendManyView
         readQr={readQr}
         coin={props.coin}
+        ticker={coinDetails.ticker}
         balance={balance}
         recipients={recipients}
         onRecipientChange={onRecipientChange}

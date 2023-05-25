@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import RecipientInput from './recipient-input';
 import useTranslation from '../../utils/use-translation';
 import AmountInput from './amount-input';
@@ -6,6 +6,8 @@ import {StyleSheet, TouchableOpacity, View, ViewStyle, Text} from 'react-native'
 import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
+import { useCurrencyConverted, useFiatSelector } from '@slavi/wallet-core/src/store/modules/currency/selectors';
+import makeRoundedBalance from "../../utils/make-rounded-balance";
 
 export interface Recipient {
   address: string;
@@ -20,6 +22,7 @@ export interface RecipientUpdatingData {
 export interface SendViewProps {
   recipient: Recipient;
   coin: string;
+  ticker: string;
   readQr: () => void;
   balance: string;
   onRecipientChange: (data: RecipientUpdatingData) => void;
@@ -38,6 +41,10 @@ const SendView = (props: SendViewProps) => {
   const onAmountChange = useCallback((amount: string) => onRecipientChange({amount}), [onRecipientChange]);
 
   const onAddressChange = useCallback((address: string) => onRecipientChange({address}), [onRecipientChange]);
+
+  const fiat = useFiatSelector();
+
+  const fiatAmount = useCurrencyConverted(props.coin, fiat, props.recipient.amount);
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
@@ -58,13 +65,15 @@ const SendView = (props: SendViewProps) => {
       />
       <AmountInput
         label={t('Amount')}
-        ticker={props.coin}
+        ticker={props.ticker}
         balance={props.balance}
         onChange={onAmountChange}
         maxIsAllowed={props.maxIsAllowed}
         setRecipientPayFee={props.setRecipientPayFee}
         errors={props.errors?.amount}
         maximumPrecision={maximumPrecision}
+        fiat={fiat}
+        fiatAmount={makeRoundedBalance(2, fiatAmount)}
       />
     </View>
   );

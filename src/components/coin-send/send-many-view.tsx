@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  Text,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, ViewStyle, Text} from 'react-native';
 import SendView, {Recipient, RecipientUpdatingData} from './send-view';
 import useTranslation from '../../utils/use-translation';
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
@@ -14,6 +8,7 @@ import theme from '../../theme';
 export interface SendManyViewProps {
   readQr: (index: number) => void;
   coin: string;
+  ticker: string;
   balance: string;
   recipients: Recipient[];
   onRecipientChange: (index: number, data: RecipientUpdatingData) => void;
@@ -37,14 +32,11 @@ const SendManyView = (props: SendManyViewProps) => {
           <SendView
             readQr={() => props.readQr(index)}
             coin={props.coin}
+            ticker={props.ticker}
             balance={props.balance}
             recipient={recipient}
-            onRecipientChange={(data: RecipientUpdatingData) =>
-              props.onRecipientChange(index, data)
-            }
-            onRemove={
-              index !== 0 ? () => props.onRecipientRemove(index) : undefined
-            }
+            onRecipientChange={(data: RecipientUpdatingData) => props.onRecipientChange(index, data)}
+            onRemove={index !== 0 ? () => props.onRecipientRemove(index) : undefined}
             maxIsAllowed={props.recipients.length === 1}
             setRecipientPayFee={props.setRecipientPayFee}
             key={`recipient_${index}`}

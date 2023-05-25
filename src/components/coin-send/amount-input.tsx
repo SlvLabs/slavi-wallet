@@ -1,4 +1,5 @@
-import React, {useMemo, useState} from 'react';
+import { useCurrencyConverted } from '@slavi/wallet-core/src/store/modules/currency/selectors';
+import React, {useEffect, useMemo, useState} from 'react';
 import {View, StyleSheet, ViewStyle, TextStyle} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
@@ -20,6 +21,8 @@ export interface AmountInputProps {
   tickerStyle?: TextStyle;
   controlsContainerStyle?: ViewStyle;
   maximumPrecision?: number;
+  fiat?: string;
+  fiatAmount?: string;
 }
 
 const AmountInput = (props: AmountInputProps) => {
@@ -54,6 +57,7 @@ const AmountInput = (props: AmountInputProps) => {
             onButtonPress={onMaxPress}
             label={props.label}
             maximumPrecision={maximumPrecision}
+            bottomText={props.fiat && props.fiatAmount ? `≈ ${props.fiatAmount} ${props.fiat}` : ''}
           />
         </View>
       </View>

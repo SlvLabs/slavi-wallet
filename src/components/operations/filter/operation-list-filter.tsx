@@ -123,7 +123,12 @@ const OperationListFilter = (props: OperationListFilterProps) => {
       <ScrollFilterChip text={t('Date')} onPress={showDatePicker} active={datesIsActive} />
       <ScrollFilterChip text={t('Status')} onPress={showStatusFilter} active={statusesIsActive} />
       <ScrollFilterChip text={t('Type')} onPress={showTypeFilter} active={typesIsActive} />
-      <ScrollFilterChip text={t('Address')} onPress={showAddressFilter} active={addressesIsActive} />
+      <ScrollFilterChip
+        text={t('Address')}
+        onPress={showAddressFilter}
+        active={addressesIsActive}
+        chipStyle={styles.address}
+      />
       <OperationFilterModal
         visible={fullModalShown}
         onCancel={hideFilter}
@@ -193,6 +198,9 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     flex: 1,
+  },
+  address: {
+    marginRight: 24,
   },
 });
 

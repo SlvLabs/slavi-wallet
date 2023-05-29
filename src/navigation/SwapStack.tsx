@@ -11,6 +11,7 @@ export interface SwapStackParamList extends ParamListBase {
   swap: {
     network: string;
     srcCoin: string;
+    dstCoin: string;
   };
 }
 

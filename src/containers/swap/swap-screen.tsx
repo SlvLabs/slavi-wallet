@@ -42,6 +42,7 @@ const APPROVE_INTERVAL_CHECK = 5 * 1000;
 const SwapScreen = () => {
   const route = useRoute<CoinSwapRouteProps>();
   const selectedCoin = route.params?.srcCoin;
+  const destinationCoin = route.params?.dstCoin;
   const selectedNetwork = route.params?.network;
 
   const [network, setNetwork] = useState<string>(selectedNetwork);
@@ -49,7 +50,7 @@ const SwapScreen = () => {
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.1);
   const [inAmount, setInAmount] = useState<string>('0.0');
   const [inCoin, setInCoin] = useState<string | undefined>(selectedCoin);
-  const [dstCoin, setDstCoin] = useState<string>();
+  const [dstCoin, setDstCoin] = useState<string>(destinationCoin);
   const [addressIndex, setAddressIndex] = useState<number>();
   const [balance, setBalance] = useState<string>();
   const [address, setAddress] = useState<string>();

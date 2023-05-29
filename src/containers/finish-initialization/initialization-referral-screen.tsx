@@ -13,6 +13,7 @@ import {useRoute} from '@react-navigation/native';
 import {ReferralRouteProps} from '../../navigation/initialization-finish-stack';
 import {CaptchaModal} from '../../components/captcha/captcha-modal';
 import LinearGradient from 'react-native-linear-gradient';
+import Layout from '../../utils/layout';
 
 export function InitializationReferralScreen() {
   const route = useRoute<ReferralRouteProps>();
@@ -81,6 +82,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   descriptionContainer: {
+    paddingLeft: Layout.isSmallDevice ? 16 : 32,
+    paddingRight: Layout.isSmallDevice ? 16 : 32,
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -94,6 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     color: theme.colors.white,
+    textAlign: 'center',
   },
   description3: {
     fontFamily: theme.fonts.default,
@@ -109,12 +113,12 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: theme.colors.white,
     marginBottom: 16,
+    alignSelf: 'center',
   },
   inputContainer: {
     marginLeft: 32,
     marginRight: 32,
     marginTop: 37,
-    alignItems: 'center',
   },
   imageContainer: {
     flex: 1,

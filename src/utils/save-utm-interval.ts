@@ -24,6 +24,9 @@ export function saveReferral(utmService?: UtmServiceInterface) {
             clearInterval(interval);
           });
         }
+      })
+      .catch(() => {
+        clearInterval(interval);
       });
 
     i++;

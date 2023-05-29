@@ -54,21 +54,23 @@ const ConfirmMnemonicScreen = () => {
   }, [dispatch, mnemonic]);
 
   return (
-    <InitializationBackground>
-      <View style={styles.textBlock}>
-        <Text style={styles.header}>{t('Type your secret phrase')}</Text>
-        <Text style={styles.description}>
-          {t("Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone.")}
-        </Text>
+    <InitializationBackground containerStyle={styles.wrap}>
+      <View style={styles.content}>
+        <View style={styles.textBlock}>
+          <Text style={styles.header}>{t('Type your secret phrase')}</Text>
+          <Text style={styles.description}>
+            {t("Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone.")}
+          </Text>
+        </View>
+        <MnemonicArea words={availableWords} style={styles.availableContainer} onPressWorld={selectWord} />
+        <MnemonicArea
+          words={selectWords}
+          style={styles.selectedContainer}
+          onPressWorld={unselectWord}
+          wordStyle={styles.word}
+        />
+        {isWrong && <AlertRow text={t('The secret phrase was entered incorrectly')} />}
       </View>
-      <MnemonicArea words={availableWords} style={styles.availableContainer} onPressWorld={selectWord} />
-      <MnemonicArea
-        words={selectWords}
-        style={styles.selectedContainer}
-        onPressWorld={unselectWord}
-        wordStyle={styles.word}
-      />
-      {isWrong && <AlertRow text={t('The secret phrase was entered incorrectly')} />}
       <View style={styles.buttonsBlock}>
         <SolidButton title={t('Continue')} onPress={goNext} disabled={selectWords.length != words.length || isWrong} />
         <View style={styles.loaderView}>
@@ -82,24 +84,23 @@ const ConfirmMnemonicScreen = () => {
 const styles = StyleSheet.create({
   availableContainer: {
     borderBottomWidth: 0,
-    flex: 2,
     paddingTop: Layout.isSmallDevice ? 8 : 16,
     paddingBottom: Layout.isSmallDevice ? 8 : 16,
+    marginTop: Layout.isSmallDevice ? 20 : 56,
   },
   selectedContainer: {
     borderBottomWidth: 0,
     borderRadius: 8,
     backgroundColor: theme.colors.grayDark,
-    flex: 2,
     paddingTop: 16,
     paddingBottom: 16,
     marginTop: 8,
+    height: Layout.isSmallDevice ? 170 : 184,
   },
   textBlock: {
     marginBottom: Layout.isSmallDevice ? 4 : 30,
-    flex: 1,
     justifyContent: 'flex-end',
-    marginTop: 20,
+    marginTop: Layout.isSmallDevice ? 18 : 24,
   },
   header: {
     fontFamily: theme.fonts.default,
@@ -123,15 +124,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonsBlock: {
-    flex: 1,
     justifyContent: 'flex-end',
-    marginTop: Layout.isSmallDevice ? 20 : 0,
+    marginTop: Layout.isSmallDevice ? 16 : 32,
   },
   loaderView: {
     paddingTop: Layout.isSmallDevice ? 8 : 17,
   },
   word: {
     backgroundColor: theme.colors.darkWord,
+  },
+  content: {},
+  wrap: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
+    flex: 1,
   },
 });
 

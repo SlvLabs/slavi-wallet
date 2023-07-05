@@ -18,6 +18,7 @@ export interface AddressSelectorProps {
   disabled?: boolean;
   children?: ReactNode;
   baseTicker?: string;
+  hideBalances?: boolean;
 }
 
 const AddressSelector = (props: AddressSelectorProps) => {
@@ -71,6 +72,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
         onSelect={props.onSelect}
         ticker={props.ticker}
         baseTicker={props.baseTicker}
+        hideBalances={props.hideBalances}
       />
     </View>
   );

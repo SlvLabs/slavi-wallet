@@ -35,6 +35,7 @@ import {BlurView} from '@react-native-community/blur';
 import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 import {saveReferral} from './utils/save-utm-interval';
 import {useAppExit} from './hooks/use-app-exit';
+import WalletConnectSessionRequestModalV2 from "./components/wallet-connect/session-request-modal-v2";
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -161,6 +162,7 @@ const App: () => ReactNode = () => {
         asyncStorageProvider,
         performanceMonitor,
         services.current,
+        Config.WC_PROJECT_ID,
         devMode,
         Config.APP_VERSION,
       ),
@@ -317,6 +319,7 @@ const App: () => ReactNode = () => {
               helpShow={helpShow}
             />
             {!isBootstrapped && <WalletConnectSessionRequestModal />}
+            {!isBootstrapped && <WalletConnectSessionRequestModalV2 />}
             {!isBootstrapped && <WalletConnectSignRequestModal />}
             {!isBootstrapped && <WalletConnectTxRequestModal />}
             {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}

@@ -20,6 +20,7 @@ export interface InnerAddressElementProps {
   balancePrecision?: number;
   baseBalance?: string;
   baseTicker?: string;
+  hideBalance?: boolean;
 }
 
 const DEFAULT_PRECISION = 4;
@@ -41,7 +42,7 @@ const InnerAddressElement = (props: InnerAddressElementProps) => {
           <Text style={{...styles.name, ...props.nameStyle}} ellipsizeMode={'tail'} numberOfLines={1}>
             {props.name || t('No name')}
           </Text>
-          {!!props.balance && (
+          {!props.hideBalance && !!props.balance && (
             <Text style={{...styles.balance, ...props.balanceStyle}}>
               {`${makeRoundedBalance(props.balancePrecision || DEFAULT_PRECISION, props.balance)} ${props.ticker}`}
             </Text>

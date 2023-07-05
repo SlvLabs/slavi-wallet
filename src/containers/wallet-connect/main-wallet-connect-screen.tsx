@@ -11,45 +11,61 @@ import ConfirmationModal from '../../components/modal/confirmation-modal';
 import Toast from 'react-native-simple-toast';
 import ScrollableScreen from '../../components/scrollable-screen';
 import CustomIcon from '../../components/custom-icon/custom-icon';
+import useWalletConnectServiceV2 from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service-v2';
+import {detectWalletConnectVersion} from '@slavi/wallet-core/src/utils/detect-wallet-connect-version';
+import {SessionData} from '@slavi/wallet-core/src/store/modules/wallet-connect';
 
 export default function MainWalletConnectScreen() {
   const [scannerIsShown, setScannerIsShown] = useState<boolean>(false);
-  const [killingCandidate, setKillingCandidate] = useState<string>();
+  const [killingCandidate, setKillingCandidate] = useState<SessionData>();
 
   const sessions = useSelectWalletConnectSessions();
 
   const walletConnectService = useWalletConnectService();
-  const {t} = useTranslation()
+  const walletConnectServiceV2 = useWalletConnectServiceV2();
+  const {t} = useTranslation();
 
   const showScanner = useCallback(() => setScannerIsShown(true), []);
   const hideScanner = useCallback(() => setScannerIsShown(false), []);
 
-  const showKilling = useCallback((peerId?: string) => setKillingCandidate(peerId), []);
+  const showKilling = useCallback((sessionId?: SessionData) => setKillingCandidate(sessionId), []);
   const hideKilling = useCallback(() => setKillingCandidate(undefined), []);
 
   const killSession = useCallback(async () => {
-    if(killingCandidate) {
+    if (killingCandidate && killingCandidate.peerId) {
       try {
-        await walletConnectService.killSession(killingCandidate);
+        if (killingCandidate.version === 2) {
+          await walletConnectServiceV2.killSession(killingCandidate.peerId);
+        } else {
+          await walletConnectService.killSession(killingCandidate.peerId);
+        }
       } catch (err) {
         Toast.show(t('walletDisconnectError'));
       }
       hideKilling();
     }
-  }, [killingCandidate])
+  }, [hideKilling, killingCandidate, t, walletConnectService, walletConnectServiceV2]);
 
-  const onQRRead = useCallback(async (uri: string) => {
-    let success = true;
-    try {
-      await walletConnectService.connect(uri);
-    } catch (err) {
-      success = false;
+  const onQRRead = useCallback(
+    async (uri: string) => {
+      let success = true;
+      try {
+        if (detectWalletConnectVersion(uri) === 2) {
+          await walletConnectServiceV2.connect(uri);
+        } else {
+          await walletConnectService.connect(uri);
+        }
+      } catch (err) {
+        success = false;
+        Toast.show(t('walletConnectionDuration'));
+      }
+      if (success) {
+      }
       Toast.show(t('walletConnectionDuration'));
-    }
-    if(success) {}
-    Toast.show(t('walletConnectionDuration'));
-    hideScanner();
-  }, [hideScanner, t]);
+      hideScanner();
+    },
+    [hideScanner, t, walletConnectService, walletConnectServiceV2],
+  );
 
   return (
     <ScrollableScreen title={t('walletConnect')}>
@@ -60,31 +76,27 @@ export default function MainWalletConnectScreen() {
       {sessions.length > 0 && (
         <View style={styles.sessionsContainer}>
           <Text style={styles.sessionsTitle}>{t('activeSessions')}</Text>
-          {sessions.map((session, index) => <Session
-            peerName={session.peerName || 'unknown'}
-            peerUrl={session.peerUrl}
-            icon={session.icon}
-            onPress={() => showKilling(session.peerId)}
-            key={`session_${index}`}
-          />)}
+          {sessions.map((session, index) => (
+            <Session
+              peerName={session.peerName || 'unknown'}
+              peerUrl={session.peerUrl}
+              icon={session.icon}
+              onPress={() => showKilling(session)}
+              key={`session_${index}`}
+            />
+          ))}
         </View>
       )}
-      <SolidButton title={t('newConnect')} onPress={showScanner} containerStyle={styles.connectionButton}/>
+      <SolidButton title={t('newConnect')} onPress={showScanner} containerStyle={styles.connectionButton} />
       {sessions.length === 0 && (
         <View style={{...styles.placeholder}}>
           <View style={styles.iconContainer}>
-            <CustomIcon
-              name={'Category'}
-              size={64}
-              color={theme.colors.textLightGray3}
-              style={styles.icon}
-            />
+            <CustomIcon name={'Category'} size={64} color={theme.colors.textLightGray3} style={styles.icon} />
           </View>
-          <Text style={styles.placeholderText}>
-            {t('noActiveSessions')}
-          </Text>
-        </View>)}
-      <QrReaderModal visible={scannerIsShown} onQRRead={onQRRead} onClose={hideScanner}/>
+          <Text style={styles.placeholderText}>{t('noActiveSessions')}</Text>
+        </View>
+      )}
+      <QrReaderModal visible={scannerIsShown} onQRRead={onQRRead} onClose={hideScanner} />
       <ConfirmationModal
         visible={!!killingCandidate}
         onPositive={killSession}
@@ -160,5 +172,5 @@ const styles = StyleSheet.create({
   },
   connectionButton: {
     marginTop: 24,
-  }
+  },
 });

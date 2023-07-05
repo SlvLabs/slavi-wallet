@@ -632,6 +632,11 @@ const translations = {
   stakingEventEnded: 'Event ended',
   baseBalance: '{{ticker}} Balance: {{balance}}',
   insufficientBaseBalance: 'Insufficient {{coin}} balance to pay TX fees',
+
+  // ---
+  walletConnectRequiredBlockchains: 'Required blockchains',
+  walletConnectAddress: 'Select address for blockchains',
+  dappName: 'DApp name',
 };
 
 export default translations;

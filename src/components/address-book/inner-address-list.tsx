@@ -16,6 +16,7 @@ export interface InnerAddressListProps {
   placeholderSize?: number;
   placeholderColor?: string;
   placeholderTextStyle?: TextStyle;
+  hideBalances?: boolean;
 }
 
 const defaultPlaceholderSize = 256;
@@ -37,6 +38,7 @@ const InnerAddressList = (props: InnerAddressListProps) => {
                 ticker={props.ticker}
                 baseTicker={props.baseTicker}
                 baseBalance={element.baseBalance}
+                hideBalance={props.hideBalances}
               />
             </TouchableOpacity>
           ))}

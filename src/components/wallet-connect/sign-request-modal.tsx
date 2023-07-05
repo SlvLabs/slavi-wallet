@@ -7,39 +7,102 @@ import OutlineButton from '../buttons/outline-button';
 import useTranslation from '../../utils/use-translation';
 import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import theme from '../../theme';
+import {EIP155SigningMethod} from '@slavi/wallet-core/src/utils/eip155';
+import useWalletConnectServiceV2 from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service-v2';
 
 export default function WalletConnectSignRequestModal() {
   const [error, setError] = useState<string>();
 
   const signRequest = useSelectWalletConnectSignRequest();
   const walletConnectService = useWalletConnectService();
+  const walletConnectServiceV2 = useWalletConnectServiceV2();
   const {t} = useTranslation();
 
   const onApprove = useCallback(async () => {
-    if (signRequest.peerId && signRequest.method && signRequest.coin && signRequest.address && signRequest.payload) {
-      try {
-        await walletConnectService.approveRequest(
-          signRequest.peerId,
-          signRequest.method,
-          signRequest.coin,
-          signRequest.address,
-          signRequest.payload,
-        );
-      } catch (err) {
-        setError((err as Error).toString());
+    if (signRequest.version === 2) {
+      if (
+        signRequest.active &&
+        signRequest.topic &&
+        signRequest.active &&
+        signRequest.method &&
+        signRequest.coin &&
+        signRequest.address &&
+        signRequest.payload
+      ) {
+        try {
+          await walletConnectServiceV2.approveRequest(
+            signRequest.active,
+            signRequest.method as unknown as EIP155SigningMethod,
+            signRequest.coin,
+            signRequest.address,
+            signRequest.topic,
+            signRequest.payload,
+          );
+        } catch (err) {
+          setError((err as Error).toString());
+        }
+      } else {
+        if (
+          signRequest.peerId &&
+          signRequest.method &&
+          signRequest.coin &&
+          signRequest.address &&
+          signRequest.payload
+        ) {
+          try {
+            await walletConnectService.approveRequest(
+              signRequest.peerId,
+              signRequest.method,
+              signRequest.coin,
+              signRequest.address,
+              signRequest.payload,
+            );
+          } catch (err) {
+            setError((err as Error).toString());
+          }
+        }
       }
     }
-  }, [signRequest, walletConnectService]);
+  }, [
+    signRequest.active,
+    signRequest.address,
+    signRequest.coin,
+    signRequest.method,
+    signRequest.payload,
+    signRequest.peerId,
+    signRequest.topic,
+    signRequest.version,
+    walletConnectService,
+    walletConnectServiceV2,
+  ]);
 
   const onReject = useCallback(async () => {
-    if (signRequest.peerId && signRequest.id) {
-      try {
-        await walletConnectService.rejectAction(signRequest.peerId, signRequest.id);
-      } catch (err) {
-        setError((err as Error).toString());
+    console.log('request', signRequest);
+    if (signRequest.version === 2) {
+      if (signRequest.topic && signRequest.id) {
+        try {
+          await walletConnectServiceV2.rejectRequest(signRequest.id, signRequest.topic);
+        } catch (err) {
+          setError((err as Error).toString());
+        }
+      }
+    } else {
+      if (signRequest.peerId && signRequest.active) {
+        try {
+          await walletConnectService.rejectAction(signRequest.peerId, signRequest.active);
+        } catch (err) {
+          setError((err as Error).toString());
+        }
       }
     }
-  }, [walletConnectService, signRequest]);
+  }, [
+    signRequest.version,
+    signRequest.topic,
+    signRequest.id,
+    signRequest.peerId,
+    walletConnectServiceV2,
+    walletConnectService,
+  ]);
 
   useEffect(() => {
     if (!signRequest.active) {
@@ -48,12 +111,18 @@ export default function WalletConnectSignRequestModal() {
   }, [signRequest.active]);
 
   return (
-    <BaseModal contentStyle={styles.container} visible={signRequest.active} onCancel={onReject}>
+    <BaseModal contentStyle={styles.container} visible={!!signRequest.active} onCancel={onReject}>
       <Text style={styles.header}>{t('walletConnectRequestSignHeader')}</Text>
       <View style={styles.addressContainer}>
         <Text style={styles.label}>{t('walletFrom')}</Text>
         <Text style={styles.address}>{signRequest.address}</Text>
       </View>
+      {!!signRequest.name && (
+        <View style={styles.dappContainer}>
+          <Text style={styles.label}>{t('dappName')}</Text>
+          <Text style={styles.dapp}>{signRequest.name}</Text>
+        </View>
+      )}
       <View style={styles.dappContainer}>
         <Text style={styles.label}>{t('dapp')}</Text>
         <Text style={styles.dapp}>{signRequest.dapp}</Text>

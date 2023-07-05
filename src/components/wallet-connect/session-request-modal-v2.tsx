@@ -1,135 +1,117 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import BaseModal from '../modal/base-modal';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
-  useSelectAllCoinsForWalletConnect,
+  useSelectCoinsForWalletConnect,
   useSelectWalletConnectSessionRequest,
 } from '@slavi/wallet-core/src/store/modules/wallet-connect/selectors';
 import useTranslation from '../../utils/use-translation';
-import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service';
 import SolidButton from '../buttons/solid-button';
 import theme from '../../theme';
 import OutlineButton from '../buttons/outline-button';
-import AddressSelector from '../buttons/address-selector';
-import {CoinForWalletConnect} from '@slavi/wallet-core/src/store/modules/wallet-connect/index';
-import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
 import getImageSource from '../../utils/get-image-source';
-import NetworkSelector, {NetworkData, NetworksOptions} from '../swap/network-selector';
+import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-addresses-balance';
+import AddressSelector from '../buttons/address-selector';
+import useWalletConnectServiceV2 from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service-v2';
 
-export default function WalletConnectSessionRequestModal() {
-  const [coin, setCoin] = useState<CoinForWalletConnect>();
+export default function WalletConnectSessionRequestModalV2() {
+  const [error, setError] = useState<string>();
   const [account, setAccount] = useState<string>();
   const [accountIndex, setAccountIndex] = useState<number>(0);
-  const [error, setError] = useState<string>();
 
   const {t} = useTranslation();
   const sessionRequest = useSelectWalletConnectSessionRequest();
-  const coins = useSelectAllCoinsForWalletConnect();
-  const walletConnectService = useWalletConnectService();
-  const balancesState = useAddressesBalance(coin?.id);
+  const coins = useSelectCoinsForWalletConnect(sessionRequest?.requiredNamespaces);
+  const walletConnectService = useWalletConnectServiceV2();
+  const {isLoading, balances} = useAddressesBalance('ETH');
 
   const onApprove = useCallback(() => {
-    if (!sessionRequest.active) {
+    if (!sessionRequest.active || isLoading || !sessionRequest.requiredNamespaces) {
       return;
     }
 
-    console.log(
-        sessionRequest,
-      sessionRequest.peerId,
-      coin,
-      account,
-      coin?.chainId,
-      sessionRequest.peerId && coin && account && coin.chainId,
-    );
-    if (sessionRequest.peerId && coin && account && coin.chainId) {
-      // TODO: Catch exception and set error
-      walletConnectService.approveSession(sessionRequest.peerId, coin.chainId, account);
-    } else {
+    console.log(account);
+    if (!account) {
       setError(t('walletAccountNotSet'));
+      return;
     }
-  }, [sessionRequest, coin, account, walletConnectService, t]);
+
+    const namespaces: any = {};
+    Object.keys(sessionRequest.requiredNamespaces).forEach(key => {
+      if (!sessionRequest.requiredNamespaces?.[key]) {
+        return;
+      }
+
+      const accounts: string[] = [];
+      sessionRequest?.requiredNamespaces?.[key].chains.map(chain => {
+        accounts.push(`${chain}:${account}`);
+      });
+
+      namespaces[key] = {
+        accounts: accounts,
+        methods: sessionRequest.requiredNamespaces[key].methods,
+        events: sessionRequest.requiredNamespaces[key].events,
+      };
+    });
+
+    // TODO: Catch exception and set error
+    walletConnectService.approveSession(sessionRequest.active, namespaces);
+  }, [sessionRequest.active, sessionRequest.requiredNamespaces, isLoading, account, walletConnectService, t]);
 
   const onReject = useCallback(() => {
-    if (sessionRequest.peerId) {
-      // TODO: Catch exception and set error
-      walletConnectService.rejectSession(sessionRequest.peerId);
+    if (!sessionRequest.active) {
+      return;
     }
+    // TODO: Catch exception and set error
+    walletConnectService.rejectSession(sessionRequest.active);
   }, [walletConnectService, sessionRequest]);
 
-  const chainSelectOptions: NetworksOptions = useMemo(
-    () =>
-      coins.reduce<Record<string, NetworkData>>((acc, coin) => {
-        acc[coin.id] = {
-          name: coin.name,
-          logo: coin.logo,
-          id: coin.id,
-        };
-        return acc;
-      }, {}),
-    [coins],
-  );
+  useEffect(() => {
+    setError(undefined);
+  }, [account, sessionRequest.active]);
 
   useEffect(() => {
-    if (sessionRequest.chainId) {
-      const _coin = coins.find(element => element.chainId === sessionRequest.chainId);
-      if (_coin) {
-        setCoin(_coin);
-      } else {
-        setError(t('unsupportedChainId'));
-      }
+    if (isLoading) {
+      return;
     }
-  }, [sessionRequest.chainId, coins, t]);
 
-  useEffect(() => {
-    if (!sessionRequest.active) {
-      setAccount(undefined);
-      setError(undefined);
+    if (balances?.[accountIndex]?.address) {
+      setAccount(balances?.[accountIndex]?.address);
     }
-  }, [sessionRequest.active]);
-
-  useEffect(() => {
-    if (!balancesState.isLoading && balancesState?.balances?.[accountIndex]?.address) {
-      setAccount(balancesState?.balances?.[accountIndex]?.address);
-    }
-  }, [accountIndex, balancesState]);
+  }, [accountIndex, balances, isLoading]);
 
   return (
     <BaseModal
       contentStyle={styles.container}
-      visible={!!sessionRequest.active && sessionRequest.version === 1}
+      visible={!!sessionRequest.active && sessionRequest.version === 2}
       onCancel={onReject}>
       <Text style={styles.header}>{t('walletConnectSessionHeader')}</Text>
       <Image source={{uri: sessionRequest.icon}} style={styles.logo} />
       <Text style={styles.name}>{sessionRequest.peerName}</Text>
       <Text style={styles.uri}>{sessionRequest.peerUrl}</Text>
-      {!sessionRequest.chainId ? (
-        <NetworkSelector
-          onSelect={(id: string) => setCoin(coins.find(coin => coin.id === id))}
-          networks={chainSelectOptions}
-          value={coin?.id}
-          label={t('walletNetwork')}
-          containerStyle={styles.select}
-        />
-      ) : (
-        !!coin && (
-          <View style={styles.fixedNetworkContainer}>
-            <Image source={getImageSource(coin?.logo)} style={styles.coinLogo} />
-            <View>
-              <Text style={styles.networkLabel}>{t('walletNetwork')}</Text>
-              <Text style={styles.networkName}>{coin?.name}</Text>
+      <Text style={styles.requiredBlockchains}>{t('walletConnectRequiredBlockchains')}</Text>
+      {!!coins && (
+        <ScrollView style={styles.networks}>
+          {coins.map(coin => (
+            <View style={styles.fixedNetworkContainer} key={coin.id}>
+              <Image source={getImageSource(coin?.logo)} style={styles.coinLogo} />
+              <View>
+                <Text style={styles.networkLabel}>{t('walletNetwork')}</Text>
+                <Text style={styles.networkName}>{coin?.name}</Text>
+              </View>
             </View>
-          </View>
-        )
+          ))}
+        </ScrollView>
       )}
+      <Text style={styles.addressLabel}>{t('walletConnectAddress')}</Text>
       <AddressSelector
-        disabled={!coin}
         label={t('walletAccount')}
         containerStyle={styles.addressSelector}
-        addresses={balancesState.balances}
+        addresses={balances}
         onSelect={setAccountIndex}
         selectedAddress={accountIndex}
-        ticker={coin?.ticker || ''}
-        baseTicker={coin?.parentTicker || undefined}
+        ticker={''}
+        hideBalances={true}
       />
       <View style={styles.errorContainer}>
         <Text style={styles.error}>{error}</Text>
@@ -139,7 +121,8 @@ export default function WalletConnectSessionRequestModal() {
           title={t('walletConnectApprove')}
           onPress={onApprove}
           containerStyle={styles.topButton}
-          disabled={!!error || !account}
+          disabled={!!error}
+          loading={isLoading}
         />
         <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
@@ -148,12 +131,15 @@ export default function WalletConnectSessionRequestModal() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
   logo: {
     width: 80,
     height: 80,
     alignSelf: 'center',
     marginBottom: 16,
+    borderRadius: 40,
   },
   header: {
     alignSelf: 'center',
@@ -187,7 +173,6 @@ const styles = StyleSheet.create({
   },
   addressSelector: {
     marginBottom: 20,
-    marginTop: 12,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: theme.colors.borderGray,
@@ -195,14 +180,15 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   fixedNetworkContainer: {
-    paddingLeft: 16,
-    paddingTop: 16,
-    paddingBottom: 16,
+    paddingLeft: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: theme.colors.borderGray,
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 4,
   },
   networkLabel: {
     fontFamily: theme.fonts.default,
@@ -217,7 +203,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 24,
     letterSpacing: 0.02,
     color: theme.colors.lighter,
@@ -242,5 +228,25 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginRight: 12,
+  },
+  requiredBlockchains: {
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 16,
+    color: theme.colors.white,
+    marginBottom: 8,
+  },
+  addressLabel: {
+    marginTop: 20,
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 16,
+    color: theme.colors.white,
+    marginBottom: 8,
+  },
+  networks: {
+    maxHeight: 260,
   },
 });

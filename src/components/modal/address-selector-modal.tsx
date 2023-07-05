@@ -26,6 +26,7 @@ export interface AddressSelectorModalProps extends ModalProps {
   iconColor?: string;
   titleStyle?: TextStyle;
   baseTicker?: string;
+  hideBalances?: boolean;
 }
 
 const AddressSelectorModal = (props: AddressSelectorModalProps) => {
@@ -82,6 +83,7 @@ const AddressSelectorModal = (props: AddressSelectorModalProps) => {
           placeholderTextStyle={styles.searchPlaceholder}
           ticker={props.ticker}
           baseTicker={props.baseTicker}
+          hideBalances={props.hideBalances}
         />
       </ScrollView>
     </FullScreenModal>

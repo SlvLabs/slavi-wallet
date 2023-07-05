@@ -9,43 +9,97 @@ import useWalletConnectService from '@slavi/wallet-core/src/contexts/hooks/use-w
 import theme from '../../theme';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
 import NumberText from '../text/number-text';
+import {EIP155SigningMethod} from '@slavi/wallet-core/src/utils/eip155';
+import useWalletConnectServiceV2 from '@slavi/wallet-core/src/contexts/hooks/use-wallet-connect-service-v2';
 
 export default function WalletConnectTxRequestModal() {
   const [error, setError] = useState<string>();
 
   const request = useSelectWalletConnectTxRequest();
+  const walletConnectServiceV2 = useWalletConnectServiceV2();
   const walletConnectService = useWalletConnectService();
   const {t} = useTranslation();
 
   const onApprove = useCallback(async () => {
-    if (request.peerId && request.method && request.coin && request.address && request.payload) {
-      try {
-        await walletConnectService.approveRequest(
-          request.peerId,
-          request.method,
-          request.coin,
-          request.address,
-          request.payload,
-        );
-      } catch (err) {
-        if (err instanceof CreateTransactionError) {
-          setError(t('Can not create transaction. Try latter or contact support.'));
-        } else {
+    if (request.version === 2) {
+      if (request.active && request.topic && request.method && request.coin && request.address && request.payload) {
+        try {
+          await walletConnectServiceV2.approveRequest(
+            request.active,
+            request.method as unknown as EIP155SigningMethod,
+            request.coin,
+            request.address,
+            request.topic,
+            request.payload,
+          );
+        } catch (err) {
+          if (err instanceof CreateTransactionError) {
+            setError(t('Can not create transaction. Try latter or contact support.'));
+          } else {
+            setError((err as Error).toString());
+          }
+        }
+      }
+    } else {
+      if (request.peerId && request.method && request.coin && request.address && request.payload) {
+        try {
+          await walletConnectService.approveRequest(
+            request.peerId,
+            request.method,
+            request.coin,
+            request.address,
+            request.payload,
+          );
+        } catch (err) {
+          if (err instanceof CreateTransactionError) {
+            setError(t('Can not create transaction. Try latter or contact support.'));
+          } else {
+            setError((err as Error).toString());
+          }
+        }
+      }
+    }
+  }, [
+    request.version,
+    request.active,
+    request.topic,
+    request.method,
+    request.coin,
+    request.address,
+    request.payload,
+    request.peerId,
+    walletConnectServiceV2,
+    t,
+    walletConnectService,
+  ]);
+
+  const onReject = useCallback(async () => {
+    if (request.version === 2) {
+      if (request.topic && request.active) {
+        try {
+          await walletConnectServiceV2.rejectRequest(request.active, request.topic);
+        } catch (err) {
+          setError((err as Error).toString());
+        }
+      }
+    } else {
+      if (request.peerId && request.active) {
+        try {
+          await walletConnectService.rejectAction(request.peerId, request.active);
+        } catch (err) {
           setError((err as Error).toString());
         }
       }
     }
-  }, [t, request, walletConnectService]);
-
-  const onReject = useCallback(async () => {
-    if (request.peerId && request.id) {
-      try {
-        await walletConnectService.rejectAction(request.peerId, request.id);
-      } catch (err) {
-        setError((err as Error).toString());
-      }
-    }
-  }, [walletConnectService, request]);
+  }, [
+    request.version,
+    request.topic,
+    request.active,
+    request.peerId,
+    request.id,
+    walletConnectServiceV2,
+    walletConnectService,
+  ]);
 
   useEffect(() => {
     if (!request.active) {
@@ -54,12 +108,18 @@ export default function WalletConnectTxRequestModal() {
   }, [request.active]);
 
   return (
-    <BaseModal contentStyle={styles.container} visible={request.active} onCancel={onReject}>
+    <BaseModal contentStyle={styles.container} visible={!!request.active} onCancel={onReject}>
       <Text style={styles.header}>{t('walletConnectRequestTxHeader')}</Text>
       <View style={styles.addressContainer}>
         <Text style={styles.label}>{t('walletFrom')}</Text>
         <Text style={styles.address}>{request.address}</Text>
       </View>
+      {!!request.name && (
+        <View style={styles.dappContainer}>
+          <Text style={styles.label}>{t('dappName')}</Text>
+          <Text style={styles.dapp}>{request.name}</Text>
+        </View>
+      )}
       <View style={styles.dappContainer}>
         <Text style={styles.label}>{t('dapp')}</Text>
         <Text style={styles.dapp}>{request.dapp}</Text>
@@ -121,7 +181,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.default,
     fontStyle: 'normal',
     fontWeight: '500',
-    fontSize: 12,
+    fontSize: 11,
     lineHeight: 16,
     letterSpacing: 0.02,
     color: theme.colors.lighter,

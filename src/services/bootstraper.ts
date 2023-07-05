@@ -36,6 +36,7 @@ export const createCoreBootstrap = (
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
   serviceLocator: ServiceLocatorCoreInterface,
+  walletConnectProjectId: string,
   devMode?: boolean,
   appVersion?: string,
 ) => {
@@ -61,6 +62,7 @@ export const createCoreBootstrap = (
     serviceLocator: serviceLocator,
     walletConnectClientMeta: walletConnectClientMeta,
     NotificationClientInterface: firebaseService,
+    walletConnectProjectId: walletConnectProjectId,
   });
   return {
     loadInitial: async () => {
@@ -79,6 +81,7 @@ const bootstrap = async (
   dataStorageProvider: DataStoreProviderInterface,
   performanceMonitor: PerformanceMonitorInterface,
   serviceLocator: ServiceLocatorCoreInterface,
+  walletConnectProjectId: string,
   devMode?: boolean,
   appVersion?: string,
 ): Promise<void> => {
@@ -87,6 +90,7 @@ const bootstrap = async (
     dataStorageProvider,
     performanceMonitor,
     serviceLocator,
+    walletConnectProjectId,
     devMode,
     appVersion,
   );

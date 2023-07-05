@@ -15,19 +15,23 @@ export default function Session(props: SessionProps) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.leftColumn}>
-        <View style={styles.imageContainer}>
-          {!!icon && <Image source={{uri: icon}} style={styles.image} />}
-        </View>
+        <View style={styles.imageContainer}>{!!icon && <Image source={{uri: icon}} style={styles.image} />}</View>
         <View style={styles.textBlock}>
           <Text style={styles.name}>{peerName}</Text>
           {!!peerUrl && <Text style={styles.url}>{peerUrl}</Text>}
         </View>
       </View>
       <View style={styles.iconContainer}>
-        <Icon name={'chevron-right'} type={'feather'} size={22} color={theme.colors.textLightGray} style={styles.icon}/>
+        <Icon
+          name={'chevron-right'}
+          type={'feather'}
+          size={22}
+          color={theme.colors.textLightGray}
+          style={styles.icon}
+        />
       </View>
     </TouchableOpacity>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -61,6 +65,7 @@ const styles = StyleSheet.create({
   image: {
     width: 32,
     height: 32,
+    borderRadius: 16,
   },
   icon: {},
   leftColumn: {
@@ -72,9 +77,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 32,
     height: 32,
-    marginRight: 10
+    marginRight: 10,
   },
   iconContainer: {
     flex: 1,
-  }
+  },
 });

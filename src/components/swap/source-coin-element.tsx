@@ -6,7 +6,6 @@ import CustomIcon from '../custom-icon/custom-icon';
 import theme from '../../theme';
 import SolidButton from '../buttons/solid-button';
 import CoinsSelectModal from '../coins/coins-select-modal';
-import {DisplayCoinData} from '@slavi/wallet-core/src/store/modules/coins/use-coins-selector';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
 import makeRoundedBalance from '../../utils/make-rounded-balance';
 import {CoinListElementData} from '../coins/coins-select-list';
@@ -17,22 +16,13 @@ export interface SourceCoinElementProps {
   amount: string;
   onAmountChange: (amount: string) => void;
   onCoinSelect: (coinId: string) => void;
-  coins: DisplayCoinData[];
+  coins: CoinListElementData[];
   logo?: string;
   containerStyle?: ViewStyle;
 }
 
 export default function SourceCoinElement(props: SourceCoinElementProps) {
-  const {
-    balance,
-    ticker,
-    logo,
-    containerStyle,
-    onAmountChange,
-    amount,
-    coins,
-    onCoinSelect
-  } = props;
+  const {balance, ticker, logo, containerStyle, onAmountChange, amount, coins, onCoinSelect} = props;
 
   const [coinModalShown, setCoinModalIsShown] = useState<boolean>(false);
 
@@ -43,10 +33,13 @@ export default function SourceCoinElement(props: SourceCoinElementProps) {
 
   const onMaxPress = useCallback(() => onAmountChange(balance), [balance, onAmountChange]);
 
-  const _onCoinSelect = useCallback((coin: CoinListElementData) => {
-    onCoinSelect(coin.id);
-    hideCoinModal();
-  }, [onCoinSelect, hideCoinModal]);
+  const _onCoinSelect = useCallback(
+    (coin: CoinListElementData) => {
+      onCoinSelect(coin.id);
+      hideCoinModal();
+    },
+    [onCoinSelect, hideCoinModal],
+  );
 
   return (
     <View style={{...styles.container, ...containerStyle}}>
@@ -60,7 +53,7 @@ export default function SourceCoinElement(props: SourceCoinElementProps) {
           disableErrorStyle={true}
           inputContainerStyle={styles.srcInput}
         />
-        <Text style={styles.balanceLabel}>{`${t('balance')}: ${makeRoundedBalance(6,balance)} ${ticker}`}</Text>
+        <Text style={styles.balanceLabel}>{`${t('balance')}: ${makeRoundedBalance(6, balance)} ${ticker}`}</Text>
       </View>
       <View style={styles.rightColumn}>
         <View style={styles.row}>
@@ -73,9 +66,9 @@ export default function SourceCoinElement(props: SourceCoinElementProps) {
             buttonStyle={styles.maxButton}
           />
           <TouchableOpacity style={styles.coinsRow} onPress={showCoinModal}>
-            <Image source={getImageSource(logo)} style={styles.image}/>
+            <Image source={getImageSource(logo)} style={styles.image} />
             <Text style={styles.ticker}>{ticker}</Text>
-            <CustomIcon name={'arrow-right1'} size={8} color={theme.colors.textLightGray1}/>
+            <CustomIcon name={'arrow-right1'} size={8} color={theme.colors.textLightGray1} />
           </TouchableOpacity>
         </View>
       </View>

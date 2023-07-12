@@ -27,17 +27,20 @@ export default function NetworkSelector(props: NetworkSelectorProps) {
   const [modalIsShown, setModalIsShown] = useState<boolean>(false);
 
   const selected: NetworkData | undefined = useMemo(
-    () => typeof value !== 'undefined' ? networks[value] : undefined,
-    [networks, value]
+    () => (typeof value !== 'undefined' ? networks[value] : undefined),
+    [networks, value],
   );
 
   const showModal = useCallback(() => setModalIsShown(true), []);
   const hideModal = useCallback(() => setModalIsShown(false), []);
 
-  const _onSelect = useCallback((network: string) => {
-    onSelect(network);
-    hideModal();
-  }, [onSelect, hideModal]);
+  const _onSelect = useCallback(
+    (network: string) => {
+      onSelect(network);
+      hideModal();
+    },
+    [onSelect, hideModal],
+  );
 
   return (
     <TouchableOpacity style={{...styles.container, ...containerStyle}} onPress={showModal}>
@@ -55,57 +58,59 @@ export default function NetworkSelector(props: NetworkSelectorProps) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: theme.colors.grayDark,
-      paddingLeft: 16,
-      paddingRight: 16,
-      paddingTop: 18,
-      paddingBottom: 18,
-      flexDirection: 'row',
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: theme.colors.borderGray,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    gradient: {
-      borderRadius: 46,
-      padding: 2,
-    },
-    content: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    image: {
-      width: 24,
-      height: 24,
-      marginRight: 12,
-    },
-    icon: {
-      transform: [{
+  container: {
+    backgroundColor: theme.colors.grayDark,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 18,
+    paddingBottom: 18,
+    flexDirection: 'row',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.colors.borderGray,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  gradient: {
+    borderRadius: 46,
+    padding: 2,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 24,
+    height: 24,
+    marginRight: 12,
+  },
+  icon: {
+    transform: [
+      {
         rotate: '90deg',
-      }],
-      marginRight: 8,
-    },
-    value: {
-      marginRight: 8,
-      fontFamily: theme.fonts.default,
-      fontStyle: 'normal',
-      fontWeight: '500',
-      fontSize: 16,
-      lineHeight: 22,
-      color: theme.colors.white,
-      textAlignVertical: 'center',
-    },
-    label: {
-      marginRight: 8,
-      fontFamily: theme.fonts.default,
-      fontStyle: 'normal',
-      fontWeight: '500',
-      fontSize: 12,
-      lineHeight: 14,
-      color: theme.colors.lightGray,
-      textAlignVertical: 'center',
-    },
-    textBlock: {},
+      },
+    ],
+    marginRight: 8,
+  },
+  value: {
+    marginRight: 8,
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.colors.white,
+    textAlignVertical: 'center',
+  },
+  label: {
+    marginRight: 8,
+    fontFamily: theme.fonts.default,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 14,
+    color: theme.colors.lightGray,
+    textAlignVertical: 'center',
+  },
+  textBlock: {},
 });

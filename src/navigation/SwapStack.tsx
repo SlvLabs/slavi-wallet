@@ -9,9 +9,9 @@ import {ParamListBase} from '@react-navigation/routers';
 
 export interface SwapStackParamList extends ParamListBase {
   swap: {
-    network: string;
-    srcCoin: string;
-    dstCoin: string;
+    network?: string;
+    srcCoin?: string;
+    dstCoin?: string;
   };
 }
 

@@ -39,26 +39,30 @@ import Layout from '../../utils/layout';
 
 const APPROVE_INTERVAL_CHECK = 5 * 1000;
 
+interface _INetwork {
+  readonly networkName?: string;
+  readonly coinName: string;
+  readonly id: string;
+  readonly logo?: string;
+  readonly ticker: string;
+}
 const SwapScreen = () => {
   const route = useRoute<CoinSwapRouteProps>();
-  const selectedCoin = route.params?.srcCoin;
-  const destinationCoin = route.params?.dstCoin;
-  const selectedNetwork = route.params?.network;
+  const srcCoinFromRoute = route.params?.srcCoin;
+  const dstCoinFromRoute = route.params?.dstCoin;
+  const networkFromRoute = route.params?.network;
+  const networkFromRouteRef = useRef(networkFromRoute);
+  networkFromRouteRef.current = networkFromRoute;
 
-  const [network, setNetwork] = useState<string>(selectedNetwork);
+  const [network, setNetwork] = useState<_INetwork>();
   const [txPriority, setTxPriority] = useState<TransactionPriority>(TransactionPriority.average);
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.1);
   const [inAmount, setInAmount] = useState<string>('0.0');
-  const [inCoin, setInCoin] = useState<string | undefined>(selectedCoin);
-  const [dstCoin, setDstCoin] = useState<string>(destinationCoin);
+  const [inCoin, setInCoin] = useState<NonNullable<typeof coinsForSwap>[number] | undefined>();
+  const [dstCoin, setDstCoin] = useState<NonNullable<typeof coinsForSwap>[number] | undefined>();
   const [addressIndex, setAddressIndex] = useState<number>();
   const [balance, setBalance] = useState<string>();
   const [address, setAddress] = useState<string>();
-  const [srcTicker, setSrcTicker] = useState<string>();
-  const [feeTicker, setFeeTicker] = useState<string>();
-  const [srcLogo, setSrcLogo] = useState<string>();
-  const [dstTicker, setDstTicker] = useState<string>();
-  const [dstLogo, setDstLogo] = useState<string>();
   const [approveConfIsShown, setApproveConfIsShown] = useState<boolean>(false);
   const [swapConfIsShown, setSwapConfIsShown] = useState<boolean>(false);
   const [fee, setFee] = useState<string>();
@@ -86,38 +90,174 @@ const SwapScreen = () => {
   const addressService = useAddressesService();
   const specService = useCoinSpecsService();
 
-  const {isLoading, error: networksError, coins: parentCoins} = useGetAvailableNetworks();
+  const {isLoading, error: networksError, coins: _parentCoins} = useGetAvailableNetworks();
+  const [parentCoins, setParentCoins] = useState<_INetwork[]>([]);
+  const parentCoinsRef = useRef(parentCoins);
+  useEffect(() => {
+    setParentCoins(prev => {
+      const checkedIds = new Set<string>();
+      let needUpdate = false;
+      for (const _pCoin of _parentCoins) {
+        const found = prev.find(
+          p =>
+            p.id === _pCoin.id &&
+            p.coinName === _pCoin.name &&
+            p.networkName === _pCoin.networkName &&
+            p.logo === _pCoin.logo &&
+            p.ticker === _pCoin.ticker,
+        );
+        if (!found) {
+          needUpdate = true;
+          break;
+        }
+        checkedIds.add(found.id);
+      }
+      if (needUpdate || checkedIds.size !== prev.length) {
+        setNetwork(p => {
+          let endVariant = _parentCoins?.find(pp => pp.id === networkFromRouteRef.current) ?? _parentCoins[0];
+          if (p) {
+            endVariant = _parentCoins?.find(c => c.id === p.id) ?? endVariant;
+          }
+          if (!endVariant) {
+            return undefined;
+          }
+          return {
+            id: endVariant.id,
+            networkName: endVariant.networkName,
+            coinName: endVariant.name,
+            logo: endVariant.logo,
+            ticker: endVariant.ticker,
+          };
+        });
+        const res =
+          _parentCoins?.map(c => ({
+            id: c.id,
+            coinName: c.name,
+            logo: c.logo,
+            networkName: c.networkName,
+            ticker: c.ticker,
+          })) ?? [];
+        parentCoinsRef.current = res;
+        return res;
+      }
+      return prev;
+    });
+  }, [_parentCoins]);
+
   const coins = useCoinsSelector({isSwap: true});
 
-  const balancesState = useAddressesBalance(inCoin);
+  const [networkOptions, setNetworkOptions] = useState<NetworksOptions>({});
+
+  useEffect(() => {
+    setNetworkOptions(
+      parentCoins?.reduce<NetworksOptions>((options, coin) => {
+        options[coin.id] = {
+          id: coin.id,
+          name: coin.networkName || coin.coinName,
+          logo: coin.logo,
+        };
+        return options;
+      }, {}) ?? {},
+    );
+  }, [parentCoins]);
+
+  useEffect(() => {
+    setNetwork(parentCoinsRef.current.find(c => c.id === networkFromRoute) ?? parentCoinsRef.current[0]);
+  }, [networkFromRoute]);
+
+  const {
+    error: availableCoinsError,
+    errors: availableCoinsErrors,
+    isLoading: availableCoinsLoading,
+    coins: coinsForSwap,
+  } = useAvailableCoins(network?.id);
+
+  const [srcCoins, setSrcCoins] = useState<NonNullable<typeof coins>>([]);
+  const [dstCoins, setDstCoins] = useState<NonNullable<typeof coinsForSwap>>([]);
+  useEffect(() => {
+    let _srcCoins = [];
+    let _dstCoins;
+    if (coinsForSwap?.length && network) {
+      for (const coin of coinsForSwap) {
+        const knownCoin = coins.find(c => c.id === coin.id);
+        if (knownCoin) {
+          if (knownCoin.id === network.id || knownCoin.parent === network.id) {
+            _srcCoins.push(knownCoin);
+          } else {
+            _srcCoins = [];
+            break;
+          }
+        }
+      }
+      if (_srcCoins.length) {
+        _dstCoins = coinsForSwap;
+      }
+    }
+    setSrcCoins(_srcCoins);
+    setDstCoins(_dstCoins ?? []);
+  }, [coins, coinsForSwap, network]);
+  useEffect(() => {
+    let routeCoin, parentCoin;
+    if (!network?.id) {
+      return;
+    }
+    for (const coin of srcCoins) {
+      if (coin.id !== network.id && coin.parent !== network.id) {
+        return;
+      }
+      if (network?.id === coin.id) {
+        parentCoin = coin;
+      }
+      if (coin.id === srcCoinFromRoute) {
+        routeCoin = coin;
+        break;
+      }
+    }
+    setInCoin(routeCoin ?? parentCoin ?? srcCoins[0]);
+  }, [network?.id, srcCoinFromRoute, srcCoins]);
+  useEffect(() => {
+    let routeCoin, defaultCoin;
+    for (const coin of dstCoins) {
+      if (coin.default) {
+        defaultCoin = coin;
+      }
+      if (coin.id === dstCoinFromRoute) {
+        routeCoin = coin;
+        break;
+      }
+    }
+    setDstCoin(routeCoin ?? defaultCoin ?? dstCoins[0]);
+  }, [dstCoinFromRoute, dstCoins]);
+
+  const balancesState = useAddressesBalance(inCoin?.id);
 
   const {t} = useTranslation();
   const navigation = useNavigation();
 
-  const {contractAddress, error: spenderError} = useGetSpenderForCoin(network);
+  const {contractAddress, error: spenderError} = useGetSpenderForCoin(network?.id);
 
   const {
     request: requestApproval,
     error: approvalError,
     loading: approvalsLoading,
     approvals,
-  } = useUnconfirmedApprovals(network, inCoin, address);
+  } = useUnconfirmedApprovals(network?.id, inCoin?.id, address);
 
   const networkPattern: EthPattern | null = useMemo(() => {
-    if (network) {
-      return patternService.createEthPattern(network, addressService.getGetterDelegate(network));
+    if (network?.id) {
+      return patternService.createEthPattern(network?.id, addressService.getGetterDelegate(network?.id));
     }
 
     return null;
-  }, [network, patternService, addressService]);
+  }, [network?.id, patternService, addressService]);
 
   const coinPattern: Erc20Pattern | null = useMemo(() => {
-    if (inCoin && network && inCoin !== network && !isLoading) {
-      return patternService.createErc20Pattern(inCoin, addressService.getGetterDelegate(inCoin));
+    if (inCoin?.id && network?.id && inCoin.id !== network.id && !isLoading) {
+      return patternService.createErc20Pattern(inCoin.id, addressService.getGetterDelegate(inCoin.id));
     }
 
     return null;
-  }, [inCoin, network, isLoading, patternService, addressService]);
+  }, [inCoin?.id, network?.id, isLoading, patternService, addressService]);
 
   const {
     error: allowanceError,
@@ -125,7 +265,7 @@ const SwapScreen = () => {
     insufficientAmount,
     request: requestInsufficientApprovedAmount,
     isLoading: allowanceLoading,
-  } = useInsufficientApprovedAmount(address, network, inCoin, inAmount);
+  } = useInsufficientApprovedAmount(address, network?.id, inCoin?.id, inAmount);
 
   const {
     spentAmount: realSpentAmount,
@@ -136,38 +276,6 @@ const SwapScreen = () => {
     isLoading: txLoading,
     getSwapTx,
   } = useGetSwapTx();
-
-  const networkOptions: NetworksOptions = useMemo((): NetworksOptions => {
-    if (isLoading || !parentCoins) {
-      return {};
-    }
-
-    const options: NetworksOptions = {};
-    parentCoins.forEach(coin => {
-      options[coin.id] = {
-        id: coin.id,
-        name: coin.networkName || coin.name,
-        logo: coins.find(element => element.id === coin.id)?.logo,
-      };
-    });
-
-    return options;
-  }, [isLoading, parentCoins, coins]);
-
-  const filteredCoins = useMemo(() => {
-    if (!network) {
-      return [];
-    }
-
-    return coins.filter(coin => coin.parent === network || coin.id === network);
-  }, [network, coins]);
-
-  const {
-    error: availableCoinsError,
-    errors: availableCoinsErrors,
-    isLoading: availableCoinsLoading,
-    coins: dstCoins,
-  } = useAvailableCoins(network);
 
   useEffect(() => {
     let canceled = false;
@@ -193,16 +301,19 @@ const SwapScreen = () => {
     errors: getInfoErrors,
     price,
   } = useGetSwapInfo({
-    coin: network,
-    fromCoin: inCoin,
+    coin: network?.id,
+    fromCoin: inCoin?.id,
     address: address,
-    toCoin: dstCoin,
+    toCoin: dstCoin?.id,
     gasPrice: gasPrice?.gasPrice,
     amount: inAmount,
   });
 
   const showApproveConf = useCallback(() => setApproveConfIsShown(true), []);
-  const hideApproveConf = useCallback(() => setApproveConfIsShown(false), []);
+  const hideApproveConf = useCallback(() => {
+    setApproveConfIsShown(false);
+    setLoading(false);
+  }, []);
   const showSwapConf = useCallback(() => setSwapConfIsShown(true), []);
   const hideSwapConf = useCallback(() => setSwapConfIsShown(false), []);
   const showErrorModal = useCallback(() => setErrorModalIsShown(true), []);
@@ -225,7 +336,7 @@ const SwapScreen = () => {
   const onApproveSubmit = useCallback(async () => {
     setLoading(true);
     if (
-      !inCoin ||
+      !inCoin?.id ||
       !inAmount ||
       !address ||
       !contractAddress ||
@@ -249,7 +360,7 @@ const SwapScreen = () => {
       return;
     }
   }, [
-    inCoin,
+    inCoin?.id,
     inAmount,
     address,
     contractAddress,
@@ -265,10 +376,10 @@ const SwapScreen = () => {
     if (
       !approveTxs ||
       approveTxs.length === 0 ||
-      !network ||
+      !network?.id ||
       !networkPattern ||
       !address ||
-      !inCoin ||
+      !inCoin?.id ||
       !contractAddress ||
       approveSubmitting
     ) {
@@ -279,7 +390,7 @@ const SwapScreen = () => {
     networkPattern
       .sendApproveTransactions(approveTxs, {
         address: address,
-        coin: inCoin,
+        coin: inCoin.id,
         contract: contractAddress,
       })
       .then(() => {
@@ -292,17 +403,15 @@ const SwapScreen = () => {
         }
       })
       .finally(() => {
-        setLoading(false);
         setApproveSubmitting(false);
+        hideApproveConf();
       });
-
-    hideApproveConf();
   }, [
     approveTxs,
-    network,
+    network?.id,
     networkPattern,
     address,
-    inCoin,
+    inCoin?.id,
     contractAddress,
     approveSubmitting,
     hideApproveConf,
@@ -311,14 +420,24 @@ const SwapScreen = () => {
 
   const onSwapAccept = useCallback(() => {
     const f = async () => {
-      if (!dstCoin || !network || !tx || !networkPattern || !inCoin || !receiveAmount || error || swapSubmitting) {
+      if (
+        !dstCoin?.id ||
+        !network?.id ||
+        !(+inAmount > 0) ||
+        !tx ||
+        !networkPattern ||
+        !inCoin?.id ||
+        !realReceiveAmount ||
+        error ||
+        swapSubmitting
+      ) {
         return;
       }
 
       setSwapSubmitting(true);
 
       const nonce = await networkPattern.getNonce(tx);
-      const chainId = specService.getSpec(network)?.chainId;
+      const chainId = specService.getSpec(network?.id)?.chainId;
 
       const {gas, ...other} = tx;
 
@@ -331,10 +450,10 @@ const SwapScreen = () => {
 
       try {
         await networkPattern.sendSwapTransactions([signedTx], {
-          srcCoin: inCoin,
+          srcCoin: inCoin.id,
           srcAmount: inAmount,
-          dstCoin: dstCoin,
-          dstAmount: receiveAmount,
+          dstCoin: dstCoin.id,
+          dstAmount: realReceiveAmount,
         });
       } catch (e) {
         setLoading(false);
@@ -352,12 +471,12 @@ const SwapScreen = () => {
     setLoading(true);
     f();
   }, [
-    dstCoin,
-    network,
+    dstCoin?.id,
+    network?.id,
     tx,
     networkPattern,
-    inCoin,
-    receiveAmount,
+    inCoin?.id,
+    realReceiveAmount,
     error,
     swapSubmitting,
     specService,
@@ -369,10 +488,11 @@ const SwapScreen = () => {
 
   const onSwapSubmit = useCallback(async () => {
     if (
-      !network ||
-      !inCoin ||
-      !dstCoin ||
+      !network?.id ||
+      !inCoin?.id ||
+      !dstCoin?.id ||
       !inAmount ||
+      +inAmount === 0 ||
       !slippageTolerance ||
       !address ||
       !networkPattern ||
@@ -381,21 +501,21 @@ const SwapScreen = () => {
       return;
     }
 
-    const realNetwork = coins.find(e => e.id === inCoin)?.parent;
+    const realNetwork = coins.find(e => e.id === inCoin?.id)?.parent;
 
-    if (inCoin !== network && realNetwork !== network) {
+    if (inCoin.id !== network.id && realNetwork !== network.id) {
       return;
     }
 
     setBlocked(true);
     setSubmitSwap(true);
 
-    await coinService.enablePregenedCoin(dstCoin);
+    await coinService.enablePregenedCoin(dstCoin.id);
 
     getSwapTx({
-      coin: network,
-      fromCoin: inCoin,
-      toCoin: dstCoin,
+      coin: network?.id,
+      fromCoin: inCoin.id,
+      toCoin: dstCoin.id,
       amount: inAmount,
       slippage: slippageTolerance,
       allowPartialFill: false,
@@ -403,9 +523,9 @@ const SwapScreen = () => {
       address: address,
     });
   }, [
-    network,
-    inCoin,
-    dstCoin,
+    network?.id,
+    inCoin?.id,
+    dstCoin?.id,
     inAmount,
     slippageTolerance,
     address,
@@ -429,11 +549,17 @@ const SwapScreen = () => {
     [balancesState],
   );
 
-  const onNetworkSelect = useCallback((value: string) => {
-    setInCoin(undefined);
-    setFee(undefined);
-    setNetwork(value);
-  }, []);
+  const onNetworkSelect = useCallback(
+    (value: string) => {
+      setInCoin(undefined);
+      setFee(undefined);
+      setSrcCoins([]);
+      setDstCoin(undefined);
+      setDstCoins([]);
+      setNetwork(parentCoins?.find(p => p.id === value));
+    },
+    [parentCoins],
+  );
 
   const onFinish = useCallback(() => {
     hideSuccessModal();
@@ -446,25 +572,6 @@ const SwapScreen = () => {
       ],
     });
   }, [navigation, hideSuccessModal]);
-
-  useEffect(() => {
-    if (!isLoading && !network && parentCoins?.[0]?.id) {
-      setNetwork(selectedNetwork || parentCoins[0].id);
-    }
-  }, [parentCoins, isLoading, network, selectedCoin, selectedNetwork]);
-
-  useEffect(() => {
-    if (!inCoin && filteredCoins?.[0]) {
-      if (!filteredCoins.find(e => e.id === selectedCoin)) {
-        setInCoin(filteredCoins[0].id);
-      } else {
-        setInCoin(selectedCoin);
-      }
-    }
-  }, [filteredCoins, inCoin, selectedCoin]);
-
-  useEffect(() => setInCoin(selectedCoin), [selectedCoin]);
-  useEffect(() => setNetwork(selectedNetwork), [selectedNetwork]);
 
   useEffect(() => {
     if (!balancesState || !balancesState.balances || balancesState.balances.length === 0) {
@@ -486,26 +593,9 @@ const SwapScreen = () => {
   }, [balancesState, address]);
 
   useEffect(() => {
-    const coin = coins.find(c => c.id === inCoin);
-    setSrcTicker(coin?.ticker);
-    setFeeTicker(coin?.parentTicker || coin?.ticker);
-    setSrcLogo(coin?.logo);
-  }, [coins, inCoin]);
-
-  useEffect(() => {
-    if (!dstCoins) {
-      return;
-    }
-
-    const coin = dstCoins.find(c => c.id === dstCoin);
-    setDstTicker(coin?.ticker);
-    setDstLogo(coin?.logo);
-  }, [dstCoin, dstCoins, network]);
-
-  useEffect(() => {
-    if (tx && network && networkPattern && submitSwap && gasPrice) {
+    if (tx && network?.id && networkPattern && submitSwap && gasPrice) {
       const estimateFee = networkPattern.getFee(gasPrice, tx.gas, txPriority);
-      const networkBalance = coins.find(c => c.id === network)?.total || '0';
+      const networkBalance = coins.find(c => c.id === network?.id)?.total || '0';
       if (stringNumberGt(networkBalance, estimateFee)) {
         setFee(makeRoundedBalance(6, estimateFee));
         showSwapConf();
@@ -517,18 +607,7 @@ const SwapScreen = () => {
       setSubmitSwap(false);
       setBlocked(false);
     }
-  }, [tx, network, txPriority, networkPattern, submitSwap, coins, showSwapConf, t, gasPrice]);
-
-  useEffect(() => {
-    if (dstCoins && dstCoins.length > 0) {
-      for (const c of dstCoins) {
-        if (c.id !== network && c.default) {
-          setDstCoin(c.id);
-          setDstLogo(c.logo);
-        }
-      }
-    }
-  }, [dstCoins, network]);
+  }, [tx, network?.id, txPriority, networkPattern, submitSwap, coins, showSwapConf, t, gasPrice]);
 
   useEffect(() => {
     if (isLoading) {
@@ -543,7 +622,7 @@ const SwapScreen = () => {
     }
 
     if (txError === 'insufficient funds') {
-      setError(`${t('insufficientNetworkFunds')} ${network}`);
+      setError(`${t('insufficientNetworkFunds')} ${network?.id}`);
       setLoading(false);
       setBlocked(false);
       return;
@@ -594,7 +673,7 @@ const SwapScreen = () => {
     showErrorModal,
     approvalError,
     isLoading,
-    network,
+    network?.id,
   ]);
 
   useEffect(() => {
@@ -602,14 +681,14 @@ const SwapScreen = () => {
   }, [isLoading, allowanceLoading, txLoading, availableCoinsLoading]);
 
   useEffect(() => {
-    setDisabled(!network || !inCoin || !inAmount || !address || !!error || !stringNumberGt(inAmount, '0'));
-  }, [network, inCoin, inAmount, address, error]);
+    setDisabled(!network?.id || !inCoin?.id || !inAmount || !address || !!error || !stringNumberGt(inAmount, '0'));
+  }, [network?.id, inCoin?.id, inAmount, address, error]);
 
   useEffect(() => {
     if (!approving) {
       requestInsufficientApprovedAmount();
     }
-  }, [address, network, inCoin, approving, requestInsufficientApprovedAmount]);
+  }, [address, network?.id, inCoin?.id, approving, requestInsufficientApprovedAmount]);
 
   useEffect(() => {
     if (!approvalsLoading) {
@@ -647,8 +726,12 @@ const SwapScreen = () => {
   }, []);
 
   useEffect(() => {
-    setError(undefined);
-  }, [inCoin, network, dstCoin, inAmount, address]);
+    if (inCoin?.id && dstCoin?.id && inCoin.id === dstCoin.id) {
+      setError(t('sameSwap'));
+    } else {
+      setError(undefined);
+    }
+  }, [inCoin?.id, network?.id, dstCoin?.id, inAmount, address, t]);
 
   useEffect(() => {
     if (inAmount && balance && stringNumberGt(inAmount, balance)) {
@@ -657,14 +740,8 @@ const SwapScreen = () => {
   }, [inAmount, balance, t]);
 
   useEffect(() => {
-    if (inCoin && dstCoin && inCoin === dstCoin) {
-      setError(t('sameSwap'));
-    }
-  }, [inCoin, dstCoin, t]);
-
-  useEffect(() => {
     setInAmount('0.0');
-  }, [inCoin]);
+  }, [inCoin?.id]);
 
   useEffect(() => {
     if (error) {
@@ -711,6 +788,20 @@ const SwapScreen = () => {
     [onTxPriorityChange, hideSettings],
   );
 
+  const onSrcCoinSelect = useCallback(
+    (id: string) => {
+      setInCoin(srcCoins?.find(c => c.id === id));
+    },
+    [srcCoins],
+  );
+
+  const onDstCoinSelect = useCallback(
+    (id: string) => {
+      setDstCoin(dstCoins?.find(c => c.id === id));
+    },
+    [dstCoins],
+  );
+
   return (
     <Screen
       title={t('exchange')}
@@ -723,7 +814,7 @@ const SwapScreen = () => {
       <KeyboardAwareScrollView keyboardShouldPersistTaps={'handled'} contentContainerStyle={styles.scroll}>
         <View style={styles.swapBlock}>
           <NetworkSelector
-            value={network}
+            value={network?.id}
             networks={networkOptions}
             onSelect={onNetworkSelect}
             containerStyle={styles.network}
@@ -731,24 +822,24 @@ const SwapScreen = () => {
           />
           <SourceCoinElement
             balance={balance || '0'}
-            ticker={srcTicker || ''}
+            ticker={inCoin?.ticker || ''}
             containerStyle={styles.srcBlock}
             amount={inAmount}
             onAmountChange={setInAmount}
-            coins={filteredCoins}
-            onCoinSelect={setInCoin}
-            logo={srcLogo}
+            coins={srcCoins}
+            onCoinSelect={onSrcCoinSelect}
+            logo={inCoin?.logo}
           />
           <View style={styles.swapButton}>
             <CustomIcon name={'exchange1'} color={theme.colors.green} size={18} />
           </View>
           <DestinationCoinElement
-            ticker={dstTicker || ''}
+            ticker={dstCoin?.ticker || ''}
             amount={makeRoundedBalance(6, receiveAmount || '0')}
             containerStyle={styles.destBlock}
-            coins={dstCoins || []}
-            onCoinSelect={setDstCoin}
-            logo={dstLogo}
+            coins={dstCoins}
+            onCoinSelect={onDstCoinSelect}
+            logo={dstCoin?.logo}
           />
           <AddressSelector
             label={t('From account')}
@@ -756,14 +847,16 @@ const SwapScreen = () => {
             addresses={balancesState.balances}
             onSelect={onAddressSelect}
             selectedAddress={addressIndex}
-            ticker={srcTicker || ''}
-            baseTicker={feeTicker}
+            ticker={inCoin?.ticker || ''}
+            baseTicker={network?.ticker}
           />
         </View>
         <View style={styles.priceView}>
           <Text style={styles.price}>{!!price && price !== '0' && t('price')}</Text>
           <Text style={styles.price}>
-            {!!price && price !== '0' && `${makeRoundedBalance(4, price)} ${srcTicker} ${t('per')} 1 ${dstTicker}`}
+            {!!price &&
+              price !== '0' &&
+              `${makeRoundedBalance(4, price)} ${inCoin?.ticker} ${t('per')} 1 ${dstCoin?.ticker}`}
           </Text>
         </View>
         {approving || waitSwapProvider ? (
@@ -796,7 +889,7 @@ const SwapScreen = () => {
           contract={contractAddress || ''}
           fee={fee || ''}
           loading={approveSubmitting}
-          feeTicker={feeTicker || ''}
+          feeTicker={network?.ticker || ''}
         />
         <SwapConfirmationModal
           visible={swapConfIsShown}
@@ -804,14 +897,14 @@ const SwapScreen = () => {
           onAccept={onSwapAccept}
           contract={contractAddress || ''}
           fee={fee || ''}
-          srcCoin={srcTicker || ''}
-          srcLogo={srcLogo}
+          srcCoin={inCoin?.ticker || ''}
+          srcLogo={inCoin?.logo}
           srcAmount={makeRoundedBalance(4, realSpentAmount || '0')}
-          dstCoin={dstTicker || ''}
-          dstLogo={dstLogo}
+          dstCoin={dstCoin?.ticker || ''}
+          dstLogo={dstCoin?.logo}
           dstAmount={makeRoundedBalance(4, realReceiveAmount || '0')}
           loading={swapSubmitting}
-          feeTicker={feeTicker || ''}
+          feeTicker={network?.ticker || ''}
         />
         <WarningModal
           title={t('internal error')}

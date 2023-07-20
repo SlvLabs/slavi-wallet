@@ -3493,6 +3493,31 @@
     protobufjs "^7.2.3"
     react-i18next "^11.7.3"
 
+"@slavi/wallet-core@git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#d4eeefb22cf800322897d3ac06940a216ad4b9ca":
+  version "1.0.0"
+  resolved "git+ssh://git@gitlab.com/defi-wallet/defi-wallet.git#d4eeefb22cf800322897d3ac06940a216ad4b9ca"
+  dependencies:
+    "@json-rpc-tools/utils" "^1.7.6"
+    "@reduxjs/toolkit" "^1.3.6"
+    "@slavi/crypto-core" "git+ssh://git@gitlab.com/defi-wallet/crypto-core.git#master"
+    "@slavi/react-web-socket" "git+ssh://git@gitlab.com/defi-wallet/react-web-socket#3.0.4"
+    "@solana/web3.js" "^1.31.0"
+    "@walletconnect/client" "^1.7.1"
+    "@walletconnect/types" "^2.8.4"
+    "@walletconnect/utils" "^2.8.4"
+    "@walletconnect/web3wallet" "^1.8.1"
+    bip21 "^2.0.3"
+    bs58 "^4.0.1"
+    bs58check "^2.1.2"
+    decimal.js "^10.2.1"
+    ed25519-hd-key "1.2.0"
+    eth-sig-util "^3.0.1"
+    ethers "^5.0.23"
+    i18next "^19.8.2"
+    lodash "^4.17.20"
+    protobufjs "^7.2.3"
+    react-i18next "^11.7.3"
+
 "@solana/buffer-layout@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@solana/buffer-layout/-/buffer-layout-3.0.0.tgz#b9353caeb9a1589cb77a1b145bcb1a9a93114326"

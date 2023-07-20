@@ -5,6 +5,7 @@ export default {
     dark: '#171717',
     white: '#fff',
     violet: '#BF8FDD',
+    violet2: '#9153BF',
     whiteOpacity: 'rgba(255,255,255,0.8)',
     lightTransparent: 'rgba(255,255,255,0.08)',
     mediumTransparent: 'rgba(255,255,255,0.3)',

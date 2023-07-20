@@ -12,6 +12,7 @@ import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-servi
 import {useDeleteAccount} from '../../hooks/useDeleteAccount';
 import {useLogout} from '../../hooks/useLogout';
 import {getReadableVersion, getVersion} from 'react-native-device-info';
+import {getAppVersion} from "../../utils/get-app-version";
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22} />;
 
@@ -143,9 +144,7 @@ const SettingsScreen = () => {
           </ListItem.Content>
         </ListItem>
         <View style={styles.versionView}>
-          <Text style={styles.version}>{`${t('version')}: ${
-            Platform.OS === 'ios' ? getReadableVersion() : getVersion()
-          }`}</Text>
+          <Text style={styles.version}>{`${t('version')}: ${getAppVersion()}`}</Text>
         </View>
       </KeyboardAwareScrollView>
       {deleteAccountModal}

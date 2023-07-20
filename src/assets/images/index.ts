@@ -48,4 +48,5 @@ export const operationNftTransfer = require('./operation-nft-transfer.png');
 export const swapIcon = require('./swap-icon.png');
 export const attention = require('./attention.png');
 export const zoom_plus = require('./zoom_plus.png');
+export const releaseNoteLogo = require('./release-notes-logo.png');
 

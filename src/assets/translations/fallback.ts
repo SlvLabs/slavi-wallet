@@ -637,6 +637,9 @@ const translations = {
   walletConnectRequiredBlockchains: 'Required blockchains',
   walletConnectAddress: 'Select address for blockchains',
   dappName: 'DApp name',
+
+  // ---
+  releaseNotesHeader: 'Slavi Wallet {{version}} updates',
 };
 
 export default translations;

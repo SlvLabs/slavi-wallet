@@ -36,6 +36,7 @@ import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/no
 import {saveReferral} from './utils/save-utm-interval';
 import {useAppExit} from './hooks/use-app-exit';
 import WalletConnectSessionRequestModalV2 from "./components/wallet-connect/session-request-modal-v2";
+import {ReleaseNoteModal} from "./components/modal/release-note-modal";
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -324,6 +325,7 @@ const App: () => ReactNode = () => {
             {!isBootstrapped && <WalletConnectTxRequestModal />}
             {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
             {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized} />}
+            {!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized && <ReleaseNoteModal />}
             {devMode && (
               <Text
                 style={{

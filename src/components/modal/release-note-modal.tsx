@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import BaseModal, {BaseModalProps} from './base-modal';
+import BaseModal from './base-modal';
 import {Image, Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {releaseNoteLogo} from '../../assets/images';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
@@ -7,7 +7,7 @@ import {getAppVersion} from '../../utils/get-app-version';
 import theme from '../../theme';
 import CustomIcon from '../custom-icon/custom-icon';
 import Layout from '../../utils/layout';
-import {useReleaseNotes} from "@slavi/wallet-core/src/hooks/use-release-notes";
+import {useReleaseNotes} from '@slavi/wallet-core/src/hooks/use-release-notes';
 
 const MAX_RELEASE_NOTES_COUNT = 30;
 

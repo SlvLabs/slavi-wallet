@@ -167,9 +167,7 @@ const SendSolanaBasedScreen = (props: SendSolanaScreenProps) => {
           return false;
         }
         if (e instanceof InsufficientFunds) {
-          let text = t(
-            'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
-          );
+          let text = t('serverInsufficientFunds');
 
           if (coinDetails.parent && e.coin === coinDetails.parent) {
             text += ` (${coinDetails.parentName})`;

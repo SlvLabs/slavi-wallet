@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
   iconWrap: {
     flex: 1,
     marginLeft: 8,
+    justifyContent: 'center',
   },
   errorContainer: {
     padding: 8,

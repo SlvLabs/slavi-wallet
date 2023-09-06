@@ -7,7 +7,10 @@ import ApplicationTabs from './ApplicationTabs';
 import HelpPageScreen from '../containers/account-initialization/HelpPageScreen';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import {isReadyRef, navigationRef} from './navigate';
-import InitializationFinishStack from './initialization-finish-stack';
+import AccountReadyScreen from '../containers/finish-initialization/account-ready-screen';
+import {InitializationReferralScreen} from '../containers/finish-initialization/initialization-referral-screen';
+import {createStackNavigator} from '@react-navigation/stack';
+import ROUTES from './config/routes';
 
 interface MainNavigatorProps {
   isInitialized: boolean;
@@ -16,6 +19,25 @@ interface MainNavigatorProps {
   isInitializationFinished: boolean;
   isUpdateRequired: boolean;
   helpShow: boolean;
+  isReferralShow: boolean;
+}
+
+const Stack = createStackNavigator();
+
+function getDefaultRoute(props: MainNavigatorProps) {
+  if (props.isInitializationFinished) {
+    return ROUTES.MAIN.ACCOUNT_READY;
+  }
+
+  if (props.helpShow) {
+    return ROUTES.MAIN.HELP;
+  }
+
+  if (props.isReferralShow) {
+    return ROUTES.MAIN.REFERRAL;
+  }
+
+  return ROUTES.MAIN.TABS;
 }
 
 const MainNavigator = (props: MainNavigatorProps) => {
@@ -43,22 +65,14 @@ const MainNavigator = (props: MainNavigatorProps) => {
     );
   }
 
-  if (props.isInitializationFinished) {
-    console.log('isInitializationFinished');
-    return (
-      <NavigationContainer theme={DarkTheme}>
-        <InitializationFinishStack />
-      </NavigationContainer>
-    );
-  }
-
-  if (props.helpShow) {
-    return <HelpPageScreen />;
-  }
-
   return (
     <NavigationContainer theme={DarkTheme} ref={navigationRef} onReady={() => isReadyRef.resolve()}>
-      <ApplicationTabs />
+      <Stack.Navigator initialRouteName={getDefaultRoute(props)} screenOptions={{headerShown: false}}>
+        <Stack.Screen name={ROUTES.MAIN.ACCOUNT_READY} component={AccountReadyScreen} />
+        <Stack.Screen name={ROUTES.MAIN.HELP} component={HelpPageScreen} />
+        <Stack.Screen name={ROUTES.MAIN.REFERRAL} component={InitializationReferralScreen} />
+        <Stack.Screen name={ROUTES.MAIN.TABS} component={ApplicationTabs} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

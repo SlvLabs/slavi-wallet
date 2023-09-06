@@ -1,12 +1,13 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text, Touchable} from 'react-native';
+import React, {useCallback, useRef} from 'react';
+import {StyleSheet, TextInput, TextStyle, View, ViewStyle, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import {Clipboard} from '@react-native-community/clipboard/dist/Clipboard';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export interface CopiedTextAreaProps {
+  value: string;
   onChange?: (value: string) => void;
   containerStyle?: ViewStyle;
   buttonStyle?: ViewStyle;
@@ -16,36 +17,35 @@ export interface CopiedTextAreaProps {
 
 export const DEFAULT_LINE_NUMBER = 5;
 
-const InsertableTextArea = (props: CopiedTextAreaProps) => {
-  const [value, setValue] = useState<string>('');
-
+const InsertableTextArea = ({
+  value,
+  onChange,
+  containerStyle,
+  buttonStyle,
+  inputStyle,
+  lineNumber,
+}: CopiedTextAreaProps) => {
   const onPress = useCallback(async () => {
-    Clipboard.getString().then((val: string) => setValue(val));
-  }, []);
+    Clipboard.getString().then(onChange);
+  }, [onChange]);
 
   const {t} = useTranslation();
-
-  useEffect(() => {
-    if (props.onChange) {
-      props.onChange(value);
-    }
-  }, [props, value]);
 
   const inputRef = useRef<TextInput>(null);
 
   const onPressContainer = useCallback(() => {
-    if(inputRef.current) {
-      inputRef.current.focus()
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   }, []);
 
   return (
-    <View style={{...styles.container, ...props.containerStyle}}>
+    <View style={{...styles.container, ...containerStyle}}>
       <View style={styles.buttonRow}>
         <Button
           title={t('Insert')}
           type="clear"
-          style={{...styles.button, ...props.buttonStyle}}
+          style={{...styles.button, ...buttonStyle}}
           titleStyle={styles.buttonTittle}
           onPress={onPress}
         />
@@ -56,10 +56,10 @@ const InsertableTextArea = (props: CopiedTextAreaProps) => {
         )}
       </View>
       <TextInput
-        style={{...styles.input, ...props.inputStyle}}
-        numberOfLines={props.lineNumber || DEFAULT_LINE_NUMBER}
+        style={{...styles.input, ...inputStyle}}
+        numberOfLines={lineNumber || DEFAULT_LINE_NUMBER}
         value={value}
-        onChangeText={setValue}
+        onChangeText={onChange}
         textAlignVertical={'top'}
         selectionColor={theme.colors.darkWord}
         multiline={true}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: theme.colors.textLightGray,
     textAlignVertical: 'center',
-  }
+  },
 });
 
 export default InsertableTextArea;

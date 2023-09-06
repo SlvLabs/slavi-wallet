@@ -1,4 +1,10 @@
 const ROUTES = {
+  MAIN: {
+    ACCOUNT_READY: 'AccountReady',
+    HELP: 'HELP',
+    REFERRAL: 'InitializationReferralScreen',
+    TABS: 'Tabs',
+  },
   INITIALIZATION: {
     LOCALIZATION: 'Initialization/Localization',
     PASSCODE: 'Initialization/Passcode',

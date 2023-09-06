@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Lottie from 'lottie-react-native';
 import {referralAnimation} from '../../assets/annimation';
 import useTranslation from '../../utils/use-translation';
@@ -7,16 +7,18 @@ import theme from '../../theme';
 import {GoldenSolidButton} from '../../components/buttons/golden-solid-button';
 import {ReferralInput} from '../../components/referral/referral-input';
 import {useReferralCode} from '../../hooks/use-referral-code';
-import {useDispatch} from 'react-redux';
-import {hideFinish} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
-import {useRoute} from '@react-navigation/native';
-import {ReferralRouteProps} from '../../navigation/initialization-finish-stack';
+import {useDispatch, useSelector} from 'react-redux';
+import {hideReferral, ReferralState} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import {CaptchaModal} from '../../components/captcha/captcha-modal';
 import LinearGradient from 'react-native-linear-gradient';
 import Layout from '../../utils/layout';
+import {State} from '@slavi/wallet-core/src/store/index';
+import ROUTES from '../../navigation/config/routes';
+import OutlineButton from '../../components/buttons/outline-button';
+import {useNavigation} from '@react-navigation/native';
 
 export function InitializationReferralScreen() {
-  const route = useRoute<ReferralRouteProps>();
+  const {codeLen, invitingCode} = useSelector<State, ReferralState>(state => state.initialization.referralState);
 
   const dispatch = useDispatch();
 
@@ -31,24 +33,48 @@ export function InitializationReferralScreen() {
     captchaShown,
     hideCaptcha,
     isLoading,
-  } = useReferralCode(route.params.codeLen, route.params.invitingCode);
+  } = useReferralCode(codeLen || 6, invitingCode || null);
 
   const {t} = useTranslation();
+  const navigation = useNavigation();
 
-  const goNext = useCallback(() => dispatch(hideFinish()), [dispatch]);
+  const goToRewardHub = useCallback(() => {
+    dispatch(hideReferral());
+    navigation.reset({
+      index: 2,
+      routes: [
+        {
+          name: ROUTES.MAIN.TABS,
+        },
+        {
+          name: ROUTES.MAIN.TABS,
+          params: {screen: ROUTES.TABS.SETTINGS},
+        },
+        {
+          name: ROUTES.MAIN.TABS,
+          params: {screen: ROUTES.TABS.SETTINGS, params: {screen: ROUTES.SETTINGS.REFERRAL}},
+        },
+      ],
+    });
+  }, [dispatch, navigation]);
+
+  const goToWallet = useCallback(() => {
+    dispatch(hideReferral());
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.MAIN.TABS,
+        },
+      ],
+    });
+  }, [dispatch, navigation]);
 
   return (
     <LinearGradient {...theme.gradients.screenBackground} style={styles.container}>
       <Lottie source={referralAnimation} autoPlay={true} loop={true} style={styles.logo} />
-      <View style={styles.descriptionContainer}>
-        <Text style={styles.description1}>{t('referralInitDescription1')}</Text>
-        <View style={styles.row}>
-          <Text style={styles.description1}>{t('referralInitDescription2')}</Text>
-          <Text style={styles.description3}> {t('referralInitDescription3')}</Text>
-        </View>
-      </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>{t('referralInitInputLabel')}</Text>
+        <Text style={styles.label}>{t('referralInitInputLabelNew')}</Text>
         <ReferralInput
           value={code}
           onChange={onChangeCode}
@@ -58,14 +84,16 @@ export function InitializationReferralScreen() {
           buttonText={buttonText}
         />
       </View>
-      <TouchableOpacity onPress={goNext}>
-        <Text style={styles.notCode}>{t('referralNotCode')}</Text>
-      </TouchableOpacity>
       <GoldenSolidButton
-        title={t('referralContinue')}
+        title={t('referralExploreReward')}
         containerStyle={styles.button}
-        disabled={!isSuccess}
-        onPress={goNext}
+        onPress={goToRewardHub}
+        loading={isLoading}
+      />
+      <OutlineButton
+        title={t('referralGoToWallet')}
+        containerStyle={styles.button}
+        onPress={goToWallet}
         loading={isLoading}
       />
       <CaptchaModal visible={captchaShown} onSolved={onCaptchaSolved} onCancel={hideCaptcha} />
@@ -86,25 +114,6 @@ const styles = StyleSheet.create({
     paddingRight: Layout.isSmallDevice ? 16 : 32,
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  description1: {
-    fontFamily: theme.fonts.default,
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 20,
-    color: theme.colors.white,
-    textAlign: 'center',
-  },
-  description3: {
-    fontFamily: theme.fonts.default,
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 20,
-    color: theme.colors.gold2,
   },
   label: {
     fontFamily: theme.fonts.gilroy,

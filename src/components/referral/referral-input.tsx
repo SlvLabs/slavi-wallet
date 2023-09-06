@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
     paddingRight: 40,
   },
   icon: {
-    marginLeft: 20,
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   successContainer: {
     borderColor: theme.colors.green,

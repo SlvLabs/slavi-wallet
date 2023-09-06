@@ -571,8 +571,8 @@ const translations = {
   referralInitDescription1: 'Join our brand new event  and earn Teddies. Be the one who share',
   referralInitDescription3: 'a pool of $500 000',
   referralInitInputLabel: 'Enter your referral code',
-  referralNotCode: 'I don’t have a code',
-  referralContinue: 'Continue',
+  referralNotCode: 'Go to wallet',
+  referralContinue: 'Explore Reward hub',
   referralPaste: 'Paste',
   referralVerify: 'Verify',
   referralWrong: 'Wrong',
@@ -640,6 +640,16 @@ const translations = {
 
   // ---
   releaseNotesHeader: 'Slavi Wallet {{version}} updates',
+
+  // ---
+  or: 'or',
+  scanQr: 'Scan QR',
+  exploreWallet: 'Explore Wallet Features',
+  fullyPrepared: "You're fully prepared!",
+  fullyPreparedDesc: 'Your DeFi wallet is ready for operation',
+  referralExploreReward: 'Explore Reward Hub',
+  referralGoToWallet: 'Go to Wallet',
+  referralInitInputLabelNew: 'Submit Friend’s Referral Code',
 };
 
 export default translations;

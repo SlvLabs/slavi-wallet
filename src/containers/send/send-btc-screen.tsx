@@ -180,11 +180,7 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
         });
       } catch (e) {
         if (e instanceof InsufficientFunds) {
-          addError(
-            t(
-              'Server returned error: Insufficient funds. Perhaps the balance of the wallet did not have time to update.',
-            ),
-          );
+          addError(t('serverInsufficientFunds'));
         } else {
           setLocked(false);
           if (e instanceof CreateTransactionError) {

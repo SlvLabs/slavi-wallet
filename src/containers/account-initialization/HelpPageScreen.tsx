@@ -1,15 +1,20 @@
 import {Image, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import {useDispatch} from 'react-redux';
-import {skipHelp} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import {showReferral} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import Layout from '../../utils/layout';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import HelpWavesBackground from '../../components/background/help-waves-background';
 import {help_1, help_2, help_3, help_4, help_5} from '../../assets/images';
 import Carousel from 'react-native-snap-carousel';
+import {useGetReferralInfo} from '@slavi/wallet-core/src/providers/ws/hooks/referral/use-get-referral-info';
+import {CampaignStatus} from '@slavi/wallet-core/src/providers/ws/messages/refferal';
+import ROUTES from '../../navigation/config/routes';
+import {useNavigation} from '@react-navigation/native';
+
 enum Pages {
   deposit,
   trade,
@@ -55,19 +60,51 @@ function JumpButton({onPress, direction, enabled}: JumpButtonProps) {
 }
 
 export default function HelpPageScreen() {
+  const [readyToNext, setReadyToNext] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = React.useState(0);
   const _currentPageRef = useRef<number>(0);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const {isLoading, data} = useGetReferralInfo(true);
+
+  const toNext = useCallback(() => {
+    setReadyToNext(true);
+  }, []);
+
+  useEffect(() => {
+    if (!readyToNext || isLoading || !data) {
+      return;
+    }
+
+    if (data?.campaignStatus === CampaignStatus.active) {
+      dispatch(
+        showReferral({
+          invitingCode: data.invitingCode,
+          codeLen: data.codeLength,
+        }),
+      );
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: ROUTES.MAIN.REFERRAL,
+          },
+        ],
+      });
+    }
+  }, [data, dispatch, isLoading, navigation, readyToNext]);
+
   const onSnapToItem = useCallback(
     (newIndex: number) => {
       if (newIndex === allPages.length) {
-        dispatch(skipHelp());
+        toNext();
         return;
       }
       setCurrentPage(newIndex);
       _currentPageRef.current = newIndex;
     },
-    [dispatch],
+    [toNext],
   );
 
   const {t} = useTranslation();
@@ -78,12 +115,12 @@ export default function HelpPageScreen() {
   const snapToNext = useCallback(() => {
     if (carousel.current) {
       if (_currentPageRef.current === allPages.length - 1) {
-        dispatch(skipHelp());
+        toNext();
       } else {
         carousel.current.snapToNext();
       }
     }
-  }, [carousel, dispatch]);
+  }, [carousel, toNext]);
 
   const snapToPrev = useCallback(() => {
     if (carousel.current) {
@@ -91,8 +128,9 @@ export default function HelpPageScreen() {
     }
   }, [carousel]);
   const onSkip = useCallback(() => {
-    dispatch(skipHelp());
-  }, [dispatch]);
+    toNext();
+  }, [toNext]);
+
   const _renderItem = useCallback(
     ({item}: {item: Pages}) => {
       if (item === allPages.length) {
@@ -116,18 +154,18 @@ export default function HelpPageScreen() {
   const carouselOnScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (_currentPageRef.current === allPages.length) {
-        dispatch(skipHelp());
+        toNext();
         return;
       }
       if (scrollPos.current !== null) {
         if (_currentPageRef.current === allPages.length - 1) {
           if (e.nativeEvent.contentOffset.x - scrollPos.current > Layout.window.width / 4) {
-            dispatch(skipHelp());
+            toNext();
           }
         }
       }
     },
-    [dispatch],
+    [toNext],
   );
 
   const carouselOnScrollStart = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {

@@ -35,8 +35,8 @@ import {BlurView} from '@react-native-community/blur';
 import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 import {saveReferral} from './utils/save-utm-interval';
 import {useAppExit} from './hooks/use-app-exit';
-import WalletConnectSessionRequestModalV2 from "./components/wallet-connect/session-request-modal-v2";
-import {ReleaseNoteModal} from "./components/modal/release-note-modal";
+import WalletConnectSessionRequestModalV2 from './components/wallet-connect/session-request-modal-v2';
+import {ReleaseNoteModal} from './components/modal/release-note-modal';
 
 const App: () => ReactNode = () => {
   const [isAccountInitialized, setAccountInitialized] = useState<boolean>(false);
@@ -48,6 +48,7 @@ const App: () => ReactNode = () => {
   const [isUpdateRequired, setIsUpdateRequired] = useState<boolean>(false);
   const [isTimeFixRequired, setIsTimeFixRequired] = useState<boolean>(false);
   const [helpShow, setHelpShow] = useState<boolean>(false);
+  const [referralShow, setReferralShow] = useState<boolean>(false);
 
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = useState<boolean>(false);
@@ -101,6 +102,10 @@ const App: () => ReactNode = () => {
 
   store.subscribe(() => {
     setHelpShow(store.getState().initialization.helpShow);
+  });
+
+  store.subscribe(() => {
+    setReferralShow(store.getState().initialization.referralState.active);
   });
 
   store.subscribe(() =>
@@ -318,6 +323,7 @@ const App: () => ReactNode = () => {
               isInitializationFinished={isInitFinishShow}
               isUpdateRequired={isUpdateRequired}
               helpShow={helpShow}
+              isReferralShow={referralShow}
             />
             {!isBootstrapped && <WalletConnectSessionRequestModal />}
             {!isBootstrapped && <WalletConnectSessionRequestModalV2 />}

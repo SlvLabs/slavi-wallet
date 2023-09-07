@@ -650,6 +650,12 @@ const translations = {
   referralExploreReward: 'Explore Reward Hub',
   referralGoToWallet: 'Go to Wallet',
   referralInitInputLabelNew: 'Submit Friend’s Referral Code',
+
+  // MINA v1
+  minaAdvancedFeeHeader: 'Set fee limit',
+  minaAdvancedFeeLimitPlaceholder: 'Fee limit',
+  minaMemoInputLabel: 'Memo',
+  minaMemoIsTooLong: 'Memo is too long',
 };
 
 export default translations;

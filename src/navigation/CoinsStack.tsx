@@ -85,7 +85,6 @@ const CoinsStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.COINS.LIST}
-        headerMode={'screen'}
         screenOptions={defaultScreenOption}>
         <StackNavigator.Screen
           name={ROUTES.COINS.LIST}

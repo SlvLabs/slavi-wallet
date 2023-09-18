@@ -20,6 +20,7 @@ import TokenAddButton from '../../containers/token/token-add-button';
 
 export interface CoinsListCardProps {
   containerStyle: ViewStyle;
+  onContentSizeChange: (height: number) => void;
 }
 
 enum CoinsSortType {
@@ -115,9 +116,11 @@ const coinsReducer: CoinsReducer = (state, action) => {
   }
 };
 
-const CoinListCard = (props: CoinsListCardProps) => {
-  const {containerStyle} = props;
+function getHeight(count: number): number {
+  return count * 73 + 60;
+}
 
+const CoinListCard = ({containerStyle, onContentSizeChange}: CoinsListCardProps) => {
   const {t} = useTranslation();
   const coins = useCoinsSelector();
   const navigation = useNavigation();
@@ -196,8 +199,10 @@ const CoinListCard = (props: CoinsListCardProps) => {
     if (search.length > 0) {
       const newList: CoinDisplayData[] = searcher(coinsToCardState.coins, ['name', 'ticker'], search);
       setCoinsToList(newList);
+      onContentSizeChange(getHeight(newList.length));
     } else {
       setCoinsToList(coinsToCardState.coins);
+      onContentSizeChange(getHeight(coinsToCardState.coins.length));
     }
   }, [coinsToCardState.coins, search]);
 

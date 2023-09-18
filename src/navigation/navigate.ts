@@ -4,7 +4,8 @@ import Deferred from '@slavi/wallet-core/src/utils/deffered';
 
 export const isReadyRef = new Deferred<void>();
 
-export const navigationRef = createRef<NavigationContainerRef>();
+//TODO: remove any type
+export const navigationRef = createRef<NavigationContainerRef<any>>();
 
 export async function navigate(name: any, params?: any) {
   await isReadyRef.promise;

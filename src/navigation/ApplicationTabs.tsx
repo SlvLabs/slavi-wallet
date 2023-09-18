@@ -28,17 +28,6 @@ export default function ApplicationTabs() {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
 
-  const labels = useMemo(
-    () => ({
-      [ROUTES.TABS.COINS]: t('tab_Wallet'),
-      [ROUTES.TABS.DEFI]: t('tab_Earn'),
-      [ROUTES.TABS.OPERATIONS]: t('tab_Operations'),
-      [ROUTES.TABS.SWAP]: t('tab_Exchange'),
-      [ROUTES.TABS.SETTINGS]: t('tab_Settings'),
-    }),
-    [t],
-  );
-
   const getScreenOptions: GetScreenOptions = useCallback(
     ({route}: {route: {name: string}}) => ({
       tabBarIcon: ({size, focused}: any) => {
@@ -54,38 +43,33 @@ export default function ApplicationTabs() {
               }}
             />
             <CustomIcon name={name} size={size} color={focused ? theme.colors.borderGreen : theme.colors.gold2} />
-          </View>
-        );
-      },
-      tabBarLabel: ({color}: TextStyle) => {
-        return <Text style={{...styles.label, color: color}}>{labels[route.name]}</Text>;
-      },
+          </View>);
+        },
+        tabBarLabelStyle: styles.label,
+        activeTintColor: theme.colors.white,
+        tabBarStyle: {
+            height: 60 + insets.bottom,
+            backgroundColor: theme.colors.black,
+            paddingTop: 0,
+            paddingBottom: 4,
+        },
+        lazy: true,
+        headerShown: false,
     }),
-    [labels],
+    [insets],
   );
 
   return useMemo(
     () => (
-      <Tab.Navigator
-        screenOptions={getScreenOptions}
-        tabBarOptions={{
-          activeTintColor: theme.colors.white,
-          style: {
-            height: 60 + insets.bottom,
-            backgroundColor: theme.colors.black,
-            paddingTop: 0,
-          },
-          tabStyle: styles.tab,
-        }}
-        lazy={true}>
-        <Tab.Screen name={ROUTES.TABS.COINS} component={CoinsStack} />
-        <Tab.Screen name={ROUTES.TABS.DEFI} component={EarnStack} />
-        <Tab.Screen name={ROUTES.TABS.OPERATIONS} component={OperationsStack} />
-        <Tab.Screen name={ROUTES.TABS.SWAP} component={SwapStack} />
-        <Tab.Screen name={ROUTES.TABS.SETTINGS} component={SettingsStack} />
+      <Tab.Navigator screenOptions={getScreenOptions}>
+        <Tab.Screen name={ROUTES.TABS.COINS} component={CoinsStack} options={{tabBarLabel: t('tab_Wallet')}} />
+        <Tab.Screen name={ROUTES.TABS.DEFI} component={EarnStack} options={{tabBarLabel: t('tab_Earn')}} />
+        <Tab.Screen name={ROUTES.TABS.OPERATIONS} component={OperationsStack} options={{tabBarLabel: t('tab_Operations')}} />
+        <Tab.Screen name={ROUTES.TABS.SWAP} component={SwapStack} options={{tabBarLabel: t('tab_Exchange')}} />
+        <Tab.Screen name={ROUTES.TABS.SETTINGS} component={SettingsStack} options={{tabBarLabel: t('tab_Settings')}} />
       </Tab.Navigator>
     ),
-    [getScreenOptions, insets.bottom],
+    [getScreenOptions, insets.bottom, t],
   );
 }
 
@@ -98,15 +82,14 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     color: theme.colors.whiteOpacity,
   },
-  tab: {
-    height: 60,
-  },
   tabElement: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 10,
   },
+    focused: {
+        borderTopColor: theme.colors.borderGreen,
+        borderTopWidth: 1,
+    },
 });
-
-// export default ApplicationTabs;

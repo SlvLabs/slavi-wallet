@@ -49,8 +49,8 @@ export function ReleaseNoteModal() {
         <Image source={releaseNoteLogo} width={72} height={72} style={styles.image} />
         <Text style={styles.header}>{t('releaseNotesHeader', {version: version})}</Text>
         <ScrollView style={styles.scroll} horizontal={false}>
-          {notes.map(note => (
-            <ReleaseNoteEntity text={note} />
+          {notes.map((note, i) => (
+            <ReleaseNoteEntity text={note} key={i}/>
           ))}
         </ScrollView>
       </View>

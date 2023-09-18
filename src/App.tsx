@@ -299,9 +299,9 @@ const App: () => ReactNode = () => {
       }
     };
 
-    AppState.addEventListener('change', onChange);
+    const subscriber = AppState.addEventListener('change', onChange);
     return () => {
-      AppState.removeEventListener('change', onChange);
+      subscriber.remove()
     };
   }, []);
 

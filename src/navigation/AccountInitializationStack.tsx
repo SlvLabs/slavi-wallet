@@ -17,7 +17,6 @@ const AccountInitializationStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.ACCOUNT_INITIALIZATION.MENU}
-        headerMode={'screen'}
         screenOptions={{...defaultScreenOption, headerShown: false}}>
         <StackNavigator.Screen
           name={ROUTES.ACCOUNT_INITIALIZATION.MENU}

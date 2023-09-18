@@ -26,7 +26,6 @@ const EarnStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.EARN.MAIN}
-        headerMode={'screen'}
         screenOptions={defaultScreenOption}>
         <StackNavigator.Screen name={ROUTES.EARN.MAIN} component={EarnScreen} options={{headerShown: false}} />
         <StackNavigator.Screen name={ROUTES.EARN.INVESTMENT} component={WalletStakingEarnScreen} options={{headerShown: false}} />

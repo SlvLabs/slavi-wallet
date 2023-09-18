@@ -18,7 +18,6 @@ const SettingsSecurityStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.SETTINGS_SECURITY.MAIN}
-        headerMode={'screen'}
         screenOptions={defaultScreenOption}>
         <StackNavigator.Screen
           name={ROUTES.SETTINGS_SECURITY.MAIN}

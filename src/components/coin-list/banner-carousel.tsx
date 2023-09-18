@@ -78,6 +78,7 @@ export default function BannerCarousel() {
         style={styles.carousel}
         width={Layout.isSmallDevice ? 172 : 192}
         height={Layout.isSmallDevice ? 90 : 102}
+        autoFillData={true}
       />
     </View>
   );

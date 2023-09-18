@@ -45,14 +45,6 @@ public class MainActivity extends ReactActivity {
   }
 
   @Override
-  protected ReactActivityDelegate createReactActivityDelegate() {
-    return new ReactActivityDelegateWrapper(this,
-      new ReactActivityDelegate(this, getMainComponentName())
-    );
-  }
-
-
-  @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     if (hasFocus) {
       ReactActivity activity = this;

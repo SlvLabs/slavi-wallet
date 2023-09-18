@@ -26,7 +26,6 @@ const OperationsStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.OPERATIONS.LIST}
-        headerMode={'screen'}
         screenOptions={defaultScreenOption}>
         <StackNavigator.Screen
           name={ROUTES.OPERATIONS.LIST}

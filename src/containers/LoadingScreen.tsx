@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: (Layout.window.height * 600) / 724,
+    width: 480,
   },
   background: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import useNftList from '@slavi/wallet-core/src/providers/ws/hooks/nft/use-nft-list';
 import Spinner from '../spinner';
@@ -11,10 +11,23 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import NftFilterRow from './nft-filter-row';
 
-export default function NftList() {
+interface NftListProps {
+  onContentSizeChange: (height: number) => void;
+}
+
+
+function getHeight(count: number): number {
+  return count * 356 + 16;
+}
+
+export default function NftList({onContentSizeChange}: NftListProps) {
   const {list, isLoading, switchHidden, filter} = useNftList();
   const {t} = useTranslation();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    onContentSizeChange(getHeight(list?.length || 0));
+  }, [onContentSizeChange, list?.length]);
 
   const onElementPress = useCallback(
     (id: string, contract: string, network: string) => {

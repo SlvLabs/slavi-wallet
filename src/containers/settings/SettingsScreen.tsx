@@ -11,7 +11,6 @@ import Screen from '../../components/screen';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 import {useDeleteAccount} from '../../hooks/useDeleteAccount';
 import {useLogout} from '../../hooks/useLogout';
-import {getReadableVersion, getVersion} from 'react-native-device-info';
 import {getAppVersion} from "../../utils/get-app-version";
 
 const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22} />;
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingTop: 13,
     paddingBottom: 13,
-    borderBottomColor: theme.colors.maxTransparent,
+    borderColor: theme.colors.maxTransparent,
     paddingLeft: 0,
     paddingRight: 0,
   },

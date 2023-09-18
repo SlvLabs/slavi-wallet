@@ -14,6 +14,7 @@ import useTranslation from '../../utils/use-translation';
 import LinearGradient from 'react-native-linear-gradient';
 import {SceneRendererProps} from 'react-native-tab-view/lib/typescript/src/types';
 import BannerCarousel from '../../components/coin-list/banner-carousel';
+import Layout from "../../utils/layout";
 
 type Route = {
   key: string;
@@ -25,6 +26,8 @@ const CoinsListScreen = () => {
   const navigation = useNavigation();
 
   const [tabIndex, setTabIndex] = useState<number>(0);
+  const [tabCoinHeight, setTabCoinHeight] = useState<number>(Layout.window.height - 280);
+  const [tabNftHeight, setTabNftHeight] = useState<number>(Layout.window.height - 280);
 
   const fiat = store.useFiatSelector() || 'USD';
   const crypto = store.useCryptoSelector() || 'BTC';
@@ -69,13 +72,13 @@ const CoinsListScreen = () => {
         case 'coins':
           return (
             <View style={tabIndex !== 0 && styles.hidden}>
-              <CoinListCard containerStyle={styles.coinsCard} />
+              <CoinListCard containerStyle={styles.coinsCard} onContentSizeChange={setTabCoinHeight} />
             </View>
           );
         case 'nft':
           return (
             <View style={tabIndex !== 1 && styles.hidden}>
-              <NftList />
+              <NftList onContentSizeChange={setTabNftHeight} />
             </View>
           );
       }
@@ -127,6 +130,8 @@ const CoinsListScreen = () => {
             renderTabBar={renderTabs}
             onIndexChange={setTabIndex}
             lazy={true}
+            overScrollMode={'never'}
+            style={{height: tabIndex === 0 ? tabCoinHeight : tabNftHeight}}
           />
         </View>
       </ScrollView>
@@ -183,6 +188,7 @@ const styles = StyleSheet.create({
   },
   tabOptionContainer: {
     width: '50%',
+    height: 36,
   },
   activeTabOption: {
     borderRadius: 8,

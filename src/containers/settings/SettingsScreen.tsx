@@ -12,8 +12,9 @@ import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-servi
 import {useDeleteAccount} from '../../hooks/useDeleteAccount';
 import {useLogout} from '../../hooks/useLogout';
 import {getAppVersion} from "../../utils/get-app-version";
+import CustomIcon from "../../components/custom-icon/custom-icon";
 
-const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22} />;
+const chevron = <CustomIcon name={'arrow'} color={theme.colors.textLightGray} size={22} />
 
 const SettingsScreen = () => {
   const {t, i18n} = useTranslation();

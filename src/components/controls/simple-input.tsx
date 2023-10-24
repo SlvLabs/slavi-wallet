@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   bottomText: {
     fontFamily: theme.fonts.default,

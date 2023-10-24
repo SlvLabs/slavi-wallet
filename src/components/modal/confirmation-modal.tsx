@@ -1,10 +1,11 @@
 import React, {useCallback, useMemo} from 'react';
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import SolidButton from '../buttons/solid-button';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import {StyleSheet, Text} from 'react-native';
 import OutlineButton from '../buttons/outline-button';
 import theme from '../../theme';
+import {ModalProps} from "./base-modal";
 
 export interface ConfirmationModalProps extends ModalProps {
   onPositive: () => void;
@@ -32,7 +33,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
   }, [onCancel, onPositive]);
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={visible}
       onCancel={onCancel}
       modalStyle={modalStyle}
@@ -42,7 +43,7 @@ export default function ConfirmationModal(props: ConfirmationModalProps) {
       {!!description && <Text style={styles.description}>{description}</Text>}
       <SolidButton onPress={_onPositive} title={t(_positiveText as TranslationsKey)} containerStyle={styles.button} />
       <OutlineButton onPress={onCancel} title={t(_negativeText as TranslationsKey)} containerStyle={styles.button} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

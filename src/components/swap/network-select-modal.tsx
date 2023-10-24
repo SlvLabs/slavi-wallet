@@ -1,10 +1,11 @@
 import React from 'react';
-import BaseModal, {ModalProps} from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import {NetworksOptions} from './network-selector';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import getImageSource from '../../utils/get-image-source';
 import theme from '../../theme';
 import useTranslation from '../../utils/use-translation';
+import {ModalProps} from "../modal/base-modal";
 
 export interface NetworkSelectModalProps extends ModalProps {
   networks: NetworksOptions;
@@ -19,7 +20,7 @@ export default function NetworkSelectModal(props: NetworkSelectModalProps) {
   const {t} = useTranslation();
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={visible}
       onCancel={onCancel}
       showCloseIcon={false}
@@ -34,7 +35,7 @@ export default function NetworkSelectModal(props: NetworkSelectModalProps) {
           </TouchableOpacity>
         ))}
         </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

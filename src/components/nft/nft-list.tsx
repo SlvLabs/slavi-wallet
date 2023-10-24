@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import useNftList from '@slavi/wallet-core/src/providers/ws/hooks/nft/use-nft-list';
 import Spinner from '../spinner';
@@ -11,7 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from '../../navigation/config/routes';
 import NftFilterRow from './nft-filter-row';
 
-export default function NftList() {
+const NftList = memo(function () {
   const {list, isLoading, switchHidden, filter} = useNftList();
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -81,7 +81,7 @@ export default function NftList() {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -124,3 +124,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default NftList;

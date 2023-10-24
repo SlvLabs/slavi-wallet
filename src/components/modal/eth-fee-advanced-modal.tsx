@@ -3,9 +3,10 @@ import React, {useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import DecimalInput, {DecimalType} from '../controls/decimal-input';
 import SolidButton from '../buttons/solid-button';
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import theme from '../../theme';
 import OutlineButton from '../buttons/outline-button';
+import {ModalProps} from "./base-modal";
 
 export interface EthFeeAdvancedModalProps extends ModalProps {
   onAccept: (gasPrice?: string, gasLimit?: string) => void;
@@ -24,7 +25,7 @@ const EthFeeAdvancedModal = (props: EthFeeAdvancedModalProps) => {
   const [gasLimit, setGasLimit] = useState<string>();
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={props.visible}
       onCancel={props.onCancel}
       modalStyle={props.modalStyle}
@@ -72,7 +73,7 @@ const EthFeeAdvancedModal = (props: EthFeeAdvancedModalProps) => {
           buttonStyle={props.cancelButtonStyle}
         />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 };
 

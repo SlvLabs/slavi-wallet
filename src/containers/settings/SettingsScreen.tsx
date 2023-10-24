@@ -11,10 +11,10 @@ import Screen from '../../components/screen';
 import useAuthService from '@slavi/wallet-core/src/contexts/hooks/use-auth-service';
 import {useDeleteAccount} from '../../hooks/useDeleteAccount';
 import {useLogout} from '../../hooks/useLogout';
-import {getReadableVersion, getVersion} from 'react-native-device-info';
 import {getAppVersion} from "../../utils/get-app-version";
+import CustomIcon from "../../components/custom-icon/custom-icon";
 
-const chevron = <ListItem.Chevron color={theme.colors.textLightGray} size={22} />;
+const chevron = <CustomIcon name={'arrow'} color={theme.colors.textLightGray} size={22} />
 
 const SettingsScreen = () => {
   const {t, i18n} = useTranslation();
@@ -23,13 +23,10 @@ const SettingsScreen = () => {
   const authService = useAuthService();
 
   const goToMnemonicExport = useCallback(
-    () =>
-      InteractionManager.runAfterInteractions(() => {
+    () => {
         authService.forbid();
         navigation.navigate(ROUTES.SETTINGS.EXPORT_MNEMONIC);
-      }),
-    [navigation, authService],
-  );
+      }, [navigation, authService]);
   const goToMnemonicImport = useCallback(() => {
     authService.forbid();
     navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC);
@@ -158,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingTop: 13,
     paddingBottom: 13,
-    borderBottomColor: theme.colors.maxTransparent,
+    borderColor: theme.colors.maxTransparent,
     paddingLeft: 0,
     paddingRight: 0,
   },

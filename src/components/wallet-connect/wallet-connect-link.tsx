@@ -50,9 +50,9 @@ export default function WalletConnectLink({loading}: {loading: boolean}) {
   );
 
   useEffect(() => {
-    Linking.addEventListener('url', eventHandler);
+    const subscriber = Linking.addEventListener('url', eventHandler);
 
-    return () => Linking.removeEventListener('url', eventHandler);
+    return () => subscriber.remove();
   }, [eventHandler]);
 
   useEffect(() => {

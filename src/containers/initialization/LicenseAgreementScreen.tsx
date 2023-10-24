@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     maxHeight: Layout.window.height - 100,
   },
   agreementView: {
+    marginTop: 8,
     marginBottom: 24,
     justifyContent: 'center',
     alignItems: 'center',

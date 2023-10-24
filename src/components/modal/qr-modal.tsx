@@ -1,9 +1,10 @@
 import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import QRCode from 'react-native-qrcode-svg';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
+import {ModalProps} from "./base-modal";
 
 export interface QrModalProps extends ModalProps {
   title: string;
@@ -15,7 +16,7 @@ export default function QrModal(props: QrModalProps) {
   const {title, data, description, ...other} = props;
 
   return (
-    <BaseModal {...other} contentStyle={styles.container}>
+    <BaseAuthedModal {...other} contentStyle={styles.container}>
       <Text style={styles.header}>{title}</Text>
       <View style={styles.qrContainer}>
         <View style={{...styles.qrCorner, ...styles.qrCorner1}} />
@@ -27,7 +28,7 @@ export default function QrModal(props: QrModalProps) {
         </View>
       </View>
       {!!description && <Text style={styles.description}>{description}</Text>}
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

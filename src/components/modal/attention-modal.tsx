@@ -1,4 +1,4 @@
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import useTranslation from '../../utils/use-translation';
 import React from 'react';
 import {Image, StyleSheet, Text} from 'react-native';
@@ -7,6 +7,7 @@ import SolidButton from '../buttons/solid-button';
 import OutlineButton from '../buttons/outline-button';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
+import {ModalProps} from "./base-modal";
 
 export interface AttentionModalProps extends ModalProps {
   text: string;
@@ -16,13 +17,13 @@ export function AttentionModal({text, onAccept, ...baseModalProps}: AttentionMod
   const {t} = useTranslation();
 
   return (
-    <BaseModal contentStyle={styles.container} {...baseModalProps}>
+    <BaseAuthedModal contentStyle={styles.container} {...baseModalProps}>
       <Image source={attention} style={styles.image} />
       <Text style={styles.title}>{t('attention')}</Text>
       <Text style={styles.text}>{text}</Text>
       <SolidButton onPress={onAccept} title={t('attentionContinue')} containerStyle={styles.acceptButton}/>
       <OutlineButton onPress={baseModalProps.onCancel} title={t('attentionCancel')} containerStyle={styles.declineButton} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

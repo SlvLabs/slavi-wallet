@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
   useSelectCoinsForWalletConnect,
@@ -81,7 +81,7 @@ export default function WalletConnectSessionRequestModalV2() {
   }, [accountIndex, balances, isLoading]);
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       contentStyle={styles.container}
       visible={!!sessionRequest.active && sessionRequest.version === 2}
       onCancel={onReject}>
@@ -126,7 +126,7 @@ export default function WalletConnectSessionRequestModalV2() {
         />
         <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

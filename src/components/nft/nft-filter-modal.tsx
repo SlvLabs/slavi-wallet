@@ -1,4 +1,4 @@
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import {StyleSheet, Switch, Text, View} from 'react-native';
 import theme from '../../theme';
 import React, {useCallback, useReducer, useState} from 'react';
@@ -61,7 +61,7 @@ export default function NftFilterModal({
   }, []);
 
   return (
-    <BaseModal visible={visible} onCancel={onCancel}>
+    <BaseAuthedModal visible={visible} onCancel={onCancel}>
       <View style={styles.networksContainer}>
         <Text style={styles.header}>{t('nftSelectBlockchain')}</Text>
         <View style={styles.networkList}>
@@ -91,7 +91,7 @@ export default function NftFilterModal({
         <SolidButton title={t('apply')} containerStyle={styles.btn1} onPress={submit} loading={updateLoading} />
         <OutlineButton title={t('Cancel')} onPress={onCancel} />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

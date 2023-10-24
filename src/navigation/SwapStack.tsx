@@ -26,7 +26,7 @@ const SwapStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.SWAP.MAIN}
-        headerMode={'screen'}
+
         screenOptions={defaultScreenOption}>
         <StackNavigator.Screen
           name={ROUTES.SWAP.MAIN}

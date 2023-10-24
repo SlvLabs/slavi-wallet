@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import theme from '../../theme';
 import SelectableList from '../controls/selectable-list';
+import {ModalProps} from "./base-modal";
 
 export interface SelectModalProps extends ModalProps {
   onSelect: (value: string) => void;
@@ -24,7 +25,7 @@ export function SelectModal(props: SelectModalProps) {
   );
 
   return (
-    <BaseModal {...other}>
+    <BaseAuthedModal {...other}>
       <View style={styles.container}>
         {!!header && (
           <View style={styles.header}>
@@ -35,7 +36,7 @@ export function SelectModal(props: SelectModalProps) {
           <SelectableList onSelect={_onSelect} options={options} current={current} />
         </View>
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

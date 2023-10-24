@@ -128,7 +128,7 @@ export default function AuthModal(props: AuthModalProps) {
     }
   }, [authService, ban]);
 
-  useEffect(() => {
+  const updateBiometricSupporting = useCallback(() => {
     supportedAuthenticationTypesAsync().then(types => {
       if (authService.isBiometricEnable()) {
         if (types.includes(AuthenticationType.FACIAL_RECOGNITION)) {
@@ -140,6 +140,13 @@ export default function AuthModal(props: AuthModalProps) {
         }
       }
     });
+  }, [authService])
+
+  useEffect(() => {
+    updateBiometricSupporting();
+    authService?.onAuthChange.add(updateBiometricSupporting);
+
+    return () => authService?.onAuthChange.remove(updateBiometricSupporting);
   }, [authService]);
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import BaseModal from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import {Image, Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {releaseNoteLogo} from '../../assets/images';
 import useTranslation, {TranslationsKey} from '../../utils/use-translation';
@@ -44,17 +44,17 @@ export function ReleaseNoteModal() {
   const {needShow, onClose} = useReleaseNotes(version);
 
   return (
-    <BaseModal visible={notes.length > 0 && needShow} showCloseIcon={true} onCancel={onClose}>
+    <BaseAuthedModal visible={notes.length > 0 && needShow} showCloseIcon={true} onCancel={onClose}>
       <View style={styles.content}>
         <Image source={releaseNoteLogo} width={72} height={72} style={styles.image} />
         <Text style={styles.header}>{t('releaseNotesHeader', {version: version})}</Text>
         <ScrollView style={styles.scroll} horizontal={false}>
-          {notes.map(note => (
-            <ReleaseNoteEntity text={note} />
+          {notes.map((note, i) => (
+            <ReleaseNoteEntity text={note} key={i}/>
           ))}
         </ScrollView>
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

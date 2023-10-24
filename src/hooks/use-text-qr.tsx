@@ -8,6 +8,7 @@ export default function useTextQr(onQRRead: (data: string) => void) {
 
   const onRead = useCallback(
     (data: string) => {
+      console.log(data)
       onQRRead(data);
       hide();
     },

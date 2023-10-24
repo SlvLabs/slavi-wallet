@@ -18,13 +18,11 @@ const MnemonicExportScreen = () => {
 
   return (
     <ScrollableScreen title={t('Export mnemonic phrase')}>
-      <View style={styles.textBlock}>
-        <Text style={styles.description}>
-          {t(
-            "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
-          )}
-        </Text>
-      </View>
+      <Text style={styles.description}>
+        {t(
+          "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
+        )}
+      </Text>
       <MnemonicArea
         words={words}
         style={styles.mnemonicContainer}
@@ -40,14 +38,8 @@ const MnemonicExportScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  descriptionContainer: {
-    margin: 20,
-  },
   controlButtonContainer: {
     margin: 30,
-  },
-  textBlock: {
-    marginBottom: 30,
   },
   description: {
     fontFamily: theme.fonts.default,
@@ -58,6 +50,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: theme.colors.textLightGray,
     textAlign: 'left',
+    marginBottom: 30,
   },
   buttonsBlock: {
     justifyContent: 'flex-end',

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useSelectWalletConnectSignRequest} from '@slavi/wallet-core/src/store/modules/wallet-connect/selectors';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import SolidButton from '../buttons/solid-button';
 import OutlineButton from '../buttons/outline-button';
 import useTranslation from '../../utils/use-translation';
@@ -111,7 +111,7 @@ export default function WalletConnectSignRequestModal() {
   }, [signRequest.active]);
 
   return (
-    <BaseModal contentStyle={styles.container} visible={!!signRequest.active} onCancel={onReject}>
+    <BaseAuthedModal contentStyle={styles.container} visible={!!signRequest.active} onCancel={onReject}>
       <Text style={styles.header}>{t('walletConnectRequestSignHeader')}</Text>
       <View style={styles.addressContainer}>
         <Text style={styles.label}>{t('walletFrom')}</Text>
@@ -140,7 +140,7 @@ export default function WalletConnectSignRequestModal() {
         <SolidButton title={t('walletConnectApprove')} onPress={onApprove} containerStyle={styles.topButton} />
         <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import BaseModal, {ModalProps} from '../../modal/base-modal';
+import BaseAuthedModal from '../../modal/base-authorized-modal';
 import {Image, Linking, StyleSheet, Text, View} from 'react-native';
 import useTranslation from '../../../utils/use-translation';
 import theme from '../../../theme';
@@ -13,6 +13,7 @@ import Layout from '../../../utils/layout';
 import getImageSource from '../../../utils/get-image-source';
 import CustomIcon from '../../custom-icon/custom-icon';
 import AlertRow from "../../error/alert-row";
+import {ModalProps} from "../../modal/base-modal";
 
 export interface ConfirmStakeModalProps extends ModalProps {
   onAccept: () => void;
@@ -49,7 +50,7 @@ export function ConfirmStakeModal({
   useEffect(() => setAccepted(false), [modalProps.visible]);
 
   return (
-    <BaseModal contentStyle={styles.content} {...modalProps} showCloseIcon={true}>
+    <BaseAuthedModal contentStyle={styles.content} {...modalProps} showCloseIcon={true}>
       <Text style={styles.header}>{t('stakingConfirmationHeader')}</Text>
       <View style={styles.stakeBlock}>
         <View style={styles.row}>
@@ -103,7 +104,7 @@ export function ConfirmStakeModal({
         loading={loading}
       />
       <OutlineButton title={t('Cancel')} onPress={modalProps.onCancel} containerStyle={styles.cancelButton} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

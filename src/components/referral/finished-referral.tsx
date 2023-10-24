@@ -19,7 +19,7 @@ export function FinishedReferral({points, slvAmount, token}: FinishedReferralPro
 
   return (
     <View style={styles.container}>
-      <Lottie source={referralFinishedAnimation} autoPlay={true} loop={true} style={styles.logo} />
+      < Lottie source={referralFinishedAnimation} autoPlay={true} loop={true} style={styles.logo} />
       <View style={styles.content}>
         <Text style={styles.header}>{t('referralCongratulations')}</Text>
         <View style={styles.earnedRow}>
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
+    height: 480,
   },
   amountLabel: {
     fontFamily: theme.fonts.gilroy,

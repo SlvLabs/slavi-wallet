@@ -23,7 +23,6 @@ const SettingsStack = () => {
     () => (
       <StackNavigator.Navigator
         initialRouteName={ROUTES.SETTINGS.MAIN}
-        headerMode={'screen'}
         screenOptions={defaultScreenOption}>
         <StackNavigator.Screen
           name={ROUTES.SETTINGS.MAIN}

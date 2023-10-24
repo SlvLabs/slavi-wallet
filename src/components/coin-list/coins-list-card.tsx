@@ -1,5 +1,5 @@
 import SearchCoinRow from './search-coin-row';
-import React, {Reducer, useCallback, useEffect, useReducer, useState} from 'react';
+import React, {memo, Reducer, useCallback, useEffect, useReducer, useState} from 'react';
 import {Dimensions, StyleSheet, View, ViewStyle} from 'react-native';
 import {ParamsItem} from './search-params-button';
 import {CoinDisplayData} from './coins-list-element';
@@ -17,6 +17,7 @@ import ROUTES from '../../navigation/config/routes';
 import store from '@slavi/wallet-core/src/store/index';
 import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import TokenAddButton from '../../containers/token/token-add-button';
+import Layout from "../../utils/layout";
 
 export interface CoinsListCardProps {
   containerStyle: ViewStyle;
@@ -115,9 +116,7 @@ const coinsReducer: CoinsReducer = (state, action) => {
   }
 };
 
-const CoinListCard = (props: CoinsListCardProps) => {
-  const {containerStyle} = props;
-
+const CoinListCard = memo(({containerStyle}: CoinsListCardProps) => {
   const {t} = useTranslation();
   const coins = useCoinsSelector();
   const navigation = useNavigation();
@@ -227,7 +226,7 @@ const CoinListCard = (props: CoinsListCardProps) => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

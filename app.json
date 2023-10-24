@@ -4,6 +4,14 @@
   "expo": {
     "scheme": "wc",
     "name": "slaviWalletMobile",
-    "slug": "slaviWalletMobile"
+    "slug": "slaviWalletMobile",
+    "plugins": [
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
+        }
+      ]
+    ],
   }
 }

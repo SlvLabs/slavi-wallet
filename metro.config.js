@@ -1,3 +1,5 @@
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+
 /**
  * Metro configuration for React Native
  * https://github.com/facebook/react-native
@@ -5,7 +7,7 @@
  * @format
  */
 
-module.exports = {
+config = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -15,7 +17,7 @@ module.exports = {
     }),
   },
   resolver: {
-    sourceExts: ['jsx', 'js', 'ts', 'tsx', 'cjs'],
+    sourceExts: ['jsx', 'js', 'ts', 'tsx', 'cjs', 'json', 'map'],
     extraNodeModules: {
       crypto: require.resolve('react-native-crypto'),
       stream: require.resolve('readable-stream'),
@@ -24,4 +26,7 @@ module.exports = {
       assert: require.resolve('assert'),
     },
   },
-};
+  maxWorkers: 2,
+}
+
+module.exports = mergeConfig(getDefaultConfig(__dirname), config);

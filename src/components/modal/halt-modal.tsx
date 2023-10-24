@@ -1,9 +1,9 @@
 import React from 'react';
-import BaseModal from '../modal/base-modal';
 import {StyleSheet, Text, View} from 'react-native';
 import Spinner from '../spinner';
 import theme from '../../theme';
 import SolidButton from '../buttons/solid-button';
+import BaseModal from "./base-modal";
 
 export interface HaltModalProps {
   onAccept: () => void;

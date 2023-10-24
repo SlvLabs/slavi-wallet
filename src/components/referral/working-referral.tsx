@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
+    height: 480,
   },
   content: {
     paddingLeft: Layout.isSmallDevice ? 8 : 16,

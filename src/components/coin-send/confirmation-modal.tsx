@@ -3,7 +3,7 @@ import useTranslation from '../../utils/use-translation';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import SolidButton from '../buttons/solid-button';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import theme from '../../theme';
 import shrinkAddress from '../../utils/shrink-address';
 import OutlineButton from '../buttons/outline-button';
@@ -55,7 +55,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
   }, [onAccept]);
 
   return (
-    <BaseModal visible={visible} showCloseIcon={true} onCancel={onCancel}>
+    <BaseAuthedModal visible={visible} showCloseIcon={true} onCancel={onCancel}>
       <View style={styles.content}>
         <View
           style={{
@@ -105,7 +105,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
           />
         </View>
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 };
 

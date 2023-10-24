@@ -1,5 +1,5 @@
 import {Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import Layout from '../../utils/layout';
 import Carousel from 'react-native-reanimated-carousel';
 import SimpleToast from 'react-native-simple-toast';
@@ -67,10 +67,16 @@ export default function BannerCarousel() {
     [loading, onBannerPress, onImageLoad],
   );
 
+  // for position in center for first banner
+  const preparedBanners = useMemo(() =>
+      [banners[banners.length - 1], ...banners.slice(0, banners.length - 1)],
+      [banners]
+  );
+
   return (
     <View style={styles.container}>
       <Carousel
-        data={banners}
+        data={preparedBanners}
         renderItem={renderItem}
         loop={true}
         autoPlay={!loading}
@@ -79,6 +85,7 @@ export default function BannerCarousel() {
         width={Layout.isSmallDevice ? 172 : 192}
         height={Layout.isSmallDevice ? 90 : 102}
         autoFillData={true}
+        defaultIndex={1}
       />
     </View>
   );

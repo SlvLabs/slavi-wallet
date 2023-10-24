@@ -1,7 +1,7 @@
 import useTranslation from '../../utils/use-translation';
 import {Linking, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useState} from 'react';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import theme from '../../theme';
 import SimpleCheckbox from '../controls/simple-checkbox';
 import GSolidButton from '../buttons/g-solid-button';
@@ -38,7 +38,7 @@ export const ConfirmationModal = ({visible, onSubmit, onCancel, source}: Confirm
     ).catch(e => console.error(e));
   }, [source, t]);
   return (
-    <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} header={header}>
+    <BaseAuthedModal visible={visible} onCancel={onCancel} showCloseIcon={true} header={header}>
       <View style={styles.bodyContainer}>
         <Text style={styles.body}>
           {t(source === BuySource.binance ? 'CoinBuyDisclaimer' : 'CoinBuyDisclaimerSwitchere')}
@@ -57,7 +57,7 @@ export const ConfirmationModal = ({visible, onSubmit, onCancel, source}: Confirm
       <View style={styles.controlsContainer}>
         <GSolidButton title={t('OK')} onPress={_onSubmit} buttonStyle={styles.acceptButton} disabled={!accepted} />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 };
 

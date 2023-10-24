@@ -12,6 +12,7 @@ import theme from '../../theme';
 
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import Screen from '../../components/screen';
+import CustomIcon from "../../components/custom-icon/custom-icon";
 
 enum ConfirmationState {
   hidden,
@@ -75,21 +76,23 @@ const InvalidateCachesScreen = () => {
           key={'invalidate_1'}
           onPress={showCoinsConf}
           containerStyle={{...styles.itemContainer, ...styles.firstItem}}
+          bottomDivider
         >
           <ListItem.Content style={{backgroundColor: 'transparent'}}>
             <ListItem.Title style={styles.label}>{t('Invalidate coins cache')}</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron color={theme.colors.textLightGray} size={22}/>
+          <CustomIcon name={'arrow'} color={theme.colors.textLightGray} size={22} />
         </ListItem>
         <ListItem
           key={'invalidate_2'}
           onPress={showLanguageConf}
           containerStyle={styles.itemContainer}
+          bottomDivider
         >
           <ListItem.Content>
             <ListItem.Title style={styles.label}>{t('Invalidate language cache')}</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron color={theme.colors.textLightGray} size={22} />
+          <CustomIcon name={'arrow'} color={theme.colors.textLightGray} size={22} />
         </ListItem>
         <ConfirmationModal
           onPositive={onConfirm}
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: 'transparent',
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.maxTransparent,
+    borderColor: theme.colors.maxTransparent,
   },
   label: {
     fontFamily: theme.fonts.default,

@@ -8,16 +8,13 @@ import theme from '../../theme';
 import SolidButton from '../../components/buttons/solid-button';
 import ConfirmationModal from '../../components/modal/confirmation-modal';
 import {selectMnemonicError} from '@slavi/wallet-core/src/store/modules/account/selectors';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setMnemonicError} from '@slavi/wallet-core/src/store/modules/account/account';
-import Screen from '../../components/screen';
 import {usePinProtection} from '../../hooks/usePinProtection';
-import OutlineButton from '../../components/buttons/outline-button';
 import useTextQr from '../../hooks/use-text-qr';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import Layout from '../../utils/layout';
-import CustomIcon from '../../components/custom-icon/custom-icon';
 import {ScanButton} from "../../components/buttons/scan-button";
+import ScrollableScreen from "../../components/scrollable-screen";
 
 const MnemonicImportScreen = () => {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -47,49 +44,38 @@ const MnemonicImportScreen = () => {
   usePinProtection();
 
   return (
-    <Screen title={t('Import new mnemonic phrase')}>
-      <KeyboardAwareScrollView contentContainerStyle={styles.content}>
-        <View style={styles.textBlock}>
-          <Text style={styles.description}>
-            {t(
-              "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
-            )}
-          </Text>
-          <InsertableTextArea onChange={onMnemonicChange} value={mnemonic} />
-          <Text style={styles.error}>{mnemonicError}</Text>
-          <View style={styles.delimiterRow}>
-            <View style={styles.delimiter} />
-            <Text style={styles.delimiterText}>{t('or')}</Text>
-            <View style={styles.delimiter} />
-          </View>
-          <ScanButton title={t('scanQr')} onPress={show} />
-        </View>
-        <SolidButton title={t('Import')} onPress={showConf} />
-        <ConfirmationModal
-          onPositive={updateMnemonic}
-          title={t('Attention!')}
-          visible={confIsShown}
-          onCancel={hideConf}
-          description={t(
-            'By importing a new passphrase, you may lose access to existing addresses. Make sure to save all private keys.',
+    <ScrollableScreen title={t('Import new mnemonic phrase')}>
+      <View style={styles.textBlock}>
+        <Text style={styles.description}>
+          {t(
+            "These 12 words are the key to your wallet. By pulling it, you cannot restore access. Write it down in the correct order, or copy it and keep it in a safe place. Don't give it to anyone",
           )}
-        />
-        <QrReaderModal visible={shown} onQRRead={onRead} onClose={hide} />
-      </KeyboardAwareScrollView>
-    </Screen>
+        </Text>
+        <InsertableTextArea onChange={onMnemonicChange} value={mnemonic} containerStyle={styles.insertableArea}/>
+        <Text style={styles.error}>{mnemonicError}</Text>
+        <View style={styles.delimiterRow}>
+          <View style={styles.delimiter} />
+          <Text style={styles.delimiterText}>{t('or')}</Text>
+          <View style={styles.delimiter} />
+        </View>
+        <ScanButton title={t('scanQr')} onPress={show} />
+      </View>
+      <SolidButton title={t('Import')} onPress={showConf} />
+      <ConfirmationModal
+        onPositive={updateMnemonic}
+        title={t('Attention!')}
+        visible={confIsShown}
+        onCancel={hideConf}
+        description={t(
+          'By importing a new passphrase, you may lose access to existing addresses. Make sure to save all private keys.',
+        )}
+      />
+      <QrReaderModal visible={shown} onQRRead={onRead} onClose={hide} />
+    </ScrollableScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    padding: 16,
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    height: '100%',
-  },
-  descriptionContainer: {
-    margin: 20,
-  },
   controlButtonContainer: {
     margin: 30,
   },
@@ -136,6 +122,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: theme.fonts.default,
     lineHeight: 20,
+  },
+  insertableArea: {
+    marginRight: 0,
+    marginLeft: 0,
   },
 });
 

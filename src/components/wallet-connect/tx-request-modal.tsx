@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useSelectWalletConnectTxRequest} from '@slavi/wallet-core/src/store/modules/wallet-connect/selectors';
 import {StyleSheet, Text, View} from 'react-native';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import SolidButton from '../buttons/solid-button';
 import OutlineButton from '../buttons/outline-button';
 import useTranslation from '../../utils/use-translation';
@@ -108,7 +108,7 @@ export default function WalletConnectTxRequestModal() {
   }, [request.active]);
 
   return (
-    <BaseModal contentStyle={styles.container} visible={!!request.active} onCancel={onReject}>
+    <BaseAuthedModal contentStyle={styles.container} visible={!!request.active} onCancel={onReject}>
       <Text style={styles.header}>{t('walletConnectRequestTxHeader')}</Text>
       <View style={styles.addressContainer}>
         <Text style={styles.label}>{t('walletFrom')}</Text>
@@ -135,7 +135,7 @@ export default function WalletConnectTxRequestModal() {
         <SolidButton title={t('walletConnectApprove')} onPress={onApprove} containerStyle={styles.topButton} />
         <OutlineButton title={t('walletConnectReject')} onPress={onReject} />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

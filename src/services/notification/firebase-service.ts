@@ -139,7 +139,7 @@ export class FirebaseService {
           try {
             params = JSON.parse(data.params);
           } catch (e) {
-            console.error(e);
+            console.error('ERROR: ',e);
           }
         }
 

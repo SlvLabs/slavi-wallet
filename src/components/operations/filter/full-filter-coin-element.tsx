@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     fontSize: 16,
     lineHeight: 22,
-    color: theme.colors.textLightGray,
+    color: theme.colors.lightGray,
   },
   typeContainer: {
     borderRadius: 4,

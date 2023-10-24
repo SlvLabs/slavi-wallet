@@ -329,7 +329,6 @@ const App: () => ReactNode = () => {
             {!isBootstrapped && <WalletConnectSessionRequestModalV2 />}
             {!isBootstrapped && <WalletConnectSignRequestModal />}
             {!isBootstrapped && <WalletConnectTxRequestModal />}
-            {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
             {!isBootstrapped && isAccountInitialized && isInitialized && <WalletConnectLink loading={!isAuthorized} />}
             {!isBootstrapped && isAccountInitialized && isInitialized && isAuthorized && <ReleaseNoteModal />}
             {devMode && (
@@ -350,6 +349,7 @@ const App: () => ReactNode = () => {
                 reducedTransparencyFallbackColor="white"
               />
             )}
+            {isTimeFixRequired && <TimeFixRequiredModal onCancel={clearIsTimeFixRequired} />}
           </SafeAreaProvider>
         </servicesContext.Provider>
       </Provider>

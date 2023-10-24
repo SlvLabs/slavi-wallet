@@ -3,8 +3,9 @@ import React, {useCallback, useEffect, useState} from 'react';
 import useTranslation from '../../utils/use-translation';
 import SolidButton from '../buttons/solid-button';
 import SimpleInput from '../controls/simple-input';
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import theme from '../../theme';
+import {ModalProps} from "./base-modal";
 
 export interface SimpleInputModalProps extends ModalProps {
   onSubmit: (name?: string) => void;
@@ -28,7 +29,7 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
   useEffect(() => setName(props.value), [props.value]);
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={props.visible}
       onCancel={props.onCancel}
       modalStyle={props.modalStyle}
@@ -41,7 +42,7 @@ const SimpleInputModal = (props: SimpleInputModalProps) => {
         inputContainerStyle={styles.inputContainerStyle}
       />
       <SolidButton onPress={_onSubmit} title={t('Save')} buttonStyle={{...styles.button, ...props.buttonStyle}} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 };
 

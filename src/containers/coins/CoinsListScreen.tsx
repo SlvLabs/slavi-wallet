@@ -8,13 +8,11 @@ import store from '@slavi/wallet-core/src/store/index';
 import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import useTotalBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-total-balance-hook';
 import {useNavigation} from '@react-navigation/native';
-import {TabView} from 'react-native-tab-view';
 import NftList from '../../components/nft/nft-list';
 import useTranslation from '../../utils/use-translation';
 import LinearGradient from 'react-native-linear-gradient';
-import {SceneRendererProps} from 'react-native-tab-view/lib/typescript/src/types';
 import BannerCarousel from '../../components/coin-list/banner-carousel';
-import Layout from "../../utils/layout";
+import {LazyTabView} from "../../components/tabs/lazy-tab-view";
 
 type Route = {
   key: string;
@@ -26,8 +24,6 @@ const CoinsListScreen = () => {
   const navigation = useNavigation();
 
   const [tabIndex, setTabIndex] = useState<number>(0);
-  const [tabCoinHeight, setTabCoinHeight] = useState<number>(Layout.window.height - 280);
-  const [tabNftHeight, setTabNftHeight] = useState<number>(Layout.window.height - 280);
 
   const fiat = store.useFiatSelector() || 'USD';
   const crypto = store.useCryptoSelector() || 'BTC';
@@ -66,55 +62,9 @@ const CoinsListScreen = () => {
     [t],
   );
 
-  const renderScene = useCallback(
-    ({route}: SceneRendererProps & {route: Route}) => {
-      switch (route.key) {
-        case 'coins':
-          return (
-            <View style={tabIndex !== 0 && styles.hidden}>
-              <CoinListCard containerStyle={styles.coinsCard} onContentSizeChange={setTabCoinHeight} />
-            </View>
-          );
-        case 'nft':
-          return (
-            <View style={tabIndex !== 1 && styles.hidden}>
-              <NftList onContentSizeChange={setTabNftHeight} />
-            </View>
-          );
-      }
-    },
-    [tabIndex],
-  );
-
-  const renderTabs = useCallback(
-    (props: any) => {
-      const {navigationState} = props;
-      return (
-        <View style={styles.tabBar}>
-          {navigationState.routes.map((route: Route, i: number) => (
-            <TouchableOpacity key={`tab_${i}`} onPress={() => setTabIndex(i)} style={styles.tabOptionContainer}>
-              {tabIndex === i ? (
-                <LinearGradient
-                  {...theme.gradients.activeTabV2}
-                  style={{...styles.tabOption, ...styles.activeTabOption}}>
-                  <Text style={styles.activeTabLabel}>{route.title}</Text>
-                </LinearGradient>
-              ) : (
-                <View style={styles.tabOption}>
-                  <Text style={styles.tabLabel}>{route.title}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      );
-    },
-    [tabIndex],
-  );
-
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView >
         <BalanceHeader
           fiatBalance={balance.fiat}
           fiatTicker={fiatSymbol}
@@ -124,15 +74,29 @@ const CoinsListScreen = () => {
         />
         <BannerCarousel />
         <View style={styles.content}>
-          <TabView
-            navigationState={{index: tabIndex, routes}}
-            renderScene={renderScene}
-            renderTabBar={renderTabs}
-            onIndexChange={setTabIndex}
-            lazy={true}
-            overScrollMode={'never'}
-            style={{height: tabIndex === 0 ? tabCoinHeight : tabNftHeight}}
-          />
+          <View style={styles.tabBar}>
+            {routes.map((route: Route, i: number) => (
+                <TouchableOpacity key={`tab_${i}`} onPress={() => setTabIndex(i)} style={styles.tabOptionContainer}>
+                  {tabIndex === i ? (
+                      <LinearGradient
+                          {...theme.gradients.activeTabV2}
+                          style={{...styles.tabOption, ...styles.activeTabOption}}>
+                        <Text style={styles.activeTabLabel}>{route.title}</Text>
+                      </LinearGradient>
+                  ) : (
+                      <View style={styles.tabOption}>
+                        <Text style={styles.tabLabel}>{route.title}</Text>
+                      </View>
+                  )}
+                </TouchableOpacity>
+            ))}
+          </View>
+          <LazyTabView active={tabIndex === 0}>
+            <CoinListCard containerStyle={styles.coinsCard} />
+          </LazyTabView>
+          <LazyTabView active={tabIndex === 1}>
+            <NftList />
+          </LazyTabView>
         </View>
       </ScrollView>
     </View>

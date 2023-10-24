@@ -45,13 +45,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   balanceContainer: {
-    flex: 5,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
   convertedBalances: {
     flexDirection: 'column',
-    flex: 1,
   },
   fiatBalance: {
     flexDirection: 'row',

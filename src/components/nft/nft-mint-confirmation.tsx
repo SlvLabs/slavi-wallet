@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, Text} from 'react-native';
-import BaseModal, {ModalProps} from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import useTranslation from '../../utils/use-translation';
 import NftInfoElement from '../../containers/nft/nft-info-element';
 import SolidButton from '../buttons/solid-button';
@@ -9,6 +9,7 @@ import theme from '../../theme';
 import Layout from '../../utils/layout';
 import shrinkAddress from '../../utils/shrink-address';
 import {Decimal80} from '@slavi/wallet-core/src/utils/prepared-decimal';
+import {ModalProps} from "../modal/base-modal";
 
 export interface NftConfirmationProps extends ModalProps {
   onAccept: () => void;
@@ -28,7 +29,7 @@ export default function NftMintConfirmation(props: NftConfirmationProps) {
   const totalFee = useMemo(() => new Decimal80(fee).add(baseAmount).toString(), [fee, baseAmount]);
 
   return (
-    <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
+    <BaseAuthedModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
       <Text style={styles.title}>{t('nftMintConfTitle')}</Text>
       <Text style={styles.name}>{name}</Text>
       <NftInfoElement label={t('nftAddress')} value={shrinkAddress(address || '')} />
@@ -36,7 +37,7 @@ export default function NftMintConfirmation(props: NftConfirmationProps) {
       <Text style={styles.error}>{error}</Text>
       <SolidButton title={t('Ok')} onPress={onAccept} style={styles.button} containerStyle={styles.button} loading={loading} />
       <OutlineButton title={t('Cancel')} onPress={onCancel} style={styles.button} disabled={loading} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

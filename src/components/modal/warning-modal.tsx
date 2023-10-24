@@ -1,9 +1,10 @@
 import React, {useCallback} from 'react';
-import BaseModal, {ModalProps} from './base-modal';
+import BaseAuthedModal from './base-authorized-modal';
 import SolidButton from '../buttons/solid-button';
 import useTranslation from '../../utils/use-translation';
 import {StyleSheet, Text} from 'react-native';
 import theme from '../../theme';
+import {ModalProps} from "./base-modal";
 
 export interface ConfirmationModalProps extends ModalProps {
   title: string;
@@ -20,7 +21,7 @@ export default function WarningModal(props: ConfirmationModalProps) {
   }, [onCancel]);
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={visible}
       onCancel={onCancel}
       modalStyle={modalStyle}
@@ -29,7 +30,7 @@ export default function WarningModal(props: ConfirmationModalProps) {
       <Text style={styles.header}>{title}</Text>
       {!!description && <Text style={styles.description}>{description}</Text>}
       <SolidButton onPress={onPress} title={t('OK')} containerStyle={styles.button} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

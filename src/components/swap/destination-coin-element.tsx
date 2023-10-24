@@ -6,10 +6,12 @@ import theme from '../../theme';
 import CoinsSelectModal from '../coins/coins-select-modal';
 import CustomIcon from '../custom-icon/custom-icon';
 import {CoinListElementData} from '../coins/coins-select-list';
+import makeRoundedBalance from "../../utils/make-rounded-balance";
 
 export interface DestinationCoinElementProps {
   ticker: string;
   amount: string;
+  balance?: string;
   onCoinSelect: (coinId: string) => void;
   coins: CoinListElementData[];
   logo?: string;
@@ -24,6 +26,7 @@ export default function DestinationCoinElement(props: DestinationCoinElementProp
     containerStyle,
     coins,
     onCoinSelect,
+    balance,
   } = props;
 
   const [coinModalShown, setCoinModalIsShown] = useState<boolean>(false);
@@ -43,6 +46,7 @@ export default function DestinationCoinElement(props: DestinationCoinElementProp
       <View style={styles.leftColumn}>
         <Text style={styles.label}>{t('youReceive')}</Text>
         <Text style={styles.amount}>{amount}</Text>
+        <Text style={styles.balanceLabel}>{`${t('balance')}: ${makeRoundedBalance(6, balance ?? 0)} ${ticker}`}</Text>
       </View>
       <View style={styles.rightColumn}>
         <TouchableOpacity style={styles.row} onPress={showCoinModal}>
@@ -78,6 +82,7 @@ const styles = StyleSheet.create({
   },
   leftColumn: {
     flex: 1,
+    justifyContent: 'space-between',
   },
   label: {
     fontFamily: theme.fonts.default,
@@ -129,5 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 21,
     color: theme.colors.white,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
 });

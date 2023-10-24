@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   },
   leftColumn: {
     flex: 1,
+    justifyContent: 'space-between',
   },
   label: {
     fontFamily: theme.fonts.default,

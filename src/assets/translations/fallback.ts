@@ -650,6 +650,10 @@ const translations = {
   referralExploreReward: 'Explore Reward Hub',
   referralGoToWallet: 'Go to Wallet',
   referralInitInputLabelNew: 'Submit Friend’s Referral Code',
+  qrCodeScanner: 'QR-code scanner',
+  noAccessToCamera: 'No access to camera',
+  tryAgain: 'Try again',
+  requestingPermission: 'Requesting for camera permission...',
 };
 
 export default translations;

@@ -23,13 +23,10 @@ const SettingsScreen = () => {
   const authService = useAuthService();
 
   const goToMnemonicExport = useCallback(
-    () =>
-      InteractionManager.runAfterInteractions(() => {
+    () => {
         authService.forbid();
         navigation.navigate(ROUTES.SETTINGS.EXPORT_MNEMONIC);
-      }),
-    [navigation, authService],
-  );
+      }, [navigation, authService]);
   const goToMnemonicImport = useCallback(() => {
     authService.forbid();
     navigation.navigate(ROUTES.SETTINGS.IMPORT_MNEMONIC);

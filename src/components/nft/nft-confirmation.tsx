@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text} from 'react-native';
-import BaseModal, {ModalProps} from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import useTranslation from '../../utils/use-translation';
 import getImageSource from '../../utils/get-image-source';
 import {nftPlaceholder1} from '../../assets/images';
@@ -10,6 +10,7 @@ import OutlineButton from '../buttons/outline-button';
 import theme from '../../theme';
 import Layout from '../../utils/layout';
 import shrinkAddress from '../../utils/shrink-address';
+import {ModalProps} from "../modal/base-modal";
 
 export interface NftConfirmationProps extends ModalProps {
   onAccept: () => void;
@@ -27,7 +28,7 @@ export default function NftConfirmation(props: NftConfirmationProps) {
   const {t} = useTranslation();
 
   return (
-    <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
+    <BaseAuthedModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
       <Text style={styles.title}>{t('nftConfTitle')}</Text>
       <Image source={getImageSource(image, nftPlaceholder1)} style={styles.image} />
       <Text style={styles.name}>{name}</Text>
@@ -38,7 +39,7 @@ export default function NftConfirmation(props: NftConfirmationProps) {
       <NftInfoElement label={t('nftFee')} value={fee} isLast={true} />
       <SolidButton title={t('Ok')} onPress={onAccept} style={styles.button} containerStyle={styles.button} />
       <OutlineButton title={t('Cancel')} onPress={onCancel} style={styles.button} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

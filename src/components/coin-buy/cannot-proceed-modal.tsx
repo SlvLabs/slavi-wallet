@@ -2,7 +2,7 @@ import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import SolidButton from '../buttons/solid-button';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import theme from '../../theme';
 import {ipDisconnect} from '../../assets/images';
 
@@ -18,7 +18,7 @@ export const CannotProceedModal = (props: CannotProceedModalProps) => {
   const {t} = useTranslation();
 
   return (
-    <BaseModal visible={visible}>
+    <BaseAuthedModal visible={visible}>
       {showImg && (
         <View style={styles.imgContainer}>
           <Image source={ipDisconnect} style={styles.img} />
@@ -33,7 +33,7 @@ export const CannotProceedModal = (props: CannotProceedModalProps) => {
       <View style={styles.controlsContainer}>
         <SolidButton title={t('OK')} onPress={onSubmit} buttonStyle={styles.acceptButton} />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 };
 

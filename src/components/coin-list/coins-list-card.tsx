@@ -1,5 +1,5 @@
 import SearchCoinRow from './search-coin-row';
-import React, {Reducer, useCallback, useEffect, useReducer, useState} from 'react';
+import React, {memo, Reducer, useCallback, useEffect, useReducer, useState} from 'react';
 import {Dimensions, StyleSheet, View, ViewStyle} from 'react-native';
 import {ParamsItem} from './search-params-button';
 import {CoinDisplayData} from './coins-list-element';
@@ -17,10 +17,10 @@ import ROUTES from '../../navigation/config/routes';
 import store from '@slavi/wallet-core/src/store/index';
 import {useFiatSymbolSelector} from '@slavi/wallet-core/src/store/modules/currency/selectors';
 import TokenAddButton from '../../containers/token/token-add-button';
+import Layout from "../../utils/layout";
 
 export interface CoinsListCardProps {
   containerStyle: ViewStyle;
-  onContentSizeChange: (height: number) => void;
 }
 
 enum CoinsSortType {
@@ -116,11 +116,7 @@ const coinsReducer: CoinsReducer = (state, action) => {
   }
 };
 
-function getHeight(count: number): number {
-  return count * 73 + 60;
-}
-
-const CoinListCard = ({containerStyle, onContentSizeChange}: CoinsListCardProps) => {
+const CoinListCard = memo(({containerStyle}: CoinsListCardProps) => {
   const {t} = useTranslation();
   const coins = useCoinsSelector();
   const navigation = useNavigation();
@@ -199,10 +195,8 @@ const CoinListCard = ({containerStyle, onContentSizeChange}: CoinsListCardProps)
     if (search.length > 0) {
       const newList: CoinDisplayData[] = searcher(coinsToCardState.coins, ['name', 'ticker'], search);
       setCoinsToList(newList);
-      onContentSizeChange(getHeight(newList.length));
     } else {
       setCoinsToList(coinsToCardState.coins);
-      onContentSizeChange(getHeight(coinsToCardState.coins.length));
     }
   }, [coinsToCardState.coins, search]);
 
@@ -232,7 +226,7 @@ const CoinListCard = ({containerStyle, onContentSizeChange}: CoinsListCardProps)
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

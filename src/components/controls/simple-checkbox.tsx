@@ -2,6 +2,7 @@ import {Icon} from 'react-native-elements';
 import theme from '../../theme';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useMemo} from 'react';
+import CustomIcon from "../custom-icon/custom-icon";
 
 export interface SimpleCheckboxProps {
   label?: string;
@@ -20,8 +21,7 @@ export default function SimpleCheckbox(props: SimpleCheckboxProps) {
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={backgroundStyle}>
         {checked && (
-          <Icon
-            type="octicon"
+          <CustomIcon
             name="check"
             color={theme.colors.white}
             size={16}

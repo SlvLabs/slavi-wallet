@@ -1,4 +1,4 @@
-import BaseModal, {ModalProps} from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import TxMetaInfo from './tx-meta-info';
 import TxInfo, {TxInfoProps} from './tx-info';
 import {StyleSheet, Text} from 'react-native';
@@ -8,6 +8,7 @@ import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import OutlineButton from '../buttons/outline-button';
 import Layout from '../../utils/layout';
+import {ModalProps} from "../modal/base-modal";
 
 export interface SwapConfirmationModalProps extends ModalProps, TxInfoProps {
   onAccept: () => void;
@@ -37,7 +38,7 @@ export default function SwapConfirmationModal(props: SwapConfirmationModalProps)
   const {t} = useTranslation();
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={visible}
       onCancel={onCancel}
       showCloseIcon={true}
@@ -61,7 +62,7 @@ export default function SwapConfirmationModal(props: SwapConfirmationModalProps)
       />
       <SolidButton title={t('Ok')} onPress={onAccept} containerStyle={styles.okButton} loading={loading} />
       <OutlineButton title={t('Cancel')} onPress={onCancel} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

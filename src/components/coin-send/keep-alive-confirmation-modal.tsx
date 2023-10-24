@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import BaseModal, {BaseModalProps} from '../modal/base-modal';
+import BaseAuthedModal, {BaseModalProps} from '../modal/base-authorized-modal';
 import {StyleSheet, Text, View} from 'react-native';
 import SolidButton from '../buttons/solid-button';
 import useTranslation from '../../utils/use-translation';
@@ -25,7 +25,7 @@ const KeepAliveConfirmationModal = (props: KeepAliveConfirmationModalProps) => {
   useEffect(() => setLoading(false), [visible]);
 
   return (
-    <BaseModal {...other} >
+    <BaseAuthedModal {...other} >
       <View
         style={styles.headerContainer}>
         <Text style={styles.header}>
@@ -46,7 +46,7 @@ const KeepAliveConfirmationModal = (props: KeepAliveConfirmationModalProps) => {
           buttonStyle={styles.cancelButton}
         />
       </View>
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

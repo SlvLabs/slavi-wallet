@@ -51,9 +51,7 @@ const AddressSelector = (props: AddressSelectorProps) => {
         <View style={styles.row}>
           <View style={styles.textContainer}>
             {props.label && (
-              <View>
-                <Text style={styles.label}>{props.label}</Text>
-              </View>
+              <Text style={styles.label}>{props.label}</Text>
             )}
             <Text style={textStyle} numberOfLines={1} ellipsizeMode={'middle'}>
               {text}
@@ -84,8 +82,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingLeft: 16,
     paddingRight: 24,
-    paddingTop: 22,
-    paddingBottom: 22,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   row: {
     flexDirection: 'row',
@@ -121,6 +119,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0.02,
     color: theme.colors.textLightGray1,
+    marginBottom: 4,
   },
   disabledContainer: {
     backgroundColor: theme.colors.lightBackground,

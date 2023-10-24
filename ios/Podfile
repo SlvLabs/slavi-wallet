@@ -12,11 +12,11 @@ end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
-platform :ios, min_ios_version_supported
+platform :ios, '13.0'
 prepare_react_native_project!
 
 setup_permissions([
- 'Camera',
+#  'Camera',
 ])
 
 require_relative '../node_modules/react-native/scripts/react_native_pods'
@@ -36,6 +36,9 @@ flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : Flip
 use_frameworks! :linkage => :static
 # right after `use_frameworks! :linkage => :static`
 $RNFirebaseAsStaticFramework = true
+
+# Force pods to match minimum iOS version for React Native
+# Fixes build issue on Xcode Cloud where some pods
 
 target 'slaviWalletMobile' do
   use_expo_modules!
@@ -116,6 +119,9 @@ react_native_post_install(
  config[:reactNativePath],
  :mac_catalyst_enabled => false
 )
-    installer.pods_project.build_configurations.each do |config| config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] =  "arm64"
-    end
+#     installer.pods_project.build_configurations.each do |config| config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] =  "arm64"
+#     end
+
+    # https://github.com/facebook/react-native/issues/39568
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
 end

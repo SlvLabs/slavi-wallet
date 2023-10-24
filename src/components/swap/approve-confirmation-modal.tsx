@@ -1,10 +1,12 @@
-import BaseModal, { ModalProps } from "../modal/base-modal";
+import BaseAuthedModal  from "../modal/base-authorized-modal";
 import {StyleSheet, Text} from 'react-native';
 import useTranslation from '../../utils/use-translation';
 import React from "react";
 import SolidButton from '../buttons/solid-button';
 import TxMetaInfo from './tx-meta-info';
 import theme from '../../theme';
+import {ModalProps} from "../modal/base-modal";
+import OutlineButton from "../buttons/outline-button";
 
 export interface ApproveConfirmationModalProps extends ModalProps {
   contract: string;
@@ -20,7 +22,7 @@ export default function ApproveConfirmationModal(props: ApproveConfirmationModal
   const {t} = useTranslation();
 
   return (
-    <BaseModal
+    <BaseAuthedModal
       visible={visible}
       onCancel={onCancel}
       showCloseIcon={false}
@@ -35,8 +37,8 @@ export default function ApproveConfirmationModal(props: ApproveConfirmationModal
         feeTicker={feeTicker}
       />
       <SolidButton title={t('Ok')} onPress={onAccept} containerStyle={styles.okButton} loading={loading} />
-      <SolidButton title={t('Cancel')} onPress={onCancel} />
-    </BaseModal>
+      <OutlineButton title={t('Cancel')} onPress={onCancel} />
+    </BaseAuthedModal>
   );
 }
 

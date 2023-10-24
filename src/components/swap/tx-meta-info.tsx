@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   feeRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingTop: 8,
   },
   feeText: {
     fontFamily: theme.fonts.default,

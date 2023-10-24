@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import theme from '../../theme';
 import {CheckBox, Icon} from 'react-native-elements';
 
@@ -69,7 +69,7 @@ const SearchParamsButton = (props: SortButtonProps) => {
   return (
     <View>
       <TouchableOpacity onPress={showOverlay}>{props.icon}</TouchableOpacity>
-      <BaseModal visible={visible} onCancel={hideOverlay}>
+      <BaseAuthedModal visible={visible} onCancel={hideOverlay}>
         <View>
           {!!props.header && (
             <View style={styles.header}>
@@ -84,7 +84,7 @@ const SearchParamsButton = (props: SortButtonProps) => {
             />
           </View>
         </View>
-      </BaseModal>
+      </BaseAuthedModal>
     </View>
   );
 };

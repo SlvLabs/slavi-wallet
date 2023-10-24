@@ -51,7 +51,7 @@ export default function ApplicationTabs() {
             height: 60 + insets.bottom,
             backgroundColor: theme.colors.black,
             paddingTop: 0,
-            paddingBottom: 4,
+            paddingBottom: 4 + insets.bottom,
         },
         lazy: true,
         headerShown: false,

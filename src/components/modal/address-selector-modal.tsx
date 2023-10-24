@@ -2,12 +2,12 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TextStyle, ScrollView, TouchableOpacity} from 'react-native';
 import CustomIcon from '../custom-icon/custom-icon';
 import useTranslation from '../../utils/use-translation';
-import {ModalProps} from './base-modal';
 import SimpleInput from '../controls/simple-input';
 import theme from '../../theme';
 import InnerAddressList from '../address-book/inner-address-list';
 import FullScreenModal from './full-screen-modal';
 import Layout from '../../utils/layout';
+import {ModalProps} from "./base-modal";
 
 export interface AddressEntry {
   address: string;

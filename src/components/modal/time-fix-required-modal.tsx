@@ -9,6 +9,7 @@ export function TimeFixRequiredModal({onCancel}: {onCancel: () => void}) {
     ws.open();
     onCancel();
   }, [ws, onCancel]);
+
   const {t} = useTranslation();
 
   return (

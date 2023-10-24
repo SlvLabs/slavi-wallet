@@ -1,7 +1,7 @@
 import {ModalProps, StyleSheet, Text, View} from 'react-native';
 import TransactionPriority from '@slavi/wallet-core/src/utils/transaction-priority';
 import React, {useCallback, useMemo, useState} from 'react';
-import BaseModal from '../modal/base-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import useTranslation from '../../utils/use-translation';
 import SimpleRadio from '../controls/simple-radio';
 import theme from '../../theme';
@@ -56,7 +56,7 @@ export default function SettingsModal(props: SettingsModalProps) {
   }, [slippageTolerance, speed, visible]);
 
   return (
-    <BaseModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
+    <BaseAuthedModal visible={visible} onCancel={onCancel} showCloseIcon={true} modalStyle={styles.modal}>
       <Text style={styles.header}>{t('Settings')}</Text>
       <View style={styles.speedView}>
         <Text style={styles.label}>{t('speed')}</Text>
@@ -68,7 +68,7 @@ export default function SettingsModal(props: SettingsModalProps) {
       </View>
       <Text style={styles.error}>{error}</Text>
       <OutlineSuccessButton title={t('Ok')} onPress={submit} />
-    </BaseModal>
+    </BaseAuthedModal>
   );
 }
 

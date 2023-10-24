@@ -63,6 +63,7 @@ export default {
     tabsBackground: 'rgba(10, 10, 12, 0.4)',
     blueBackground: '#0A0D22',
     disabledTitle: '#26272A',
+    modalBackground: '#22252f',
   },
   /** @deprecated */
   colorsOld: {

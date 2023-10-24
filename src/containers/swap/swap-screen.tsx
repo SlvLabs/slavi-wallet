@@ -36,6 +36,7 @@ import {CoinSwapRouteProps} from '../../navigation/SwapStack';
 import Screen from '../../components/screen';
 import SettingsModal from '../../components/swap/settings-modal';
 import Layout from '../../utils/layout';
+import {useResultBalance} from "@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-result-balance";
 
 const APPROVE_INTERVAL_CHECK = 5 * 1000;
 
@@ -198,7 +199,7 @@ const SwapScreen = () => {
   }, [coins, coinsForSwap, network]);
   useEffect(() => {
     let routeCoin, parentCoin;
-    if (!network?.id) {
+    if (!network?.id || inCoin) {
       return;
     }
     for (const coin of srcCoins) {
@@ -214,8 +215,13 @@ const SwapScreen = () => {
       }
     }
     setInCoin(routeCoin ?? parentCoin ?? srcCoins[0]);
-  }, [network?.id, srcCoinFromRoute, srcCoins]);
+  }, [network?.id, srcCoinFromRoute, srcCoins, inCoin]);
+
   useEffect(() => {
+    if (dstCoin) {
+      return;
+    }
+
     let routeCoin, defaultCoin;
     for (const coin of dstCoins) {
       if (coin.default) {
@@ -226,8 +232,9 @@ const SwapScreen = () => {
         break;
       }
     }
+
     setDstCoin(routeCoin ?? defaultCoin ?? dstCoins[0]);
-  }, [dstCoinFromRoute, dstCoins]);
+  }, [dstCoinFromRoute, dstCoins, dstCoin]);
 
   const balancesState = useAddressesBalance(inCoin?.id);
 
@@ -802,6 +809,8 @@ const SwapScreen = () => {
     [dstCoins],
   );
 
+  const dstBalance = useResultBalance(dstCoin?.id || '', address, receiveAmount)
+
   return (
     <Screen
       title={t('exchange')}
@@ -840,6 +849,7 @@ const SwapScreen = () => {
             coins={dstCoins}
             onCoinSelect={onDstCoinSelect}
             logo={dstCoin?.logo}
+            balance={dstBalance}
           />
           <AddressSelector
             label={t('From account')}
@@ -956,6 +966,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.borderGray,
     zIndex: 100,
     marginTop: -12,
+    marginBottom: -12,
     alignSelf: 'center',
   },
   header: {
@@ -975,7 +986,6 @@ const styles = StyleSheet.create({
     ],
   },
   destBlock: {
-    marginTop: -12,
     height: 110,
   },
   srcBlock: {

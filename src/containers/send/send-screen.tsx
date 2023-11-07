@@ -14,6 +14,7 @@ import {
   TRON_PATTERN,
   TRC10_PATTERN,
   TRC20_PATTERN,
+  MINA_PATTERN,
 } from '@slavi/wallet-core/src/services/coin-pattern/utils/pattern-names';
 import SendErc20Screen from './send-erc20-screen';
 import SendPolkadotScreen from './send-polkadot';
@@ -21,6 +22,7 @@ import SendSolanaBasedScreen from './send-solana-screen';
 import SendTronScreen from './send-tron-screen';
 import SendTrc10Screen from './send-trc10-screen';
 import SendTrc20Screen from './send-trc20-screen';
+import SendMinaScreen from './send-mina-screen';
 
 const SendScreen = () => {
   const route = useRoute<CoinSendRouteProps>();
@@ -43,6 +45,7 @@ const SendScreen = () => {
     [TRON_PATTERN, <SendTronScreen coin={coin} />],
     [TRC10_PATTERN, <SendTrc10Screen coin={coin} />],
     [TRC20_PATTERN, <SendTrc20Screen coin={coin} />],
+    [MINA_PATTERN, <SendMinaScreen coin={coin} />],
   ]);
 
   const screen = getHandlerByPattern(pattern, screensMap);

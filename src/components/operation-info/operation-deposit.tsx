@@ -41,7 +41,7 @@ export function OperationDeposit({operation}: OperationDepositProps) {
       {!!operation.toAddress && (
         <RowOperation
           label={t('detailsReceivedTo')}
-          isLast={true}
+          isLast={!operation.memo}
           content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name} />}
         />
       )}
@@ -49,6 +49,13 @@ export function OperationDeposit({operation}: OperationDepositProps) {
         (operation.from.length > 1 && (
           <MovementsOperation to={operation.to} from={operation.from} ticker={coin!.ticker} />
         ))}
+      {!!operation.memo && (
+        <RowOperation
+          label={t('memoInOperationInfo')}
+          content={<AddressOperation address={operation.memo} />}
+          isLast={true}
+        />
+      )}
     </ContainerOperation>
   );
 }

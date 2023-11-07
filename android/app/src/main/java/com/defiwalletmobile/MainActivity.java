@@ -16,7 +16,7 @@ public class MainActivity extends ReactActivity {
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate(savedInstanceState);
+    super.onCreate(null);
     Window window = getWindow();
     window.setFormat(PixelFormat.RGBA_F16);
   }

@@ -518,7 +518,7 @@ PODS:
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-restart (0.0.24):
+  - react-native-restart (0.0.27):
     - React-Core
   - react-native-safe-area-context (3.2.0):
     - React-Core
@@ -1091,7 +1091,7 @@ SPEC CHECKSUMS:
   react-native-notification-sounds: 739f8adc4010138e4cd72fd4e3220e7df758473f
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
+  react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-simple-toast: 8ee5d23f0b92b935ab7434cdb65159ce12dfb4b7
   react-native-webview: 669ae162965f629a8d6a4bdd3b99a304d36ef1f2

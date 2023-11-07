@@ -654,6 +654,14 @@ const translations = {
   noAccessToCamera: 'No access to camera',
   tryAgain: 'Try again',
   requestingPermission: 'Requesting for camera permission...',
+
+  // MINA v1
+  minaAdvancedFeeHeader: 'Set fee limit',
+  minaAdvancedFeeLimitPlaceholder: 'Fee limit',
+  minaMemoInputLabel: 'Memo (optional)',
+  minaMemoIsTooLong: 'Memo is too long',
+  memoInOperationInfo: 'Memo',
+  minaMinSendForAccountActivation: 'Recipient is not active. Minimal amount for activation required',
 };
 
 export default translations;

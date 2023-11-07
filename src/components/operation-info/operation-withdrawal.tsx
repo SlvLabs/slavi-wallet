@@ -20,6 +20,7 @@ export function OperationWithdrawal({operation}: OperationWithdrawalProps) {
   const {t} = useTranslation();
 
   const coin = useCoinDetails(operation.coin);
+  console.log(operation.data);
 
   return (
     <ContainerOperation explorerLink={operation.explorerLink}>
@@ -41,7 +42,7 @@ export function OperationWithdrawal({operation}: OperationWithdrawalProps) {
       )}
       {!!operation.toAddress && (
         <RowOperation
-          isLast={true}
+          isLast={!operation.memo}
           label={t('detailsReceivedTo')}
           content={<AddressOperation address={operation.toAddress.address} addressName={operation.toAddress.name} />}
         />
@@ -50,6 +51,9 @@ export function OperationWithdrawal({operation}: OperationWithdrawalProps) {
         (operation.from.length > 1 && (
           <MovementsOperation to={operation.to} from={operation.from} ticker={coin!.ticker} />
         ))}
+      {!!operation.memo && (
+        <RowOperation label={t('memoInOperationInfo')} content={<AddressOperation address={operation.memo} />} isLast={true} />
+      )}
     </ContainerOperation>
   );
 }

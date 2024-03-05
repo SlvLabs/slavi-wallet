@@ -1,12 +1,11 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
-import {parseDataFromQr} from '@slavi/wallet-core/src/utils/qr';
+import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
 import useCoinDetails from '@slavi/wallet-core/src/store/modules/coins/use-coin-details';
 import CoinBalanceHeader from '../../components/coins/coin-balance-header';
 import SendManyView from '../../components/coin-send/send-many-view';
-import {QrData} from '@slavi/wallet-core/src/utils/qr';
-import {useCoinSpecsService, useCoinPatternService, useAddressesService, useDidUpdateEffect} from '@slavi/wallet-core';
+import {useAddressesService, useCoinPatternService, useCoinSpecsService, useDidUpdateEffect} from '@slavi/wallet-core';
 import useSpendableBalance from '@slavi/wallet-core/src/store/modules/balances/hooks/use-spendable-balance';
 import {Recipient} from '../../components/coin-send/send-view';
 import useTranslation from '../../utils/use-translation';
@@ -174,10 +173,25 @@ const SendBtcScreen = (props: SendBtcScreenProps) => {
 
       let result;
       try {
-        result = await pattern.createTransactions([...recipients], {
-          receiverPaysFee: recipientPayFee,
-          txPriority: txPriority,
-        });
+        result = await pattern
+          .createTransactions([...recipients], {
+            receiverPaysFee: recipientPayFee,
+            txPriority: txPriority,
+          })
+          // try to recreate tx if on slow fee result is not good
+          .catch(e => {
+            if (
+              e instanceof CreateTransactionError &&
+              e.message === 'Fee is less than minimal' &&
+              txPriority === TransactionPriority.slow
+            ) {
+              return pattern.createTransactions([...recipients], {
+                receiverPaysFee: recipientPayFee,
+                txPriority: TransactionPriority.average,
+              });
+            }
+            throw e;
+          });
       } catch (e) {
         if (e instanceof InsufficientFunds) {
           addError(t('serverInsufficientFunds'));

@@ -85,8 +85,8 @@ android {
         applicationId "com.defiwalletmobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 31
-        versionName "1.25.2"
+        versionCode 33
+        versionName "1.26.2"
         multiDexEnabled true
         resValue "string", "build_config_package", "com.defiwalletmobile"
         missingDimensionStrategy 'react-native-camera', 'general'
@@ -95,7 +95,7 @@ android {
         release {
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                storePassword MYAPP_UPLOAD_STORE_PASSWORDсв
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }

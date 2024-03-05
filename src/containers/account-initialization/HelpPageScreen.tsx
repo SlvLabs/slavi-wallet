@@ -4,7 +4,7 @@ import PointerProgressBar from '../../components/progress/pointer-progress-bar';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
 import {useDispatch} from 'react-redux';
-import {showReferral} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
+import {hideReferral, showReferral} from '@slavi/wallet-core/src/store/modules/initialization/initialization';
 import Layout from '../../utils/layout';
 import CustomIcon from '../../components/custom-icon/custom-icon';
 import HelpWavesBackground from '../../components/background/help-waves-background';
@@ -89,6 +89,16 @@ export default function HelpPageScreen() {
         routes: [
           {
             name: ROUTES.MAIN.REFERRAL,
+          },
+        ],
+      });
+    } else {
+      dispatch(hideReferral());
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: ROUTES.MAIN.TABS,
           },
         ],
       });

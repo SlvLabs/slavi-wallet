@@ -168,7 +168,7 @@ const App: () => ReactNode = () => {
         asyncStorageProvider,
         performanceMonitor,
         services.current,
-        Config.WC_PROJECT_ID,
+        Config.WC_PROJECT_ID!,
         devMode,
         Config.APP_VERSION,
       ),
@@ -195,7 +195,7 @@ const App: () => ReactNode = () => {
       .catch(e => {
         try {
           crashlytics().recordError(e);
-        } catch (e) {}
+        } catch {}
 
         if (e instanceof NotificationUnsupported) {
           console.warn('Notification unsupported on this device');
@@ -310,7 +310,7 @@ const App: () => ReactNode = () => {
   useAppExit();
 
   return (
-    <DefaultBoundary FallbackComponent={() => <SimpleErrorBoundary />}>
+    <DefaultBoundary FallbackComponent={SimpleErrorBoundary}>
       <StatusBar backgroundColor="transparent" translucent={true} barStyle={'light-content'} />
       <Provider store={store}>
         <servicesContext.Provider value={services.current}>

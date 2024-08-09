@@ -45,7 +45,7 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const _renderItem = useCallback(
+  const _renderItem = useCallback<Carousel<AddressData>['_renderItem']>(
     ({item, index}) => {
       return (
         <View style={{...styles.container, ...props.containerStyle}}>
@@ -106,7 +106,7 @@ const AddressesCarousel: ForwardRefRenderFunction<AddressesCarouselHandle, Addre
   }, [carousel]);
 
   useEffect(() => {
-    setTimeout( () => {
+    setTimeout(() => {
       if (refs.current?.[0]) {
         refs.current[0].toDataURL(props.onDataChange);
       }

@@ -1,12 +1,5 @@
-import {
-  FlatList,
-  ImageStyle,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import {FlatList, ImageStyle, StyleSheet, TouchableOpacity, View, Text, ListRenderItem} from 'react-native';
+import React, {ReactNode, useCallback, useState} from 'react';
 import BaseAuthedModal from '../modal/base-authorized-modal';
 import theme from '../../theme';
 import {CheckBox, Icon} from 'react-native-elements';
@@ -19,7 +12,7 @@ export interface ParamsItem {
 
 export interface SortButtonProps {
   sortingMethods: ParamsItem[];
-  icon: Element;
+  icon: ReactNode;
   header?: string;
   iconStyle?: ImageStyle;
 }
@@ -30,39 +23,32 @@ const SearchParamsButton = (props: SortButtonProps) => {
   const hideOverlay = () => setVisible(false);
   const showOverlay = () => setVisible(true);
 
-  const renderParamsElement = useCallback(
-    ({item}) => {
-      const onPress = () => {
-        hideOverlay();
-        item.onPress();
-      }
+  const renderParamsElement = useCallback<ListRenderItem<ParamsItem>>(({item}) => {
+    const onPress = () => {
+      hideOverlay();
+      item.onPress();
+    };
 
-      return (
-        <TouchableOpacity
+    return (
+      <TouchableOpacity onPress={onPress} style={styles.itemContainer}>
+        <CheckBox
+          uncheckedColor={theme.colors.lightTransparent}
+          checkedColor={theme.colors.green}
+          checked={!!item.isActive}
+          uncheckedIcon={
+            <Icon
+              type="material-community"
+              name="checkbox-blank-circle-outline"
+              color={theme.colors.lightTransparent}
+            />
+          }
+          checkedIcon={<Icon type="material-community" name="circle-slice-8" color={theme.colors.green} />}
           onPress={onPress}
-          style={styles.itemContainer}>
-          <CheckBox
-            uncheckedColor={theme.colors.lightTransparent}
-            checkedColor={theme.colors.green}
-            checked={item.isActive}
-            uncheckedIcon={
-              <Icon
-                type='material-community'
-                name='checkbox-blank-circle-outline'
-                color={theme.colors.lightTransparent}
-              />}
-            checkedIcon={
-              <Icon
-                type='material-community'
-                name='circle-slice-8'
-                color={theme.colors.green}
-              />
-            }
-            onPress={onPress}
-          />
-          <Text style={styles.itemText}>{item.title}</Text>
-        </TouchableOpacity>
-      )}, []);
+        />
+        <Text style={styles.itemText}>{item.title}</Text>
+      </TouchableOpacity>
+    );
+  }, []);
 
   const keyExtractor = (item: any, index: number) => index.toString();
 
@@ -77,11 +63,7 @@ const SearchParamsButton = (props: SortButtonProps) => {
             </View>
           )}
           <View style={styles.list}>
-            <FlatList
-              data={props.sortingMethods}
-              renderItem={renderParamsElement}
-              keyExtractor={keyExtractor}
-            />
+            <FlatList data={props.sortingMethods} renderItem={renderParamsElement} keyExtractor={keyExtractor} />
           </View>
         </View>
       </BaseAuthedModal>

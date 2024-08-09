@@ -71,6 +71,6 @@ const ROUTES = {
     MAIN: 'SettingsSecurity/Main',
     AUTO_BLOCKING: 'SettingsSecurity/AutoBlocking',
   },
-};
+} as const;
 
 export default ROUTES;

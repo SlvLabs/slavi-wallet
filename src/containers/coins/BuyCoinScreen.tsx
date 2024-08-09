@@ -107,7 +107,7 @@ const BuyCoinScreen = () => {
   }, [navigation]);
 
   const onOrder = useCallback(
-    order => {
+    (order: typeof createdOrder) => {
       if (order) {
         navigation.navigate(ROUTES.COINS.BUY_COIN_WEB_VIEW, {
           ticker: coinDetails.ticker,

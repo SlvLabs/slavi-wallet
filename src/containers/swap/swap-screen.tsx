@@ -36,7 +36,7 @@ import {CoinSwapRouteProps} from '../../navigation/SwapStack';
 import Screen from '../../components/screen';
 import SettingsModal from '../../components/swap/settings-modal';
 import Layout from '../../utils/layout';
-import {useResultBalance} from "@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-result-balance";
+import {useResultBalance} from '@slavi/wallet-core/src/providers/ws/hooks/for-swap/use-result-balance';
 
 const APPROVE_INTERVAL_CHECK = 5 * 1000;
 
@@ -83,8 +83,8 @@ const SwapScreen = () => {
   const [successModalIsShown, setSuccessModalIsShown] = useState<boolean>(false);
   const [settingsIsShown, setSettingsIsShown] = useState<boolean>(false);
 
-  const approvingTimer = useRef<NodeJS.Timer | null>(null);
-  const waitSwapProviderTimer = useRef<NodeJS.Timer | null>(null);
+  const approvingTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const waitSwapProviderTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const coinService = useCoinsService();
   const patternService = useCoinPatternService();
@@ -543,8 +543,6 @@ const SwapScreen = () => {
     getSwapTx,
   ]);
 
-  const onTxPriorityChange = useCallback(value => setTxPriority(value), []);
-
   const onAddressSelect = useCallback(
     (index: number) => {
       if (balancesState.balances[index]) {
@@ -789,10 +787,10 @@ const SwapScreen = () => {
   const onSettingsChange = useCallback(
     (speed: TransactionPriority, value: number) => {
       setSlippageTolerance(value);
-      onTxPriorityChange(speed);
+      setTxPriority(speed);
       hideSettings();
     },
-    [onTxPriorityChange, hideSettings],
+    [hideSettings],
   );
 
   const onSrcCoinSelect = useCallback(
@@ -809,7 +807,7 @@ const SwapScreen = () => {
     [dstCoins],
   );
 
-  const dstBalance = useResultBalance(dstCoin?.id || '', address, receiveAmount)
+  const dstBalance = useResultBalance(dstCoin?.id || '', address, receiveAmount);
 
   return (
     <Screen

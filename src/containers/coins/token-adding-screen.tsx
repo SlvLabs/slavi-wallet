@@ -25,11 +25,14 @@ const TokenAddingScreen = () => {
   const coinPatternService = useCoinPatternService();
   const {coins} = useGetParentCoins();
 
-  const coinOptions = useMemo(() => coins?.reduce(
-    (acc: Record<string, string>, element) => {
-      acc[element.id] = element.networkName || element.name;
-      return acc;
-    }, {}), [coins])
+  const coinOptions = useMemo(
+    () =>
+      coins?.reduce((acc: Record<string, string>, element) => {
+        acc[element.id] = element.networkName || element.name;
+        return acc;
+      }, {}),
+    [coins],
+  );
 
   useEffect(() => {
     if (!coin) {
@@ -37,7 +40,7 @@ const TokenAddingScreen = () => {
     }
     const addressValidator = coinPatternService.getAddressValidatorByCoin(coin);
 
-    if (address && !addressValidator.validate(address, coin)) {
+    if (address && !addressValidator.validate(address, coin, {isForTokenAdd: true})) {
       setAddressError(t('Invalid address'));
     }
   }, [address, coin, coinPatternService, t]);
@@ -59,17 +62,17 @@ const TokenAddingScreen = () => {
   }, [addingState.error, addingState.errors, addingState.messages, t]);
 
   useEffect(() => {
-    if(!addingState.isLoading && addingState.success) {
+    if (!addingState.isLoading && addingState.success) {
       navigation.navigate(ROUTES.COINS.LIST, {hideAdd: true});
     }
-  }, [addingState.success, addingState.isLoading])
+  }, [navigation, addingState.success, addingState.isLoading]);
 
-
+  const tmpAdd = addingState.add;
   const onSubmit = useCallback(() => {
     if (coin && address) {
-      addingState.add(coin, address);
+      tmpAdd(coin, address);
     }
-  }, [coin, address]);
+  }, [coin, address, tmpAdd]);
 
   const onChangeAddress = (_address: string) => {
     setAddressError('');
@@ -81,17 +84,18 @@ const TokenAddingScreen = () => {
     setAddressError('');
     setError('');
     setCoin(_coin);
-  }
+  };
 
   return (
     <Screen title={t('Add token')}>
       <View style={styles.textBlock}>
-        <Text style={styles.description}>{
-          t('You can add a token that is missing in our wallet.') + '\n' +
-            t('To do this, select the blockchain that owns the token and specify the address of the contract')
-        }</Text>
+        <Text style={styles.description}>
+          {t('You can add a token that is missing in our wallet.') +
+            '\n' +
+            t('To do this, select the blockchain that owns the token and specify the address of the contract')}
+        </Text>
       </View>
-      <SimpleSelect onSelect={onChangeCoin} options={coinOptions} value={coin} label={t('Parent coin')}/>
+      <SimpleSelect onSelect={onChangeCoin} options={coinOptions} value={coin} label={t('Parent coin')} />
       <InsertableInput
         onChange={onChangeAddress}
         label={t('Contract address')}

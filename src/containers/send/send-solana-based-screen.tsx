@@ -7,7 +7,7 @@ import SendView, {Recipient, RecipientUpdatingData} from '../../components/coin-
 import {VoutError} from '@slavi/wallet-core/src/validation/hooks/use-tx-vouts-validator';
 import AlertRow from '../../components/error/alert-row';
 import QrReaderModal from '../../components/coin-send/qr-reader-modal';
-import ConfirmationModal from '../../components/coin-send/confirmation-modal';
+import ConfirmationSendModal from '../../components/coin-send/confirmation-modal';
 import SimpleToast from 'react-native-simple-toast';
 import {parseDataFromQr, QrData} from '@slavi/wallet-core/src/utils/qr';
 import {useCoinSpecsService, useDidUpdateEffect} from '@slavi/wallet-core';
@@ -15,9 +15,6 @@ import useAddressesBalance from '@slavi/wallet-core/src/providers/ws/hooks/use-a
 import useVoutValidator from '@slavi/wallet-core/src/validation/hooks/use-vout-validator';
 import InsufficientFunds from '@slavi/wallet-core/src/services/errors/insufficient-funds';
 import CreateTransactionError from '@slavi/wallet-core/src/services/errors/create-transaction-error';
-import TronPattern from '@slavi/wallet-core/src/services/coin-pattern/tron-pattern';
-import Trc10Pattern from '@slavi/wallet-core/src/services/coin-pattern/trc-10-pattern';
-import Trc20Pattern from '@slavi/wallet-core/src/services/coin-pattern/trc-20-pattern';
 import SolidButton from '../../components/buttons/solid-button';
 import AddressSelector from '../../components/buttons/address-selector';
 import ROUTES from '../../navigation/config/routes';
@@ -25,14 +22,15 @@ import {useNavigation} from '@react-navigation/native';
 import AbsurdlyHighFee from '@slavi/wallet-core/src/services/errors/absurdly-high-fee';
 import TxCreatingResult from '@slavi/wallet-core/src/services/transaction/tx-creating-result';
 import ScrollableScreen from '../../components/scrollable-screen';
-import makeRoundedBalance from '../../utils/make-rounded-balance';
+import {SolanaSplPattern} from '@slavi/wallet-core/src/services/coin-pattern/solana-spl-pattern';
+import SolanaPattern from '@slavi/wallet-core/src/services/coin-pattern/solana-pattern';
 
-export interface SendTronScreenProps {
+export interface SendSolanaBasedScreenProps {
   coin: string;
-  pattern: TronPattern | Trc10Pattern | Trc20Pattern;
+  pattern: SolanaPattern | SolanaSplPattern;
 }
 
-const SendTronBasedScreen = (props: SendTronScreenProps) => {
+const SendSolanaBasedScreen = (props: SendSolanaBasedScreenProps) => {
   const {t} = useTranslation();
   const navigation = useNavigation();
 
@@ -55,9 +53,9 @@ const SendTronBasedScreen = (props: SendTronScreenProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [voutError, setVoutError] = useState<VoutError>();
   const [locked, setLocked] = useState<boolean>(false);
-  const [sendingLocked, setSendingLocked] = useState<boolean>(false);
   const [confIsShown, setConfIsShown] = useState<boolean>(false);
   const [txResult, setTxResult] = useState<TxCreatingResult | null>(null);
+  const [sendingLocked, setSendingLocked] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
   const [activeQR, setActiveQR] = useState<boolean>(false);
   const [senderIndex, setSenderIndex] = useState<number>();
@@ -130,79 +128,113 @@ const SendTronBasedScreen = (props: SendTronScreenProps) => {
     }));
     setRecipientPayFee(false);
   }, []);
-  const setError = useCallback((error: string) => {
+
+  const addError = useCallback((error: string) => {
     setIsValid(false);
-    setErrors([error]);
+    setErrors(p => [...p, error]);
   }, []);
 
-  const setWarn = useCallback((error: string) => {
-    setErrors([error]);
-  }, []);
-
-  const onSubmit = async () => {
+  const createTransaction = useCallback(async (): Promise<boolean> => {
     setLocked(true);
-    if (validate(true)) {
-      if (!props.pattern) {
-        throw new Error('Try create transaction of unknown coin');
-      }
+    if (!validate(true)) {
+      setLocked(false);
+      return false;
+    }
 
-      if (!fromAddress) {
-        setError(t('Source address not specified'));
-        return;
-      }
+    if (!fromAddress) {
+      addError(t('Source address not specified'));
+      return false;
+    }
 
-      let result;
-      try {
-        result = await props.pattern.createTransaction(recipient, fromAddress, {receiverPaysFee: recipientPayFee});
-      } catch (e) {
-        if (e instanceof InsufficientFunds) {
-          if (coinDetails.parent && e.coin === coinDetails.parent) {
-            setError(t('insufficientBaseBalance', {coin: coinDetails.parentName}));
-          } else {
-            setError(t('serverInsufficientFunds'));
-          }
-        } else {
-          setLocked(false);
-          if (e instanceof CreateTransactionError) {
-            setWarn(t('Can not create transaction. Try latter or contact support.'));
-          } else {
-            if (e instanceof AbsurdlyHighFee) {
-              setError(t('Can not create transaction. absurdly high fee.'));
-            }
-          }
-          //throw e;
+    let result;
+    try {
+      result = await props.pattern.createTransfer(
+        [
+          {
+            address: recipient.address,
+            amount: recipient.amount,
+          },
+        ],
+        {
+          from: fromAddress,
+          receiverPaysFee: recipientPayFee,
+        },
+      );
+    } catch (e) {
+      if (e instanceof InsufficientFunds) {
+        let text = t('serverInsufficientFunds');
+
+        if (coinDetails.parent && e.coin === coinDetails.parent) {
+          text += ` (${coinDetails.parentName})`;
         }
+        addError(text);
+        return false;
       }
 
-      if (!result) {
-        setLocked(false);
-        return;
+      setLocked(false);
+      if (e instanceof CreateTransactionError) {
+        addError(t('Can not create transaction. Try latter or contact support.'));
+        return false;
       }
-      setErrors([]);
-      setConfIsShown(true);
-      setTxResult(result);
-    } else {
+      if (e instanceof AbsurdlyHighFee) {
+        addError(t('Can not create transaction. absurdly high fee.'));
+        return false;
+      }
+
+      throw e;
+    }
+
+    if (!result) {
+      setLocked(false);
+      return false;
+    }
+
+    setTxResult(result);
+    return true;
+  }, [
+    addError,
+    coinDetails.parent,
+    coinDetails.parentName,
+    fromAddress,
+    props.pattern,
+    recipient.address,
+    recipient.amount,
+    recipientPayFee,
+    t,
+    validate,
+  ]);
+
+  const onSubmit = useCallback(async () => {
+    try {
+      if (await createTransaction()) {
+        setConfIsShown(true);
+      } else {
+        setLocked(false);
+      }
+    } catch (e) {
+      SimpleToast.showWithGravity((e as Error).toString(), SimpleToast.LONG, SimpleToast.TOP);
       setLocked(false);
     }
-  };
+  }, [createTransaction]);
+
   const cancelConfirmSending = useCallback(() => {
     setConfIsShown(false);
     setLocked(false);
   }, []);
-  const send = async () => {
+
+  const send = useCallback(async () => {
     if (sendingLocked) {
       return;
     }
-
+    setSendingLocked(true);
     if (!txResult) {
       throw new Error('Try send transaction before creating');
     }
 
-    setSendingLocked(true);
     try {
       await props.pattern.sendTransactions(txResult.transactions);
     } catch (e) {
-      setWarn(t('Error of broadcast tx. Try again latter or contact support'));
+      addError(t('Error of broadcast tx. Try again latter or contact support'));
       return;
     } finally {
       setSendingLocked(false);
@@ -214,15 +246,25 @@ const SendTronBasedScreen = (props: SendTronScreenProps) => {
       recipients: [recipient],
       coin: coinDetails.id,
     });
-  };
+  }, [
+    addError,
+    cancelConfirmSending,
+    coinDetails.id,
+    navigation,
+    props.pattern,
+    recipient,
+    sendingLocked,
+    t,
+    txResult,
+  ]);
 
   useDidUpdateEffect(() => validate(), [recipient, validate]);
 
   useEffect(() => {
-    if (balancesState.balances.length === 1) {
-      setSenderIndex(0);
+    if (isValid) {
+      setErrors([]);
     }
-  }, [balancesState.balances.length]);
+  }, [isValid]);
 
   const enableRecipientPaysFee = useCallback(() => setRecipientPayFee(true), []);
 
@@ -245,7 +287,6 @@ const SendTronBasedScreen = (props: SendTronScreenProps) => {
           onSelect={setSenderIndex}
           selectedAddress={senderIndex}
           ticker={coinDetails.ticker}
-          baseTicker={coinDetails.parentTicker}
         />
         <SendView
           readQr={() => setActiveQR(true)}
@@ -259,27 +300,22 @@ const SendTronBasedScreen = (props: SendTronScreenProps) => {
           errors={voutError}
           maximumPrecision={props.pattern.getMaxPrecision()}
         />
-        {errors.length > 0 && (
-          <View style={styles.errors}>
-            {errors.map((error, index) => (
-              <AlertRow text={error} key={'general_error_' + index} />
-            ))}
-          </View>
-        )}
       </View>
+      {!isValid && errors.length > 0 && (
+        <View style={styles.errors}>
+          {errors.map((error, index) => (
+            <AlertRow text={error} key={'general_error_' + index} />
+          ))}
+        </View>
+      )}
       <View style={styles.submitButton}>
-        <SolidButton
-          title={t('Send')}
-          onPress={onSubmit}
-          disabled={!isValid || locked}
-          loading={locked || sendingLocked}
-        />
+        <SolidButton title={t('Send')} onPress={onSubmit} disabled={!isValid || locked} loading={locked} />
       </View>
       <QrReaderModal visible={activeQR} onQRRead={onQRRead} onClose={() => setActiveQR(false)} />
-      <ConfirmationModal
+      <ConfirmationSendModal
         visible={confIsShown}
         vouts={txResult?.vouts || []}
-        fee={makeRoundedBalance(6, txResult?.fee)}
+        fee={txResult?.fee}
         onAccept={send}
         onCancel={cancelConfirmSending}
         ticker={coinDetails.ticker}
@@ -291,8 +327,7 @@ const SendTronBasedScreen = (props: SendTronScreenProps) => {
 
 const styles = StyleSheet.create({
   submitButton: {
-    paddingTop: 16,
-    paddingBottom: 16,
+    padding: 16,
   },
   errors: {
     padding: 32,
@@ -307,4 +342,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SendTronBasedScreen;
+export default SendSolanaBasedScreen;

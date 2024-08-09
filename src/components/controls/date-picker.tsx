@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-  Platform,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, ViewStyle, Platform} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {Icon} from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -24,7 +17,7 @@ const DatePicker = (props: DatePickerProps) => {
   const hide = useCallback(() => setPickerIsVisible(false), []);
 
   const onChange = useCallback(
-    (event, selectedDate) => {
+    (_event: unknown, selectedDate: Date | undefined) => {
       const currentDate = selectedDate || props.value;
       if (Platform.OS !== 'ios') {
         hide();
@@ -36,13 +29,9 @@ const DatePicker = (props: DatePickerProps) => {
 
   return (
     <View style={{...styles.container, ...props.containerStyle}}>
-      <TouchableOpacity
-        onPress={show}
-        style={{...styles.content, ...props.contentStyle}}>
+      <TouchableOpacity onPress={show} style={{...styles.content, ...props.contentStyle}}>
         <Icon type={'feather'} name={'calendar'} />
-        <View>
-          {props.value && <Text>{props.value.toLocaleDateString()}</Text>}
-        </View>
+        <View>{props.value && <Text>{props.value.toLocaleDateString()}</Text>}</View>
       </TouchableOpacity>
       {pickerIsVisible && (
         <View>

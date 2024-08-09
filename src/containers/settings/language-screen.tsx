@@ -1,7 +1,7 @@
 import {ActivityIndicator, View} from 'react-native';
 import React, {useCallback, useMemo} from 'react';
 import useLanguages from '@slavi/wallet-core/src/providers/ws/hooks/use-languages';
-import useTranslation from '../../utils/use-translation';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import SelectableList from '../../components/controls/selectable-list';
 import mapArrayToSelectOptions from '../../utils/map-array-to-select-options';
 import useLanguageService from '@slavi/wallet-core/src/contexts/hooks/use-language-service';
@@ -22,8 +22,9 @@ const LanguageScreen = () => {
     },[i18n, languageService]
   );
 
-  const languageOptions: Record<string, string> | undefined = useMemo(
-    () => objectMap(mapArrayToSelectOptions(languages), (lang) => t(lang)), [languages]
+  const languageOptions = useMemo(
+    () => objectMap(mapArrayToSelectOptions(languages), lang => t(lang as TranslationsKey)) as Record<string, string>,
+    [languages, t],
   );
 
   if (isLoading || !languages) {

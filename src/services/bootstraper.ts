@@ -11,12 +11,12 @@ import {FirebaseService} from './notification/firebase-service';
 import {NotificationUnsupported} from '@slavi/wallet-core/src/services/errors/notification-unsupported';
 
 const wsConfig = {
-  url: Config.WS_URL,
-  minReconnectTime: +Config.WS_MIN_RECONNECT_TIME || 1000,
-  maxReconnectTime: +Config.WS_MAX_RECONNECT_TIME || 30000,
+  url: Config.WS_URL ?? '',
+  minReconnectTime: +(Config.WS_MIN_RECONNECT_TIME || 1000),
+  maxReconnectTime: +(Config.WS_MAX_RECONNECT_TIME || 30000),
   ping: {
-    timeout: +Config.WS_PING_TIMEOUT || 31000,
-    route: Config.WS_PING_ROUTE,
+    timeout: +(Config.WS_PING_TIMEOUT || 31000),
+    route: Config.WS_PING_ROUTE || '',
   },
 };
 
@@ -46,7 +46,7 @@ export const createCoreBootstrap = (
     wsConfig: wsConfig,
     systemLanguage: 'en',
     store: store,
-    authCoinDerivedPath: Config.AUTH_DERIVED_PATH,
+    authCoinDerivedPath: Config.AUTH_DERIVED_PATH!,
     authCoinNetwork: networks.AUTH_SLV,
     dataStorageProvider: dataStorageProvider,
     coinsServiceConfig: coinsServiceConfig,

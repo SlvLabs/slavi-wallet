@@ -6,7 +6,7 @@ const cdnURL = Config.CDN_URL;
 
 const getImageSource = (uri?: string | ImageSourcePropType | null, placeholder?: string): ImageSourcePropType => {
   if (!uri || typeof uri === 'string') {
-    return uri ? {uri: cdnURL + uri} : placeholder || coinPlaceholder;
+    return uri && cdnURL ? {uri: cdnURL + uri} : placeholder || coinPlaceholder;
   }
   return uri;
 };

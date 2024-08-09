@@ -1,9 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import BaseAuthedModal, {BaseModalProps} from '../modal/base-authorized-modal';
+import BaseAuthedModal from '../modal/base-authorized-modal';
 import {StyleSheet, Text, View} from 'react-native';
 import SolidButton from '../buttons/solid-button';
 import useTranslation from '../../utils/use-translation';
 import theme from '../../theme';
+import {BaseModalProps} from '../modal/base-modal';
 
 export interface KeepAliveConfirmationModalProps extends BaseModalProps {
   onConfirm: () => void;
@@ -25,30 +26,21 @@ const KeepAliveConfirmationModal = (props: KeepAliveConfirmationModalProps) => {
   useEffect(() => setLoading(false), [visible]);
 
   return (
-    <BaseAuthedModal {...other} >
-      <View
-        style={styles.headerContainer}>
+    <BaseAuthedModal {...other}>
+      <View style={styles.headerContainer}>
         <Text style={styles.header}>
-          {t('Sending a transaction will deactivate your address in the blockchain and burn all remaining coins on it.')}
+          {t(
+            'Sending a transaction will deactivate your address in the blockchain and burn all remaining coins on it.',
+          )}
         </Text>
       </View>
-      <View
-        style={styles.controlsContainer}>
-        <SolidButton
-          title={t('Ok')}
-          onPress={_onAccept}
-          buttonStyle={styles.acceptButton}
-          loading={loading}
-        />
-        <SolidButton
-          title={t('Cancel')}
-          onPress={onCancel}
-          buttonStyle={styles.cancelButton}
-        />
+      <View style={styles.controlsContainer}>
+        <SolidButton title={t('Ok')} onPress={_onAccept} buttonStyle={styles.acceptButton} loading={loading} />
+        <SolidButton title={t('Cancel')} onPress={onCancel} buttonStyle={styles.cancelButton} />
       </View>
     </BaseAuthedModal>
   );
-}
+};
 
 const styles = StyleSheet.create({
   headerContainer: {

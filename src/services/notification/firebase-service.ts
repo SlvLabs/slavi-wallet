@@ -5,6 +5,7 @@ import {Event, EventType} from '@notifee/react-native/src/types/Notification';
 import NotificationSounds, {Sound} from 'react-native-notification-sounds';
 import {AndroidLaunchActivityFlag} from '@notifee/react-native/src/types/NotificationAndroid';
 import {navigate} from '../../navigation/navigate';
+import SimpleToast from 'react-native-simple-toast';
 
 export class FirebaseService {
   private sounds: Sound[] = [];
@@ -61,7 +62,7 @@ export class FirebaseService {
   }
 
   async deleteToken() {
-    return messaging().deleteToken();
+    await messaging().deleteToken();
   }
 
   onTokenRefresh(listener: (token: string) => void) {
@@ -98,14 +99,14 @@ export class FirebaseService {
     });
   }
 
-  private static onOpen(message: FirebaseMessagingTypes.RemoteMessage): void {
-    FirebaseService.navigateNotification(message.data);
+  private static async onOpen(message: FirebaseMessagingTypes.RemoteMessage) {
+    await FirebaseService.navigateNotification(message.data);
   }
 
   private static async onLocalNotification(notification: Event) {
     await notifee.setBadgeCount(0);
     if (notification.type === EventType.PRESS) {
-      FirebaseService.navigateNotification(notification.detail.notification?.data);
+      await FirebaseService.navigateNotification(notification.detail.notification?.data as Record<string, string>);
     }
   }
 
@@ -139,7 +140,7 @@ export class FirebaseService {
           try {
             params = JSON.parse(data.params);
           } catch (e) {
-            console.error('ERROR: ',e);
+            console.error('ERROR: ', e);
           }
         }
 
@@ -151,10 +152,10 @@ export class FirebaseService {
   private static async processInitialNotification() {
     const initialNotification = await notifee.getInitialNotification();
     if (initialNotification && initialNotification.notification?.data?.type) {
-      FirebaseService.navigateNotification(initialNotification.notification.data);
+      await FirebaseService.navigateNotification(initialNotification.notification.data as Record<string, string>);
     }
 
     const remoteInitialNotification = await messaging().getInitialNotification();
-    FirebaseService.navigateNotification(remoteInitialNotification?.data);
+    await FirebaseService.navigateNotification(remoteInitialNotification?.data);
   }
 }

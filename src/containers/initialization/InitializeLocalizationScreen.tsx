@@ -2,7 +2,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import theme from '../../theme';
 import {simpleLogo} from '../../assets/images';
-import useTranslation from '../../utils/use-translation';
+import useTranslation, {TranslationsKey} from '../../utils/use-translation';
 import SolidButton from '../../components/buttons/solid-button';
 import SimpleSelect from '../../components/controls/simple-select';
 import PointerProgressBar from '../../components/progress/pointer-progress-bar';
@@ -48,8 +48,8 @@ const InitializeLocalizationScreen = () => {
 
   const goNextStep = useCallback(() => navigation.navigate(ROUTES.INITIALIZATION.LICENSE_AGREEMENT), [navigation]);
 
-  const languageOptions: Record<string, string> | undefined = useMemo(
-    () => objectMap(mapArrayToSelectOptions(languages), l => t(l)),
+  const languageOptions: Record<string, string> = useMemo(
+    () => objectMap(mapArrayToSelectOptions(languages), l => t(l as TranslationsKey)),
     [languages, t],
   );
 
